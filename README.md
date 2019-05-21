@@ -1,5 +1,3 @@
-# SEVENGINE
-
 ## Coding Standards
 
 ### Coding Style
@@ -130,14 +128,3 @@ _Note : this guide is primarily targeted at setting up a Windows development env
 
 7. (Visual Studio) Add `$(ProjectDir)Engine\boost_1_69_0\stage\lib` to `Library Directories`
 
-### LuaJIT
-
-_Note : this guide is primarily targeted at setting up a Windows development environment. You can probably just use your package manager on Linux._
-
-1. Download and extract the LuaJIT zip file from the Team Drive
-
-2. Copy the `lua51.lib` and `lua51.dll` files from the `src` directory into your project `libraries` directory and build location
-
-3. Copy the entire `src` directory into your project `includes` directory, and rename it to `luajit-2.0`
-
-4. Add `lua51.lib` to your project's linked library settings
