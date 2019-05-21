@@ -1,37 +1,117 @@
-## Welcome to GitHub Pages
+Setting Up the Project
+GLM
+When including glm in a file, ensure that you #define GLM_ENABLE_EXPERIMENTAL before the GLM includes. The basic 3D maths GLM include section would look like :
 
-You can use the [editor on GitHub](https://github.com/Sadanand14/FALCON_ENGINE/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+#define GLM_ENABLE_EXPERIMENTAL
+#include "../glm/glm.hpp"
+#include "../glm/gtx/quaternion.hpp"
+GLEW
+The OpenGL Extension Wrangler Library is useful for determining the level of OpenGL functionality that the target platform supports. The following guide will help enable it in your environment:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Download GLEW at : https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip/download
 
-### Markdown
+After extracting all files, move the GL folder located in glew-2.1.0\include to your project's include directory
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Copy the library files in glew-2.1.0\lib\Release\x64 to your project's libraries directory
 
-```markdown
-Syntax highlighted code block
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
 
-# Header 1
-## Header 2
-### Header 3
+(Visual Studio) Go to C/C++ -> General. Add $(ProjectDir)include to Additional Include Directories if it is not already there
 
-- Bulleted
-- List
+(Visual Studio) Go to Linker -> General. Add $(ProjectDir)libraries to Additional Library Directories if it is not already there
 
-1. Numbered
-2. List
+(Visual Studio) Go to Linker -> Input. Add glew32s.lib to Additional Dependencies
 
-**Bold** and _Italic_ and `Code` text
+(Visual Studio) Go to C/C++ -> Preprocessor. Add GLEW_STATIC to Preprocessor Definitions
 
-[Link](url) and ![Image](src)
-```
+GLFW
+The Graphics Library Framework is useful for assisting in simple window creation and input handling. The following guide will help enable it in your environment:
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Download GLEW at : https://www.glfw.org/download.html
 
-### Jekyll Themes
+After extracting all files, move the GLFW folder to your project's include directory
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Sadanand14/FALCON_ENGINE/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Copy the library files in lib-vc2015 to your project's libraries directory
 
-### Support or Contact
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+(Visual Studio) Go to C/C++ -> General. Add $(ProjectDir)include to Additional Include Directories if it is not already there
+
+(Visual Studio) Go to Linker -> General. Add $(ProjectDir)libraries to Additional Library Directories if it is not already there
+
+(Visual Studio) Go to Linker -> Input. Add glfw3.lib to Additional Dependencies
+
+Boost
+Note : this guide is primarily targeted at setting up a Windows development environment. You can probably just use your package manager on Linux.
+
+Download boost at : https://www.boost.org/users/history/version_1_69_0.html
+
+Extract into the Engine project directory
+
+Run bootstrap.bat or bootstrap.sh depending on your development environment
+
+Run the newly generated b2 executable (this will take a while)
+
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
+
+(Visual Studio) Add $(ProjectDir)Engine\boost_1_69_0 to Include Directories
+
+(Visual Studio) Add $(ProjectDir)Engine\boost_1_69_0\stage\lib to Library DirectoriesSetting Up the Project
+GLM
+When including glm in a file, ensure that you #define GLM_ENABLE_EXPERIMENTAL before the GLM includes. The basic 3D maths GLM include section would look like :
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include "../glm/glm.hpp"
+#include "../glm/gtx/quaternion.hpp"
+GLEW
+The OpenGL Extension Wrangler Library is useful for determining the level of OpenGL functionality that the target platform supports. The following guide will help enable it in your environment:
+
+Download GLEW at : https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip/download
+
+After extracting all files, move the GL folder located in glew-2.1.0\include to your project's include directory
+
+Copy the library files in glew-2.1.0\lib\Release\x64 to your project's libraries directory
+
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
+
+(Visual Studio) Go to C/C++ -> General. Add $(ProjectDir)include to Additional Include Directories if it is not already there
+
+(Visual Studio) Go to Linker -> General. Add $(ProjectDir)libraries to Additional Library Directories if it is not already there
+
+(Visual Studio) Go to Linker -> Input. Add glew32s.lib to Additional Dependencies
+
+(Visual Studio) Go to C/C++ -> Preprocessor. Add GLEW_STATIC to Preprocessor Definitions
+
+GLFW
+The Graphics Library Framework is useful for assisting in simple window creation and input handling. The following guide will help enable it in your environment:
+
+Download GLEW at : https://www.glfw.org/download.html
+
+After extracting all files, move the GLFW folder to your project's include directory
+
+Copy the library files in lib-vc2015 to your project's libraries directory
+
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
+
+(Visual Studio) Go to C/C++ -> General. Add $(ProjectDir)include to Additional Include Directories if it is not already there
+
+(Visual Studio) Go to Linker -> General. Add $(ProjectDir)libraries to Additional Library Directories if it is not already there
+
+(Visual Studio) Go to Linker -> Input. Add glfw3.lib to Additional Dependencies
+
+Boost
+Note : this guide is primarily targeted at setting up a Windows development environment. You can probably just use your package manager on Linux.
+
+Download boost at : https://www.boost.org/users/history/version_1_69_0.html
+
+Extract into the Engine project directory
+
+Run bootstrap.bat or bootstrap.sh depending on your development environment
+
+Run the newly generated b2 executable (this will take a while)
+
+(Visual Studio) Go to your project properties, and set Configuration and Platform options to All
+
+(Visual Studio) Add $(ProjectDir)Engine\boost_1_69_0 to Include Directories
+
+(Visual Studio) Add $(ProjectDir)Engine\boost_1_69_0\stage\lib to Library Directories
