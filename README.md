@@ -21,7 +21,7 @@ Copy the library files in glew-2.1.0\lib\Release\x64 to your project's libraries
 GLFW
 The Graphics Library Framework is useful for assisting in simple window creation and input handling. The following guide will help enable it in your environment:
 
-Download GLEW at : https://www.glfw.org/download.html
+Download GLFW at : https://www.glfw.org/download.html
 
 After extracting all files, move the GLFW folder to your project's include directory
 
