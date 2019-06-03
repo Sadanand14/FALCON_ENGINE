@@ -8,30 +8,18 @@
 
 
 namespace Falcon {
-
-	/*
-	To fix the warning C4251 which is due to spdlog classes are not being dll exported.
-	To fix this easiest hack is just create a struct of those objects and use that struct as member is class which is part of  dll.
-
-	https://web.archive.org/web/20170811142318/http://www.microsoft-questions.com/microsoft/VC-Language/30952961/a-solution-to-warning-c4251--class-needs-to-have-dllinterface.aspx
-	*/
-	struct LoggerObjects
-	{
-		std::shared_ptr<spdlog::logger> m_EngineLogger;
-		std::shared_ptr<spdlog::logger> m_GameLogger;
-	};
-
-	class FALCON_API Log
+	class  Log
 	{
 
 	public:
-		static void Init();
-
-		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_loggers.m_EngineLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetGameLogger()   { return m_loggers.m_GameLogger; }
+		FALCON_API static void Init();
+		
+		FALCON_API inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_EngineLogger; }
+		FALCON_API inline static std::shared_ptr<spdlog::logger>& GetGameLogger()   { return m_GameLogger; }
 
 	private:
-		static LoggerObjects m_loggers;
+		static std::shared_ptr<spdlog::logger> m_EngineLogger;
+		static std::shared_ptr<spdlog::logger> m_GameLogger;
 	};
 }
 
