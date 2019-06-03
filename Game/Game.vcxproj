@@ -56,8 +56,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>FC_PLATFORM_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)FalconEngine\src</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FC_PLATFORM_WINDOWS;BUILD_DEBUG_MODE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)FalconEngine\src;$(SolutionDir)FalconEngine\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy /Y $(SolutionDir)bin\$(Configuration)-$(Platform)\FalconEngine\*.dll $(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</Command>
@@ -72,7 +72,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>FC_PLATFORM_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)FalconEngine\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)FalconEngine\src;$(SolutionDir)FalconEngine\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

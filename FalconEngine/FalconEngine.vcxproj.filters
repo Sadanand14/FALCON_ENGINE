@@ -24,9 +24,15 @@
     <ClInclude Include="src\Falcon\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Falcon\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Falcon\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Falcon\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "Application.h"
-#include <iostream>
+#include "Log.h"
 
 namespace Falcon {
 	Application::Application()
@@ -13,7 +13,7 @@ namespace Falcon {
 
 	void Application::Run()
 	{
-		std::cout << "Starting the engine" << std::endl;
+		FL_ENGINE_INFO("Starting the engine");
 		while (true);
 	}
 }

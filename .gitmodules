@@ -1,0 +1,3 @@
+[submodule "FalconEngine/vendor/spdlog"]
+	path = FalconEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog
