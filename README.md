@@ -96,7 +96,7 @@ The OpenGL Extension Wrangler Library is useful for determining the level of Ope
 
 The Graphics Library Framework is useful for assisting in simple window creation and input handling. The following guide will help enable it in your environment:
 
-1. Download GLEW at : https://www.glfw.org/download.html
+1. Download GLFW at : https://www.glfw.org/download.html
 
 2. After extracting all files, move the `GLFW` folder to your project's `include` directory
 
