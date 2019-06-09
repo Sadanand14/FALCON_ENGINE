@@ -114,17 +114,13 @@ The Graphics Library Framework is useful for assisting in simple window creation
 
 _Note : this guide is primarily targeted at setting up a Windows development environment. You can probably just use your package manager on Linux._
 
-1. Download boost at : https://www.boost.org/users/history/version_1_69_0.html
+1. Download the zip file for boost from the team drive.
 
-2. Extract into the `Engine` project directory
+2. Extract into the "FalconEngine" project directory.
 
-3. Run `bootstrap.bat` or `bootstrap.sh` depending on your development environment
+3. (Visual Studio) Go to your project properties, and set Configuration and Platform options to All.
 
-4. Run the newly generated `b2` executable (this will take a while)
+4. (Visual Studio) Add `$(ProjectDir)boost_1_69_0` to `Include Directories`.
 
-5. (Visual Studio) Go to your project properties, and set Configuration and Platform options to All
-
-6. (Visual Studio) Add `$(ProjectDir)Engine\boost_1_69_0` to `Include Directories`
-
-7. (Visual Studio) Add `$(ProjectDir)Engine\boost_1_69_0\stage\lib` to `Library Directories`
+5. (Visual Studio) Add `$(ProjectDir)boost_1_69_0\stage\lib` to `Library Directories`.
 
