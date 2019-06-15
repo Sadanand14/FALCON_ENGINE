@@ -1,8 +1,8 @@
 // header.h : include file for standard system include files,
 // or project specific include files
 
-#ifndef framework_h
-#define framework_h
+#ifndef FRAMEWORK_H
+#define FRAMEWORK_H
 
 
 #include "targetver.h"
@@ -18,7 +18,7 @@
 
 // Project Specific Include Files
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
 
 
-#endif
+#endif //!FRAMEWORK_H

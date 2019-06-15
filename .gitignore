@@ -3,8 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Boost library files
-GraphicsEngine/GraphicsEngine/boost*
+#Ignoring vendor libs and includes
+GraphicsEngine/GraphicsEngine/vendor/*
+
+#Ignoring build files
+GraphicsEngine/build/*
 
 # User-specific files
 *.rsuser

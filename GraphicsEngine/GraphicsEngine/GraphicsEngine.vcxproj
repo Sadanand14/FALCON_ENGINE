@@ -80,6 +80,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
     <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x64\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
+    <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
@@ -107,13 +109,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Directory\x64\include\;$(ProjectDir)Directory\x64\include\GL\;$(ProjectDir)Directory\x64\include\glad\;$(ProjectDir)Directory\x64\include\GLFW\;$(ProjectDir)Directory\x64\include\KHR\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\vendor\include;$(SolutionDir)$(ProjectName)\vendor\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)Directory\x64\libraries\;$(ProjectDir)Directory\x64\libraries\GLEW\;$(ProjectDir)Directory\x64\libraries\GLFW\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\$(Platform)\lib\glfw\;$(ProjectDir)vendor\$(Platform)\lib\boost;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
