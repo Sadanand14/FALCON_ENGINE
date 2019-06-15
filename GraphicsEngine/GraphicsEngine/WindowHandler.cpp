@@ -1,9 +1,6 @@
 #include "WidnowHandler.h"
 
-static void glfwError(int id, const char* description)
-{
-	std::cout << description << std::endl;
-}
+#include "OpenGLErrorHandler.h"
 
 
 WindowClass::WindowClass(const char* title, int width, int height )
@@ -11,7 +8,7 @@ WindowClass::WindowClass(const char* title, int width, int height )
 	m_title = title;
 	m_height = height;
 	m_width = width;
-	glfwSetErrorCallback(&glfwError);
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 }
 
@@ -38,10 +35,10 @@ void WindowClass::Init()
 #endif
 
 	//Create Window
-	gameWindow = glfwCreateWindow(m_width, m_height, m_title, glfwGetPrimaryMonitor(), NULL);
+	gameWindow = glfwCreateWindow(m_width, 200, m_title, glfwGetPrimaryMonitor(), NULL);
 	if (gameWindow == NULL)
 	{
-		std::cout << "Failed to create GLFW window." << std::endl;
+		//Error logging will be handler by error call back method.
 		glfwTerminate();
 		return;
 	}

@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\vendor\include;$(SolutionDir)$(ProjectName)\vendor\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Directory\x64\include\;$(ProjectDir)Directory\x64\include\GL\;$(ProjectDir)Directory\x64\include\glad\;$(ProjectDir)Directory\x64\include\GLFW\;$(ProjectDir)Directory\x64\include\KHR\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FL_PLATFORM_WINDWOS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,12 +162,15 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="OpenGLErrorHandler.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="TimeBenchmark.h" />
