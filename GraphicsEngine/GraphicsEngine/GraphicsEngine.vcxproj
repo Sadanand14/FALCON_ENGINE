@@ -162,18 +162,31 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="OpenGLErrorHandler.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="TimeBenchmark.h" />
+    <ClInclude Include="VertexArray.h" />
+    <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexLayout.h" />
     <ClInclude Include="WidnowHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

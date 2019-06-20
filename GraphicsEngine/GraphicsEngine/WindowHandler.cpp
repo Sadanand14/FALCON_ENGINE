@@ -3,17 +3,15 @@
 #include "OpenGLErrorHandler.h"
 
 
-WindowClass::WindowClass(const char* title, int width, int height )
+WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title),renderer(new Renderer())
 {
-	m_title = title;
-	m_height = height;
-	m_width = width;
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 }
 
 WindowClass::~WindowClass() 
 {
+	delete renderer;
 	if (gameWindow) glfwDestroyWindow(gameWindow);
 	glfwTerminate();
 }
@@ -35,7 +33,7 @@ void WindowClass::Init()
 #endif
 
 	//Create Window
-	gameWindow = glfwCreateWindow(m_width, 200, m_title, glfwGetPrimaryMonitor(), NULL);
+	gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
 	if (gameWindow == NULL)
 	{
 		//Error logging will be handler by error call back method.
@@ -44,7 +42,8 @@ void WindowClass::Init()
 	}
 	glfwMakeContextCurrent(gameWindow);
 	glfwSetFramebufferSizeCallback(gameWindow, framebuffer_size_callback);
-	//glViewport(0, 0, bufferWidth, bufferHeight);
+
+
 	//Load OpenGL Function Pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -52,19 +51,9 @@ void WindowClass::Init()
 	}
 
 	glfwMakeContextCurrent(gameWindow);
+	////////////////////////////////////////////////
 
-
-	/*glewExperimental = GL_TRUE;
-
-	if (glewInit() != GLEW_OK)
-	{
-		glewInitialized = true;
-		glfwDestroyWindow(gameWindow);
-		glfwTerminate();
-		return;
-	}*/
-
-	return;
+	renderer->SetDrawStates();
 }
 
 void WindowClass::Update() 
@@ -75,8 +64,7 @@ void WindowClass::Update()
 		gameInput(gameWindow);
 
 		//Render
-		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		renderer->Draw();
 
 		//Swap Buffers
 		glfwSwapBuffers(gameWindow);

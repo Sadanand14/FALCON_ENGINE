@@ -2,14 +2,19 @@
 #define WINDOW_HANDLER_H
 
 #include "framework.h"
+#include "Renderer.h"
+
+
+#include <glfw/glfw3.h>
 #include <iostream>
 
 class WindowClass
 {
 	int m_width, m_height, bufferWidth, bufferHeight;
 	const char* m_title;
-	GLFWwindow* gameWindow;
 
+	GLFWwindow* gameWindow;
+	Renderer* renderer;
 public:
 
 	WindowClass(const char*, int, int);
