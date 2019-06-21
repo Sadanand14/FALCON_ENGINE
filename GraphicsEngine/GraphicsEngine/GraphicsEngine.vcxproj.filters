@@ -16,96 +16,70 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{c378ae30-026b-48e9-bc36-c8688777ccc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{b131af51-8356-4f75-bbce-64ae57c0ca23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{edeb0fff-72f1-4b84-9752-9ac01d2b6707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{19ff3ea4-963a-4033-8c8e-decd92db6da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{2d7b3ee5-d080-4056-ab0d-f65c7fec1f26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\framework.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\Game.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\Log.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="TimeBenchmark.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\targetver.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\ThreadPool.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\TimeBenchmark.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="OpenGLErrorHandler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\Timer.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="System\Types.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="VertexLayout.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\IndexBuffer.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="VertexArray.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\OpenGLErrorHandler.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Renderer.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Shader.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\ShaderProgram.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderProgram.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\VertexArray.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\VertexBuffer.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\VertexLayout.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="WindowHandler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\WindowHandler.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -115,5 +89,43 @@
     <None Include="Shader\VertexShader.shader">
       <Filter>Shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="System\glad.c">
+      <Filter>Header Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Game.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Log.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\ThreadPool.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Timer.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\IndexBuffer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Shader.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ShaderProgram.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexArray.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBuffer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\WindowHandler.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

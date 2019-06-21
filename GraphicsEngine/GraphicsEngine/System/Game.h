@@ -1,7 +1,7 @@
 #ifndef game_h
 #define game_h
 
-#include "WindowHandler.h"
+#include "../Rendering/WindowHandler.h"
 
 
 

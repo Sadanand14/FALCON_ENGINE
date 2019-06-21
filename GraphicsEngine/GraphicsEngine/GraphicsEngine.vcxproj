@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
-    <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
+    <IncludePath>$(ProjectDir)vendor\x64\include;$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\x64\lib;$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
-    <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
+    <IncludePath>$(ProjectDir)vendor\x64\include;$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\x64\lib;$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
@@ -160,41 +160,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="IndexBuffer.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
-    <ClCompile Include="ThreadPool.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="VertexArray.cpp" />
-    <ClCompile Include="VertexBuffer.cpp" />
-    <ClCompile Include="WindowHandler.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="IndexBuffer.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="OpenGLErrorHandler.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShaderProgram.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="TimeBenchmark.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Types.h" />
-    <ClInclude Include="VertexArray.h" />
-    <ClInclude Include="VertexBuffer.h" />
-    <ClInclude Include="VertexLayout.h" />
-    <ClInclude Include="WindowHandler.h" />
+    <ClInclude Include="Rendering\IndexBuffer.h" />
+    <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\ShaderProgram.h" />
+    <ClInclude Include="Rendering\VertexArray.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexLayout.h" />
+    <ClInclude Include="Rendering\WindowHandler.h" />
+    <ClInclude Include="System\framework.h" />
+    <ClInclude Include="System\Game.h" />
+    <ClInclude Include="System\Log.h" />
+    <ClInclude Include="System\targetver.h" />
+    <ClInclude Include="System\ThreadPool.h" />
+    <ClInclude Include="System\TimeBenchmark.h" />
+    <ClInclude Include="System\Timer.h" />
+    <ClInclude Include="System\Types.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.shader" />
     <None Include="Shader\VertexShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Rendering\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\ShaderProgram.cpp" />
+    <ClCompile Include="Rendering\VertexArray.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\WindowHandler.cpp" />
+    <ClCompile Include="System\Game.cpp" />
+    <ClCompile Include="System\glad.c" />
+    <ClCompile Include="System\Log.cpp" />
+    <ClCompile Include="System\ThreadPool.cpp" />
+    <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
