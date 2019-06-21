@@ -10,11 +10,13 @@ Renderer::~Renderer()
 
 }
 
+//renderer initialization
 void Renderer::Init()
 {
 
 }
 
+//function where we set all the states for the draw function
 void Renderer::SetDrawStates()
 {
 	float vertices[] =
@@ -48,7 +50,8 @@ void Renderer::SetDrawStates()
 	sp->Use();
 }
 
-void Renderer::Draw()
+//main draw function
+void Renderer::Draw(float dt)
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);

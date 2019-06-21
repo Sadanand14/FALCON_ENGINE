@@ -19,7 +19,7 @@ public:
 
 	void Init();
 	void SetDrawStates();
-	void Draw();
+	void Draw(float);
 };
 
 #endif // !RENDERER_H

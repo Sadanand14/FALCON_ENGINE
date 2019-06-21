@@ -6,12 +6,15 @@
 #include <vector>
 #include <cassert>
 
+
+//a structure that stores the properties of individual attributes of a vertexbuffer
 struct VertexElements
 {
 	unsigned int type;
 	unsigned int count;
 	bool normalized;
 
+	//helper method to deal with different data types
 	static unsigned int GetSizeofType(unsigned int type)
 	{
 		switch (type)
@@ -25,11 +28,12 @@ struct VertexElements
 	}
 };
 
+//class that stores all the attributes attributed to a single vertex buffer
 class VertexLayout
 {
 private:
-	std::vector<VertexElements> m_elements;
-	unsigned int m_stride;
+	std::vector<VertexElements> m_elements;//stores a list of attributes
+	unsigned int m_stride;//stores the stride of all those attributes
 
 public:
 
@@ -39,7 +43,7 @@ public:
 	inline const std::vector<VertexElements>& GetElements() const { return m_elements; }
 	inline unsigned int GetStride() const { return m_stride; }
 
-
+	// templated function to add attributes to
 	template <typename T>
 	void Push(unsigned int count)
 	{

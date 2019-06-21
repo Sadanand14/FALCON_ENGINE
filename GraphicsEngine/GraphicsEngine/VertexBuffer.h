@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 
+//class to store and initialize a vertex buffer
 class VertexBuffer
 {
 private:

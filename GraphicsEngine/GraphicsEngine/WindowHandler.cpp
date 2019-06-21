@@ -2,8 +2,8 @@
 
 #include "OpenGLErrorHandler.h"
 
-
-WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title),renderer(new Renderer())
+//renderer gets initialized here
+WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title),renderer(new Renderer()),timer(new Timer())
 {
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
@@ -11,6 +11,7 @@ WindowClass::WindowClass(const char* title, int width, int height ):m_width(widt
 
 WindowClass::~WindowClass() 
 {
+	delete timer;
 	delete renderer;
 	if (gameWindow) glfwDestroyWindow(gameWindow);
 	glfwTerminate();
@@ -53,6 +54,7 @@ void WindowClass::Init()
 	glfwMakeContextCurrent(gameWindow);
 	////////////////////////////////////////////////
 
+	//sets the required states to draw the desired figure
 	renderer->SetDrawStates();
 }
 
@@ -60,11 +62,12 @@ void WindowClass::Update()
 {
 	if (!glfwWindowShouldClose(gameWindow))
 	{
+		timer->update();
 		//Input
 		gameInput(gameWindow);
 
 		//Render
-		renderer->Draw();
+		renderer->Draw(timer->GetDeltaTime());
 
 		//Swap Buffers
 		glfwSwapBuffers(gameWindow);

@@ -3,7 +3,7 @@
 
 #include "framework.h"
 #include "Renderer.h"
-
+#include "Timer.h"
 
 #include <glfw/glfw3.h>
 #include <iostream>
@@ -13,6 +13,7 @@ class WindowClass
 	int m_width, m_height, bufferWidth, bufferHeight;
 	const char* m_title;
 
+	Timer* timer;
 	GLFWwindow* gameWindow;
 	Renderer* renderer;
 public:
