@@ -70,21 +70,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
+    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
     <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
+    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x86\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
     <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x86\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
+    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
     <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x64\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0</IncludePath>
+    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
     <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x64\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -190,7 +190,7 @@
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexLayout.h" />
-    <ClInclude Include="WidnowHandler.h" />
+    <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.shader" />

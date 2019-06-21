@@ -15,4 +15,9 @@
 #include <memory.h>
 #include <tchar.h>
 
+//OpenGL specific files
+#include "glad/glad.h"
+#include "glfw/glfw3.h"
+
+
 #endif //!FRAMEWORK_H

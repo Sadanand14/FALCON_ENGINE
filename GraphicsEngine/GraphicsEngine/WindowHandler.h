@@ -4,8 +4,6 @@
 #include "framework.h"
 #include "Renderer.h"
 #include "Timer.h"
-
-#include <glfw/glfw3.h>
 #include <iostream>
 
 class WindowClass

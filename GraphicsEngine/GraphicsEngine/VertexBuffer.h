@@ -1,7 +1,7 @@
 #ifndef VERTEX_BUFFER_H
 #define VERTEX_BUFFER_H
 
-#include <glad/glad.h>
+#include "framework.h"
 
 //class to store and initialize a vertex buffer
 class VertexBuffer

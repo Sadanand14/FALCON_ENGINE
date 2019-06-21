@@ -1,7 +1,7 @@
 #ifndef SHADER_PROGRAM_H
 #define SHADER_PROGRAM_H
 
-#include <glad/glad.h>
+#include "framework.h"
 
 //class that binds compiled shader id's to a program to be used while drawing.
 class ShaderProgram

@@ -1,7 +1,7 @@
 #ifndef VERTEX_LAYOUT_H
 #define VERTEX_LAYOUT_H
 
-#include <glad/glad.h>
+#include "framework.h"
 
 #include <vector>
 #include <cassert>

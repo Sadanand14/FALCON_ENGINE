@@ -6,7 +6,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
-#include <glad/glad.h>
+#include "framework.h"
 
 
 class Renderer
