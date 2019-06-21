@@ -4,8 +4,6 @@
 #include <memory>
 #include "spdlog/spdlog.h"
 
-
-
 class  Log
 {
 

@@ -168,6 +168,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
@@ -184,10 +185,16 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="TimeBenchmark.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexLayout.h" />
     <ClInclude Include="WidnowHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\FragmentShader.shader" />
+    <None Include="Shader\VertexShader.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,13 +12,20 @@
 class Renderer
 {
 private:
+	VertexArray* va;
+	VertexBuffer* vb;
+	IndexBuffer* ib;
+	Shader* vs, *fs;
+	ShaderProgram* sp;
 
 public:
 	Renderer();
 	~Renderer();
 
 	void Init();
+	void CreateDrawStates();
 	void SetDrawStates();
+	void Update(float);
 	void Draw(float);
 };
 

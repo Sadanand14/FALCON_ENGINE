@@ -9,16 +9,16 @@ class VertexArray
 {
 private:
 	unsigned int m_rendererID;
-
+	VertexBuffer* m_vertexbuffer;
 public:
-
+	
 	VertexArray();
 	~VertexArray();
 
 	void Bind() const;
 	void Unbind() const;
 
-	void AddBuffer(const VertexBuffer&, const VertexLayout&);
+	void AddBuffer( VertexBuffer*, const VertexLayout&);
 };
 
 #endif // !1

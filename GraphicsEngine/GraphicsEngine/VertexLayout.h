@@ -21,7 +21,7 @@ struct VertexElements
 		{
 		case GL_FLOAT:			 return 4;
 		case GL_UNSIGNED_INT:	 return 4;
-		case GL_UNSIGNED_BYTE:			 return 1;
+		case GL_UNSIGNED_BYTE:	 return 1;
 		}
 		assert(false);
 		return 0;
@@ -33,7 +33,7 @@ class VertexLayout
 {
 private:
 	std::vector<VertexElements> m_elements;//stores a list of attributes
-	unsigned int m_stride;//stores the stride of all those attributes
+	unsigned int m_stride;					//stores the stride of all those attributes
 
 public:
 
@@ -53,22 +53,22 @@ public:
 	template<>
 	void Push<float>(unsigned int count)
 	{
-		m_elements.push_back({ GL_FLOAT, count, false }); \
-			m_stride += VertexElements::GetSizeofType(GL_FLOAT) * count;
+		m_elements.push_back({ GL_FLOAT, count, false }); // adds the attributes with its count to the function
+		m_stride += VertexElements::GetSizeofType(GL_FLOAT) * count;// sets the stride to add the above addition
 	}
 
 	template<>
 	void Push<unsigned int>(unsigned int count)
 	{
-		m_elements.push_back({ GL_UNSIGNED_INT, count, false });
-		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_INT) * count;
+		m_elements.push_back({ GL_UNSIGNED_INT, count, false }); // adds the attributes with its count to the function
+		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_INT) * count;// sets the stride to add the above addition
 	}
 
 	template<>
 	void Push<unsigned char>(unsigned int count)
 	{
-		m_elements.push_back({ GL_UNSIGNED_BYTE, count, false });
-		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_BYTE) * count;
+		m_elements.push_back({ GL_UNSIGNED_BYTE, count, false });// adds the attributes with its count to the function
+		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_BYTE) * count;// sets the stride to add the above addition
 	}
 
 };

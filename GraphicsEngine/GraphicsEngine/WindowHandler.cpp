@@ -3,8 +3,10 @@
 #include "OpenGLErrorHandler.h"
 
 //renderer gets initialized here
-WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title),renderer(new Renderer()),timer(new Timer())
+WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title)
 {
+	renderer = new Renderer(); // creates a new renderer class on the heap
+	timer = new Timer(); // creates a new timer class in the heap
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 }
@@ -20,13 +22,11 @@ WindowClass::~WindowClass()
 
 void WindowClass::Init() 
 {
-
 	//GLFW Configuration
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 
 	//For MacOS X
 #ifdef __APPLE__
@@ -52,10 +52,13 @@ void WindowClass::Init()
 	}
 
 	glfwMakeContextCurrent(gameWindow);
-	////////////////////////////////////////////////
+	
+	
+	//Creates the needed states for rendering
+	renderer->CreateDrawStates();
 
 	//sets the required states to draw the desired figure
-	renderer->SetDrawStates();
+	renderer->SetDrawStates(); 
 }
 
 void WindowClass::Update() 
@@ -63,11 +66,14 @@ void WindowClass::Update()
 	if (!glfwWindowShouldClose(gameWindow))
 	{
 		timer->update();
+		float dt = timer->GetDeltaTime();
+
 		//Input
 		gameInput(gameWindow);
 
 		//Render
-		renderer->Draw(timer->GetDeltaTime());
+		renderer->Update(dt);
+		renderer->Draw(dt);
 
 		//Swap Buffers
 		glfwSwapBuffers(gameWindow);

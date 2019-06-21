@@ -16,8 +16,8 @@ class WindowClass
 	Timer* timer;
 	GLFWwindow* gameWindow;
 	Renderer* renderer;
-public:
 
+public:
 	WindowClass(const char*, int, int);
 	~WindowClass();
 

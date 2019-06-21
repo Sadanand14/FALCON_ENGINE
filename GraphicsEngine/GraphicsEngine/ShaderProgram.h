@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 
+//class that binds compiled shader id's to a program to be used while drawing.
 class ShaderProgram
 {
 private:
