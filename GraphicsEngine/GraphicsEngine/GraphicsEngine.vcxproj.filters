@@ -81,6 +81,9 @@
     <ClInclude Include="Rendering\WindowHandler.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.shader">
@@ -125,6 +128,9 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\WindowHandler.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image_implementation.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>

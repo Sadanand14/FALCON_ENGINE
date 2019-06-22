@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "framework.h"
+#include "stb_image.h"
 
 
 class Renderer

@@ -169,6 +169,7 @@
     <ClInclude Include="Rendering\VertexBuffer.h" />
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\Log.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="Rendering\VertexArray.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
+    <ClCompile Include="stb_image_implementation.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\Log.cpp" />
