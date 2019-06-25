@@ -43,6 +43,7 @@ void WindowClass::Init()
 	}
 	glfwMakeContextCurrent(gameWindow);
 	glfwSetFramebufferSizeCallback(gameWindow, framebuffer_size_callback);
+	glfwSetWindowUserPointer(gameWindow, this);
 
 
 	//Load OpenGL Function Pointers
@@ -59,37 +60,26 @@ void WindowClass::Init()
 
 	//sets the required states to draw the desired figure
 	renderer->SetDrawStates(); 
+
 }
 
 void WindowClass::Update() 
 {
-	if (!glfwWindowShouldClose(gameWindow))
-	{
-		timer->update();
-		float dt = timer->GetDeltaTime();
+	timer->update();
+	float dt = timer->GetDeltaTime();
 
-		//Input
-		gameInput(gameWindow);
+	//Render
+	renderer->Update(dt);
+	renderer->Draw(dt);
 
-		//Render
-		renderer->Update(dt);
-		renderer->Draw(dt);
+	//Swap Buffers
+	glfwSwapBuffers(gameWindow);
 
-		//Swap Buffers
-		glfwSwapBuffers(gameWindow);
-
-		//Poll I/O events
-		glfwPollEvents();
-	}
+	//Poll I/O events
+	glfwPollEvents();
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
-}
-
-void gameInput(GLFWwindow* gameWindow)
-{
-	if (glfwGetKey(gameWindow, GLFW_KEY_ESCAPE) != GLFW_RELEASE)
-		glfwSetWindowShouldClose(gameWindow, true);
 }

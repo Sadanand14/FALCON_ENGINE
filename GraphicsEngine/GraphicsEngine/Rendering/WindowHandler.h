@@ -21,10 +21,12 @@ public:
 
 	void Init();
 	void Update();
+
+	inline GLFWwindow* GetWindow() { return gameWindow; }
+	inline bool WindowCloseStatus(){ return glfwWindowShouldClose(gameWindow); }
 };
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
-void gameInput(GLFWwindow* gameWindow);
 
 #endif // !WINDOW_HANDLER_H
 
