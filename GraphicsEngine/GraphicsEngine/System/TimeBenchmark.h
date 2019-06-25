@@ -3,6 +3,7 @@
 #include <chrono>
 #include <boost/chrono/chrono.hpp>
 #include <iostream>
+#include "Log.h"
 
 struct timer
 {
@@ -22,7 +23,8 @@ struct timer
 		duration = end - start;
 
 		float ms = duration.count()*1000.0f;
-		std::cout << jobTitle << " took " << ms << "\n";
+		//std::cout << jobTitle << " took " << ms << "\n";
+		FL_ENGINE_INFO("JOBSYSTEM INFO:{0} took {1}."jobTitle, ms);
 	}
 };
 
@@ -45,7 +47,7 @@ struct boostTimer
 		duration = end - start;
 
 		float ms = duration.count()* 1000.0f;
-		std::cout << jobTitle << " took " << ms << "\n";
+		FL_ENGINE_INFO("JOBSYSTEM INFO:{0} took {1}."jobTitle, ms);
 	}
 };
 

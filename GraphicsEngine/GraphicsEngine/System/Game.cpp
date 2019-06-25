@@ -1,5 +1,5 @@
 #include "game.h"
-
+#include "Log.h"
 #include <iostream>
 
 int main()

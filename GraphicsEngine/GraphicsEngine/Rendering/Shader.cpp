@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <cassert>
-
+#include "Log.h";
 
 Shader::Shader(const std::string& path)
 {
@@ -24,7 +24,7 @@ SimpleShader Shader::LoadShader(const std::string& path)
 
 	if (getline(input, line))// reads first line
 	{
-		std::cout << "FILE FOUND" << std::endl;
+		FL_ENGINE_INFO("INFO: File found");
 	}
 	std::stringstream ss;
 	unsigned int shaderType = NULL;
@@ -49,7 +49,10 @@ SimpleShader Shader::LoadShader(const std::string& path)
 			ss << line << "\n";				// reads the rest of the lines in the shader
 		}
 
-		std::cout << (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+		//if (shaderType == GL_VERTEX_SHADER)
+			FL_ENGINE_INFO("INFO: Loading {0} shader.", (shaderType == GL_VERTEX_SHADER)?"vertex":"fragment");
+		//else
+			//FL_ENGINE_INFO("INFO: Loading Vertex shader.");
 
 	}
 	else
@@ -82,8 +85,14 @@ void Shader::CompileShader(unsigned int type, std::string source)
 		char* message = new char[length]; // generates a char array of that length
 		glGetShaderInfoLog(m_compiledID, length, &length, message); // paasses in the error log into the created char array
 
-		std::cout << "Could'nt Compile" << (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") << "Shader! \n";
-		std::cout << message << std::endl;
+
+		
+		FL_ENGINE_ERROR("ERROR: Failed to compile {0} , {1}", (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment"), message);
+		
+		/*std::
+		
+		<< "Could'nt Compile" << (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") << "Shader! \n";
+		std::cout << message << std::endl;*/
 
 		assert(false);				// stops execution if the shader code didnt compile.
 	}

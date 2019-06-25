@@ -1,6 +1,7 @@
 #include "InputReceiver.h"
 
 #include <iostream>
+#include "Log.h"
 
 boost::array<bool, MAX_KEYS> InputReceiver::m_keyStates = {false};
 boost::array<bool, MAX_MOUSE_KEYS> InputReceiver::m_mouseStates = { false };
@@ -28,7 +29,9 @@ void InputReceiver::key_callback(GLFWwindow* window, int key, int scancode, int 
 	m_keyStates[key] = (action != GLFW_RELEASE);
 
 	//FL_ENGINE_INFO(whatever is being printed in the next line)
-	std::cout << "A key int: " << GLFW_KEY_A << "\n key pressed state for A(" << key<<") is: "<< m_keyStates[key] <<std::endl; 
+	//std::cout << "A key int: " << GLFW_KEY_A << "\n key pressed state for A(" << key<<") is: "<< m_keyStates[key] <<std::endl; 
+
+	FL_ENGINE_INFO("INFO: {0}, Key pressed state for A({1}) is: {2}", GLFW_KEY_A,key, m_keyStates[key]);
 }
 
 void InputReceiver::mouse_callback(GLFWwindow* window, int button, int action, int mods) 

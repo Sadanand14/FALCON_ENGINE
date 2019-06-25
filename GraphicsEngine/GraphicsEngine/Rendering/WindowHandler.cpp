@@ -1,7 +1,7 @@
 #include "WindowHandler.h"
 
 #include "OpenGLErrorHandler.h"
-
+#include "Log.h"
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title)
 {
@@ -49,7 +49,7 @@ void WindowClass::Init()
 	//Load OpenGL Function Pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD." << std::endl;
+		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
 	glfwMakeContextCurrent(gameWindow);
