@@ -2,12 +2,12 @@
 #include <cassert>
 
 //creates and binds an index buffer 
-IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count) :m_count(count)
+IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count) :m_count(count),m_renderBufferId(0)
 {
 	assert(sizeof(unsigned int) == sizeof(GLuint));// makes sure that both GLuint and unsigned int have same size on the system
 
-	glGenBuffers(1, &renderBufferId);// generates a buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderBufferId);// binds that buffer to the context
+	glGenBuffers(1, &m_renderBufferId);// generates a buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderBufferId);// binds that buffer to the context
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	//passes in the data of the index array
 
@@ -16,12 +16,12 @@ IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count) :m_cou
 
 IndexBuffer::~IndexBuffer()
 {
-	glDeleteBuffers(1, &renderBufferId);// deletes the index buffer
+	glDeleteBuffers(1, &m_renderBufferId);// deletes the index buffer
 }
 
 void IndexBuffer::Bind() const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderBufferId);//binds the index buffer to the current context
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderBufferId);//binds the index buffer to the current context
 }
 
 void IndexBuffer::Unbind() const

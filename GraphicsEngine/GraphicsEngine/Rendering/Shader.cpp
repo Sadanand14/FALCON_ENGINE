@@ -1,14 +1,14 @@
 #include "Shader.h"
-#include <fstream>
+#include <boost/filesystem/fstream.hpp>
 #include <sstream>
 #include <iostream>
 #include <cassert>
-#include "Log.h";
+#include "Log.h"
 
-Shader::Shader(const std::string& path)
+Shader::Shader(const std::string& path) : m_compiledID(0)
 {
 	m_Shader = LoadShader(path); // calls a function that processes the file path provided and returns a structure
-	CompileShader(m_Shader.type, m_Shader.source); //passes the structure into the function to generate an ID.
+	CompileShader(m_Shader.type,  m_Shader.source); //passes the structure into the function to generate an ID.
 }
 
 Shader::~Shader()
@@ -24,9 +24,9 @@ SimpleShader Shader::LoadShader(const std::string& path)
 
 	if (getline(input, line))// reads first line
 	{
-		FL_ENGINE_INFO("INFO: File found");
+		 FL_ENGINE_INFO("INFO: File found");
 	}
-	std::stringstream ss;
+	std::string  finalstring;
 	unsigned int shaderType = NULL;
 
 
@@ -46,13 +46,14 @@ SimpleShader Shader::LoadShader(const std::string& path)
 		}
 		while (getline(input, line))
 		{
-			ss << line << "\n";				// reads the rest of the lines in the shader
+			//ss << line << "\n";
+			finalstring += (line + "\n");				// reads the rest of the lines in the shader
 		}
 
-		//if (shaderType == GL_VERTEX_SHADER)
+		if (shaderType == GL_VERTEX_SHADER)
 			FL_ENGINE_INFO("INFO: Loading {0} shader.", (shaderType == GL_VERTEX_SHADER)?"vertex":"fragment");
-		//else
-			//FL_ENGINE_INFO("INFO: Loading Vertex shader.");
+		else
+			FL_ENGINE_INFO("INFO: Loading Vertex shader.");
 
 	}
 	else
@@ -60,9 +61,9 @@ SimpleShader Shader::LoadShader(const std::string& path)
 		assert(false);					 //  stops execution if it isnt declared as a shader
 	}
 
-	//std::cout << ss.str() << std::endl;
+	//std::cout << finalstring<< std::endl;
 
-	return { shaderType, ss.str()};		//returns a structure containing the type and the source code for the shader
+	return { shaderType, finalstring};		//returns a structure containing the type and the source code for the shader
 }
 
 
@@ -96,4 +97,19 @@ void Shader::CompileShader(unsigned int type, std::string source)
 
 		assert(false);				// stops execution if the shader code didnt compile.
 	}
+}
+
+void Shader::SetUniform4f(const boostString& path, float vx, float vy, float vz, float vw)
+{
+	int location = GetUniformLocation(path);
+	glUniform4f(location, vx, vy, vz, vw);
+}
+
+int Shader::GetUniformLocation(const boostString& name)
+{
+	int location = glGetUniformLocation(m_compiledID, name.c_str());
+	if (location == -1)
+		std::cout << "Uniform( " << name << ") does not exist!" << std::endl;
+	
+	return location;
 }

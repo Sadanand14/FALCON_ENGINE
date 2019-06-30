@@ -13,11 +13,11 @@
 class Renderer
 {
 private:
-	VertexArray* va;
-	VertexBuffer* vb;
-	IndexBuffer* ib;
-	Shader* vs, *fs;
-	ShaderProgram* sp;
+	VertexArray* va = nullptr;
+	VertexBuffer* vb = nullptr;
+	IndexBuffer* ib = nullptr;
+	Shader* vs = nullptr, *fs = nullptr;
+	ShaderProgram* sp = nullptr;
 
 public:
 	Renderer();

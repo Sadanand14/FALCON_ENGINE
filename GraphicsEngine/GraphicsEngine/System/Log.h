@@ -2,8 +2,11 @@
 #define LOG_H
 
 #include <memory>
+#pragma warning( push )
+#pragma warning( disable : 26451)
 #include "spdlog/spdlog.h"
-
+#include "spdlog/sinks/stdout_color_sinks.h"
+#pragma warning( defaul: 26451 )
 class Log
 {
 
