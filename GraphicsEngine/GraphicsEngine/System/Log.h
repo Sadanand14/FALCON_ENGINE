@@ -1,12 +1,22 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <memory>
+/**
+	Disabling warnings thrown out by vendor code
+*/
 #pragma warning( push )
+#pragma warning( disable : 26495)
 #pragma warning( disable : 26451)
-#include "spdlog/spdlog.h"
+#pragma warning( disable : 6387)
+#pragma warning( disable : 26498)
+
+#include "spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-#pragma warning( defaul: 26451 )
+#pragma warning (pop)
+
+#include <memory>
+
+
 class Log
 {
 
