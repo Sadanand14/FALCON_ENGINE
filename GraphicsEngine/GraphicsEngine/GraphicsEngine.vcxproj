@@ -43,14 +43,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
-    <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x64\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
+    <IncludePath>$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Debug;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Debug;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)boost_1_69_0;$(ProjectDir)Directory\x64\include;$(IncludePath);$(ProjectDir)GraphicsEngine\boost_1_69_0;$(ProjectDir)System</IncludePath>
-    <LibraryPath>$(ProjectDir)boost_1_69_0\stage\lib;$(ProjectDir)Directory\x64\libraries;$(LibraryPath);&amp;(ProjectDir)GraphicsEngine\boost_1_69_0\stage\lib</LibraryPath>
+    <IncludePath>$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Release;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Release;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
@@ -60,14 +60,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\vendor\include\;$(SolutionDir)$(ProjectName)\vendor\include\spdlog\;$(SolutionDir)$(ProjectName)\vendor\include\KHR\;$(SolutionDir)$(ProjectName)\vendor\include\GLFW\;$(SolutionDir)$(ProjectName)\vendor\include\glad\;$(SolutionDir)$(ProjectName)\vendor\include\boost\;$(SolutionDir)$(ProjectName)\vendor\include\assimp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\;$(ProjectDir)vendor\libs\boost\;$(ProjectDir)vendor\libs\GLFW\$(Configuration)\;$(ProjectDir)vendor\libs\assimp\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,16 +77,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\vendor\include\;$(SolutionDir)$(ProjectName)\vendor\include\spdlog\;$(SolutionDir)$(ProjectName)\vendor\include\KHR\;$(SolutionDir)$(ProjectName)\vendor\include\GLFW\;$(SolutionDir)$(ProjectName)\vendor\include\glad\;$(SolutionDir)$(ProjectName)\vendor\include\boost\;$(SolutionDir)$(ProjectName)\vendor\include\assimp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FL_PLATFORM_WINDWOS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\;$(ProjectDir)vendor\libs\boost\;$(ProjectDir)vendor\libs\GLFW\$(Configuration)\;$(ProjectDir)vendor\libs\assimp\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
