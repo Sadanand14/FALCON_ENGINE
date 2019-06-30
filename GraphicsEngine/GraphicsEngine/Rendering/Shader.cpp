@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <cassert>
-#include "Log.h";
+#include "Log.h"
 
 Shader::Shader(const std::string& path)
 {

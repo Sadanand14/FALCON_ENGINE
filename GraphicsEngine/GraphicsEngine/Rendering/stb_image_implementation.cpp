@@ -1,3 +1,7 @@
+
+/**
+	Disabling warnings thrown out by vendor code
+*/
 #pragma warning( push )
 #pragma warning( disable : 6011)
 #pragma warning( disable : 6262)
