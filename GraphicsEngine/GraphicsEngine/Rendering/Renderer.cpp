@@ -49,7 +49,7 @@ void Renderer::CreateDrawStates()
 	vs = new Shader("Shader/VertexShader.vert"); // generate a vertex shader
 	fs = new Shader("Shader/FragmentShader.frag"); // generate a fragment shader
 	sp = new ShaderProgram(fs->GetID(), vs->GetID()); // generate a shader program to make use of those shaders
-	texture = new Texture("water.jpg"); // load texture
+	texture = new Texture("../Assets/Textures/water.jpg"); // load texture
 }
 
 //function where we set all the states for the draw function
