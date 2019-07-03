@@ -87,18 +87,18 @@
     <ClInclude Include="System\InputReceiver.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\Texture.h">
+    <ClInclude Include="Rendering\RenderTexture.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\FragmentShader.shader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\VertexShader.shader">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="packages.config" />
+    <None Include="Shader\FragmentShader.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\VertexShader.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\glad.c">
@@ -143,7 +143,7 @@
     <ClCompile Include="Rendering\stb_image_implementation.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Texture.cpp">
+    <ClCompile Include="Rendering\RenderTexture.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>

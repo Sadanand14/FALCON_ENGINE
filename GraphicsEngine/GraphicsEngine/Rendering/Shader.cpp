@@ -8,7 +8,7 @@
 Shader::Shader(const std::string& path) : m_compiledID(0)
 {
 	m_Shader = LoadShader(path); // calls a function that processes the file path provided and returns a structure
-	CompileShader(m_Shader.type,  m_Shader.source); //passes the structure into the function to generate an ID.
+	CompileShader(m_Shader.m_type,  m_Shader.m_source); //passes the structure into the function to generate an ID.
 }
 
 Shader::~Shader()
@@ -63,7 +63,7 @@ SimpleShader Shader::LoadShader(const std::string& path)
 
 	//std::cout << finalstring<< std::endl;
 
-	return { shaderType, finalstring};		//returns a structure containing the type and the source code for the shader
+	return SimpleShader(shaderType, finalstring);//returns a structure containing the type and the source code for the shader
 }
 
 
@@ -99,17 +99,4 @@ void Shader::CompileShader(unsigned int type, std::string source)
 	}
 }
 
-void Shader::SetUniform4f(const boostString& path, float vx, float vy, float vz, float vw)
-{
-	int location = GetUniformLocation(path);
-	glUniform4f(location, vx, vy, vz, vw);
-}
 
-int Shader::GetUniformLocation(const boostString& name)
-{
-	int location = glGetUniformLocation(m_compiledID, name.c_str());
-	if (location == -1)
-		std::cout << "Uniform( " << name << ") does not exist!" << std::endl;
-	
-	return location;
-}

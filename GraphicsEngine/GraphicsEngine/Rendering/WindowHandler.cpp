@@ -3,7 +3,7 @@
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 //renderer gets initialized here
-WindowClass::WindowClass(const char* title, int width, int height ):m_width(width),m_height(height),m_title(title)
+WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
 {
 	renderer = new Renderer(); // creates a new renderer class on the heap
 	timer = new Timer(); // creates a new timer class in the heap

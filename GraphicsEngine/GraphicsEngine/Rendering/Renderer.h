@@ -6,8 +6,8 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
-#include "framework.h"
 #include "stb_image.h"
+#include "RenderTexture.h"
 
 
 class Renderer
@@ -18,6 +18,7 @@ private:
 	IndexBuffer* ib = nullptr;
 	Shader* vs = nullptr, *fs = nullptr;
 	ShaderProgram* sp = nullptr;
+	Texture* texture = nullptr;
 
 public:
 	Renderer();
