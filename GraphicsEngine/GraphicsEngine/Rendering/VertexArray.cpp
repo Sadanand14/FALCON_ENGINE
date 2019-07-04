@@ -24,7 +24,7 @@ void VertexArray::AddBuffer( VertexBuffer* const vb, const VertexLayout& vl)
 		const auto& element = elements[i];	// takes in attributes one by one
 		glEnableVertexAttribArray(i);		// enables the locations for those attributes.
 
-		glVertexAttribPointer(i, element.count, element.type, element.normalized, vl.GetStride(), (const void*)offset);
+		glVertexAttribPointer(i, element.count, element.type, element.normalized, vl.GetStride(), (const void*)(size_t)offset);
 		//designates the various properties of each attribute, check docs.gl for more info
 
 		offset += element.count * VertexElements::GetSizeofType(element.type);// increments offset for each attribute added
