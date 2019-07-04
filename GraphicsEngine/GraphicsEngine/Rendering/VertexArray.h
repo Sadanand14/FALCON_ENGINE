@@ -4,6 +4,7 @@
 #include "VertexBuffer.h"
 #include "VertexLayout.h"
 
+
 //class to initialize and store vertex array object its bound vertexbuffer and its attributes
 class VertexArray
 {

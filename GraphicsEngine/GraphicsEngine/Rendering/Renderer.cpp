@@ -58,8 +58,8 @@ void Renderer::SetDrawStates()
 	va->Bind();// bind the vertex array object to the context (auto binds the buffer bound to it as well)
 	ib->Bind();// bind the index buffer to the context
 	sp->Use(); // bind the shader program to the context 
-
 	texture->Bind();// Bind the texture to slot 0;
+
 	sp->SetUniform1i("u_color", 0);// Tell the texture sampler to pick up the texture from slot 0;
 }
 
