@@ -27,7 +27,7 @@ SimpleShader Shader::LoadShader(const std::string& path)
 		 FL_ENGINE_INFO("INFO: File found");
 	}
 	std::string  finalstring;
-	unsigned int shaderType = NULL;
+	unsigned int shaderType = 0;
 
 
 	if (line.find("#SHADER") != std::string::npos) // if the first line has shader declaration

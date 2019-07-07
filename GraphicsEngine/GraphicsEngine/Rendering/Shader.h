@@ -10,7 +10,7 @@ struct SimpleShader
 {
 	unsigned int m_type;
 	std::string m_source;
-	SimpleShader() :m_type(NULL){ return; }
+	SimpleShader() :m_type(0){ return; }
 	SimpleShader(unsigned int type, std::string source) : m_type(type), m_source(source) { return; }
 };
 

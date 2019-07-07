@@ -5,15 +5,24 @@
 #define FRAMEWORK_H
 
 
-#include "targetver.h"
+
+
+#ifdef FL_PLATFORM_WINDOWS
+
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+
 // Windows Header Files
+#include "targetver.h"
 #include <windows.h>
+#include <tchar.h>
+
+#endif
+
+
 // C RunTime Header Files
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
-#include <tchar.h>
 
 //OpenGL specific files
 #include "glad/glad.h"
