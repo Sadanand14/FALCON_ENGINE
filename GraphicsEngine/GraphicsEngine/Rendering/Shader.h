@@ -1,39 +1,44 @@
 #ifndef SHADER_H
-#define	SHADER_H
+#define SHADER_H
 
-#include "framework.h"
+#include <framework.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-#include <string>
+//GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-
-struct SimpleShader
-{
-	unsigned int m_type;
-	std::string m_source;
-	SimpleShader() :m_type(NULL){ return; }
-	SimpleShader(unsigned int type, std::string source) : m_type(type), m_source(source) { return; }
-};
 
 class Shader
 {
-private:
-	unsigned int m_compiledID; // id for this shader
-	SimpleShader m_Shader; // structure storing the code and type of shader
 public:
-	Shader(const std::string& path);
-	~Shader();
+	//Program ID
+	unsigned int programID = 0;
 
-	void SetUniform4f(const std::string&, float, float, float, float);
-	void SetUniform1f(const std::string&, float);
-	void SetUniform1i(const std::string&, int);
+	//Constructor to read and build the shader
+	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
-	inline const unsigned int GetID() const { return m_compiledID;} 
+	//Use the shader
+	void useShader();
 
-private:
-	SimpleShader LoadShader(const std::string& name);
-	void CompileShader(unsigned int, std::string);
-	int GetUniformLocation(const std::string& name);
+	//Utility uniform functions
+	void setBool(const std::string& name, bool value) const;
+	void setInt(const std::string& name, int value) const;
+	void setFloat(const std::string& name, float value) const;
+	void setVec2(const std::string& name, const glm::vec2& value) const;
+	void setVec2(const std::string& name, float x, float y) const;
+	void setVec3(const std::string& name, const glm::vec3& value) const;
+	void setVec3(const std::string& name, float x, float y, float z) const;
+	void setVec4(const std::string& name, const glm::vec4& value) const;
+	void setVec4(const std::string& name, float x, float y, float z, float w) const;
+	void setMat2(const std::string& name, const glm::mat2& mat) const;
+	void setMat3(const std::string& name, const glm::mat3& mat) const;
+	void setMat4(const std::string& name, const glm::mat4& mat) const;
+	GLint getUniform(const GLchar* name);
+	
 };
 
-#endif // !1
-
+#endif

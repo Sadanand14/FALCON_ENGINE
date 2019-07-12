@@ -1,34 +1,30 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
-#include "stb_image.h"
-#include "RenderTexture.h"
 
+#include "stb_image.h"
+#include "Model.h"
+
+#include "..//System/Camera.h"
+#include "Shader.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Renderer
 {
-private:
-	VertexArray* va = nullptr;
-	VertexBuffer* vb = nullptr;
-	IndexBuffer* ib = nullptr;
-	Shader* vs = nullptr, *fs = nullptr;
-	ShaderProgram* sp = nullptr;
-	Texture* texture = nullptr;
-
 public:
 	Renderer();
 	~Renderer();
 
+	Shader* m_shadyStuff = nullptr;
+	Model* m_nanosuit = nullptr;
+
 	void Init();
 	void CreateDrawStates();
 	void SetDrawStates();
-	void Update(float);
-	void Draw(float);
+	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
+	void Draw();
+
 };
 
 #endif // !RENDERER_H

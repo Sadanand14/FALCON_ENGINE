@@ -19,9 +19,9 @@ InputReceiver::~InputReceiver()
 
 void InputReceiver::Init(GLFWwindow* window)
 {
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetMouseButtonCallback(window, mouse_callback);
-	glfwSetCursorPosCallback(window, cursor_callback);
+	//glfwSetKeyCallback(window, key_callback);
+	//glfwSetMouseButtonCallback(window, mouse_callback);
+	//glfwSetCursorPosCallback(window, cursor_callback);
 }
 
 void InputReceiver::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
