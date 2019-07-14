@@ -107,6 +107,7 @@
     <ClInclude Include="System\TimeBenchmark.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
+    <ClInclude Include="VertexLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

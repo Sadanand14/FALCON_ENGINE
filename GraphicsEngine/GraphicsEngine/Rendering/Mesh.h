@@ -4,24 +4,11 @@
 #include <framework.h>
 #include <vector>
 #include <string>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
+#include "VertexLayout.h"
 
 using namespace std;
-
-struct Vertex {
-	//Position 
-	glm::vec3 Position;
-	//Normal
-	glm::vec3 Normal;
-	//Texture Coordinates
-	glm::vec2 TexCoords;
-	//Tangent
-	glm::vec3 Tangent;
-	//Bitangent
-	glm::vec3 Bitangent;
-};
 
 struct Texture {
 	unsigned int textureID = 0;
