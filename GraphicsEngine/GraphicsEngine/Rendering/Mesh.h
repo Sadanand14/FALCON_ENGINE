@@ -7,9 +7,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
 
 using namespace std;
 
