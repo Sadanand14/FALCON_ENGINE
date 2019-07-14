@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Log.h"
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
@@ -28,7 +29,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	}
 	catch (std::ifstream::failure e)
 	{
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+		FL_ENGINE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ");
 	}
 	const char* vShaderCode = vertexCode.c_str();
 	const char* fShaderCode = fragmentCode.c_str();
@@ -48,7 +49,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		std::cout << "Error::Shader::Vertex::Compilation_Failed\n" << infoLog << std::endl;
+		FL_ENGINE_ERROR("Error::Shader::Vertex::Compilation_Failed\n", infoLog);
 	};
 
 	//Fragment Shader
@@ -60,7 +61,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		std::cout << "Error::Shader::Fragment1::Compilation_Failed\n" << infoLog << std::endl;
+		FL_ENGINE_ERROR("Error::Shader::Fragment1::Compilation_Failed\n", infoLog);
 	}
 
 	//Link Shaders
@@ -74,7 +75,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetProgramInfoLog(m_programID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		FL_ENGINE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", infoLog);
 	}
 
 	//Delete the Shaders after they're linked to the program

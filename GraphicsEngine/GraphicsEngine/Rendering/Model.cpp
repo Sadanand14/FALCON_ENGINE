@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Log.h"
 
 void Model::Draw(Shader shader)
 {
@@ -14,7 +15,7 @@ void Model::LoadModel(string const& path)
 	// Error Check
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+		FL_ENGINE_ERROR("ERROR::ASSIMP::", importer.GetErrorString());
 		return;
 	}
 	// Directory Path
