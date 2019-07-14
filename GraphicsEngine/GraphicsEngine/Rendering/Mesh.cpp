@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-void Mesh::setupMesh()
+void Mesh::SetupMesh()
 {
 	// Create Buffers and Arrays
 	glGenVertexArrays(1, &VAO);
@@ -36,7 +36,13 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::drawMesh(Shader shader)
+Mesh::Mesh(const vector<Vertex>& vertices, const vector<unsigned int>& indices, const vector<Texture>& textures) : m_vertices(vertices) , m_indices(indices) , m_textures(textures)
+{
+	SetupMesh();
+}
+
+
+void Mesh::DrawMesh(Shader shader)
 {
 	// bind appropriate textures
 	unsigned int diffuseNr = 1;
@@ -59,7 +65,7 @@ void Mesh::drawMesh(Shader shader)
 			number = std::to_string(heightNr++); 
 
 	    // Set Sampler
-		glUniform1i(glGetUniformLocation(shader.programID, (name + number).c_str()), i);
+		glUniform1i(glGetUniformLocation(shader.m_programID, (name + number).c_str()), i);
 		// Bind Texture
 		glBindTexture(GL_TEXTURE_2D, m_textures[i].textureID);
 	}

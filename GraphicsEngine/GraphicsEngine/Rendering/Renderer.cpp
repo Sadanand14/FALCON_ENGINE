@@ -1,10 +1,5 @@
 #include "Renderer.h"
 
-
-// load Model
-//Model Car1("../Assets/Models/Car1/Mercedes-Benz C63 AMG.fbx");
-//Model Nanosuit("../Assets/Models/nanosuit/nanosuit.obj"); 
-
 Renderer::Renderer()
 {
 	Init();
@@ -29,7 +24,7 @@ void Renderer::CreateDrawStates()
 	glEnable(GL_DEPTH_TEST);
 
 	//Draw in Wireframe mode - Comment out
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	
 
 	//Load Model
 	m_nanosuit = new Model("../Assets/Models/nanosuit/nanosuit.obj");	
@@ -41,22 +36,22 @@ void Renderer::CreateDrawStates()
 void Renderer::SetDrawStates()
 {
 	//Use the Program Shader
-	m_shadyStuff->useShader();
+	m_shadyStuff->UseShader();
 }
 
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
-	m_shadyStuff->setMat4("projection", projection);
+	m_shadyStuff->SetMat4("projection", projection);
 
 	// camera/view transformations
-	m_shadyStuff->setMat4("view", view);
+	m_shadyStuff->SetMat4("view", view);
 
 	// Model transformations
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.75f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-	m_shadyStuff->setMat4("model", model);
+	m_shadyStuff->SetMat4("model", model);
 }
 
 void Renderer::Draw()

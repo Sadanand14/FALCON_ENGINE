@@ -18,47 +18,45 @@
 #include <map>
 #include <vector>
 
-using namespace std;
-
-unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
-
 class Model
 {
+private:
+	//Functions
+	// Load model (assimp supported extension) and store mesh data in meshes
+	void LoadModel(string const& path);
+
+	// Process nodes
+	void ProcessNode(aiNode* node, const aiScene* scene);
+
+	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
+	// The required info is returned as a Texture struct.
+	vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
+
 public:
 	/*  Model Data */
-	vector<Texture> textures_loaded;
-	vector<Mesh> meshes;
-	string directory;
-	bool gammaCorrection;
+	vector<Texture> m_texturesLoaded;
+	vector<Mesh> m_meshes;
+	string m_directory;
+	bool m_gammaCorrection;
 
 	//Functions
 	// Pass filepath to 3D model
-	Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
+	Model(string const& path, bool gamma = false) : m_gammaCorrection(gamma)
 	{
-		loadModel(path);
+		LoadModel(path);
 	}
 
 	// Draw Model
 	void Draw(Shader shader);
 
-private:
-	//Functions
-	// Load model (assimp supported extension) and store mesh data in meshes
-	void loadModel(string const& path);
 
-	// Process nodes
-	void processNode(aiNode* node, const aiScene* scene);
-	
-	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-
-	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
-	// The required info is returned as a Texture struct.
-	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);	
 };
 
 //Load Texture from file
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma);
-
+unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
 
 #endif

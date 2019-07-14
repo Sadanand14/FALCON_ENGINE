@@ -7,6 +7,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBuffer.h"
 
 using namespace std;
 
@@ -32,6 +35,13 @@ struct Texture {
 
 class Mesh {
 
+private:
+	//Render Data
+	unsigned int VBO, EBO;
+
+	//Functions
+	void SetupMesh();
+
 public: 
 	//Mesh Data
 	vector<Vertex> m_vertices;
@@ -39,23 +49,11 @@ public:
 	vector<Texture> m_textures;
 	unsigned int VAO;
 
-	//Functions
-	Mesh(const vector<Vertex>& vertices, const vector<unsigned int>& indices, const vector<Texture>& textures)
-		: m_vertices(vertices)
-		, m_indices(indices)
-		, m_textures(textures)
-	{
-		setupMesh();
-	}
+	//Constructor
+	Mesh(const vector<Vertex>& vertices, const vector<unsigned int>& indices, const vector<Texture>& textures);
 
-	void drawMesh(Shader shader);
-
-private:
-	//Render Data
-	unsigned int VBO, EBO;
-
-	//Functions
-	void setupMesh();
+	//Functions	
+	void DrawMesh(Shader shader);
 };
 
 #endif

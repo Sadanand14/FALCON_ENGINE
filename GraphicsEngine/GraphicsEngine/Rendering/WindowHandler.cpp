@@ -12,17 +12,17 @@ bool firstMouse = true;
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
 {
-	renderer = new Renderer(); // creates a new renderer class on the heap
-	timer = new Timer(); // creates a new timer class in the heap
+	m_renderer = new Renderer(); // creates a new renderer class on the heap
+	m_timer = new Timer(); // creates a new timer class in the heap
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 }
 
 WindowClass::~WindowClass() 
 {
-	delete timer;
-	delete renderer;
-	if (gameWindow) glfwDestroyWindow(gameWindow);
+	delete m_timer;
+	delete m_renderer;
+	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
 }
 
@@ -41,16 +41,16 @@ void WindowClass::Init()
 #endif
 
 	//Create Window
-	gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
-	if (gameWindow == NULL)
+	m_gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
+	if (m_gameWindow == NULL)
 	{
 		//Error logging will be handler by error call back method.
 		glfwTerminate();
 		return;
 	}
-	glfwMakeContextCurrent(gameWindow);
-	glfwSetFramebufferSizeCallback(gameWindow, framebuffer_size_callback);
-	glfwSetWindowUserPointer(gameWindow, this);
+	glfwMakeContextCurrent(m_gameWindow);
+	glfwSetFramebufferSizeCallback(m_gameWindow, framebuffer_size_callback);
+	glfwSetWindowUserPointer(m_gameWindow, this);
 
 	//Load OpenGL Function Pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -59,45 +59,45 @@ void WindowClass::Init()
 	}
 
 	//Camera
-	glfwSetCursorPosCallback(gameWindow, mouse_callback);
-	glfwSetScrollCallback(gameWindow, scroll_callback);
+	glfwSetCursorPosCallback(m_gameWindow, mouse_callback);
+	glfwSetScrollCallback(m_gameWindow, scroll_callback);
 	
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 	//Create Draw States in Renderer
-	renderer->CreateDrawStates();
+	m_renderer->CreateDrawStates();
 
 	//Set Draw States in Renderer
-	renderer->SetDrawStates();
+	m_renderer->SetDrawStates();
 }
 
 void WindowClass::Update() 
 {
-	while (!glfwWindowShouldClose(gameWindow))
+	while (!glfwWindowShouldClose(m_gameWindow))
 	{
-		timer->update();
-		float dt = timer->GetDeltaTime();
+		m_timer->update();
+		float dt = m_timer->GetDeltaTime();
 
 		//Game Input
-		processInput(gameWindow, dt);
+		ProcessInput(m_gameWindow, dt);
 
 		//Camera
 		glm::mat4 view = camera.GetViewMatrix();
 
 		//Render
-		renderer->Update(m_width, m_height, camera.Zoom, view, dt);
-		renderer->Draw();
+		m_renderer->Update(m_width, m_height, camera.m_Zoom, view, dt);
+		m_renderer->Draw();
 
 		//Swap Buffers
-		glfwSwapBuffers(gameWindow);
+		glfwSwapBuffers(m_gameWindow);
 
 		//Poll I/O events
 		glfwPollEvents();
 	}
 }
 
-void WindowClass::processInput(GLFWwindow* window, float deltaTime)
+void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
