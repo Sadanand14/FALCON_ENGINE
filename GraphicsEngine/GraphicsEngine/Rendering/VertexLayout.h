@@ -50,31 +50,32 @@ public:
 	template <typename T>
 	void Push(unsigned int count)
 	{
-		static_assert(false);
-	}
-
-	template<>
-	void Push<float>(unsigned int count)
-	{
-		m_elements.push_back({ GL_FLOAT, count, false }); // adds the attributes with its count to the function
-		m_stride += VertexElements::GetSizeofType(GL_FLOAT) * count;// sets the stride to add the above addition
-	}
-
-	template<>
-	void Push<unsigned int>(unsigned int count)
-	{
-		m_elements.push_back({ GL_UNSIGNED_INT, count, false }); // adds the attributes with its count to the function
-		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_INT) * count;// sets the stride to add the above addition
-	}
-
-	template<>
-	void Push<unsigned char>(unsigned int count)
-	{
-		m_elements.push_back({ GL_UNSIGNED_BYTE, count, false });// adds the attributes with its count to the function
-		m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_BYTE) * count;// sets the stride to add the above addition
+		//static_assert(false, "Assertion failed");
 	}
 
 };
+template<>
+inline void VertexLayout::Push<float>(unsigned int count)
+{
+	m_elements.push_back({ GL_FLOAT, count, false }); // adds the attributes with its count to the function
+	m_stride += VertexElements::GetSizeofType(GL_FLOAT) * count;// sets the stride to add the above addition
+}
+
+template<>
+inline void VertexLayout::Push<unsigned int>(unsigned int count)
+{
+	m_elements.push_back({ GL_UNSIGNED_INT, count, false }); // adds the attributes with its count to the function
+	m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_INT) * count;// sets the stride to add the above addition
+}
+
+template<>
+inline void VertexLayout::Push<unsigned char>(unsigned int count)
+{
+	m_elements.push_back({ GL_UNSIGNED_BYTE, count, false });// adds the attributes with its count to the function
+	m_stride += VertexElements::GetSizeofType(GL_UNSIGNED_BYTE) * count;// sets the stride to add the above addition
+}
+
+
 
 #endif // !1
 

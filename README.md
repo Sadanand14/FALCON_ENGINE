@@ -72,25 +72,6 @@ When including glm in a file, ensure that you `#define GLM_ENABLE_EXPERIMENTAL` 
 #include "../glm/gtx/quaternion.hpp"
 ```
 
-### GLEW
-
-The OpenGL Extension Wrangler Library is useful for determining the level of OpenGL functionality that the target platform supports. The following guide will help enable it in your environment:
-
-1. Download GLEW at : https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip/download
-
-2. After extracting all files, move the `GL` folder located in `glew-2.1.0\include` to your project's `include` directory
-
-3. Copy the library files in `glew-2.1.0\lib\Release\x64` to your project's `libraries` directory
-
-4. (Visual Studio) Go to your project properties, and set Configuration and Platform options to All
-
-5. (Visual Studio) Go to C/C++ -> General. Add `$(ProjectDir)include` to `Additional Include Directories` if it is not already there
-
-6. (Visual Studio) Go to Linker -> General. Add `$(ProjectDir)libraries` to `Additional Library Directories` if it is not already there
-
-7. (Visual Studio) Go to Linker -> Input. Add `glew32s.lib` to `Additional Dependencies`
-
-8. (Visual Studio) Go to C/C++ -> Preprocessor. Add `GLEW_STATIC` to `Preprocessor Definitions`
 
 ### GLFW
 
@@ -123,4 +104,41 @@ _Note : this guide is primarily targeted at setting up a Windows development env
 4. (Visual Studio) Add `$(ProjectDir)boost_1_69_0` to `Include Directories`.
 
 5. (Visual Studio) Add `$(ProjectDir)boost_1_69_0\stage\lib` to `Library Directories`.
+
+### Building Falcon on Linux
+
+1. To setup required libs, open a terminal and run following commands.
+```shell
+sudo apt-get update
+sudo apt install python
+sudo apt install python-dev
+sudo apt install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libglew-dev
+```
+2. Setting up git on linux
+```shell
+sudo apt install git
+git config --global user.email "user@email.com"
+git config --gloval user.name  "FirstName LastName"
+```
+Now clone the repo in your working directory.
+
+3. Download vendor_linux.tar from drive. And extract it in the `GraphicsEngine/GraphicsEngine/` path. (In future we can automate this step).
+
+4. To build and run the code,
+	1. Generate project
+```shell
+./GenProject.sh
+```
+	2. Run make to build project
+	```shell
+	make 
+	```
+	if you want to clean the build directory use,
+	```shell
+	make clean
+	```
+
+
+### Precautions to work with premake now,
+Whenever you add new directory in source, add any lib or any include please make sure you add it to the relevant places in the premake.lua file. otherwise there will be lot of inconsistencies. 
 
