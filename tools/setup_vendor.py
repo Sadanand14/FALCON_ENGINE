@@ -1,0 +1,71 @@
+import os
+import requests
+import tarfile
+import warnings
+import zipfile
+
+# Ref. https://stackoverflow.com/questions/38511444/python-download-files-from-google-drive-using-url
+
+class GDriveDownloader:
+
+	URL = "https://docs.google.com/uc?export=download"
+
+
+	@staticmethod
+	def download_file(file_name,file_id, dest_path, unzip = True):
+		'''
+		file_id   = file id from google drive sharable link
+		dest_path = where to download
+		unzip 	  = should file be unziped?
+		'''
+
+		#setting up download directory
+		dest_dir = os.path.dirname(dest_path)
+		if not os.path.exists(dest_dir):
+			os.makedirs(dest_dir)
+
+		#downloading the file if not exists
+		full_path = dest_path+file_name
+		if not os.path.exists(full_path):
+			
+			download_session = requests.Session()
+			print("Downloading {} to {}".format(file_name,dest_path))
+
+			response = download_session.get(GDriveDownloader.URL, params={'id':file_id},stream = True)
+
+			token = GDriveDownloader.get_confirm_token(response)
+
+			if token:
+				params = {'id':file_id, 'confirm':token }
+				response = download_session.get(GDriveDownloader.URL, params=params,stream = True)
+
+			GDriveDownloader.save_response_content(response,full_path)
+			print("Successfully downloaded the {}".format(file_name))
+
+			if unzip:
+				print("We should unzip here")
+		else:
+			print("{} already present. Not downloading".format(file_name))
+
+
+	@staticmethod
+	def get_confirm_token(response):
+	    for key, value in response.cookies.items():
+	        if key.startswith('download_warning'):
+	            return value
+
+	    return None
+
+	@staticmethod
+	def save_response_content(response, destination):
+	    CHUNK_SIZE = 32768
+
+	    with open(destination, "wb") as f:
+	        for chunk in response.iter_content(CHUNK_SIZE):
+	            if chunk: # filter out keep-alive new chunks
+	                f.write(chunk)
+
+
+if __name__ == '__main__':
+	GDriveDownloader.download_file("vendor.rar","13KZk7kFcIKugqGdveQ6RcQDxGrTSAn-S","./test_path/")
+
