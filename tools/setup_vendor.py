@@ -1,5 +1,6 @@
 import os
 import requests
+import sys
 import tarfile
 import warnings
 import zipfile
@@ -14,6 +15,7 @@ class GDriveDownloader:
 	@staticmethod
 	def download_file(file_name,file_id, dest_path, unzip = True):
 		'''
+		file_name = file to be downloaded.
 		file_id   = file id from google drive sharable link
 		dest_path = where to download
 		unzip 	  = should file be unziped?
@@ -43,7 +45,19 @@ class GDriveDownloader:
 			print("Successfully downloaded the {}".format(file_name))
 
 			if unzip:
-				print("We should unzip here")
+				try:
+					print('Unzipping...')
+					extraction_path = os.path.dirname(dest_path)
+					if sys.argv[1] == 'Windows':
+						with zipfile.ZipFile(full_path, 'r') as z:
+							z.extractall(extraction_path)
+					elif sys.argv[1] == 'Linux':
+						with tarfile.open(full_path, 'r') as z:
+							z.extractall(extraction_path)
+					print('Done.')
+				except zipfile.BadZipfile:
+					warnings.warn('Ignoring `unzip` since "{}" does not look like a valid zip file'.format(file_name))
+
 		else:
 			print("{} already present. Not downloading".format(file_name))
 
@@ -67,5 +81,9 @@ class GDriveDownloader:
 
 
 if __name__ == '__main__':
-	GDriveDownloader.download_file("vendor.rar","13KZk7kFcIKugqGdveQ6RcQDxGrTSAn-S","./test_path/")
-
+	if sys.argv[1] == 'Windows':
+		GDriveDownloader.download_file("vendor.zip","1K6funGJKcaJOuOas6qUDLEqo4fd0VUlw","../GraphicsEngine/GraphicsEngine/")
+	elif sys.argv[1] == 'Linux':
+		GDriveDownloader.download_file("vendor.rar","1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN","../GraphicsEngine/GraphicsEngine/")
+	else:
+		print "Unsupported platform"
