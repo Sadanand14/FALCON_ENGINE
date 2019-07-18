@@ -624,7 +624,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <framework.h>
+
+#include "framework.h"
 
 static void* get_proc(const char *namez);
 
