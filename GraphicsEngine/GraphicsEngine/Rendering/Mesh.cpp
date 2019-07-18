@@ -72,7 +72,7 @@ void Mesh::DrawMesh(Shader shader)
 
 	// Draw Mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// Set back to default
