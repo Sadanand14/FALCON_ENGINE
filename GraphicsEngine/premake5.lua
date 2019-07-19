@@ -103,6 +103,8 @@ project "GraphicsEngine"
 				"%{LinkDebugDirs.assimp}",
 			}
 
+   			postbuildcommands { "copy /y /d" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
+
 	
 	filter { "system:windows", "configurations:Release" }
      		
@@ -115,6 +117,7 @@ project "GraphicsEngine"
 				"%{LinkReleaseDirs.boost}",
 				"%{LinkReleaseDirs.assimp}"
 			}
+ 	 		postbuildcommands { "copy /y /d" .. %{LinkReleaseDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
 
 	
 	--------SETTING UP THINGS FOR LINUX
@@ -159,6 +162,10 @@ project "GraphicsEngine"
 			"/usr/lib"
 		}
 
+
+		postbuildcommands { "cp -rf" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
+
+
 	filter {"system:linux","configurations:Release"}
 		defines "BUILD_RELEASE_MODE"
 		optimize "On"
@@ -172,3 +179,5 @@ project "GraphicsEngine"
 			"/usr/local/lib",
 			"/usr/lib"
 		}
+		
+	   	postbuildcommands { "cp -rf" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }

@@ -1,17 +1,42 @@
 #include "IndexBuffer.h"
 #include <cassert>
 
-//creates and binds an index buffer 
-IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count) :m_count(count),m_renderBufferId(0)
+
+
+
+
+//creates and binds an index buffer with int array
+IndexBuffer::IndexBuffer(const unsigned int* indices,size_t count) 
+	:m_count(count),m_renderBufferId(0)
 {
 	assert(sizeof(unsigned int) == sizeof(GLuint));// makes sure that both GLuint and unsigned int have same size on the system
 
+	SetupIndexBuffer(indices);// unbinds the index buffer
+}
+
+
+
+//creates and binds an index buffer with int vector
+IndexBuffer::IndexBuffer(const std::vector<unsigned int>& indices, size_t count)
+	:m_count(count), m_renderBufferId(0)
+{
+	unsigned int * indicesArr = new unsigned int [count];
+	std::copy(indices.begin(), indices.end(), indicesArr);
+	SetupIndexBuffer(indicesArr);// unbinds the index buffer	
+}
+
+
+
+//Geneartes and bind data to the index buffer
+void IndexBuffer::SetupIndexBuffer(const unsigned int* indices)
+{
 	glGenBuffers(1, &m_renderBufferId);// generates a buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderBufferId);// binds that buffer to the context
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	//passes in the data of the index array
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);// unbinds the index buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 }
 
 IndexBuffer::~IndexBuffer()

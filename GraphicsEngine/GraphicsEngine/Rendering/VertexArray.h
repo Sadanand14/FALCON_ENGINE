@@ -19,7 +19,8 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void AddBuffer( VertexBuffer*, const VertexLayout&);
+	void AddBuffer(VertexBuffer*);
+	void SetupVertextAttribPointers();
 };
 
 #endif // !1

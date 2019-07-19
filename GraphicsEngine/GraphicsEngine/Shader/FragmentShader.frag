@@ -1,14 +1,12 @@
-#SHADER FRAGMENT
 #version 460 core
 
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec4 FragColor;
 
 in vec2 v_texcoord;
 
-uniform sampler2D u_color;
+uniform sampler2D texture_diffuse1;
 
 void main()
 {
-	vec4 tex = texture(u_color, v_texcoord);
-	color = tex;
+	FragColor = texture(texture_diffuse1, v_texcoord);
 }

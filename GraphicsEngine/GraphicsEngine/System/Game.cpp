@@ -5,7 +5,7 @@
 int main()
 {
 	Log::Init();
-	WindowClass* window1 = new WindowClass("mywindow", 1280, 720);
+	WindowClass* window1 = new WindowClass("FalconEngine", 1280, 720);
 	InputReceiver* input = new InputReceiver(window1);
 
 	while(!window1->WindowCloseStatus())
