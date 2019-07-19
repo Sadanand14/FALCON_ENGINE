@@ -69,7 +69,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y/d $(ProjectDir)vendor\libs\assimp\$(Configuration)\* $(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</Command>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -117,7 +117,6 @@
     <ClInclude Include="System\TimeBenchmark.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
-    <ClInclude Include="VertexLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
