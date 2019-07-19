@@ -1,44 +1,29 @@
 #include "Mesh.h"
 
+
 void Mesh::SetupMesh()
 {
-	// Create Buffers and Arrays
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-	// Load Vertex Buffer
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW);
-
-
-	//Vertex attribute pointers	
-	//Positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	//Normals
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-	// Texture Coordinates
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-	//Tangents
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-	//Bitangents
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-
-	glBindVertexArray(0);
+	m_VAO = new VertexArray();
+	m_VAO->Bind();
+	m_VBO = new VertexBuffer(&m_vertices[0], m_vertices.size() * sizeof(Vertex));
+	m_IBO = new IndexBuffer(m_indices, m_indices.size());
+	m_VAO->AddBuffer(m_VBO);
+	m_VAO->Unbind();
 }
 
-Mesh::Mesh(const vector<Vertex>& vertices, const vector<unsigned int>& indices, const vector<Texture>& textures) : m_vertices(vertices) , m_indices(indices) , m_textures(textures)
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures) 
+	: m_vertices(vertices) , m_indices(indices) , m_textures(textures),
+	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
 {
 	SetupMesh();
+}
+
+
+Mesh::~Mesh()
+{
+	delete m_VAO;
+	delete m_VBO;
+	delete m_IBO;
 }
 
 
@@ -53,8 +38,8 @@ void Mesh::DrawMesh(Shader shader)
 	{
 		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
 		// retrieve texture number (the N in diffuse_textureN)
-		string number;
-		string name = m_textures[i].type;
+		std::string number;
+		std::string name = m_textures[i].type;
 		if (name == "texture_diffuse")
 			number = std::to_string(diffuseNr++);
 		else if (name == "texture_specular")
@@ -71,9 +56,11 @@ void Mesh::DrawMesh(Shader shader)
 	}
 
 	// Draw Mesh
-	glBindVertexArray(VAO);
+	m_VAO->Bind();
+	m_IBO->Bind();
 	glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	m_IBO->Unbind();
+	m_VAO->Unbind();
 
 	// Set back to default
 	glActiveTexture(GL_TEXTURE0);

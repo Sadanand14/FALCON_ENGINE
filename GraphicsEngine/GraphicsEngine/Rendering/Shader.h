@@ -12,14 +12,37 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
+
+
+struct SimpleShader
+{
+	unsigned int m_shaderId = 0;
+	GLenum m_type;
+	std::string m_source;
+	SimpleShader(GLenum type) :m_shaderId(0),m_type(type) {}
+	SimpleShader(GLenum type, std::string source) :m_shaderId(0),m_type(type), m_source(source) {}
+};
+
+
+
+
 class Shader
 {
+
+private:
+	void LoadShaderCode(const GLchar* vertexPath, GLenum& type);
+	void CompileShaderCode(SimpleShader& shader);
+
 public:
 	//Program ID
 	unsigned int m_programID = 0;
+	SimpleShader m_vertexShader;
+	SimpleShader m_fragmentShader;
 
 	//Constructor to read and build the shader
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+
+	void LinkShaders();
 
 	//Use the shader
 	void UseShader();
@@ -41,4 +64,4 @@ public:
 	
 };
 
-#endif
+#endif //!SHADER_H

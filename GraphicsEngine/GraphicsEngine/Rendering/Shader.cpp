@@ -1,87 +1,120 @@
 #include "Shader.h"
 #include "Log.h"
 
-Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+
+/**
+* Get vertex/fragment code from the file path\
+*/
+void Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
 {
-	//Get vertex/fragment code from the file path
-	std::string vertexCode;
-	std::string fragmentCode;
-	std::ifstream vShaderFile;
-	std::ifstream fShaderFile;
-	// Ensure ifstream objects can throw exceptions:
-	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	std::string shaderSrc;
+	std::ifstream shaderFile;
+	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
 	try
 	{
 		//Open the files
-		vShaderFile.open(vertexPath);
-		fShaderFile.open(fragmentPath);
-		std::stringstream vShaderStream, fShaderStream;
+		shaderFile.open(filePath);
 		//Read file's buffer content into the streams
-		vShaderStream << vShaderFile.rdbuf();
-		fShaderStream << fShaderFile.rdbuf();
+		std::stringstream shaderSrcStream;
+		shaderSrcStream << shaderFile.rdbuf();
 		//Close the files
-		vShaderFile.close();
-		fShaderFile.close();
-		//Convert stream to string
-			vertexCode = vShaderStream.str();
-		fragmentCode = fShaderStream.str();
+		shaderFile.close();
+
+		switch (type)
+		{
+		case GL_VERTEX_SHADER:
+			m_vertexShader.m_source = shaderSrcStream.str();
+		case GL_FRAGMENT_SHADER:
+			m_fragmentShader.m_source = shaderSrcStream.str();
+		}
 	}
-	catch (std::ifstream::failure e)
+	catch (std::exception e)
 	{
-		FL_ENGINE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ");
+		FL_ENGINE_ERROR("ERROR::Failed to read shader code.{0}",e.what());
 	}
-	const char* vShaderCode = vertexCode.c_str();
-	const char* fShaderCode = fragmentCode.c_str();
+}
 
 
-	//Build and Compile Shaders
-	unsigned int vertex, fragment;
+
+
+
+/**
+* Compiles the shader code recieved from load shader function to store an id for the compiled source code.
+*/
+void Shader::CompileShaderCode(SimpleShader& shader)
+{
+	
+	shader.m_shaderId = glCreateShader(shader.m_type); //generate the shader buffer
+
+	const char* src = shader.m_source.c_str();	// converts to const char*
+	glShaderSource(shader.m_shaderId, 1, &src, NULL);//binds source to shader id
+	glCompileShader(shader.m_shaderId);//compilder the shader with provided id
+	
+	//Print any compilation errors
 	int success;
 	char infoLog[512];
-
-	//Vertex Shader 
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
-	glCompileShader(vertex);
-	//Print any compilation errors
-	glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(shader.m_shaderId, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		FL_ENGINE_ERROR("Error::Shader::Vertex::Compilation_Failed\n", infoLog);
+		glGetShaderInfoLog(shader.m_shaderId, 512, NULL, infoLog);
+		FL_ENGINE_ERROR("Error::Shader compilation failed:\n {0}", infoLog);
 	};
+}
 
-	//Fragment Shader
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
-	glCompileShader(fragment);
-	//Check for shader compile errors
-	glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		FL_ENGINE_ERROR("Error::Shader::Fragment1::Compilation_Failed\n", infoLog);
-	}
 
+/**
+* Links the shaders with current program.
+*/
+
+void Shader::LinkShaders()
+{
 	//Link Shaders
 	m_programID = glCreateProgram();
-	glAttachShader(m_programID, vertex);
-	glAttachShader(m_programID, fragment);
+	glAttachShader(m_programID, m_vertexShader.m_shaderId);
+	glAttachShader(m_programID, m_fragmentShader.m_shaderId);
 	glLinkProgram(m_programID);
 	glValidateProgram(m_programID);
 	//Print any linking errors
+	int success;
+	char infoLog[512];
 	glGetProgramiv(m_programID, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		glGetProgramInfoLog(m_programID, 512, NULL, infoLog);
-		FL_ENGINE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", infoLog);
+		FL_ENGINE_ERROR("Error::Shader Linking Failed {0}", infoLog);
 	}
+}
+
+
+/*
+* Shader constructor takes in paths to the src files of shaders and takes care of building and linking them with the 
+* current opengl context.
+* Parameters must be in order of VertexShaderPath, Fragmentshaderpath
+*/
+Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+	:m_vertexShader(GL_VERTEX_SHADER),
+	 m_fragmentShader(GL_FRAGMENT_SHADER)
+{	
+	//Read the shaders 
+	GLenum vertexShader = GL_VERTEX_SHADER;
+	LoadShaderCode(vertexPath, vertexShader);
+	GLenum fragmentShader = GL_FRAGMENT_SHADER;
+	LoadShaderCode(fragmentPath, fragmentShader);
+
+	//Compile the shaders
+	CompileShaderCode(m_vertexShader);
+	CompileShaderCode(m_fragmentShader);
+
+	//Link Shaders
+	LinkShaders();
 
 	//Delete the Shaders after they're linked to the program
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	glDeleteShader(m_vertexShader.m_shaderId);
+	glDeleteShader(m_fragmentShader.m_shaderId);
 }
+
+
 
 void Shader::UseShader()
 {

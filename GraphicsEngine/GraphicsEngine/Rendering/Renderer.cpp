@@ -35,6 +35,7 @@ void Renderer::CreateDrawStates()
 
 void Renderer::SetDrawStates()
 {
+
 	//Use the Program Shader
 	m_shadyStuff->UseShader();
 }

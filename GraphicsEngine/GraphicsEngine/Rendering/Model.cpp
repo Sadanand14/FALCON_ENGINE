@@ -1,13 +1,21 @@
 #include "Model.h"
 #include "Log.h"
 
+
+// Pass filepath to 3D model
+Model::Model(std::string const& path, bool gamma /*false*/)
+	: m_gammaCorrection(gamma)
+{
+	LoadModel(path);
+}
+
 void Model::Draw(Shader shader)
 {
 	for (unsigned int i = 0; i < m_meshes.size(); i++)
-		m_meshes[i].DrawMesh(shader);
+		m_meshes[i]->DrawMesh(shader);
 }
 
-void Model::LoadModel(string const& path)
+void Model::LoadModel(std::string const& path)
 {
 	// Read File (Assimp)
 	Assimp::Importer importer;
@@ -15,7 +23,7 @@ void Model::LoadModel(string const& path)
 	// Error Check
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		FL_ENGINE_ERROR("ERROR::ASSIMP::", importer.GetErrorString());
+		FL_ENGINE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
 		return;
 	}
 	// Directory Path
@@ -40,12 +48,12 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	}
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	// Data to load
-	vector<Vertex> vertices;
-	vector<unsigned int> indices;
-	vector<Texture> textures;
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+	std::vector<Texture> textures;
 
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -94,8 +102,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
+	
 	// Process materials
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
 
 	//N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
 	// diffuse: texture_diffuseN
@@ -103,10 +113,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	// normal: texture_normalN
 
 	// 1. Diffuse maps
-	vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+	std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	// 2. Specular maps
-	vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+	std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	// 3. Normal maps
 	std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
@@ -116,12 +126,13 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 	// return a mesh object created from the extracted mesh data
-	return Mesh(vertices, indices, textures);
+	Mesh * tmpMesh =  new Mesh(vertices, indices, textures);
+	return tmpMesh;
 }
 
-vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
+std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
-	vector<Texture> textures;
+	std::vector<Texture> textures;
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
 		aiString str;
@@ -150,9 +161,10 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
 	return textures;
 }
 
-unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
+unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
-	string filename = string(path);
+	std::string filename(path);
+
 	filename = directory + '/' + filename;
 
 	unsigned int textureID;
@@ -162,7 +174,7 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
-		GLenum format;
+		GLenum format = 0;
 		if (nrComponents == 1)
 			format = GL_RED;
 		else if (nrComponents == 3)
@@ -183,9 +195,15 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 	}
 	else
 	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		FL_ENGINE_ERROR("ERROR: Texture failed to load at {0} ", path);
 		stbi_image_free(data);
 	}
 
 	return textureID;
+}
+
+
+Model::~Model()
+{
+	for (auto& mesh : m_meshes) delete mesh;
 }
