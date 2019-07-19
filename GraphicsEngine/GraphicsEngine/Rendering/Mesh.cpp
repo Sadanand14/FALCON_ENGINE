@@ -1,5 +1,5 @@
 #include "Mesh.h"
-
+#include "Log.h"
 
 void Mesh::SetupMesh()
 {
@@ -16,6 +16,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
 	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
 {
 	SetupMesh();
+	FL_ENGINE_INFO("INFO: Mesh set up correctly.");
 }
 
 

@@ -7,6 +7,7 @@ Model::Model(std::string const& path, bool gamma /*false*/)
 	: m_gammaCorrection(gamma)
 {
 	LoadModel(path);
+	FL_ENGINE_INFO("INFO: Model loaded sussfully for {0}", path);
 }
 
 void Model::Draw(Shader shader)
