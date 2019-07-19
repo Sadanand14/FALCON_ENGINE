@@ -91,7 +91,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y/d $(ProjectDir)vendor\libs\assimp\$(Configuration)\* $(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</Command>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
