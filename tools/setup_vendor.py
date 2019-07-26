@@ -83,12 +83,16 @@ class GDriveDownloader:
 
 
 if __name__ == '__main__':
+
+	ASSET_FILE_ID = "1MibiR-59YDyeMXrKdxREv8tDXY4UDL_f"
+	VENDOR_WINDOW_ID = "1K6funGJKcaJOuOas6qUDLEqo4fd0VUlw"
+	VENDOR_LINUX_ID = "1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN"
 	if platform.system() == 'Windows':
-		GDriveDownloader.download_file("vendor.zip","1K6funGJKcaJOuOas6qUDLEqo4fd0VUlw","../GraphicsEngine/GraphicsEngine/")
-		GDriveDownloader.download_file("assets.zip","1MibiR-59YDyeMXrKdxREv8tDXY4UDL_f","../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("vendor.zip",VENDOR_WINDOW_ID,"../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("assets.zip",ASSET_FILE_ID,"../GraphicsEngine/GraphicsEngine/")
 	elif platform.system() == 'Linux':
-		GDriveDownloader.download_file("vendor_linux.tar","1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN","../GraphicsEngine/GraphicsEngine/")
-		GDriveDownloader.download_file("assets.zip","1MibiR-59YDyeMXrKdxREv8tDXY4UDL_f","../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("vendor_linux.tar",VENDOR_LINUX_ID,"../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("assets.zip",ASSET_FILE_ID,"../GraphicsEngine/GraphicsEngine/")
 	else:
 		print "Unsupported platform"
 
