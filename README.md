@@ -1,3 +1,13 @@
+
+## Important links:
+1. [Working with premake](#precautions-to-work-with-premake-now)
+
+2. [Build on linux](#building-falcon-on-linux)
+
+3. [Setup Vendors and assets for the project](tools/Readme.md)
+
+
+
 ## Coding Standards
 
 ### Coding Style
@@ -122,7 +132,7 @@ git config --gloval user.name  "FirstName LastName"
 ```
 Now clone the repo in your working directory.
 
-3. Download vendor_linux.tar from drive. And extract it in the `GraphicsEngine/GraphicsEngine/` path. (In future we can automate this step).
+3. Download vendor_linux.tar from drive. And extract it in the `GraphicsEngine/GraphicsEngine/` path. Use setup_vendor script for this.
 
 4. To build and run the code,
 	1. Generate project
