@@ -1,4 +1,5 @@
 import os
+import platform
 import requests
 import sys
 import tarfile
@@ -48,13 +49,14 @@ class GDriveDownloader:
 				try:
 					print('Unzipping...')
 					extraction_path = os.path.dirname(dest_path)
-					if sys.argv[1] == 'Windows':
+					if platform.system() == 'Windows':
 						with zipfile.ZipFile(full_path, 'r') as z:
 							z.extractall(extraction_path)
-					elif sys.argv[1] == 'Linux':
+					elif platform.system() == 'Linux':
 						with tarfile.open(full_path, 'r') as z:
 							z.extractall(extraction_path)
-					print('Done.')
+					print('Done.Removing archive file')
+					os.remove(full_path)
 				except zipfile.BadZipfile:
 					warnings.warn('Ignoring `unzip` since "{}" does not look like a valid zip file'.format(file_name))
 
@@ -81,9 +83,12 @@ class GDriveDownloader:
 
 
 if __name__ == '__main__':
-	if sys.argv[1] == 'Windows':
+	if platform.system() == 'Windows':
 		GDriveDownloader.download_file("vendor.zip","1K6funGJKcaJOuOas6qUDLEqo4fd0VUlw","../GraphicsEngine/GraphicsEngine/")
-	elif sys.argv[1] == 'Linux':
-		GDriveDownloader.download_file("vendor.rar","1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN","../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("assets.zip","1MibiR-59YDyeMXrKdxREv8tDXY4UDL_f","../GraphicsEngine/GraphicsEngine/")
+	elif platform.system() == 'Linux':
+		GDriveDownloader.download_file("vendor_linux.tar","1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN","../GraphicsEngine/GraphicsEngine/")
+		GDriveDownloader.download_file("assets.zip","1MibiR-59YDyeMXrKdxREv8tDXY4UDL_f","../GraphicsEngine/GraphicsEngine/")
 	else:
 		print "Unsupported platform"
+
