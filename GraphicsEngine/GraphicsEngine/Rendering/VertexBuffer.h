@@ -9,7 +9,7 @@ class VertexBuffer
 private:
 	unsigned int m_renderBufferId;
 public:
-	VertexBuffer(const void*, unsigned int size);
+	VertexBuffer(const void*,size_t size);
 	~VertexBuffer();
 
 	void Bind() const;

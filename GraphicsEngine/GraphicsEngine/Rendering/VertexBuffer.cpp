@@ -1,7 +1,8 @@
 #include "VertexBuffer.h"
 
 //generate and store data into a vertexbuffer
-VertexBuffer::VertexBuffer(const void* databuffer, unsigned int size):m_renderBufferId(0)
+VertexBuffer::VertexBuffer(const void* databuffer,size_t size)
+	:m_renderBufferId(0)
 {
 	glGenBuffers(1, &m_renderBufferId);			   //generates a vertex buffer 
 	glBindBuffer(GL_ARRAY_BUFFER, m_renderBufferId); //binds the vertex buffer to the current context

@@ -1,21 +1,28 @@
 #include "WindowHandler.h"
-
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
+
+//Camera 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+//Camera Setup	
+float lastX = 0.0f;
+float lastY = 0.0f;
+bool firstMouse = true;
+
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
 {
-	renderer = new Renderer(); // creates a new renderer class on the heap
-	timer = new Timer(); // creates a new timer class in the heap
+	m_renderer = new Renderer(); // creates a new renderer class on the heap
+	m_timer = new Timer(); // creates a new timer class in the heap
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 }
 
 WindowClass::~WindowClass() 
 {
-	delete timer;
-	delete renderer;
-	if (gameWindow) glfwDestroyWindow(gameWindow);
+	delete m_timer;
+	delete m_renderer;
+	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
 }
 
@@ -34,17 +41,16 @@ void WindowClass::Init()
 #endif
 
 	//Create Window
-	gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
-	if (gameWindow == NULL)
+	m_gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
+	if (m_gameWindow == NULL)
 	{
 		//Error logging will be handler by error call back method.
 		glfwTerminate();
 		return;
 	}
-	glfwMakeContextCurrent(gameWindow);
-	glfwSetFramebufferSizeCallback(gameWindow, framebuffer_size_callback);
-	glfwSetWindowUserPointer(gameWindow, this);
-
+	glfwMakeContextCurrent(m_gameWindow);
+	glfwSetFramebufferSizeCallback(m_gameWindow, framebuffer_size_callback);
+	glfwSetWindowUserPointer(m_gameWindow, this);
 
 	//Load OpenGL Function Pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -52,31 +58,81 @@ void WindowClass::Init()
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
-	glfwMakeContextCurrent(gameWindow);
+	//Camera
+	glfwSetCursorPosCallback(m_gameWindow, mouse_callback);
+	glfwSetScrollCallback(m_gameWindow, scroll_callback);
 	
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
-	//Creates the needed states for rendering
-	renderer->CreateDrawStates();
+	//Create Draw States in Renderer
+	m_renderer->CreateDrawStates();
 
-	//sets the required states to draw the desired figure
-	renderer->SetDrawStates(); 
-
+	//Set Draw States in Renderer
+	m_renderer->SetDrawStates();
 }
 
 void WindowClass::Update() 
 {
-	timer->update();
-	float dt = timer->GetDeltaTime();
+	while (!glfwWindowShouldClose(m_gameWindow))
+	{
+		m_timer->update();
+		float dt = m_timer->GetDeltaTime();
 
-	//Render
-	renderer->Update(dt);
-	renderer->Draw(dt);
+		//Game Input
+		ProcessInput(m_gameWindow, dt);
 
-	//Swap Buffers
-	glfwSwapBuffers(gameWindow);
+		//Camera
+		glm::mat4 view = camera.GetViewMatrix();
 
-	//Poll I/O events
-	glfwPollEvents();
+		//Render
+		m_renderer->Update(m_width, m_height, camera.m_Zoom, view, dt);
+		m_renderer->Draw();
+
+		//Swap Buffers
+		glfwSwapBuffers(m_gameWindow);
+
+		//Poll I/O events
+		glfwPollEvents();
+	}
+}
+
+void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = (float)xpos;
+		lastY = (float)ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = (float)xpos - lastX;
+	float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = (float)xpos;
+	lastY = (float)ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll((float)yoffset);
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)

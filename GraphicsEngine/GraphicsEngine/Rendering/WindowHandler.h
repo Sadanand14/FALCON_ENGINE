@@ -5,15 +5,17 @@
 #include "Renderer.h"
 #include "Timer.h"
 #include <iostream>
+#include "Camera.h"
 
 class WindowClass
 {
-	int m_width, m_height, bufferWidth, bufferHeight;
+
+	int m_width, m_height, m_bufferWidth, m_bufferHeight;
 	const char* m_title;
 
-	Timer* timer;
-	GLFWwindow* gameWindow;
-	Renderer* renderer;
+	Timer* m_timer;
+	GLFWwindow* m_gameWindow;
+	Renderer* m_renderer;		
 
 public:
 	WindowClass(const char*, int, int);
@@ -22,11 +24,22 @@ public:
 	void Init();
 	void Update();
 
-	inline GLFWwindow* GetWindow() { return gameWindow; }
-	inline bool WindowCloseStatus(){ return glfwWindowShouldClose(gameWindow); }
+
+	inline GLFWwindow* GetWindow() { return m_gameWindow; }
+	inline bool WindowCloseStatus(){ return glfwWindowShouldClose(m_gameWindow); }
+
+	//Input
+	void ProcessInput(GLFWwindow* gameWindow, float deltaTime);	
+
 };
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+
+
+
 
 #endif // !WINDOW_HANDLER_H
 

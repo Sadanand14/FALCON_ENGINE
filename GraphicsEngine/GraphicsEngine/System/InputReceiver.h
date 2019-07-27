@@ -6,7 +6,6 @@
 
 #include "../Rendering/WindowHandler.h"
 #include "Log.h"
-
 #include <boost/array.hpp>
 
 class InputReceiver 

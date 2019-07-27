@@ -1,39 +1,67 @@
 #ifndef SHADER_H
-#define	SHADER_H
+#define SHADER_H
 
-#include "framework.h"
+#include <framework.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-#include <string>
+//GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 
 
 struct SimpleShader
 {
-	unsigned int m_type;
+	unsigned int m_shaderId = 0;
+	GLenum m_type;
 	std::string m_source;
-	SimpleShader() :m_type(0){ return; }
-	SimpleShader(unsigned int type, std::string source) : m_type(type), m_source(source) { return; }
+	SimpleShader(GLenum type) :m_shaderId(0),m_type(type) {}
+	SimpleShader(GLenum type, std::string source) :m_shaderId(0),m_type(type), m_source(source) {}
 };
+
+
+
 
 class Shader
 {
+
 private:
-	unsigned int m_compiledID; // id for this shader
-	SimpleShader m_Shader; // structure storing the code and type of shader
+	void LoadShaderCode(const GLchar* vertexPath, GLenum& type);
+	void CompileShaderCode(SimpleShader& shader);
+
 public:
-	Shader(const std::string& path);
-	~Shader();
+	//Program ID
+	unsigned int m_programID = 0;
+	SimpleShader m_vertexShader;
+	SimpleShader m_fragmentShader;
 
-	void SetUniform4f(const std::string&, float, float, float, float);
-	void SetUniform1f(const std::string&, float);
-	void SetUniform1i(const std::string&, int);
+	//Constructor to read and build the shader
+	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
-	inline const unsigned int GetID() const { return m_compiledID;} 
+	void LinkShaders();
 
-private:
-	SimpleShader LoadShader(const std::string& name);
-	void CompileShader(unsigned int, std::string);
-	int GetUniformLocation(const std::string& name);
+	//Use the shader
+	void UseShader();
+
+	//Utility uniform functions
+	void SetBool(const std::string& name, bool value) const;
+	void SetInt(const std::string& name, int value) const;
+	void SetFloat(const std::string& name, float value) const;
+	void SetVec2(const std::string& name, const glm::vec2& value) const;
+	void SetVec2(const std::string& name, float x, float y) const;
+	void SetVec3(const std::string& name, const glm::vec3& value) const;
+	void SetVec3(const std::string& name, float x, float y, float z) const;
+	void SetVec4(const std::string& name, const glm::vec4& value) const;
+	void SetVec4(const std::string& name, float x, float y, float z, float w) const;
+	void SetMat2(const std::string& name, const glm::mat2& mat) const;
+	void SetMat3(const std::string& name, const glm::mat3& mat) const;
+	void SetMat4(const std::string& name, const glm::mat4& mat) const;
+	GLint GetUniform(const GLchar* name);
+	
 };
 
-#endif // !1
-
+#endif //!SHADER_H
