@@ -27,7 +27,7 @@ steps:
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '2.*'
-    architecture: 'x64'
+    addToPath: true
 
 - script: 
     python -m pip install --upgrade pip 
