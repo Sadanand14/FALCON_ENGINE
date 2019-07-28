@@ -44,6 +44,10 @@ steps:
     python tools/setup_vendor.py
   displayName: 'Setting up vendors'
 
+- script: | 
+    GenProject.bat
+  workingDirectory: 'GraphicsEngine'
+  displayName: 'Running premake'
 
 - task: VSBuild@1
   inputs:
