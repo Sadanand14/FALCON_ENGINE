@@ -60,7 +60,7 @@ steps:
 
 - script: |
     dir
-  workingDirectory: 'GraphicsEngine/vendor'
+  workingDirectory: 'GraphicsEngine/GraphicsEngine'
   displayName: 'Running dir in vendor folder'
 
 - script: |
