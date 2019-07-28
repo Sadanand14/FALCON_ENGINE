@@ -1,3 +1,6 @@
+## Build Sanity :
+
+[![Build Status](https://dev.azure.com/san2889/san2889/_apis/build/status/Sadanand14.FALCON_ENGINE?branchName=master)](https://dev.azure.com/san2889/san2889/_build/latest?definitionId=1&branchName=master)
 
 ## Important links:
 1. [Working with premake](#precautions-to-work-with-premake-now)
