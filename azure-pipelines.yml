@@ -44,10 +44,29 @@ steps:
     python tools/setup_vendor.py
   displayName: 'Setting up vendors'
 
-- script: | 
-    GenProject.bat
+#- script: | 
+#    GenProject.bat
+#  workingDirectory: 'GraphicsEngine'
+#  displayName: 'Running premake'
+
+- script: |
+    dir
+  displayName: 'Running dir in main folder'
+
+- script: |
+    dir
   workingDirectory: 'GraphicsEngine'
-  displayName: 'Running premake'
+  displayName: 'Running dir in engine folder'
+
+- script: |
+    dir
+  workingDirectory: 'GraphicsEngine/vendor/include'
+  displayName: 'Running dir in vendor folder'
+
+- script: |
+    dir
+  workingDirectory: 'GraphicsEngine/vendor/libs'
+  displayName: 'Running dir in vendor folder'
 
 - task: VSBuild@1
   inputs:
