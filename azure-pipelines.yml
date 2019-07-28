@@ -65,7 +65,7 @@ steps:
 
 - script: |
     dir
-  workingDirectory: 'GraphicsEngine/GraphicsEngien/vendor/libs'
+  workingDirectory: 'GraphicsEngine/GraphicsEngine/vendor/libs'
   displayName: 'Running dir in vendor folder'
 
 - task: VSBuild@1
