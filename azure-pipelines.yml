@@ -60,12 +60,12 @@ steps:
 
 - script: |
     dir
-  workingDirectory: 'GraphicsEngine/vendor/include'
+  workingDirectory: 'GraphicsEngine/vendor'
   displayName: 'Running dir in vendor folder'
 
 - script: |
     dir
-  workingDirectory: 'GraphicsEngine/vendor/libs'
+  workingDirectory: 'GraphicsEngine/GraphicsEngien/vendor/libs'
   displayName: 'Running dir in vendor folder'
 
 - task: VSBuild@1
