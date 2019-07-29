@@ -88,9 +88,14 @@ project "GraphicsEngine"
 		links 
 		{
 			"glfw3.lib",
-			"opengl32.lib"
+			"opengl32.lib";
+			"assimp-vc140-mt.lib"
 		}
 
+		nuget {'glm:0.9.9.500'}
+
+
+	
 
 	filter { "system:windows", "configurations:Debug" }
 			defines "BUILD_DEBUG_MODE"
@@ -175,4 +180,16 @@ project "GraphicsEngine"
 			"/usr/local/lib",
 			"/usr/lib"
 		}
-		
+
+
+	--Setting up prebuild commands--
+	
+	filter{"configurations:Debug"}
+		assimp_abs_path = path.getabsolute(LinkDebugDirs["assimp"])
+	
+		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+
+	filter{"configurations:Release"}
+		assimp_abs_path = path.getabsolute(LinkReleaseDirs["assimp"])
+	
+		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
