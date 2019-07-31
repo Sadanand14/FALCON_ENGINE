@@ -2,6 +2,9 @@
 
 ### Prerequisites:
 1. Install python 2.* and its path to system paths.
+   #### Resource links:
+   1. [python download link(select 2.* from all releases)](https://www.python.org/downloads/)
+   2. [Setting up python path for windows](https://www.youtube.com/watch?v=Y2q_b4ugPWk)
 
 ### Setting up drive files:
 Whenever you update vendor folders on GDrive, take care of following things,
