@@ -26,7 +26,7 @@ steps:
 
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '2.*'
+    versionSpec: '3.*'
     addToPath: true
 
 - script: 
@@ -36,9 +36,6 @@ steps:
 - script: 
     pip install requests 
   displayName: 'Install required python modules'
-- script: 
-    echo %cd%
-  displayName: 'Wrting current working directory'
 
 - script: | 
     python tools/setup_vendor.py
@@ -49,24 +46,6 @@ steps:
 #  workingDirectory: 'GraphicsEngine'
 #  displayName: 'Running premake'
 
-- script: |
-    dir
-  displayName: 'Running dir in main folder'
-
-- script: |
-    dir
-  workingDirectory: 'GraphicsEngine'
-  displayName: 'Running dir in engine folder'
-
-- script: |
-    dir
-  workingDirectory: 'GraphicsEngine/GraphicsEngine'
-  displayName: 'Running dir in vendor folder'
-
-- script: |
-    dir
-  workingDirectory: 'GraphicsEngine/GraphicsEngine/vendor/libs'
-  displayName: 'Running dir in vendor folder'
 
 - task: VSBuild@1
   inputs:
