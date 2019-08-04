@@ -1,10 +1,14 @@
 ## Setting up Vendors and Assets with scrpt:
 
 ### Prerequisites:
-1. Install python 2.* and its path to system paths.
+1. Install python 3.* and its path to system paths.
    #### Resource links:
-   1. [python download link(select 2.* from all releases)](https://www.python.org/downloads/)
-   2. [Setting up python path for windows](https://www.youtube.com/watch?v=Y2q_b4ugPWk)
+   1. [python download link(select latest 3.* from all releases)](https://www.python.org/downloads/)
+   2. [Setting up python and pip path for windows(Tutorial)](https://www.youtube.com/watch?v=Y2q_b4ugPWk)
+   
+2. We are using `requests` module in python. To install it run following commands in terminal,
+   1. ```shell python -m pip install --upgrade pip ```
+   2. ```shell pip install requests```
 
 ### Setting up drive files:
 Whenever you update vendor folders on GDrive, take care of following things,
