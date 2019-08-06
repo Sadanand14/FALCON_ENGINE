@@ -88,9 +88,14 @@ project "GraphicsEngine"
 		links 
 		{
 			"glfw3.lib",
-			"opengl32.lib"
+			"opengl32.lib";
+			"assimp-vc140-mt.lib"
 		}
 
+		nuget {'glm:0.9.9.500'}
+
+
+	
 
 	filter { "system:windows", "configurations:Debug" }
 			defines "BUILD_DEBUG_MODE"
@@ -103,7 +108,6 @@ project "GraphicsEngine"
 				"%{LinkDebugDirs.assimp}",
 			}
 
-   			postbuildcommands { "copy /y /d" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
 
 	
 	filter { "system:windows", "configurations:Release" }
@@ -117,7 +121,6 @@ project "GraphicsEngine"
 				"%{LinkReleaseDirs.boost}",
 				"%{LinkReleaseDirs.assimp}"
 			}
- 	 		postbuildcommands { "copy /y /d" .. %{LinkReleaseDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
 
 	
 	--------SETTING UP THINGS FOR LINUX
@@ -163,8 +166,6 @@ project "GraphicsEngine"
 		}
 
 
-		postbuildcommands { "cp -rf" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
-
 
 	filter {"system:linux","configurations:Release"}
 		defines "BUILD_RELEASE_MODE"
@@ -179,5 +180,16 @@ project "GraphicsEngine"
 			"/usr/local/lib",
 			"/usr/lib"
 		}
-		
-	   	postbuildcommands { "cp -rf" .. %{LinkDebugDirs.assimp} .. "/* build/" .. outputdir .. "/bin/%{prj.name}" }
+
+
+	--Setting up prebuild commands--
+	
+	filter{"configurations:Debug"}
+		assimp_abs_path = path.getabsolute(LinkDebugDirs["assimp"])
+	
+		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+
+	filter{"configurations:Release"}
+		assimp_abs_path = path.getabsolute(LinkReleaseDirs["assimp"])
+	
+		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
