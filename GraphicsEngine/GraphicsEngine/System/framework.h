@@ -4,7 +4,10 @@
 #ifndef FRAMEWORK_H
 #define FRAMEWORK_H
 
+//Falcon platform independent defines
 
+#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+#define BIT(x) (1 << x)
 
 
 #ifdef FL_PLATFORM_WINDOWS
@@ -29,6 +32,6 @@
 #include "glfw/glfw3.h"
 
 
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+
 
 #endif //!FRAMEWORK_H

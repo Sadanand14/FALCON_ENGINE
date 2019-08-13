@@ -51,7 +51,7 @@ void Window::Init()
 		return;
 	}
 	glfwMakeContextCurrent(m_Window);
-	glfwSetFramebufferSizeCallback(m_Window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(m_Window, frame_buffer_size_callback);
 	glfwSetWindowUserPointer(m_Window, this);
 
 	//Load OpenGL Function Pointers
@@ -68,7 +68,14 @@ void Window::Init()
 	
 }
 
-
+void Window:: SetGLFWErrorCallback() const {
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
+	
+	#ifdef BUILD_DEBUG_MODE
+	//glEnable(GL_DEBUG_OUTPUT);
+	//glDebugMessageCallback(GLErrorHandler::MessageCallback, nullptr);
+	#endif // FL_BUILD_DEBUG
+}
 
 void Window::Update() 
 {
@@ -100,7 +107,7 @@ void Window::SetVSync(bool enable)
 
 
 
-void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)
+void frame_buffer_size_callback(GLFWwindow* gameWindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }

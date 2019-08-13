@@ -5,19 +5,6 @@
 #include "System/events/MouseEvent.h"
 #include "Rendering/WindowHandler.h"
 
-boost::array<bool, MAX_KEYS> InputReceiver::s_keyStates = {false};
-boost::array<bool, MAX_MOUSE_KEYS> InputReceiver::s_mouseStates = { false };
-double InputReceiver::s_xpos = 0.0, InputReceiver::s_ypos = 0.0;
-
-InputReceiver::InputReceiver(Window* windowClass) 
-{
-	Init(windowClass->GetWindow());
-}
-
-InputReceiver::~InputReceiver() 
-{
-	
-}
 
 
 void InputReceiver::key_callback(GLFWwindow* glfwWindow, int keyCode, int scancode, int action, int mods)
@@ -58,7 +45,7 @@ void InputReceiver::char_callback(GLFWwindow* glfwWindow, unsigned int keyCode)
 	Window& window = *(static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow)));
 	EventCallbackFunc eventCallBackFunc = window.GetWindowEventCallbackFunction();
 	events::KeyTypedEvent event(keyCode);
-	EventCallbackFunc(event);
+	eventCallBackFunc(event);
 }
 
 

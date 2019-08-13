@@ -1,4 +1,4 @@
-#include "WindowsInput.h
+#include "WindowsInput.h"
 #include "framework.h"
 #include "System/Application.h"
 
@@ -30,12 +30,12 @@ bool WindowsInput::IsMouseButtonPressed(int button)
 {
 	auto window = Application::GetInstance().GetWindow().GetGLFWWindow();
 	auto state = glfwGetMouseButton(window, button);
-	return state == GLFW_PRESS
+	return state == GLFW_PRESS;
 }
 
 std::pair<float, float> WindowsInput::GetMousePositionImpl()
 {
-	auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+	auto window = Application::GetInstance().GetWindow().GetGLFWWindow();
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	return { (float)xpos, (float)ypos };

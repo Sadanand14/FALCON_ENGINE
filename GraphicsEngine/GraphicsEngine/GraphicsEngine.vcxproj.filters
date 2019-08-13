@@ -63,9 +63,6 @@
     <ClInclude Include="Rendering\stb_image.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="System\InputReceiver.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="System\Camera.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
@@ -111,6 +108,27 @@
     <ClInclude Include="System\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="System\Layers\Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Layers\LayerStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\InputReceiver.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\WindowsInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\KeyCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\MouseCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -143,9 +161,6 @@
     <ClCompile Include="Rendering\WindowHandler.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="System\InputReceiver.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\stb_image_implementation.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
@@ -171,6 +186,21 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="System\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Layers\Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Layers\LayerStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Input\InputReceiver.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Input\WindowsInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\OpenGLErrorHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

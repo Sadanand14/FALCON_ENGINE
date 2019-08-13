@@ -2,6 +2,9 @@
 #include "Log.h"
 #include "glm/vec3.hpp"
 #include "framework.h"
+#include "System/Input/Input.h"
+#include "events/ApplicationEvent.h"
+
 Application* Application::s_Instance = nullptr;
 
 Application::Application():
@@ -12,7 +15,7 @@ Application::Application():
 	s_Instance = this;
 
 	m_Window = new Window(1600, 900);
-	m_Window->SetWindowsCallback(BIND_EVENT_FN(Application::OnEvent));
+	m_Window->SetWindowsEventCallbackFunction(BIND_EVENT_FN(Application::OnEvent));
 
 
 	m_Renderer = new Renderer(); // creates a new renderer class on the heap
@@ -34,7 +37,16 @@ Application::~Application()
 
 void Application::OnEvent(events::Event& e)
 {
-	FL_ENGINE_INFO("Event catched {0}", e);
+	events::EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowCloseEvent));
+	FL_ENGINE_INFO("Event catched {0}", e.ToString());
+}
+
+bool Application::OnWindowCloseEvent(events::WindowCloseEvent& e)
+{
+	FL_ENGINE_INFO("Closing the window");
+	m_Window->SetWindowShouldClose(true);
+	return true;
 }
 
 void Application::Run()
@@ -47,8 +59,10 @@ void Application::Run()
 		m_Timer->update();
 		float dt = m_Timer->GetDeltaTime();
 
-		//Game Input
-		m_Window->ProcessInput(m_Window->GetGLFWWindow(),m_Camera, dt);
+		if (Input::GetKeyDown(FL_KEY_SPACE))
+		{
+			FL_ENGINE_TRACE("ouch!!");
+		}
 
 		//Camera
 		glm::mat4 view = m_Camera.GetViewMatrix();

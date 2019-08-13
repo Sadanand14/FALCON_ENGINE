@@ -23,7 +23,7 @@ class Window
 
 	void SetInputCallbacks();
 
-	inline void SetGLFWErrorCallback() const{ glfwSetErrorCallback(&GLErrorHandler::glfwError);}
+	void SetGLFWErrorCallback() const;
 
 public:
 	Window(const char*, int, int);
@@ -52,12 +52,16 @@ public:
 	inline EventCallbackFunc GetWindowEventCallbackFunction() const { return m_EventCallback; }
 
 
+
 	void SetVSync(bool enable);
 	inline bool isVSync() const { return VSync; }
 
 	inline GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
 };
+
+void frame_buffer_size_callback(GLFWwindow*, int, int);
+
 
 #endif // !WINDOW_HANDLER_H
 

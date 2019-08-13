@@ -1,11 +1,20 @@
 #ifndef OPENGLERRORHANDLER_H
 #define OPENGLERRORHANDLER_H
 
-#include "../System/Log.h"
+#include "Log.h"
+#include "framework.h"
+
+
 namespace GLErrorHandler {
-	void glfwError(int id, const char* description)
-	{
-		FL_ENGINE_ERROR("ERROR:{0}, {1}", id, description);
-	}
+	void glfwError(int id, const char* description);
+
+	void GLAPIENTRY MessageCallback(GLenum source,
+		GLenum type,
+		GLuint id,
+		GLenum severity,
+		GLsizei length,
+		const GLchar* message,
+		const void* userParam);
+
 }
 #endif // OPENGLERRORHANDLER_H

@@ -5,6 +5,7 @@
 #include "Rendering/WindowHandler.h"
 #include "Rendering/Renderer.h"
 #include "events/Event.h"
+#include "events/ApplicationEvent.h"
 
 class Application
 {
@@ -17,6 +18,7 @@ private:
 	//Camera
 	Camera m_Camera;
 
+	
 public:
 	static inline Application& GetInstance() { return *s_Instance; }
 	Application();
@@ -27,10 +29,13 @@ public:
 	
 	inline const Window& GetWindow() const { return *m_Window; }
 	
+	
+	//Event handling methods
+	bool OnWindowCloseEvent(events::WindowCloseEvent& e);
 };
 
 //To be defined by client
-Application* CreateApplication();
+//Application* CreateApplication();
 
 
 

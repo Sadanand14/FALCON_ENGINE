@@ -2,7 +2,9 @@
 #define INPUT_H
 
 #include "framework.h"
-
+#include "KeyCodes.h"
+#include "MouseCodes.h"
+#include <utility>
 /* TODO:
 /  1. Add GetAxis like method.
 /  2. More methods around mouse
@@ -37,17 +39,15 @@ public:
 
 	inline static bool GetKeyDown(int keycode) { return s_Instance->IsKeyDown(keycode); }
 	inline static bool GetKeyUp(int keycode) { return s_Instance->IsKeyUp(keycode); }
-	inline static bool GetKeyDown(int keycode) { return s_Instance->IsKeyRepeated(keycode); }
+	inline static bool GetKeyRepeat(int keycode) { return s_Instance->IsKeyRepeated(keycode); }
 
 
 	inline static bool GetMouseButton(int button) { return s_Instance->IsMouseButtonPressed(button); }
 	inline static std::pair<float, float> GetMousePosition() { return s_Instance->GetMousePositionImpl(); }
 	inline static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
-	inline static float GetMouseY() { return s_Instance->GetMouseYImpl();
+	inline static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
 
 };
 
 
 #endif // INPUT_H
-
-	
