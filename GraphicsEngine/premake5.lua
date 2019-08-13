@@ -11,13 +11,15 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDirs = {}
 
-IncludeDirs["vendor"] = "GraphicsEngine/vendor/include/";
-IncludeDirs["spdlog"] = "GraphicsEngine/vendor/include/spdlog";
-IncludeDirs["GLFW"]   = "GraphicsEngine/vendor/include/glfw";
-IncludeDirs["glad"]   = "GraphicsEngine/vendor/include/glad";
-IncludeDirs["assimp"] = "GraphicsEngine/vendor/include/assimp";
-IncludeDirs["KHR"]    = "GraphicsEngine/vendor/include/KHR";
-IncludeDirs["boost"]  = "GraphicsEngine/vendor/include/boost";
+IncludeDirs["vendor"]  = "GraphicsEngine/vendor/include/";
+IncludeDirs["spdlog"]  = "GraphicsEngine/vendor/include/spdlog";
+IncludeDirs["GLFW"]    = "GraphicsEngine/vendor/include/glfw";
+IncludeDirs["glad"]    = "GraphicsEngine/vendor/include/glad";
+IncludeDirs["assimp"]  = "GraphicsEngine/vendor/include/assimp";
+IncludeDirs["KHR"]     = "GraphicsEngine/vendor/include/KHR";
+IncludeDirs["boost"]   = "GraphicsEngine/vendor/include/boost";
+IncludeDirs["System"]  = "GraphicsEngine/System";
+IncludeDirs["events"]  = "GraphicsEngine/System/events";
 
 
 LinkDebugDirs = {}

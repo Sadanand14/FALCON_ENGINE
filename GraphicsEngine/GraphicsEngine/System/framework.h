@@ -28,4 +28,7 @@
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
+
+#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+
 #endif //!FRAMEWORK_H

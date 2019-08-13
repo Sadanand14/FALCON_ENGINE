@@ -6,40 +6,58 @@
 #include "Timer.h"
 #include <iostream>
 #include "Camera.h"
+#include "events/Event.h"
+#include "OpenGLErrorHandler.h"
+using EventCallbackFunc = std::function<void(events::Event&)>;
 
-class WindowClass
+
+class Window
 {
+	GLFWwindow* m_Window;
 
+	// Following data could be moved out to a struct which holds Windows Metadata
 	int m_width, m_height, m_bufferWidth, m_bufferHeight;
-	const char* m_title;
+	const char* m_title;	
+	bool VSync;
+	EventCallbackFunc m_EventCallback;
 
-	Timer* m_timer;
-	GLFWwindow* m_gameWindow;
-	Renderer* m_renderer;		
+	void SetInputCallbacks();
+
+	inline void SetGLFWErrorCallback() const{ glfwSetErrorCallback(&GLErrorHandler::glfwError);}
 
 public:
-	WindowClass(const char*, int, int);
-	~WindowClass();
+	Window(const char*, int, int);
+	Window(int width, int height);
+
+
+	~Window();
 
 	void Init();
 	void Update();
 
+	inline GLFWwindow* GetWindow() { return m_Window; }
+	
+	inline bool GetWindowShouldClose() const { return glfwWindowShouldClose(m_Window); }
+	inline void SetWindowShouldClose(bool val) { glfwSetWindowShouldClose(m_Window, val);}
 
-	inline GLFWwindow* GetWindow() { return m_gameWindow; }
-	inline bool WindowCloseStatus(){ return glfwWindowShouldClose(m_gameWindow); }
+	inline void SwapBuffers() const { glfwSwapBuffers(m_Window); }
 
-	//Input
-	void ProcessInput(GLFWwindow* gameWindow, float deltaTime);	
+	inline void PollEvents() const { glfwPollEvents(); }
+
+	inline const float GetWidth() const { return m_width; }
+	
+	inline const float GetHeight() const { return m_height; }
+
+	inline void SetWindowsEventCallbackFunction(const EventCallbackFunc& callback) { m_EventCallback = callback; }
+	inline EventCallbackFunc GetWindowEventCallbackFunction() const { return m_EventCallback; }
+
+
+	void SetVSync(bool enable);
+	inline bool isVSync() const { return VSync; }
+
+	inline GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
 };
-
-void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
-
-
-
 
 #endif // !WINDOW_HANDLER_H
 
