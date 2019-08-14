@@ -110,7 +110,7 @@
     <ClInclude Include="Rendering\VertexBuffer.h" />
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
-    <ClInclude Include="System\Camera.h" />
+    <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="System\events\ApplicationEvent.h" />
     <ClInclude Include="System\events\Event.h" />
     <ClInclude Include="System\events\KeyEvent.h" />
@@ -148,7 +148,7 @@
     <ClCompile Include="Rendering\VertexArray.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
-    <ClCompile Include="System\Camera.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\Input\InputReceiver.cpp" />
