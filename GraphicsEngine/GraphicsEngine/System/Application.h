@@ -4,8 +4,11 @@
 #include "framework.h"
 #include "Rendering/WindowHandler.h"
 #include "Rendering/Renderer.h"
+#include "Rendering/Camera.h"
 #include "events/Event.h"
 #include "events/ApplicationEvent.h"
+#include "events/KeyEvent.h"
+#include "events/MouseEvent.h"
 
 class Application
 {
@@ -17,7 +20,10 @@ private:
 	Timer* m_Timer;
 	//Camera
 	Camera m_Camera;
-
+	//Camera Setup	
+	float lastX = 0.0f;
+	float lastY = 0.0f;
+	bool firstMouse = true;
 	
 public:
 	static inline Application& GetInstance() { return *s_Instance; }
@@ -32,6 +38,11 @@ public:
 	
 	//Event handling methods
 	bool OnWindowCloseEvent(events::WindowCloseEvent& e);
+
+	//Input handling methods. These currently handle Camera, but should be moved to other layer later on.
+	bool OnKeyPress(events::KeyPressedEvent& e);
+	bool OnMouseMove(events::MouseMovedEvent& e);
+	bool OnMouseScroll(events::MouseScrolledEvent& e);
 };
 
 //To be defined by client

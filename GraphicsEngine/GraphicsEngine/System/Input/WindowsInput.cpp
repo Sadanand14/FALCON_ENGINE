@@ -3,13 +3,13 @@
 #include "System/Application.h"
 
 
-Input* WindowsInput::s_Instance = new WindowsInput();
+Input* Input::s_Instance = new WindowsInput();
 
 bool WindowsInput::IsKeyDown(int keycode)
 {
 	auto window = Application::GetInstance().GetWindow().GetGLFWWindow();
 	auto state = glfwGetKey(window, keycode);
-	return state == GLFW_PRESS;
+	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
 bool WindowsInput::IsKeyUp(int keycode)

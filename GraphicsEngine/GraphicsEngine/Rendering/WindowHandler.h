@@ -44,9 +44,9 @@ public:
 
 	inline void PollEvents() const { glfwPollEvents(); }
 
-	inline const float GetWidth() const { return m_width; }
+	inline const int GetWidth() const { return m_width; }
 	
-	inline const float GetHeight() const { return m_height; }
+	inline const int GetHeight() const { return m_height; }
 
 	inline void SetWindowsEventCallbackFunction(const EventCallbackFunc& callback) { m_EventCallback = callback; }
 	inline EventCallbackFunc GetWindowEventCallbackFunction() const { return m_EventCallback; }
