@@ -19,6 +19,9 @@ Application::Application()
 
 	m_Timer = new Timer();// creates a new timer class in the heap
 
+	//Input
+
+	input = new InputReceiver(m_Window);
 	//Todo: May be add events class init here and connect all callbacks.
 
 }

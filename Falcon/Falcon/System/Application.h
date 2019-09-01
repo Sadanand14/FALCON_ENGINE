@@ -6,6 +6,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Camera.h"
 #include "Log.h"
+#include "InputReceiver.h"
 
 class Application
 {
@@ -14,6 +15,7 @@ private:
 	Window* m_Window;
 	Renderer* m_Renderer;
 	Timer* m_Timer;
+	InputReceiver* input;
 	//Camera
 	Camera m_Camera;
 
@@ -29,6 +31,8 @@ public:
 
 };
 
+//This will be implemented by the client using engine lib.
+Application* CreateApplication();
 
 #endif // !1APPLICATION_H
 

@@ -1,11 +1,17 @@
 #ifndef game_h
 #define game_h
 
-#include "InputReceiver.h"
+#include "Application.h"
 
+class Game : public Application
+{
+public:
+	Game();
+	~Game();
+};
 
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 900;
-
-
+Application* CreateApplication()
+{
+	return new Game();
+}
 #endif

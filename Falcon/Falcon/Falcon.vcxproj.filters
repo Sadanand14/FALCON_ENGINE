@@ -134,6 +134,7 @@
     <ClCompile Include="Rendering\Camera.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="System\EngineEntry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">

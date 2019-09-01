@@ -135,6 +135,7 @@
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="System\EngineEntry.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
@@ -143,9 +144,9 @@
     <ClCompile Include="System\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
