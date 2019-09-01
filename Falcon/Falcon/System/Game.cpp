@@ -5,10 +5,10 @@
 int main()
 {
 	Log::Init();
-	WindowClass* window1 = new WindowClass("FalconEngine", 1280, 720);
+	Window* window1 = new Window("FalconEngine", 1280, 720);
 	InputReceiver* input = new InputReceiver(window1);
 
-	while(!window1->WindowCloseStatus())
+	while(!window1->GetWindowShouldClose())
 	{
 		window1->Update();
 	}

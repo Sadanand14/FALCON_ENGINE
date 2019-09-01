@@ -9,25 +9,28 @@ float lastX = 0.0f;
 float lastY = 0.0f;
 bool firstMouse = true;
 
-//renderer gets initialized here
-WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
+Window::Window(const char* title, int width, int height ): m_width(width), m_height(height), m_bufferWidth(0), m_bufferHeight(0),m_title(title)
 {
-	m_renderer = new Renderer(); // creates a new renderer class on the heap
-	m_timer = new Timer(); // creates a new timer class in the heap
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
+	SetVSync(true);
 }
 
-WindowClass::~WindowClass() 
+Window::Window(int width, int height) : m_width(width), m_height(height), m_bufferWidth(0), m_bufferHeight(0), m_title("Falcon")
 {
-	delete m_timer;
-	delete m_renderer;
-	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
+	Init();
+	SetVSync(true);
+}
+
+Window::~Window() 
+{
+	if (m_GLWindow) glfwDestroyWindow(m_GLWindow);
 	glfwTerminate();
 }
 
 
-void WindowClass::Init() 
+void Window::Init() 
 {
 	//GLFW Configuration
 	glfwInit();
@@ -41,16 +44,16 @@ void WindowClass::Init()
 #endif
 
 	//Create Window
-	m_gameWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
-	if (m_gameWindow == NULL)
+	m_GLWindow = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
+	if (m_GLWindow == NULL)
 	{
 		//Error logging will be handler by error call back method.
 		glfwTerminate();
 		return;
 	}
-	glfwMakeContextCurrent(m_gameWindow);
-	glfwSetFramebufferSizeCallback(m_gameWindow, framebuffer_size_callback);
-	glfwSetWindowUserPointer(m_gameWindow, this);
+	glfwMakeContextCurrent(m_GLWindow);
+	glfwSetFramebufferSizeCallback(m_GLWindow, framebuffer_size_callback);
+	glfwSetWindowUserPointer(m_GLWindow, this);
 
 	//Load OpenGL Function Pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -59,45 +62,22 @@ void WindowClass::Init()
 	}
 
 	//Camera
-	glfwSetCursorPosCallback(m_gameWindow, mouse_callback);
-	glfwSetScrollCallback(m_gameWindow, scroll_callback);
+	glfwSetCursorPosCallback(m_GLWindow, mouse_callback);
+	glfwSetScrollCallback(m_GLWindow, scroll_callback);
 	
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_GLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
-	//Create Draw States in Renderer
-	m_renderer->CreateDrawStates();
-
-	//Set Draw States in Renderer
-	m_renderer->SetDrawStates();
 }
 
-void WindowClass::Update() 
+void Window::Update()
 {
-	while (!glfwWindowShouldClose(m_gameWindow))
-	{
-		m_timer->update();
-		float dt = m_timer->GetDeltaTime();
-
-		//Game Input
-		ProcessInput(m_gameWindow, dt);
-
-		//Camera
-		glm::mat4 view = camera.GetViewMatrix();
-
-		//Render
-		m_renderer->Update(m_width, m_height, camera.m_Zoom, view, dt);
-		m_renderer->Draw();
-
-		//Swap Buffers
-		glfwSwapBuffers(m_gameWindow);
-
-		//Poll I/O events
-		glfwPollEvents();
-	}
+	SwapBuffers();
+	PollEvents();
 }
 
-void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
+
+void Window::ProcessInput(GLFWwindow* window, float deltaTime)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -111,6 +91,18 @@ void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
+
+
+void Window::SetVSync(bool enable)
+{
+	if (enable)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
+
+	m_VSync = enable;
+}
+
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {

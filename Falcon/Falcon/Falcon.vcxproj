@@ -99,6 +99,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="System\Application.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\Model.h" />
@@ -111,7 +112,7 @@
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\stb_image.h" />
-    <ClInclude Include="System\Camera.h" />
+    <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="System\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\Model.cpp" />
@@ -132,7 +134,7 @@
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
-    <ClCompile Include="System\Camera.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />

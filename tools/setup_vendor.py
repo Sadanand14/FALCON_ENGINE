@@ -90,8 +90,8 @@ if __name__ == '__main__':
 
 	current_dir = os.path.dirname(os.path.realpath(__file__))
 
-	ASSETS_PATH = os.path.join(current_dir , "../GraphicsEngine/")
-	VENDOR_PATH = os.path.join(current_dir ,"../GraphicsEngine/GraphicsEngine/")
+	ASSETS_PATH = os.path.join(current_dir , "../Falcon/")
+	VENDOR_PATH = os.path.join(current_dir ,"../Falcon/Falcon/")
 
 
 	if platform.system() == 'Windows':

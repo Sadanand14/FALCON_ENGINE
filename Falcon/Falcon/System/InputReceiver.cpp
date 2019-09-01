@@ -7,9 +7,9 @@ boost::array<bool, MAX_KEYS> InputReceiver::m_keyStates = {false};
 boost::array<bool, MAX_MOUSE_KEYS> InputReceiver::m_mouseStates = { false };
 double InputReceiver::mouse_x = 0, InputReceiver::mouse_y = 0;
 
-InputReceiver::InputReceiver(WindowClass* windowClass) 
+InputReceiver::InputReceiver(Window* windowClass) 
 {
-	Init(windowClass->GetWindow());
+	Init(windowClass->GetGLFWWindow());
 }
 
 InputReceiver::~InputReceiver() 

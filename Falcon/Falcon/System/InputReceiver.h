@@ -18,7 +18,7 @@ private:
 
 public:
 
-	InputReceiver(WindowClass* window);
+	InputReceiver(Window* window);
 	~InputReceiver();
 	
 private:

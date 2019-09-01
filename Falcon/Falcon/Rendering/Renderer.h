@@ -5,7 +5,7 @@
 #include "stb_image.h"
 #include "Model.h"
 
-#include "..//System/Camera.h"
+#include "Camera.h"
 #include "Shader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
