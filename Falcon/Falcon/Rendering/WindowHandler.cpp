@@ -1,9 +1,8 @@
 #include "WindowHandler.h"
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
+#include "Application.h"
 
-//Camera 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 //Camera Setup	
 float lastX = 0.0f;
 float lastY = 0.0f;
@@ -79,17 +78,22 @@ void Window::Update()
 
 void Window::ProcessInput(GLFWwindow* window, float deltaTime)
 {
+	Camera* camera = Application::GetApplication().GetCamera();
+	
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+	{
+		camera->ProcessKeyboard(FORWARD, deltaTime);
+		FL_ENGINE_INFO("I am processign input!!");
+	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		camera->ProcessKeyboard(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		camera->ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		camera->ProcessKeyboard(RIGHT, deltaTime);
 }
 
 
@@ -106,6 +110,7 @@ void Window::SetVSync(bool enable)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	Camera* camera = Application::GetApplication().GetCamera();
 	if (firstMouse)
 	{
 		lastX = (float)xpos;
@@ -119,12 +124,13 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastX = (float)xpos;
 	lastY = (float)ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll((float)yoffset);
+	Camera* camera = Application::GetApplication().GetCamera();
+	camera->ProcessMouseScroll((float)yoffset);
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)

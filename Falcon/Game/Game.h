@@ -1,7 +1,7 @@
 #ifndef game_h
 #define game_h
 
-#include "Application.h"
+#include <falcon.h>
 
 class Game : public Application
 {

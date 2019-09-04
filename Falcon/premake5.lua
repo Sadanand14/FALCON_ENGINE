@@ -187,9 +187,9 @@ project "Falcon"
 	filter{"configurations:Debug"}
 		assimp_abs_path = path.getabsolute(LinkDebugDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		postbuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
 
 	filter{"configurations:Release"}
 		assimp_abs_path = path.getabsolute(LinkReleaseDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		postbuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')

@@ -17,7 +17,7 @@ private:
 	Timer* m_Timer;
 	InputReceiver* input;
 	//Camera
-	Camera m_Camera;
+	Camera* m_Camera;
 
 public:
 	Application();
@@ -25,9 +25,10 @@ public:
 
 	void Run();
 
-	inline Application& GetApplication() const { return *s_Instance; }
-	inline Window& GetWindow()           const { return *m_Window;   }
-	inline Renderer& GetRenderer()       const { return *m_Renderer; }
+	static inline Application& GetApplication() { return *s_Instance; }
+	inline Window& GetWindow()      const { return *m_Window;   }
+	inline Renderer& GetRenderer()  const { return *m_Renderer; }
+	inline Camera* GetCamera()  { return m_Camera; }
 
 };
 

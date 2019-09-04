@@ -2,7 +2,6 @@
 Application* Application::s_Instance = nullptr;
 
 Application::Application()
-	:m_Camera(glm::vec3(0.0f, 0.0f, 5.0f))
 {
 	Log::Init();
 
@@ -19,6 +18,8 @@ Application::Application()
 
 	m_Timer = new Timer();// creates a new timer class in the heap
 
+	//Setup Camera
+	m_Camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 	//Input
 
 	input = new InputReceiver(m_Window);
@@ -31,6 +32,7 @@ Application::~Application()
 	delete m_Window;
 	delete m_Renderer;
 	delete m_Timer;
+	delete m_Camera;
 }
 
 void Application::Run()
@@ -46,10 +48,10 @@ void Application::Run()
 		m_Window->ProcessInput(m_Window->GetGLFWWindow(), dt);
 
 		//Camera
-		glm::mat4 view = m_Camera.GetViewMatrix();
+		glm::mat4 view = m_Camera->GetViewMatrix();
 
 		//Render
-		m_Renderer->Update(m_Window->GetWidth(), m_Window->GetHeight(), m_Camera.m_Zoom, view, dt);
+		m_Renderer->Update(m_Window->GetWidth(), m_Window->GetHeight(), m_Camera->m_Zoom, view, dt);
 		m_Renderer->Draw();
 
 		m_Window->Update();

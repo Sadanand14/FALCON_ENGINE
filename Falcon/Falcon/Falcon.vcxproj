@@ -19,13 +19,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -42,15 +42,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\build\Debug-windows-x86_64\bin\Falcon\</OutDir>
-    <IntDir>..\build\Debug-windows-x86_64\intermediates\Falcon\</IntDir>
+    <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>Falcon</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\build\Release-windows-x86_64\bin\Falcon\</OutDir>
-    <IntDir>..\build\Release-windows-x86_64\intermediates\Falcon\</IntDir>
+    <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <TargetName>Falcon</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;BUILD_DEBUG_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;System;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -68,18 +68,23 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>vendor\libs\GLFW\Debug;vendor\libs\boost;vendor\libs\assimp\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW\$(Configuration);$(ProjectDir)vendor\libs\assimp\$(Configuration);$(ProjectDir)vendor\libs\boost\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PerUserRedirection>true</PerUserRedirection>
     </Link>
     <PreBuildEvent>
-      <Command>IF EXIST "vendor\libs\assimp\Release"\ (xcopy /Q /E /Y /I "vendor\libs\assimp\Release" "..\build\Debug-windows-x86_64\bin\Falcon" &gt; nul) ELSE (xcopy /Q /Y /I "vendor\libs\assimp\Release" "..\build\Debug-windows-x86_64\bin\Falcon" &gt; nul)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;BUILD_RELEASE_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;System;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -92,13 +97,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>vendor\libs\GLFW\Release;vendor\libs\boost;vendor\libs\assimp\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW\$(Configuration);$(ProjectDir)vendor\libs\assimp\$(Configuration);$(ProjectDir)vendor\libs\boost\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>IF EXIST "vendor\libs\assimp\Release"\ (xcopy /Q /E /Y /I "vendor\libs\assimp\Release" "..\build\Release-windows-x86_64\bin\Falcon" &gt; nul) ELSE (xcopy /Q /Y /I "vendor\libs\assimp\Release" "..\build\Release-windows-x86_64\bin\Falcon" &gt; nul)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="falcon.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -113,7 +123,6 @@
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\Camera.h" />
-    <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="System\ThreadPool.h" />
@@ -136,7 +145,6 @@
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="System\EngineEntry.cpp" />
-    <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
