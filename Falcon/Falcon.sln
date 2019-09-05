@@ -5,16 +5,30 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Falcon", "Falcon\Falcon.vcxproj", "{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{22699393-2351-4E28-958F-BDE2A73FE5B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Debug|x64.ActiveCfg = Debug|x64
 		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Debug|x64.Build.0 = Debug|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Debug|x86.ActiveCfg = Debug|x64
 		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Release|x64.ActiveCfg = Release|x64
 		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Release|x64.Build.0 = Release|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Release|x86.ActiveCfg = Release|x64
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Debug|x64.ActiveCfg = Debug|x64
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Debug|x64.Build.0 = Debug|x64
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Debug|x86.Build.0 = Debug|Win32
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Release|x64.ActiveCfg = Release|x64
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Release|x64.Build.0 = Release|x64
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Release|x86.ActiveCfg = Release|Win32
+		{22699393-2351-4E28-958F-BDE2A73FE5B2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

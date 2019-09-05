@@ -132,12 +132,6 @@
     <ClCompile Include="System\EngineEntry.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\FragmentShader.frag">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\VertexShader.vert">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

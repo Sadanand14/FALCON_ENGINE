@@ -82,12 +82,8 @@ void Window::ProcessInput(GLFWwindow* window, float deltaTime)
 	
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
 		camera->ProcessKeyboard(FORWARD, deltaTime);
-		FL_ENGINE_INFO("I am processign input!!");
-	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		camera->ProcessKeyboard(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
