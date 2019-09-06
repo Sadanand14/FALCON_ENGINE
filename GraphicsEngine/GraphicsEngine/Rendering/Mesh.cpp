@@ -1,7 +1,13 @@
 #include "Mesh.h"
 #include "Log.h"
 
-void Mesh::SetupMesh()
+
+/**
+* Constructor for Mesh Class.
+*/
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures) 
+	: m_vertices(vertices) , m_indices(indices) , m_textures(textures),
+	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
 {
 	m_VAO = new VertexArray();
 	m_VAO->Bind();
@@ -9,17 +15,12 @@ void Mesh::SetupMesh()
 	m_IBO = new IndexBuffer(m_indices, m_indices.size());
 	m_VAO->AddBuffer(m_VBO);
 	m_VAO->Unbind();
-}
-
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures) 
-	: m_vertices(vertices) , m_indices(indices) , m_textures(textures),
-	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
-{
-	SetupMesh();
 	FL_ENGINE_INFO("INFO: Mesh set up correctly.");
 }
 
-
+/**
+* Destructor for Mesh Class.
+*/
 Mesh::~Mesh()
 {
 	delete m_VAO;
@@ -27,7 +28,7 @@ Mesh::~Mesh()
 	delete m_IBO;
 }
 
-
+//TODO: Have to modify the function to remove the draw call from it.
 void Mesh::DrawMesh(Shader shader)
 {
 	// bind appropriate textures
