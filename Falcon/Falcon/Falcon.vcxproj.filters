@@ -129,7 +129,9 @@
     <ClCompile Include="Rendering\Camera.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="System\EngineEntry.cpp" />
+    <ClCompile Include="System\EngineEntry.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

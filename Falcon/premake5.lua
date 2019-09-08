@@ -87,12 +87,13 @@ project "Falcon"
 			"FL_PLATFORM_WINDOWS"
 		}
 
-		--[=====[links 
+		links 
 		{
 			"glfw3.lib",
 			"opengl32.lib";
+			"assimp-vc140-mt.lib"
 		}
-		--]=====]
+			
 		nuget {'glm:0.9.9.500'}
 
 
@@ -102,11 +103,6 @@ project "Falcon"
 			defines "BUILD_DEBUG_MODE"
 			symbols "On"
      		
-			--[=====[links
-			{
-				"assimp-vc142-mtd.lib"
-			}
-			--]=====]
 
 			libdirs
 			{
@@ -122,11 +118,6 @@ project "Falcon"
 			defines "BUILD_RELEASE_MODE"
 			optimize "On"
 
-		--[=====[ 	links
-			{
-				"assimp-vc142-mt.lib"
-			}
-			--]=====]
 			libdirs
 			{
 				"%{LinkReleaseDirs.GLFW}",
@@ -249,6 +240,10 @@ project "Game"
 		"%{IncludeDirs.assimp}"
 	}
 
+	dependson
+	{
+		"Falcon"
+	}
 	filter "system:windows"
 		systemversion "latest"
 
@@ -258,13 +253,7 @@ project "Game"
 
 		}
 
-		links
-		{
-			"Falcon",
-			"glfw3.lib",
-			"opengl32.lib";
-			
-		}
+		
 
 	filter "system:linux"
 		systemversion "latest"
@@ -274,20 +263,7 @@ project "Game"
 			"FL_PLATFORM_LINUX"
 		}
 
-		links 
-		{
-			"Falcon",
-			"Xrandr",
-	        "Xi",
-			"glfw3",
-        	"GLEW",
-            "GLU",
-            "GL",
-            "X11",
-			"dl",
-			"pthread",
-			"assimp"
-		}
+
 		
 
 
@@ -296,17 +272,6 @@ project "Game"
 		runtime "Debug"
 		symbols "on"
 
-		libdirs
-		{
-			"%{LinkDebugDirs.GLFW}",
-			"%{LinkDebugDirs.boost}",
-			"%{LinkDebugDirs.assimp}",
-		}
-
-		links
-		{
-			"assimp-vc142-mtd.lib"
-		}
 
 
 	filter "configurations:Release"
@@ -314,16 +279,7 @@ project "Game"
 		runtime "Release"
 		optimize "on"
 
-		links
-		{
-			"assimp-vc142-mt.lib"
-		}
-		libdirs
-		{
-			"%{LinkReleaseDirs.GLFW}",
-			"%{LinkReleaseDirs.boost}",
-			"%{LinkReleaseDirs.assimp}",
-		}
+		
 
 
 	filter{"configurations:Debug"}
