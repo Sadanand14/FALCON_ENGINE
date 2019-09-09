@@ -4,8 +4,9 @@
 #include "VertexBuffer.h"
 #include "VertexLayout.h"
 
-
-//class to initialize and store vertex array object its bound vertexbuffer and its attributes
+/**
+*Class to initialize and store vertex array object its bound vertexbuffer and its attributes using OpenGL commands..
+*/
 class VertexArray
 {
 private:

@@ -14,6 +14,10 @@
 #include "VertexLayout.h"
 #include "Texture.h"
 
+
+/**
+* Mesh Class tp store Mesh Data for Renderables.
+*/
 class Mesh {
 
 private:

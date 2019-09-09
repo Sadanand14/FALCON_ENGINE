@@ -3,6 +3,10 @@
 
 #include "framework.h"
 #include <vector>
+
+/**
+* Index Buffer CLass to initialize an index buffer and store data on using OpenGL commands.
+*/
 class IndexBuffer
 {
 private:
