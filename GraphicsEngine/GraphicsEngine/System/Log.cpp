@@ -4,6 +4,10 @@
 std::shared_ptr<spdlog::logger> Log::m_EngineLogger;
 std::shared_ptr<spdlog::logger> Log::m_GameLogger;
 
+/*
+* Following method initializes logging system.
+*/
+
 void Log::Init()
 {
 	spdlog::set_pattern("%^[%T] %n: %v%$");
