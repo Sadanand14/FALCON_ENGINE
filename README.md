@@ -9,6 +9,8 @@
 
 3. [Setup Vendors and assets for the project](tools/Readme.md)
 
+3. [Logging in Falcon](System/Readme.md)
+
 
 
 ## Coding Standards
@@ -154,4 +156,3 @@ Now clone the repo in your working directory.
 
 ### Precautions to work with premake now,
 Whenever you add new directory in source, add any lib or any include please make sure you add it to the relevant places in the premake.lua file. otherwise there will be lot of inconsistencies. 
-
