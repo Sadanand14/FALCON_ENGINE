@@ -1,4 +1,4 @@
-workspace "GraphicsEngine"
+workspace "Falcon"
 	architecture "x64"
 
 	configurations
@@ -11,32 +11,32 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDirs = {}
 
-IncludeDirs["vendor"] = "GraphicsEngine/vendor/include/";
-IncludeDirs["spdlog"] = "GraphicsEngine/vendor/include/spdlog";
-IncludeDirs["GLFW"]   = "GraphicsEngine/vendor/include/glfw";
-IncludeDirs["glad"]   = "GraphicsEngine/vendor/include/glad";
-IncludeDirs["assimp"] = "GraphicsEngine/vendor/include/assimp";
-IncludeDirs["KHR"]    = "GraphicsEngine/vendor/include/KHR";
-IncludeDirs["boost"]  = "GraphicsEngine/vendor/include/boost";
+IncludeDirs["vendor"] = "Falcon/vendor/include/";
+IncludeDirs["spdlog"] = "Falcon/vendor/include/spdlog";
+IncludeDirs["GLFW"]   = "Falcon/vendor/include/glfw";
+IncludeDirs["glad"]   = "Falcon/vendor/include/glad";
+IncludeDirs["assimp"] = "Falcon/vendor/include/assimp";
+IncludeDirs["KHR"]    = "Falcon/vendor/include/KHR";
+IncludeDirs["boost"]  = "Falcon/vendor/include/boost";
 
 
 LinkDebugDirs = {}
-LinkDebugDirs["assimp"] = "GraphicsEngine/vendor/libs/assimp/Debug"
-LinkDebugDirs["boost"]  = "GraphicsEngine/vendor/libs/boost"
-LinkDebugDirs["GLFW"]   = "GraphicsEngine/vendor/libs/GLFW/Debug"
+LinkDebugDirs["assimp"] = "Falcon/vendor/libs/assimp/Debug"
+LinkDebugDirs["boost"]  = "Falcon/vendor/libs/boost"
+LinkDebugDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Debug"
 
 LinkReleaseDirs = {}
-LinkReleaseDirs["assimp"] = "GraphicsEngine/vendor/libs/assimp/Release"
-LinkReleaseDirs["boost"]  = "GraphicsEngine/vendor/libs/boost"
-LinkReleaseDirs["GLFW"]   = "GraphicsEngine/vendor/libs/GLFW/Release"
+LinkReleaseDirs["assimp"] = "Falcon/vendor/libs/assimp/Release"
+LinkReleaseDirs["boost"]  = "Falcon/vendor/libs/boost"
+LinkReleaseDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Release"
 
 
 
 printf("%s",LinkReleaseDirs.assimp)
 
 
-project "GraphicsEngine"
-	location "GraphicsEngine"
+project "Falcon"
+	location "Falcon"
 	kind "ConsoleApp"
 	language "C++"
 
@@ -145,7 +145,8 @@ project "GraphicsEngine"
             "GL",
             "X11",
 			"dl",
-			"pthread"
+			"pthread",
+			"assimp"
 		}
 	
 
@@ -185,11 +186,11 @@ project "GraphicsEngine"
 	--Setting up prebuild commands--
 	
 	filter{"configurations:Debug"}
-		assimp_abs_path = path.getabsolute(LinkDebugDirs["assimp"])
+		assimp_abs_path_deb = path.getabsolute(LinkDebugDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		prebuildcommands ('{COPY} "%{assimp_abs_path_deb}" "%{cfg.targetdir}"')
 
 	filter{"configurations:Release"}
-		assimp_abs_path = path.getabsolute(LinkReleaseDirs["assimp"])
+		assimp_abs_path_res = path.getabsolute(LinkReleaseDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		prebuildcommands ('{COPY} "%{assimp_abs_path_res}" "%{cfg.targetdir}"')
