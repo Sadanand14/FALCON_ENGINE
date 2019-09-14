@@ -145,7 +145,8 @@ project "Falcon"
             "GL",
             "X11",
 			"dl",
-			"pthread"
+			"pthread",
+			"assimp"
 		}
 	
 
@@ -185,11 +186,11 @@ project "Falcon"
 	--Setting up prebuild commands--
 	
 	filter{"configurations:Debug"}
-		assimp_abs_path = path.getabsolute(LinkDebugDirs["assimp"])
+		assimp_abs_path_deb = path.getabsolute(LinkDebugDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		prebuildcommands ('{COPY} "%{assimp_abs_path_deb}" "%{cfg.targetdir}"')
 
 	filter{"configurations:Release"}
-		assimp_abs_path = path.getabsolute(LinkReleaseDirs["assimp"])
+		assimp_abs_path_res = path.getabsolute(LinkReleaseDirs["assimp"])
 	
-		prebuildcommands ('{COPY} "%{assimp_abs_path}" "%{cfg.targetdir}"')
+		prebuildcommands ('{COPY} "%{assimp_abs_path_res}" "%{cfg.targetdir}"')

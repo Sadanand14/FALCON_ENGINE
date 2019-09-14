@@ -43,7 +43,7 @@ steps:
 
 #- script: | 
 #    GenProject.bat
-#  workingDirectory: 'GraphicsEngine'
+#  workingDirectory: 'Falcon'
 #  displayName: 'Running premake'
 
 
