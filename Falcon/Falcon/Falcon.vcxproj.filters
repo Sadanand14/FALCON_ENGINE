@@ -28,6 +28,12 @@
     <Filter Include="Source Files\System">
       <UniqueIdentifier>{2d7b3ee5-d080-4056-ab0d-f65c7fec1f26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{cec69a95-347b-4f09-9285-9b19e9264ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{235fa173-f588-4032-aa85-5db0636ad3ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System\framework.h">
@@ -96,6 +102,12 @@
     <ClInclude Include="Rendering\VertexLayout.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Core\EntityInterface.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AssetManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -154,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\VertexBuffer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\AssetManager.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

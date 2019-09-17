@@ -95,6 +95,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Core\AssetManager.h" />
+    <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\Model.h" />
@@ -124,6 +126,7 @@
     <None Include="Shader\VertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\AssetManager.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\Model.cpp" />
