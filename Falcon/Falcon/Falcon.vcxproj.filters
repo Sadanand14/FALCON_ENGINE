@@ -110,13 +110,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Shader\FragmentShader.frag">
       <Filter>Shader</Filter>
     </None>
     <None Include="Shader\VertexShader.vert">
       <Filter>Shader</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\glad.c">

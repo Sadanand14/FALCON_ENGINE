@@ -16,8 +16,8 @@ public:
 	Renderer();
 	~Renderer();
 
-	Shader* m_shadyStuff = nullptr;
-	Model* m_nanosuit = nullptr;
+	//Shader* m_shadyStuff = nullptr;
+	//Model* m_nanosuit = nullptr;
 
 	void Init();
 	void CreateDrawStates();

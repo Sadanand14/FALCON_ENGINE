@@ -5,19 +5,13 @@
 
 // Pass filepath to 3D model
 AssetManager::AssetManager(std::string const& path, bool gamma /*false*/)
-	: m_gammaCorrection(gamma), indexOffset(0)
+	: m_gammaCorrection(gamma),indexOffset(0)
 {
 	LoadModel(path);
 	FL_ENGINE_INFO("INFO: Model loaded sussfully for {0}", path);
 }
 
-void AssetManager::Draw(Shader shader)
-{
-	for (unsigned int i = 0; i < m_meshes.size(); i++)
-		m_meshes[i]->DrawMesh(shader);
-}
-
-void AssetManager::LoadModel(std::string const& path)
+Mesh* AssetManager::LoadModel(std::string const& path)
 {
 	// Read File (Assimp)
 	Assimp::Importer importer;
@@ -26,7 +20,7 @@ void AssetManager::LoadModel(std::string const& path)
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		FL_ENGINE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
-		return;
+		return nullptr;
 	}
 	// Directory Path
 	m_directory = path.substr(0, path.find_last_of('/'));
@@ -34,9 +28,15 @@ void AssetManager::LoadModel(std::string const& path)
 	//Experimental
 	Mesh* newmesh = new Mesh();
 	newmesh->m_vertexArray.clear();
+	newmesh->m_indexArray.clear();
 	////////////////
+
+
 	// Process rootnode 
 	ProcessNode(scene->mRootNode, scene, newmesh);
+	indexOffset = 0;
+	newmesh->SetupMesh();
+	return newmesh;
 }
 
 void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh)
@@ -45,7 +45,8 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		m_meshes.push_back(ProcessMesh(mesh, scene, newmesh));
+		ProcessMesh(mesh, scene, newmesh);
+		//m_meshes.push_back(ProcessMesh(mesh, scene, newmesh));
 	}
 	//Process children nodes.
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -54,7 +55,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 	}
 }
 
-Mesh* AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
+void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
 {
 	// Data to load
 	std::vector<Vertex> vertices;
@@ -104,7 +105,7 @@ Mesh* AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmes
 	//Experimental
 	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 	indexOffset = newmesh->m_vertexArray.size();
-	
+
 
 	// now wak through each of the mesh's faces
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -115,116 +116,14 @@ Mesh* AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmes
 			indices.push_back(face.mIndices[j]);
 	}
 
-	//experimental
-	newmesh->indices.clear();
-	for (unsigned int i = 0; i < indices.size(); i++) 
+    newmesh->m_indexArray.clear();
+	for (unsigned int i = 0; i < indices.size(); i++)
 	{
-		newmesh->indices.push_back(indices[i] + indexOffset);
+		newmesh->m_indexArray.push_back(indices[i] + indexOffset);
 	}
-	//////////////////
-
-
-	// Process materials
-	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
-
-	//N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-	// diffuse: texture_diffuseN
-	// specular: texture_specularN
-	// normal: texture_normalN
-
-	// 1. Diffuse maps
-	std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-	// 2. Specular maps
-	std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-	// 3. Normal maps
-	std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-	textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-	// 4. Height maps
-	std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-	// return a mesh object created from the extracted mesh data
-	Mesh* tmpMesh = new Mesh(vertices, indices, textures);
-	return tmpMesh;
 }
-
-std::vector<Texture> AssetManager::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-{
-	std::vector<Texture> textures;
-	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-	{
-		aiString str;
-		mat->GetTexture(type, i, &str);
-		// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-		bool skip = false;
-		for (unsigned int j = 0; j < m_texturesLoaded.size(); j++)
-		{
-			if (std::strcmp(m_texturesLoaded[j].path.data(), str.C_Str()) == 0)
-			{
-				textures.push_back(m_texturesLoaded[j]);
-				skip = true;
-				break;
-			}
-		}
-		if (!skip)
-		{   // Load texture if not loaded
-			Texture texture;
-			texture.textureID = TextureFromFile(str.C_Str(), this->m_directory);
-			texture.type = typeName;
-			texture.path = str.C_Str();
-			textures.push_back(texture);
-			m_texturesLoaded.push_back(texture);
-		}
-	}
-	return textures;
-}
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
-{
-	std::string filename(path);
-
-	filename = directory + '/' + filename;
-
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format = 0;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		FL_ENGINE_ERROR("ERROR: Texture failed to load at {0} ", path);
-		stbi_image_free(data);
-	}
-
-	return textureID;
-}
-
 
 AssetManager::~AssetManager()
 {
-	for (auto& mesh : m_meshes) delete mesh;
+	//for (auto& mesh : m_meshes) delete mesh;
 }
