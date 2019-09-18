@@ -17,7 +17,7 @@ namespace fmemory {
 		}
 		catch (std::exception& e)
 		{
-			SB_ENGINE_ERROR("ERROR:{0}",e.what());
+			FL_ENGINE_ERROR("ERROR:{0}",e.what());
 			return nullptr;
 		}
 		
@@ -30,12 +30,12 @@ namespace fmemory {
 	{
 		try 
 		{
-			//SB_ENGINE_INFO("Deallocating {0}", memref);
+			//FL_ENGINE_INFO("Deallocating {0}", memref);
 			free(memref);
 		}
 		catch (std::exception& e)
 		{
-			SB_ENGINE_ERROR("ERROR:{0}", e.what());
+			FL_ENGINE_ERROR("ERROR:{0}", e.what());
 			std::cin.get();
 			std::cin.get();
 		}
@@ -59,11 +59,11 @@ namespace fmemory {
 		std::size_t  mask = alignment - 1;
 		std::uintptr_t misalignment = raw_memory_address & mask;
 		std::ptrdiff_t adjustment = alignment - misalignment;
-		//SB_ENGINE_INFO("Allignement for memory={0} mask= {1} Adjustment={2}", alignment,mask,adjustment);
+		//FL_ENGINE_INFO("Allignement for memory={0} mask= {1} Adjustment={2}", alignment,mask,adjustment);
 
 		//Fixing memory based on adjustment
 		std::uintptr_t aligned_memory_address = raw_memory_address + adjustment;
-		//SB_ENGINE_INFO("Alignement Memory Address = {0} ", aligned_memory_address);
+		//FL_ENGINE_INFO("Alignement Memory Address = {0} ", aligned_memory_address);
 
 		//storing adjustment value
 		std::uint8_t* paligned_memory = reinterpret_cast<std::uint8_t*>(aligned_memory_address);
@@ -90,7 +90,7 @@ namespace fmemory {
 		}
 		catch (std::exception& e)
 		{
-			SB_ENGINE_ERROR("ERROR: Failed to deallocate. {0}", e.what());
+			FL_ENGINE_ERROR("ERROR: Failed to deallocate. {0}", e.what());
 		}
 	}
 

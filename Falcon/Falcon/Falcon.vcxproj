@@ -112,6 +112,11 @@
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
+    <ClInclude Include="System\Memory\Allocator.hpp" />
+    <ClInclude Include="System\Memory\fmemory.h" />
+    <ClInclude Include="System\Memory\MemoryInterface.h" />
+    <ClInclude Include="System\Memory\PoolAllocator.hpp" />
+    <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
@@ -138,6 +143,9 @@
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
+    <ClCompile Include="System\Memory\Allocator.cpp" />
+    <ClCompile Include="System\Memory\MemoryInterface.cpp" />
+    <ClCompile Include="System\Memory\PoolAllocator.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
