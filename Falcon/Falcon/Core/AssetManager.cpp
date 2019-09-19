@@ -54,7 +54,8 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
 {
 	// Data to load
-	unsigned int indexOffset = 0;
+	//unsigned int 
+	size_t indexOffset = 0;
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;

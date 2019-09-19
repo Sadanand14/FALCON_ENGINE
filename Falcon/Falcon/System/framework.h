@@ -16,6 +16,14 @@
 #include <windows.h>
 #include <tchar.h>
 
+#if defined(min)
+#undef min
+#endif
+
+#if defined(max)
+#undef max
+#endif
+
 #endif
 
 
