@@ -98,10 +98,10 @@ if __name__ == '__main__':
 
 	if platform.system() == 'Windows':
 		GDriveDownloader.download_file("vendor.zip",VENDOR_WINDOW_ID,VENDOR_PATH)
-		GDriveDownloader.download_file("assets.zip",ASSET_FILE_ID,ASSETS_PATH)
+		GDriveDownloader.download_file("assets.zip",ASSET_WINDOWS_ID,ASSETS_PATH)
 	elif platform.system() == 'Linux':
 		GDriveDownloader.download_file("vendor_linux.tar",VENDOR_LINUX_ID,VENDOR_PATH)
-		GDriveDownloader.download_file("assets.tar",ASSET_FILE_ID,ASSETS_PATH)
+		GDriveDownloader.download_file("assets.tar",ASSET_LINUX_ID,ASSETS_PATH)
 	else:
 		print ("Unsupported platform")
 
