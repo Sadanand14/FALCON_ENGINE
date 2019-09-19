@@ -9,7 +9,6 @@
 #include <assimp/postprocess.h>
 
 #include <../Rendering/Mesh.h>
-#include "../Rendering/Shader.h"
 
 #include <string>
 #include <fstream>
@@ -21,19 +20,16 @@
 class AssetManager 
 {
 private:
-	unsigned int indexOffset;
 
 	// Process nodes
-	void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);
-	void ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh);
+	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);
+	static void ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh);
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
 
 public:
-	Mesh* LoadModel(std::string const& path);
-	std::string m_directory;
-	bool m_gammaCorrection;
+	static Mesh* LoadModel(std::string const& path);
 
 
 	AssetManager(std::string const& path, bool gamma = false);

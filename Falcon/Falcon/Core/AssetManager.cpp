@@ -5,7 +5,6 @@
 
 // Pass filepath to 3D model
 AssetManager::AssetManager(std::string const& path, bool gamma /*false*/)
-	: m_gammaCorrection(gamma),indexOffset(0)
 {
 	LoadModel(path);
 	FL_ENGINE_INFO("INFO: Model loaded sussfully for {0}", path);
@@ -22,8 +21,6 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 		FL_ENGINE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
 		return nullptr;
 	}
-	// Directory Path
-	m_directory = path.substr(0, path.find_last_of('/'));
 
 	//Experimental
 	Mesh* newmesh = new Mesh();
@@ -34,7 +31,6 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	// Process rootnode 
 	ProcessNode(scene->mRootNode, scene, newmesh);
-	indexOffset = 0;
 	newmesh->SetupMesh();
 	return newmesh;
 }
@@ -58,6 +54,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
 {
 	// Data to load
+	unsigned int indexOffset = 0;
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -103,8 +100,8 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 	}
 
 	//Experimental
-	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 	indexOffset = newmesh->m_vertexArray.size();
+	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 
 
 	// now wak through each of the mesh's faces

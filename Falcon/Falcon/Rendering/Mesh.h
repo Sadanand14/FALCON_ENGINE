@@ -1,4 +1,4 @@
-#ifndef MESH_H77777777777777777777777
+#ifndef MESH_H
 #define MESH_H
 
 #include <framework.h>
@@ -21,7 +21,7 @@ private:
 	//Experimental
 
 	//Render Data
-	VertexArray  *m_VAO;
+	VertexArray  *m_VAO = nullptr;
 	VertexBuffer *m_VBO;
 	IndexBuffer  *m_IBO;
 

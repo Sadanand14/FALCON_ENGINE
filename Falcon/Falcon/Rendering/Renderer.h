@@ -3,15 +3,20 @@
 
 
 #include "stb_image.h"
-#include "Model.h"
+//#include "Model.h"
 
 #include "..//System/Camera.h"
 #include "Shader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <../Core/EntityInterface.h>
+#include <../Core/AssetManager.h>
 
 class Renderer
 {
+	Entity* entity;
+	Shader* shader;
+
 public:
 	Renderer();
 	~Renderer();
