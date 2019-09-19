@@ -20,7 +20,6 @@ void VertexArray::AddBuffer( VertexBuffer* const vb)
 	m_vertexbuffer->Bind();								// binds the passed in vertex buffer
 	SetupVertextAttribPointers();
 	
-	
 	m_vertexbuffer->Unbind();       // unbinds the vertex buffer
 	glBindVertexArray(0);			// unbinds that vertex array
 }
@@ -29,7 +28,6 @@ void VertexArray::AddBuffer( VertexBuffer* const vb)
 
 void VertexArray::SetupVertextAttribPointers()
 {
-
 	//Vertex attribute pointers	
 	//Positions
 	glEnableVertexAttribArray(0);	// enables the locations for those attributes

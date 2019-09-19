@@ -11,9 +11,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-
-
 struct SimpleShader
 {
 	unsigned int m_shaderId = 0;
@@ -22,9 +19,6 @@ struct SimpleShader
 	SimpleShader(GLenum type) :m_shaderId(0),m_type(type) {}
 	SimpleShader(GLenum type, std::string source) :m_shaderId(0),m_type(type), m_source(source) {}
 };
-
-
-
 
 class Shader
 {

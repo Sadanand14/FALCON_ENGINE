@@ -14,8 +14,9 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 {
 	m_renderer = new Renderer(); // creates a new renderer class on the heap
 	m_timer = new Timer(); // creates a new timer class in the heap
-	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
+	
 }
 
 WindowClass::~WindowClass() 
