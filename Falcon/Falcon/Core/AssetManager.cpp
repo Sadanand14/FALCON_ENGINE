@@ -31,6 +31,8 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	// Process rootnode 
 	ProcessNode(scene->mRootNode, scene, newmesh);
+	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
+	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->SetupMesh();
 	return newmesh;
 }
@@ -114,7 +116,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 			indices.push_back(face.mIndices[j]);
 	}
 
-    newmesh->m_indexArray.clear();
+ 
 	for (unsigned int i = 0; i < indices.size(); i++)
 	{
 		newmesh->m_indexArray.push_back(indices[i] + indexOffset);

@@ -36,7 +36,9 @@ void Renderer::SetDrawStates()
 	rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
 
 	shader = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
-	entity->GetComponent<RenderComponent>()->m_mesh->DrawMesh(*shader);
+	shader->UseShader();
+	entity->GetComponent<RenderComponent>()->m_mesh->DrawMesh( );
+
 }
 
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
@@ -58,5 +60,5 @@ void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES, (GLsizei)entity->GetComponent<RenderComponent>()->m_mesh->m_indexArray.size(), GL_UNSIGNED_INT,(const GLvoid*)entity->GetComponent<RenderComponent>()->m_mesh->m_indexArray.data());
+	glDrawElements(GL_TRIANGLES, (GLsizei)entity->GetComponent<RenderComponent>()->m_mesh->m_indexArray.size(), GL_UNSIGNED_INT,0);
 }

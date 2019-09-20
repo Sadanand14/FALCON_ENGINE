@@ -37,7 +37,7 @@ public:
 
 	//Functions	
 	void SetupMesh();
-	void DrawMesh(Shader shader);
+	void DrawMesh();
 	
 };
 

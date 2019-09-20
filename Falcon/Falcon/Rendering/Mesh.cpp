@@ -18,16 +18,12 @@ void Mesh::SetupMesh()
 
 
 
-void Mesh::DrawMesh(Shader shader)
+void Mesh::DrawMesh()
 {
 	// Draw Mesh
 	m_VAO->Bind();
 	m_IBO->Bind();
-	//glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
 
-
-	// Set back to default
-	//glActiveTexture(GL_TEXTURE0);
 }
 
 Mesh::~Mesh()
