@@ -1,22 +1,23 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <../Rendering/stb_image.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
-#include <../Rendering/Mesh.h>
-#include "Shader.h"
-
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <map>
 #include <vector>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <Rendering/stb_image.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include <Rendering/Mesh.h>
+#include "Shader.h"
+#include "Memory/fmemory.h"
 
 class Model
 {
@@ -32,12 +33,12 @@ private:
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
-	std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	std::vector<Texture, fmemory::STLAllocator<Texture>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 public:
 	/*  Model Data */
-	std::vector<Texture> m_texturesLoaded;
-	std::vector<Mesh *> m_meshes;
+	std::vector<Texture, fmemory::STLAllocator<Texture>> m_texturesLoaded;
+	std::vector<Mesh *, fmemory::STLAllocator<Mesh *>> m_meshes;
 	std::string m_directory;
 	bool m_gammaCorrection;
 

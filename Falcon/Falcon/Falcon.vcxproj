@@ -60,8 +60,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -114,6 +115,7 @@
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="System\Memory\Allocator.hpp" />
     <ClInclude Include="System\Memory\fmemory.h" />
+    <ClInclude Include="System\Memory\fnew.h" />
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />

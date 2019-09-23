@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+#include "Memory/fmemory.h"
 #include "Shader.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -19,9 +20,9 @@ class Mesh {
 private:
 	//Render Data
 	
-	std::vector<Vertex> m_vertices;
-	std::vector<unsigned int> m_indices;
-	std::vector<Texture> m_textures;
+	std::vector<Vertex,fmemory::STLAllocator<Vertex>> m_vertices;
+	std::vector<unsigned int, fmemory::STLAllocator<unsigned int>> m_indices;
+	std::vector<Texture, fmemory::STLAllocator<Texture>> m_textures;
 	VertexArray  *m_VAO;
 	VertexBuffer *m_VBO;
 	IndexBuffer  *m_IBO;
@@ -34,9 +35,9 @@ public:
 	
 
 	//Constructor
-	Mesh(const std::vector<Vertex>& vertices, 
-		 const std::vector<unsigned int>& indices, 
-		 const std::vector<Texture>& textures);
+	Mesh(const std::vector<Vertex,fmemory::STLAllocator<Vertex>>& vertices, 
+		 const std::vector<unsigned int, fmemory::STLAllocator<unsigned int>>& indices,
+		 const std::vector<Texture, fmemory::STLAllocator<Texture>>& textures);
 
 	
 	~Mesh();

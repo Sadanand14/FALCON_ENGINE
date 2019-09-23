@@ -1,17 +1,20 @@
 #include "Mesh.h"
 #include "Log.h"
 
+
 void Mesh::SetupMesh()
 {
-	m_VAO = new VertexArray();
+	m_VAO = fmemory::fnew<VertexArray>();
 	m_VAO->Bind();
-	m_VBO = new VertexBuffer(&m_vertices[0], m_vertices.size() * sizeof(Vertex));
-	m_IBO = new IndexBuffer(m_indices, m_indices.size());
+	m_VBO = fmemory::fnew <VertexBuffer>(&m_vertices[0], m_vertices.size() * sizeof(Vertex));
+	m_IBO = fmemory::fnew <IndexBuffer>(m_indices, m_indices.size());
 	m_VAO->AddBuffer(m_VBO);
 	m_VAO->Unbind();
 }
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures) 
+Mesh::Mesh(const std::vector<Vertex, fmemory::STLAllocator<Vertex>>& vertices, 
+		   const std::vector<unsigned int, fmemory::STLAllocator<unsigned int>>& indices, 
+	       const std::vector<Texture, fmemory::STLAllocator<Texture>>& textures)
 	: m_vertices(vertices) , m_indices(indices) , m_textures(textures),
 	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
 {
@@ -22,9 +25,9 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
 
 Mesh::~Mesh()
 {
-	delete m_VAO;
-	delete m_VBO;
-	delete m_IBO;
+	fmemory::fdelete<VertexArray> (m_VAO);
+	fmemory::fdelete<VertexBuffer>(m_VBO);
+	fmemory::fdelete<IndexBuffer> (m_IBO);
 }
 
 

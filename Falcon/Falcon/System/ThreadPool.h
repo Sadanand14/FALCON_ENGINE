@@ -7,6 +7,8 @@
 #include <functional>
 #include <vector>
 
+#include "Memory/fmemory.h"
+
 typedef std::function<void()> void_function;
 typedef std::queue<void_function> ThreadQueue;
 
@@ -16,7 +18,7 @@ private:
 
 	ThreadQueue workerQueue;
 	std::atomic<bool> discard_threadPool;
-	std::vector<std::thread> worker_threads;
+	std::vector<std::thread,fmemory::STLAllocator<std::thread>> worker_threads;
 
 	void execute_task();
 

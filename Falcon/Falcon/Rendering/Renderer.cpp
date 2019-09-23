@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Memory/fmemory.h"
 
 Renderer::Renderer()
 {
@@ -7,8 +8,8 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	delete m_shadyStuff;
-	delete m_nanosuit;
+	fmemory::fdelete<Shader>(m_shadyStuff);
+	fmemory::fdelete<Model>(m_nanosuit);
 }
 
 //renderer initialization
@@ -27,10 +28,10 @@ void Renderer::CreateDrawStates()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	
 
 	//Load Model
-	m_nanosuit = new Model("../Assets/Models/nanosuit/nanosuit.obj");	
+	m_nanosuit = fmemory::fnew<Model>("../Assets/Models/nanosuit/nanosuit.obj");	
 
 	//Create Shader Program and bind a Vertex shader and Fragment shader.
-	m_shadyStuff = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	m_shadyStuff = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
 }
 
 void Renderer::SetDrawStates()
