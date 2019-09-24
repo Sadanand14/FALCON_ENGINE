@@ -14,10 +14,10 @@ namespace fmemory {
 
 		//32 bytes increaments
 		128,160,192,224,256,288,320,352,384,416,448,512,544,576,
-		608,640
+		608,640,
 
 		////64 bytes increaments
-		//704, 768, 832, 896, 960, 1024
+		704, 768, 832, 896, 960, 1024
 
 	};
 
@@ -120,12 +120,6 @@ namespace fmemory {
 			return pool_allocators + pool_lookup[size];
 		}
 	}
-
-	/*
-		TODO: Overriding new and delete to call allocate and free. Also need to add STL compatible allocators.
-	*/
-
-
 
 	void* Allocate(const std::size_t size)
 	{

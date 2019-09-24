@@ -17,6 +17,8 @@ namespace fmemory
 		}
 	}
 
+	
+
 	template <typename T, typename... Args >
 	T * fnew_arr(std::size_t& count, Args... args)
 	{
