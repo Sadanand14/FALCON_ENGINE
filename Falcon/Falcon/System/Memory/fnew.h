@@ -17,8 +17,8 @@ namespace fmemory
 		}
 	}
 
-	template <typename T, std::size_t& count, typename... Args >
-	T * fnew(Args... args)
+	template <typename T, typename... Args >
+	T * fnew_arr(std::size_t& count, Args... args)
 	{
 		if (count <= 0)
 		{
@@ -29,11 +29,11 @@ namespace fmemory
 		try {
 			//Allocating the memory
 			T* ptr = static_cast<T*>(fmemory::Allocate(sizeof(T) * count));
-			FL_ENGINE_ERROR("Allocating Array: Main Block starts at {0}", static_cast<void*>(ptr));
+			//FL_ENGINE_ERROR("Allocating Array: Main Block starts at {0}", static_cast<void*>(ptr));
 			//Constructing the object
 			for (size_t itr = 0; itr < count; ++itr)
 			{
-				FL_ENGINE_INFO("Constructing at {0}", static_cast<void*>(ptr + itr));
+				//FL_ENGINE_INFO("Constructing at {0}", static_cast<void*>(ptr + itr));
 				new(ptr + itr) T(args...);
 			}
 			return ptr;
@@ -60,8 +60,8 @@ namespace fmemory
 		}
 	}
 
-	template <typename T, std::size_t& count>
-	void fdelete(T * ptr)
+	template <typename T>
+	void fdelete(T * ptr,std::size_t& count)
 	{
 		if (count <= 0)
 		{
