@@ -3,6 +3,7 @@
 #include <iostream>
 //#include "EventManager.h"
 
+
 int main()
 {
 	Log::Init();
