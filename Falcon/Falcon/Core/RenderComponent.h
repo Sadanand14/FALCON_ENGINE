@@ -3,7 +3,7 @@
 
 #include "EntityInterface.h"
 #include "../Rendering/Mesh.h"
-#include "../Rendering/AssetManager.h"
+#include "../Core/AssetManager.h"
 
 enum RenderPass { Terrain, Environment, ShadowMaps, Skybox, Transparent, DontDraw };
 

@@ -98,103 +98,106 @@ public:
 	template<typename F>
 	inline void AddComponent() {};
 
-	template<>
-	inline void AddComponent<RenderComponent>()
-	{
-		if (m_renderC) 
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else 
-		{
-			m_renderC = new RenderComponent();
-		}
-	}
-
-	template<>
-	inline void AddComponent<PhysicsComponent>()
-	{
-		if (m_physicsC)
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else
-		{
-			m_physicsC = new PhysicsComponent();
-		}
-	}
-
-	template<>
-	inline void AddComponent<AudioComponent>()
-	{
-		if (m_audioC)
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else
-		{
-			m_audioC = new AudioComponent();
-		}
-	}
-
-	template<>
-	inline void AddComponent<AnimationComponent>()
-	{
-		if (m_animationC)
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else
-		{
-			m_animationC = new AnimationComponent();
-		}
-	}
-
-	template<>
-	inline void AddComponent<AIComponent>()
-	{
-		if (m_AIComponent)
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else
-		{
-			m_AIComponent = new AIComponent();
-		}
-	}
-
-	template<>
-	inline void AddComponent<InputComponent>()
-	{
-		if (m_inputC)
-		{
-			FL_ENGINE_ERROR("This entity already has this component!");
-		}
-		else
-		{
-			m_inputC = new InputComponent();
-		}
-	}
 
 	template<typename T>
 	inline T* GetComponent() {};
-
-	template<>
-	inline RenderComponent* GetComponent<RenderComponent>() { return m_renderC;}
-
-	template<>
-	inline AudioComponent* GetComponent<AudioComponent>() { return m_audioC; }
-
-	template<>
-	inline PhysicsComponent* GetComponent<PhysicsComponent>() { return m_physicsC; }
-
-	template<>
-	inline AnimationComponent* GetComponent<AnimationComponent>() { return m_animationC; }
-
-	template<>
-	inline InputComponent* GetComponent<InputComponent>() { return m_inputC; }
-
-	template<>
-	inline AIComponent* GetComponent <AIComponent>() { return m_AIComponent; }
 };
+
+
+template<>
+inline void Entity::AddComponent<RenderComponent>()
+{
+	if (m_renderC) 
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else 
+	{
+		m_renderC = new RenderComponent();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<PhysicsComponent>()
+{
+	if (m_physicsC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_physicsC = new PhysicsComponent();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<AudioComponent>()
+{
+	if (m_audioC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_audioC = new AudioComponent();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<AnimationComponent>()
+{
+	if (m_animationC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_animationC = new AnimationComponent();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<AIComponent>()
+{
+	if (m_AIComponent)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_AIComponent = new AIComponent();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<InputComponent>()
+{
+	if (m_inputC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_inputC = new InputComponent();
+	}
+}
+
+template<>
+inline RenderComponent* Entity::GetComponent<RenderComponent>() { return m_renderC;}
+
+template<>
+inline AudioComponent* Entity::GetComponent<AudioComponent>() { return m_audioC; }
+
+template<>
+inline PhysicsComponent* Entity::GetComponent<PhysicsComponent>() { return m_physicsC; }
+
+template<>
+inline AnimationComponent* Entity::GetComponent<AnimationComponent>() { return m_animationC; }
+
+template<>
+inline InputComponent* Entity::GetComponent<InputComponent>() { return m_inputC; }
+
+template<>
+inline AIComponent* Entity::GetComponent <AIComponent>() { return m_AIComponent; }
+
 #endif // !1
