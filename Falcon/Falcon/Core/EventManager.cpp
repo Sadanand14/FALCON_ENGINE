@@ -1,6 +1,6 @@
 #include "EventManager.h"
 
-boost::unordered_map<EventManager::EventType, std::vector<System*>> EventManager::systems;
+boost::unordered_map<EventManager::EventType, std::vector<EventSystem*>> EventManager::systems;
 
 EventManager::EventManager()
 {
@@ -26,7 +26,7 @@ void EventManager::NewEventType()
 /** @brief Subscribes an event to the system
  */
 template <typename T>
-void EventManager::SubscribeToEvent(System* sys) //Const System*?
+void EventManager::SubscribeToEvent(EventSystem* sys) //Const System*?
 {
 	static_assert(std::is_base_of<Event, T>::value, "Events must inherit from the Event class");
 	

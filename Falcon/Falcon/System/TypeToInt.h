@@ -4,10 +4,10 @@
 #include <atomic>
 #include "Types.h"
 
-static std::atomic_int idCounter = 0;
 
 namespace TypeToInt
 {
+	static std::atomic_int idCounter = 0;
 	template<typename T>
 	u32 ConvertType()
 	{

@@ -1,11 +1,11 @@
-#ifndef SYSTEM_H_
-#define SYSTEM_H_
+#ifndef EVENT_SYSTEM_H_
+#define EVENT_SYSTEM_H_
 
 #include <boost/circular_buffer.hpp>
 #include "Types.h"
 #include "Event.h"
 
-class System
+class EventSystem
 {
 protected:
 	boost::circular_buffer<std::shared_ptr<Event>> eventQueue;

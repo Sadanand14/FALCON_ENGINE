@@ -97,6 +97,9 @@
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\EntityInterface.h" />
+    <ClInclude Include="Core\Event.h" />
+    <ClInclude Include="Core\EventManager.h" />
+    <ClInclude Include="Core\EventSystem.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
@@ -109,13 +112,10 @@
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="System\Camera.h" />
-    <ClInclude Include="System\Event.h" />
-    <ClInclude Include="System\EventManager.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
-    <ClInclude Include="System\System.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
@@ -130,6 +130,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
+    <ClCompile Include="Core\EventManager.cpp" />
+    <ClCompile Include="Core\EventSystem.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
@@ -139,12 +141,10 @@
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="System\Camera.cpp" />
-    <ClCompile Include="System\EventManager.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
-    <ClCompile Include="System\System.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>

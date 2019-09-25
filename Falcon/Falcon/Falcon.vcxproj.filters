@@ -105,17 +105,17 @@
     <ClInclude Include="Core\AssetManager.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="System\Event.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\EventManager.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="System\TypeToInt.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="System\System.h">
-      <Filter>Header Files\System</Filter>
+    <ClInclude Include="Core\Event.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EventManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EventSystem.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,11 +176,11 @@
     <ClCompile Include="Core\AssetManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="System\EventManager.cpp">
-      <Filter>Source Files\System</Filter>
+    <ClCompile Include="Core\EventManager.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="System\System.cpp">
-      <Filter>Source Files\System</Filter>
+    <ClCompile Include="Core\EventSystem.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
