@@ -105,6 +105,18 @@
     <ClInclude Include="Core\AssetManager.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="System\Event.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\EventManager.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\TypeToInt.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\System.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">
@@ -163,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="Core\AssetManager.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="System\EventManager.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\System.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

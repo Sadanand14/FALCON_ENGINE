@@ -109,15 +109,19 @@
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="System\Camera.h" />
+    <ClInclude Include="System\Event.h" />
+    <ClInclude Include="System\EventManager.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
+    <ClInclude Include="System\System.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
+    <ClInclude Include="System\TypeToInt.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -135,10 +139,12 @@
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="System\Camera.cpp" />
+    <ClCompile Include="System\EventManager.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
+    <ClCompile Include="System\System.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
