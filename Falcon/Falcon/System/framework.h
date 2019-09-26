@@ -4,9 +4,6 @@
 #ifndef FRAMEWORK_H
 #define FRAMEWORK_H
 
-
-
-
 #ifdef FL_PLATFORM_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers

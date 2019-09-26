@@ -1,7 +1,10 @@
 #include "EventSystem.h"
 
-template <typename T>
-void EventSystem::ReceiveEvent(std::shared_ptr<T> t)
+void EventSystem::ReceiveEvent(std::shared_ptr<Event> t)
 {
 	this->eventQueue.push_back(t);
+}
+
+void EventSystem::processEvent() 
+{
 }

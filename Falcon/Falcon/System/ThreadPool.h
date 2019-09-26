@@ -14,15 +14,18 @@ class ThreadPool
 {
 private:
 
+	static ThreadPool * mainThreadPool;
+
 	ThreadQueue workerQueue;
 	std::atomic<bool> discard_threadPool;
 	std::vector<std::thread> worker_threads;
 
 	void execute_task();
+	ThreadPool();
 
 public:
 
-	ThreadPool();
+	static ThreadPool GetThreadPool();
 	~ThreadPool();
 
 	template<typename function_type>

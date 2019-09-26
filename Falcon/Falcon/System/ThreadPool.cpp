@@ -23,6 +23,14 @@ ThreadPool::~ThreadPool()
 	discard_threadPool = true;
 }
 
+ThreadPool ThreadPool::GetThreadPool() 
+{
+	if (mainThreadPool) 
+	{
+		
+	}
+}
+
 void ThreadPool::execute_task()
 {
 	while (!discard_threadPool)
