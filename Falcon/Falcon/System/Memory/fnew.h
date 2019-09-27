@@ -1,8 +1,16 @@
 #ifndef FNEW_H
 #define FNEW_H
 #include "Log.h"
+
+
 namespace fmemory
 {
+
+	/**
+	* Exposes allocation API to the outer world.
+	* @param All the parameters required for calling constructor
+	* @return pointer to the memory block allocated.
+	*/
 	template<typename T, typename... Args>
 	T* fnew(Args... args)
 	{
@@ -20,6 +28,12 @@ namespace fmemory
 	
 
 	template <typename T, typename... Args >
+	/**
+	* Exposes allocation API to the outer world.
+	* @param count number of elements int array
+	* @param All the parameters required for calling type constructor
+	* @return pointer to the memory block allocated.
+	*/
 	T * fnew_arr(std::size_t& count, Args... args)
 	{
 		if (count <= 0)
@@ -48,11 +62,15 @@ namespace fmemory
 	}
 
 
-
+	/*
+ 	* Deletes the memory block associated with pointer.
+	* @param pointer to the memory block
+	*/
 	template <typename T>
 	void fdelete(T* ptr)
 	{
 		try {
+			//Destructor called to delete the object from memory
 			reinterpret_cast<T*>(ptr)->~T();
 			fmemory::Free(ptr, sizeof(T));
 		}
@@ -62,6 +80,11 @@ namespace fmemory
 		}
 	}
 
+	/**
+	* Deletes the array from memory.
+	* @param pointer to the array
+	* @count number of elements in the array
+	*/
 	template <typename T>
 	void fdelete(T * ptr,std::size_t& count)
 	{

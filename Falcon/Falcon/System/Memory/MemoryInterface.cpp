@@ -104,7 +104,11 @@ namespace fmemory {
 
 
 
-	//This functions returns apropriate pool for requested size. 
+	/**
+	*
+	* Looks up block for required size into pool memory. 
+	* @return PoolAllocator* on success otherwise null
+	*/
 	static PoolAllocator* LookUp(const size_t size)
 	{
 
@@ -120,6 +124,7 @@ namespace fmemory {
 			return pool_allocators + pool_lookup[size];
 		}
 	}
+
 
 	void* Allocate(const std::size_t size)
 	{
@@ -142,7 +147,6 @@ namespace fmemory {
 
 
 
-
 	void Free(void* ref, const std::size_t size)
 	{
 		if (ref == nullptr)
@@ -159,10 +163,6 @@ namespace fmemory {
 			pool->Release(ref);
 		}
 	}
-
-
-
-
 
 
 }

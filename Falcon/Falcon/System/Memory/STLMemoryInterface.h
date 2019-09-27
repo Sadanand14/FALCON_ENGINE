@@ -58,7 +58,9 @@ namespace fmemory {
 		*/
 		pointer allocate(size_t count)
 		{
-			FL_ENGINE_INFO("Allocating using STLAllocator Requesting {0}", sizeof(T)*count);
+		
+			//FL_ENGINE_INFO("Allocating using STLAllocator Requesting {0}", sizeof(T)*count);
+	
 			return reinterpret_cast<T*>(Allocate(sizeof(T) * count));
 		}
 
@@ -69,7 +71,7 @@ namespace fmemory {
 		*/
 		void deallocate(pointer p, size_t count)
 		{
-			FL_ENGINE_INFO("Dellocating using STLAllocator.");
+			//FL_ENGINE_INFO("Dellocating using STLAllocator.");
 			Free(p, sizeof(T) * count);
 		}
 

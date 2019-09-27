@@ -81,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

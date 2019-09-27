@@ -17,11 +17,6 @@
 #include <memory>
 
 
-/*
-*	Followng constexpr can be used to enable/disable the 
-*   Memory Logs.
-*/
-constexpr auto ENABLE_MEMORY_DEBUG_LOGS = 0;
 
 class Log
 {

@@ -6,6 +6,8 @@
 #include <iostream>
 #include "Log.h"
 namespace fmemory {
+
+
 	/*
 		Allocates the memory block of requested size.Returns nullptr on failure.
 	*/
@@ -35,6 +37,7 @@ namespace fmemory {
 		}
 		catch (std::exception& e)
 		{
+
 			FL_ENGINE_ERROR("ERROR:{0}", e.what());
 			std::cin.get();
 			std::cin.get();
@@ -59,10 +62,11 @@ namespace fmemory {
 		std::size_t  mask = alignment - 1;
 		std::uintptr_t misalignment = raw_memory_address & mask;
 		std::ptrdiff_t adjustment = alignment - misalignment;
-		//FL_ENGINE_INFO("Allignement for memory={0} mask= {1} Adjustment={2}", alignment,mask,adjustment);
 
 		//Fixing memory based on adjustment
 		std::uintptr_t aligned_memory_address = raw_memory_address + adjustment;
+		
+		//FL_ENGINE_INFO("Allignement for memory={0} mask= {1} Adjustment={2}", alignment,mask,adjustment);
 		//FL_ENGINE_INFO("Alignement Memory Address = {0} ", aligned_memory_address);
 
 		//storing adjustment value
