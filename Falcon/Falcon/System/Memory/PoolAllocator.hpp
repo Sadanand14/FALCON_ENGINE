@@ -4,6 +4,14 @@
 #include <cstdlib>
 
 namespace fmemory {
+
+	/**
+	* @class
+	* <p>Pool allocator class provides functionality create pools of same sized memory 
+ 	* blocks.</p>
+	* 
+	*/
+
 	class PoolAllocator
 	{
 	private:

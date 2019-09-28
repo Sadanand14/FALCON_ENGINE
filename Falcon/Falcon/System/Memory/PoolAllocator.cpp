@@ -6,11 +6,22 @@
 
 namespace fmemory {
 	
+	/**
+	* <p> Default constructor </p>
+	*
+	*/
 	PoolAllocator::PoolAllocator()
 		:m_poolref(nullptr),m_free_list_head(nullptr),m_num_of_elements(0),m_element_size_in_bytes(0),m_alignment(4)
 	{
 	}
 
+	/**
+	*
+	* Parameterized constructor
+	* @param size_t element size in bytes sizeof(T)
+	* @param size_t number of elements
+	* @param size_t alignment required
+	*/
 	PoolAllocator::PoolAllocator(const std::size_t element_size_in_bytes, const std::size_t num_of_elements, const std::size_t alignment)
 	{
 		m_poolref = nullptr;
@@ -18,6 +29,14 @@ namespace fmemory {
 		CreatePool(element_size_in_bytes, num_of_elements,alignment);
 		
 	}
+
+
+	/**
+	* Creats pool of memory for requested number of elements.
+	* @param size_t element size in bytes sizeof(T)
+	* @param size_t number of elements
+	* @param size_t alignment required 
+	*/
 
 	void PoolAllocator::CreatePool(const std::size_t element_size_in_bytes, const std::size_t num_of_elements, const std::size_t alignment)
 	{
@@ -67,7 +86,10 @@ namespace fmemory {
 
 	}
 
-
+	/**
+	* Returns next free block from pool.
+	* @return void* returns pointer if block available else nullptr
+	*/
 	void * PoolAllocator::GetBlocKFromPool()
 	{
 		if (m_poolref == nullptr)
@@ -89,6 +111,11 @@ namespace fmemory {
 		}
 	}
 
+
+	/**
+	* Releases the referenced block and adds back to free list.
+	* @param void* pointer to memory_block
+	*/
 	void PoolAllocator::Release(void * memory_block)
 	{
 		if (memory_block == nullptr)
@@ -116,12 +143,20 @@ namespace fmemory {
 
 	}
 
+
+	/**
+	* Returns base pointer to the pool.
+	* @return void* return pointer to the pool
+	*/
 	void* PoolAllocator::GetPoolMemLocation()
 	{
 		return m_poolref;
 	}
 
 
+	/**
+	* Destructor. Deallocates all the memory and frees everything.
+	*/
 	PoolAllocator::~PoolAllocator()
 	{
 		DeallocateAligned(m_poolref);
