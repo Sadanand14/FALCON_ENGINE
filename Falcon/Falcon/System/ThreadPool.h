@@ -25,7 +25,7 @@ private:
 
 public:
 
-	static ThreadPool GetThreadPool();
+	static ThreadPool* GetThreadPool();
 	~ThreadPool();
 
 	template<typename function_type>

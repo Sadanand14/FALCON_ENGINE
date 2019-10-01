@@ -1,5 +1,7 @@
 #include "ThreadPool.h"
 
+ThreadPool* ThreadPool::mainThreadPool = NULL;
+
 ThreadPool::ThreadPool() :discard_threadPool(false) 
 {
 	int const max_threads = std::thread::hardware_concurrency();
@@ -23,12 +25,14 @@ ThreadPool::~ThreadPool()
 	discard_threadPool = true;
 }
 
-ThreadPool ThreadPool::GetThreadPool() 
+ThreadPool* ThreadPool::GetThreadPool() 
 {
-	if (mainThreadPool) 
+	if (!mainThreadPool) 
 	{
-		
+		mainThreadPool = new ThreadPool();
 	}
+
+	return mainThreadPool;
 }
 
 void ThreadPool::execute_task()

@@ -117,6 +117,9 @@
     <ClInclude Include="Core\EventSystem.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\KeyEvents.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">
@@ -180,6 +183,9 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\EventSystem.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\KeyEvents.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>

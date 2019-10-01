@@ -10,24 +10,22 @@
 #include "Types.h"
 #include "TypeToInt.h"
 
+/**
+*Manages events being pushed and what systems are listening to which events.
+*/
+
 class EventManager
 {
 private:
-	typedef u32 EventType;
-	static boost::unordered_map<EventType, std::vector<EventSystem*>> systems;
+	static boost::unordered_map<EventsCategory, std::vector<EventSystem*>> systems;
 	
 public:
 	EventManager();
 	~EventManager();
 	
-	template <typename T>
-	static void NewEventType();
+	static void SubscribeToEvent(EventSystem* sys, EventsCategory category);
 	
-	template <typename T>
-	static void SubscribeToEvent(EventSystem* sys);
-	
-	template <typename T>
-	static void PushEvent(std::shared_ptr<T> t);
+	static bool PushEvent(std::shared_ptr<Event> event, EventsCategory category);
 };
 
 #endif 

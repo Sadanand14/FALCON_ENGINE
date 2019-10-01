@@ -1,6 +1,6 @@
 #include "EventManager.h"
 
-boost::unordered_map<EventManager::EventType, std::vector<EventSystem*>> EventManager::systems;
+boost::unordered_map<EventsCategory , std::vector<EventSystem*>> EventManager::systems;
 
 EventManager::EventManager()
 {
@@ -12,41 +12,36 @@ EventManager::~EventManager()
 	
 }
 
-/** @brief Registers a new event type
+/** 
+ * Subscribes an event to the system.
+ * @param (EventSystem*) sys - The system that needs to subsribe to a certain event
  */
-template <typename T>
-void EventManager::NewEventType()
+
+void EventManager::SubscribeToEvent(EventSystem* sys, EventsCategory category) //Const System*?
 {
-	static_assert(std::is_base_of<Event, T>::value, "Events must inherit from the Event class");
-	//eventTypes.push_back(new T());
-	
-	systems[TypeToInt::ConvertType<T>()];
-}
-
-/** @brief Subscribes an event to the system
- */
-template <typename T>
-void EventManager::SubscribeToEvent(EventSystem* sys) //Const System*?
-{
-	static_assert(std::is_base_of<Event, T>::value, "Events must inherit from the Event class");
-	
-	systems[TypeToInt::ConvertType<T>()].push_back(sys);
-}
-
-/** @brief Pushes a new event to the subscribed systems
- */
-template <typename T>
-void EventManager::PushEvent(std::shared_ptr<T> t)
-{
-	static_assert(std::is_base_of<Event, T>::value, "Events must inherit from the Event class");
-
-	uint64_t mask = TypeToInt::ConvertType<T>();
-
-	if(systems.find(mask) != systems.end())
+	if (systems.find(category) != systems.end())
+		systems[category].push_back(sys);
+	else 
 	{
-		for(int32_t i = 0; i < systems[mask].size(); i++)
-		{
-			systems[mask][i]->ReceiveEvent<T>(t);
-		}
+		systems[category];
+		systems[category].push_back(sys);
 	}
+}
+
+/**
+ * Pushes a new event to the subscribed systems.
+ * @param (std::shared_ptr<T>) t - Shared pointer to the event to push
+ */
+bool EventManager::PushEvent(std::shared_ptr<Event> event, EventsCategory category)
+{
+	bool sent = false;
+	if(systems.find(category) != systems.end())
+	{
+		for(int32_t i = 0; i < systems[category].size(); i++)
+		{
+			systems[category][i]->ReceiveEvent(event);
+			sent = true;
+		}
+	} 
+	return sent;
 } 
