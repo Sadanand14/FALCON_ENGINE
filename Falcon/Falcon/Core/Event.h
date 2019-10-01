@@ -27,7 +27,7 @@ public:
 
 	inline void SetFlag(EventsCategory category) 
 	{
-		m_eventFlag = m_eventFlag | category;
+		m_eventFlag = (m_eventFlag | category);
 	}
 
 	inline u32 GetFlag()

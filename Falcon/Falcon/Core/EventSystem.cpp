@@ -4,7 +4,12 @@
  * @param (std::shared_ptr<T>) t - The event to push to the queue
  */
 
-void EventSystem::ReceiveEvent(std::shared_ptr<Event> t)
+EventSystem::EventSystem() 
+{
+
+}	
+
+void EventSystem::ReceiveEvent(boost::shared_ptr<Event> t)
 {
 	this->eventQueue.push_back(t);
 }

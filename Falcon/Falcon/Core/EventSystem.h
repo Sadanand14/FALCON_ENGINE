@@ -2,15 +2,16 @@
 #define EVENT_SYSTEM_H_
 
 #include <boost/circular_buffer.hpp>
+#include <boost/container/vector.hpp>
+#include <boost/shared_ptr.hpp>
 #include "Event.h"
 #include "..//System/ThreadPool.h"
 
 class EventSystem
 {
 protected:
-	boost::circular_buffer<std::shared_ptr<Event>> eventQueue;
-
-	//TODO:Store a list of Events to Subscribe To
+	boost::circular_buffer<boost::shared_ptr<Event>> eventQueue;
+	boost::container::vector<EventsCategory> subcribedList;
 
 public:
 	
@@ -18,8 +19,8 @@ public:
 	 * Child classes will inherit and figure out how they want to process events
 	 */
 	virtual void processEvents() = 0;
-	
-	void ReceiveEvent(std::shared_ptr<Event> t);
+	void ReceiveEvent(boost::shared_ptr<Event> t);
+	EventSystem();
 };
 
 #endif

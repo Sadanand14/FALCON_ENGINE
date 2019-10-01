@@ -32,7 +32,7 @@ void EventManager::SubscribeToEvent(EventSystem* sys, EventsCategory category) /
  * Pushes a new event to the subscribed systems.
  * @param (std::shared_ptr<T>) t - Shared pointer to the event to push
  */
-bool EventManager::PushEvent(std::shared_ptr<Event> event, EventsCategory category)
+bool EventManager::PushEvent(boost::shared_ptr<Event> event, EventsCategory category)
 {
 	bool sent = false;
 	if(systems.find(category) != systems.end())

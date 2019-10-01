@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <memory>
 #include <boost/unordered_map.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
 #include "Event.h"
 #include "EventSystem.h"
@@ -25,7 +26,7 @@ public:
 	
 	static void SubscribeToEvent(EventSystem* sys, EventsCategory category);
 	
-	static bool PushEvent(std::shared_ptr<Event> event, EventsCategory category);
+	static bool PushEvent(boost::shared_ptr<Event> event, EventsCategory category);
 };
 
 #endif 
