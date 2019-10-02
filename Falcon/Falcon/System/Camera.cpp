@@ -1,4 +1,18 @@
 #include "Camera.h"
+#include <GLFW/glfw3.h>
+CameraEventSystem::CameraEventSystem() 
+{
+	keyCodeVector.push_back(GLFW_KEY_W);
+	keyCodeVector.push_back(GLFW_KEY_A);
+	keyCodeVector.push_back(GLFW_KEY_S);
+	keyCodeVector.push_back(GLFW_KEY_D);
+	keyCodeVector.push_back(GLFW_KEY_LEFT_SHIFT);
+	keyCodeVector.push_back(GLFW_KEY_LEFT_CONTROL);
+	keyCodeVector.push_back(GLFW_KEY_UP);
+	keyCodeVector.push_back(GLFW_KEY_DOWN);
+	keyCodeVector.push_back(GLFW_KEY_LEFT);
+	keyCodeVector.push_back(GLFW_KEY_RIGHT);
+}
 
 void CameraEventSystem::SubscribeToEvents()
 {
@@ -7,9 +21,32 @@ void CameraEventSystem::SubscribeToEvents()
 
 void CameraEventSystem::ProcessEvents() 
 {
-
 }
 
+bool CameraEventSystem::CheckForKey(unsigned int code)
+{
+	bool keyExists = false;
+	for (unsigned int i = 0; i < keyCodeVector.size(); i++) 
+	{
+		if (code == keyCodeVector[i])
+			keyExists = true;
+	}
+	return keyExists;
+}
+
+void CameraEventSystem::ProcessKeyEvent(keyType type, unsigned int code)
+{
+	if (CheckForKey(code)) 
+	{
+		if (code == GLFW_KEY_W) {}
+			//call ProcessKeyBoard of camera Class;
+		else if (code == GLFW_KEY_S){}
+		else if (code == GLFW_KEY_D){}
+		else if (code == GLFW_KEY_A){}
+	}
+}
+
+/////////////////////////////////////////
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM)
 {
 	m_Position = position;
@@ -90,3 +127,5 @@ void Camera::UpdateCameraVectors()
 	m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));  // Normalize the vectors
 	m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 }
+
+

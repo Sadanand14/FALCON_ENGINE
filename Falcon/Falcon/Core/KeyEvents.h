@@ -12,6 +12,9 @@ private:
 	keyType m_type;
 
 public: 
+
+	inline unsigned int GetCode() { return m_keyCode; }
+	inline keyType GetKeyType() { return m_type; }
 	KeyEvent(unsigned int KeyCode, keyType type);
 	~KeyEvent();
 };

@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "..//Core/KeyEvents.h"
 #include <../Core/EventManager.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -10,6 +11,13 @@
 struct CameraEventSystem : public EventSystem
 {
 private:
+	std::vector<unsigned int> keyCodeVector;
+
+	void ProcessKeyEvent(keyType, unsigned int);
+	bool CheckForKey(unsigned int code);
+
+	CameraEventSystem();
+
 	virtual void SubscribeToEvents() override;
 	virtual void ProcessEvents() override;
 };
@@ -28,14 +36,13 @@ class Camera
 private:
 	// Calculates the front vector from the Camera's (updated) Euler Angles
 	void UpdateCameraVectors();
-
-public:
-	//Camera Attributes
 	glm::vec3 m_Position;
 	glm::vec3 m_Front;
 	glm::vec3 m_Up;
 	glm::vec3 m_Right;
 	glm::vec3 m_WorldUp;
+
+	//Camera Attributes
 	//Euler Angles
 	float m_Yaw;
 	float m_Pitch;
@@ -44,6 +51,7 @@ public:
 	float m_MouseSensitivity;
 	float m_Zoom;
 
+public:
 
 	// Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
@@ -52,7 +60,7 @@ public:
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-	glm::mat4 GetViewMatrix();
+	inline glm::mat4 GetViewMatrix();
 	
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM.
 	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
