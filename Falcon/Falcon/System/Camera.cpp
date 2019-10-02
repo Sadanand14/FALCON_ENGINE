@@ -1,12 +1,22 @@
 #include "Camera.h"
 
+void CameraEventSystem::SubscribeToEvents()
+{
+	EventManager::SubscribeToEvent(this, KeyEventCategory);
+}
+
+void CameraEventSystem::ProcessEvents() 
+{
+
+}
+
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM)
 {
-		m_Position = position;
-		m_WorldUp = up;
-		m_Yaw = yaw;
-		m_Pitch = pitch;
-		UpdateCameraVectors();
+	m_Position = position;
+	m_WorldUp = up;
+	m_Yaw = yaw;
+	m_Pitch = pitch;
+	UpdateCameraVectors();
 
 }
 

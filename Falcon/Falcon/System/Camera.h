@@ -1,10 +1,18 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <../Core/EventManager.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+
+struct CameraEventSystem : public EventSystem
+{
+private:
+	virtual void SubscribeToEvents() override;
+	virtual void ProcessEvents() override;
+};
 
 enum Camera_Movement{ FORWARD, BACKWARD, LEFT, RIGHT};
 

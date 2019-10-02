@@ -18,7 +18,8 @@ public:
 	/** Virtual function that processes an event.
 	 * Child classes will inherit and figure out how they want to process events
 	 */
-	virtual void processEvents() = 0;
+	virtual void SubscribeToEvents() = 0;
+	virtual void ProcessEvents() = 0;
 	void ReceiveEvent(boost::shared_ptr<Event> t);
 	EventSystem();
 };
