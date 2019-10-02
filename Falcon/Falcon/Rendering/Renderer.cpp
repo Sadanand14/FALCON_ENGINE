@@ -33,12 +33,14 @@ void Renderer::SetDrawStates()
 	entity = new Entity();
 	entity->AddComponent<RenderComponent>();
 	RenderComponent* rd = entity->GetComponent<RenderComponent>();
+	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+	rd->m_material = AssetManager::LoadMaterial("../Assets/Materials/");
 
-	shader = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	rd->m_material->shader = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	shader = rd->m_material->shader;
 	shader->UseShader();
-	entity->GetComponent<RenderComponent>()->m_mesh->DrawMesh( );
-
+	entity->GetComponent<RenderComponent>()->m_mesh->DrawMesh();
 }
 
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
@@ -60,5 +62,19 @@ void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES, (GLsizei)entity->GetComponent<RenderComponent>()->m_mesh->m_indexArray.size(), GL_UNSIGNED_INT,0);
+
+	Mesh* m = entity->GetComponent<RenderComponent>()->m_mesh;
+	Material* mat = entity->GetComponent<RenderComponent>()->m_material;
+
+	if(mat != nullptr)
+		mat->Bind();
+	for(i32 i = 0; i < m->m_indexOffsets.size(); i++)
+	{
+		i32 count;
+		if(i < m->m_indexOffsets.size() - 1)
+			count = m->m_indexOffsets[i + 1] - m->m_indexOffsets[i];
+		else
+			count = m->m_indexArray.size() - m->m_indexOffsets[i];
+		glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, m->m_indexOffsets[i]);
+	}
 }
