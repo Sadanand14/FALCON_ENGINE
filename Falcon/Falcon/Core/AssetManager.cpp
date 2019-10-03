@@ -90,10 +90,10 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = new Material();
 	mat->albedoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_albedo.tga");
-	mat->roughnessTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_rough.tga");
-	mat->normalTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_normal.tga");
-	mat->metallicTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_metal.tga");
-	mat->aoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_ao.tga");
+	//mat->roughnessTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_rough.tga");
+	//mat->normalTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_normal.tga");
+	//mat->metallicTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_metal.tga");
+	//mat->aoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_ao.tga");
 
 	return mat;
 }
