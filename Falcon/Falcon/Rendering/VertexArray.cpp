@@ -19,25 +19,23 @@ void VertexArray::AddBuffer( VertexBuffer* const vb)
 	m_vertexbuffer = vb;			//sets the vertex buffer pointer to the one thats been added
 	m_vertexbuffer->Bind();								// binds the passed in vertex buffer
 	SetupVertextAttribPointers();
-	
+
 	m_vertexbuffer->Unbind();       // unbinds the vertex buffer
 	glBindVertexArray(0);			// unbinds that vertex array
 }
 
-
-
 void VertexArray::SetupVertextAttribPointers()
 {
-	//Vertex attribute pointers	
+	//Vertex attribute pointers
 	//Positions
 	glEnableVertexAttribArray(0);	// enables the locations for those attributes
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);	//designates the various properties of each attribute, check docs.gl for more info
-	//Normals
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 	// Texture Coordinates
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	//Normals
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 	//Tangents
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));

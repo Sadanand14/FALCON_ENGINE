@@ -24,8 +24,7 @@ void Renderer::CreateDrawStates()
 	glEnable(GL_DEPTH_TEST);
 
 	//Draw in Wireframe mode - Comment out
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void Renderer::SetDrawStates()
@@ -33,8 +32,8 @@ void Renderer::SetDrawStates()
 	entity = new Entity();
 	entity->AddComponent<RenderComponent>();
 	RenderComponent* rd = entity->GetComponent<RenderComponent>();
-	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+	rd->m_mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
 	rd->m_material = AssetManager::LoadMaterial("../Assets/Materials/");
 
 	rd->m_material->shader = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
