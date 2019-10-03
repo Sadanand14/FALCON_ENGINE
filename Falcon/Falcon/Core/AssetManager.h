@@ -8,7 +8,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <../Rendering/Mesh.h>
+#include "../Rendering/Mesh.h"
+#include "../Rendering/Material.h"
 
 #include <string>
 #include <fstream>
@@ -17,7 +18,7 @@
 #include <map>
 #include <vector>
 
-class AssetManager 
+class AssetManager
 {
 private:
 
@@ -30,6 +31,8 @@ private:
 
 public:
 	static Mesh* LoadModel(std::string const& path);
+	static u32 LoadTexture(std::string const& path);
+	static Material* LoadMaterial(std::string const& path);
 
 
 	AssetManager(std::string const& path, bool gamma = false);
@@ -37,5 +40,5 @@ public:
 };
 
 
-#endif 
+#endif
 

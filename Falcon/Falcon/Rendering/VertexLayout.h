@@ -4,12 +4,12 @@
 #include <glm/glm.hpp>
 
 struct Vertex {
-	//Position 
+	//Position
 	glm::vec3 Position;
-	//Normal
-	glm::vec3 Normal;
 	//Texture Coordinates
 	glm::vec2 TexCoords;
+	//Normal
+	glm::vec3 Normal;
 	//Tangent
 	glm::vec3 Tangent;
 	//Bitangent

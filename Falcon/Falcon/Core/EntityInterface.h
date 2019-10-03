@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include "..//Rendering/Mesh.h"
+#include "../Rendering/Material.h"
 #include <glm/glm.hpp>
 #include "..//System/Log.h"
 
@@ -20,16 +21,16 @@
 
 enum Status { Inactive, Active};
 
-struct Transform 
+struct Transform
 {
 	glm::vec3 m_position, m_rotation, m_scale;
 	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation({ 0.0f, 0.0f, 0.0f }), m_scale({ 1.0f,1.0f,1.0f})
 	{}
-	Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale) 
+	Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale)
 	{}
 };
 
-struct BasicComponent 
+struct BasicComponent
 {
 	Status status;
 	BasicComponent() :status(Inactive) {}
@@ -39,14 +40,15 @@ struct BasicComponent
 struct RenderComponent :public BasicComponent
 {
 	Mesh* m_mesh;
+	Material* m_material;
 
-	RenderComponent(): m_mesh(nullptr) {}
+	RenderComponent(): m_mesh(nullptr), m_material(nullptr) {}
 	~RenderComponent() {}
 };
 
 struct AnimationComponent :public BasicComponent
 {
-	
+
 	AnimationComponent() {}
 	~AnimationComponent() {}
 };
@@ -75,9 +77,9 @@ struct InputComponent : public BasicComponent
 	~InputComponent() {}
 };
 
-class Entity 
+class Entity
 {
-private: 
+private:
 	Transform m_transform;
 	RenderComponent* m_renderC;
 	AudioComponent* m_audioC;
@@ -107,11 +109,11 @@ public:
 template<>
 inline void Entity::AddComponent<RenderComponent>()
 {
-	if (m_renderC) 
+	if (m_renderC)
 	{
 		FL_ENGINE_ERROR("This entity already has this component!");
 	}
-	else 
+	else
 	{
 		m_renderC = new RenderComponent();
 	}

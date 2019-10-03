@@ -29,12 +29,73 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	////////////////
 
 
-	// Process rootnode 
+	// Process rootnode
 	ProcessNode(scene->mRootNode, scene, newmesh);
 	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
 	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->SetupMesh();
 	return newmesh;
+}
+
+u32 AssetManager::LoadTexture(std::string const& path)
+{
+	std::string filename(path);
+
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format = 0;
+		switch(nrComponents) {
+			case 1:
+				format = GL_RED;
+				break;
+			case 2:
+				format = GL_RG;
+				break;
+			case 3:
+				format = GL_RGB;
+				break;
+			case 4:
+			default:
+				format = GL_RGBA;
+				break;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		FL_ENGINE_ERROR("ERROR: Texture failed to load at {0} ", path);
+		stbi_image_free(data);
+	}
+
+	return textureID;
+}
+
+Material* AssetManager::LoadMaterial(std::string const& path)
+{
+	//TODO: Change this to actually load a material using json and remove tmp things
+	Material* mat = new Material();
+	mat->albedoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_albedo.tga");
+	//mat->roughnessTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_rough.tga");
+	//mat->normalTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_normal.tga");
+	//mat->metallicTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_metal.tga");
+	//mat->aoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_ao.tga");
+
+	return mat;
 }
 
 void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh)
@@ -56,10 +117,10 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
 {
 	// Data to load
-	//unsigned int 
+	//unsigned int
 	size_t indexOffset = 0;
 	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<u32> indices;
 	std::vector<Texture> textures;
 
 	// Walk through each of the mesh's vertices.
@@ -81,7 +142,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 		if (mesh->mTextureCoords[0])
 		{
 			glm::vec2 vec;
-			// a vertex can contain up to 8 different texture coordinates. 
+			// a vertex can contain up to 8 different texture coordinates.
 			//To-Do: Add support for models that use more than one set of texture coordinates.
 			vec.x = mesh->mTextureCoords[0][i].x;
 			vec.y = mesh->mTextureCoords[0][i].y;
@@ -102,10 +163,9 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 		vertices.push_back(vertex);
 	}
 
-	//Experimental
-	indexOffset = newmesh->m_vertexArray.size();
 	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 
+	newmesh->m_indexOffsets.push_back(newmesh->m_indexArray.size());
 
 	// now wak through each of the mesh's faces
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -116,10 +176,10 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 			indices.push_back(face.mIndices[j]);
 	}
 
- 
+
 	for (unsigned int i = 0; i < indices.size(); i++)
 	{
-		newmesh->m_indexArray.push_back(indices[i] + indexOffset);
+		newmesh->m_indexArray.push_back(indices[i]);
 	}
 }
 
