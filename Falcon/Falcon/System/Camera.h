@@ -49,9 +49,9 @@ private:
 	//Camera Options
 	float m_MovementSpeed;
 	float m_MouseSensitivity;
-	float m_Zoom;
 
 public:
+	float m_Zoom;
 
 	// Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
