@@ -40,7 +40,7 @@ private:
 public:
 	float m_Zoom;
 	glm::vec3 m_Position;
-	glm::vec3 m_Front;
+	glm::vec3 m_Forward;
 	glm::vec3 m_Up;
 	glm::vec3 m_Right;
 	glm::vec3 m_WorldUp;

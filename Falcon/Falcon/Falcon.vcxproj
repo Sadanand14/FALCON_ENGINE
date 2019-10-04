@@ -102,6 +102,7 @@
     <ClInclude Include="Core\EventSystem.h" />
     <ClInclude Include="Core\KeyEvents.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
+    <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\Renderer.h" />
@@ -112,7 +113,7 @@
     <ClInclude Include="Rendering\VertexBuffer.h" />
     <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
-    <ClInclude Include="System\Camera.h" />
+    <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="Core\EventSystem.cpp" />
     <ClCompile Include="Core\KeyEvents.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
@@ -142,7 +144,7 @@
     <ClCompile Include="Rendering\VertexArray.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
-    <ClCompile Include="System\Camera.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />

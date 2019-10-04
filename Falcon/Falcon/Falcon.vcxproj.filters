@@ -72,9 +72,6 @@
     <ClInclude Include="System\InputReceiver.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="System\Camera.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="Rendering\Mesh.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -120,6 +117,12 @@
     <ClInclude Include="Core\KeyEvents.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Camera.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">
@@ -158,9 +161,6 @@
     <ClCompile Include="Rendering\stb_image_implementation.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="System\Camera.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
@@ -187,6 +187,12 @@
     </ClCompile>
     <ClCompile Include="Core\KeyEvents.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Camera.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "../Rendering/Material.h"
 #include <glm/glm.hpp>
 #include "..//System/Log.h"
+#include "..//Rendering/Camera.h"
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)
@@ -23,17 +24,22 @@ enum Status { Inactive, Active};
 
 struct Transform
 {
+private:
 	glm::vec3 m_position, m_rotation, m_scale;
+public:	
 	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation({ 0.0f, 0.0f, 0.0f }), m_scale({ 1.0f,1.0f,1.0f})
 	{}
 	Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale)
 	{}
+
+	inline glm::vec3 GetPosition() const { return m_position; }
+	inline glm::vec3 GetRotation() const { return m_rotation; }
+	inline glm::vec3 GetScale() const { return m_scale; }
 };
 
 struct BasicComponent
 {
-	Status status;
-	BasicComponent() :status(Inactive) {}
+	BasicComponent() {};
 	~BasicComponent() {};
 };
 
@@ -41,7 +47,7 @@ struct RenderComponent :public BasicComponent
 {
 	Mesh* m_mesh;
 	Material* m_material;
-
+	
 	RenderComponent(): m_mesh(nullptr), m_material(nullptr) {}
 	~RenderComponent() {}
 };
@@ -75,6 +81,20 @@ struct InputComponent : public BasicComponent
 {
 	InputComponent() {}
 	~InputComponent() {}
+};
+
+struct CameraComponent : public BasicComponent 
+{
+private:
+	Camera* m_camera;
+public:
+	CameraComponent(Transform transform) 
+	{
+		m_camera->m_Position = transform.GetPosition();
+		//m_camera->m_Position = transform.GetRotation();
+		//m_camera->m_Position = transform.GetScale();
+	};
+	~CameraComponent() {};
 };
 
 class Entity
