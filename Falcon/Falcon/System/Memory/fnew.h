@@ -70,7 +70,7 @@ namespace fmemory
 	* @param All the parameters required for calling type constructor
 	* @return pointer to the memory block allocated.
 	*/
-	T* fnew_arr(std::size_t count, Args... args)
+	T* fnew_arr(unsigned count, Args... args)
 	{
 		if (count <= 0)
 		{
