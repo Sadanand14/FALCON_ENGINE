@@ -11,7 +11,7 @@ int main()
 
 	WindowClass* window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
 	InputReceiver* input = fmemory::fnew<InputReceiver>(window1);
-	
+
 
 	while(!window1->WindowCloseStatus())
 	{

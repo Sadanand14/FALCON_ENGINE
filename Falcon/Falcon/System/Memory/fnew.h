@@ -30,7 +30,7 @@ namespace fmemory
 	template <typename T, typename... Args >
 	/**
 	* Exposes allocation API to the outer world.
-	* @param count number of elements int array
+	* @param count number of elements in the array by ref
 	* @param All the parameters required for calling type constructor
 	* @return pointer to the memory block allocated.
 	*/
@@ -60,6 +60,44 @@ namespace fmemory
 			return nullptr;
 		}
 	}
+
+
+
+	template <typename T, typename... Args >
+	/**
+	* Exposes allocation API to the outer world.
+	* @param count number of elements in the array by value
+	* @param All the parameters required for calling type constructor
+	* @return pointer to the memory block allocated.
+	*/
+	T* fnew_arr(std::size_t count, Args... args)
+	{
+		if (count <= 0)
+		{
+			FL_ENGINE_ERROR("ERROR:Invalid value of count for allocation provided. Not proceeding with the allocation. {0}", count);
+			return nullptr;
+		}
+
+		try {
+			//Allocating the memory
+			T* ptr = static_cast<T*>(fmemory::Allocate(sizeof(T) * count));
+			//FL_ENGINE_ERROR("Allocating Array: Main Block starts at {0}", static_cast<void*>(ptr));
+			//Constructing the object
+			for (size_t itr = 0; itr < count; ++itr)
+			{
+				//FL_ENGINE_INFO("Constructing at {0}", static_cast<void*>(ptr + itr));
+				new(ptr + itr) T(args...);
+			}
+			return ptr;
+		}
+		catch (std::exception e)
+		{
+			FL_ENGINE_ERROR("ERROR: Failed to allocate memory.{0}", e.what());
+			return nullptr;
+		}
+	}
+
+
 
 
 	/*
