@@ -17,6 +17,7 @@
 #include <memory>
 
 
+
 class Log
 {
 

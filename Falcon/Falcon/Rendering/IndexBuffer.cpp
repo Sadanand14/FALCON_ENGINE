@@ -1,9 +1,6 @@
-#include "IndexBuffer.h"
 #include <cassert>
-
-
-
-
+#include "IndexBuffer.h"
+#include "Memory/fmemory.h"
 
 //creates and binds an index buffer with int array
 IndexBuffer::IndexBuffer(const unsigned int* indices,size_t count) 
@@ -17,12 +14,15 @@ IndexBuffer::IndexBuffer(const unsigned int* indices,size_t count)
 
 
 //creates and binds an index buffer with int vector
-IndexBuffer::IndexBuffer(const std::vector<unsigned int>& indices, size_t count)
+IndexBuffer::IndexBuffer(const std::vector<unsigned int,fmemory::STLAllocator<unsigned int>>& indices, size_t count = 1)
 	:m_count(count), m_renderBufferId(0)
 {
-	unsigned int * indicesArr = new unsigned int [count];
+	unsigned int* indicesArr = fmemory::fnew_arr <unsigned int>(count);// new unsigned int[count];
+
 	std::copy(indices.begin(), indices.end(), indicesArr);
 	SetupIndexBuffer(indicesArr);// unbinds the index buffer	
+
+	fmemory::fdelete <unsigned int>(indicesArr,count);
 }
 
 
