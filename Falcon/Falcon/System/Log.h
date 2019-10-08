@@ -17,6 +17,12 @@
 #include <memory>
 
 
+/**
+* Log class definesthe logging mechanism for the engine and any application using the engine. 
+* We use a third party library "spdlog" to handle logging for us. This class is a wrapper over
+* it to make it more user friendly.
+* Currently you'll need to be in debug mode to see the logging statements.
+*/
 
 class Log
 {
@@ -24,13 +30,30 @@ class Log
 public:
 	static void Init();
 		
+	/*
+	* Method returs spdlog logger object for engine.
+	*/
 	inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return m_EngineLogger; }
+	
+	/*
+	* Method returs spdlog logger object for engine.
+	*/
 	inline static std::shared_ptr<spdlog::logger>& GetGameLogger()   { return m_GameLogger; }
 
 private:
 	static std::shared_ptr<spdlog::logger> m_EngineLogger;
 	static std::shared_ptr<spdlog::logger> m_GameLogger;
 };
+
+
+/**
+* Following are the Macros which developer can use to log statements. 
+* There are different option to be used based on severity.
+* Following is in ascending order of severity,
+* INFO, TRACE, WARN, ERROR, FATAL.
+* Thsese take in any number of parameters. For more details check the main Readme file.
+*/
+
 
 #ifdef BUILD_DEBUG_MODE
 

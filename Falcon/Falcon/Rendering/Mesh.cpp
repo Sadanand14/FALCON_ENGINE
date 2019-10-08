@@ -2,6 +2,7 @@
 #include "Log.h"
 
 
+
 void Mesh::SetupMesh()
 {
 	m_VAO = fmemory::fnew<VertexArray>();
@@ -12,6 +13,10 @@ void Mesh::SetupMesh()
 	m_VAO->Unbind();
 }
 
+
+/**
+* Constructor for Mesh Class.
+*/
 Mesh::Mesh(const std::vector<Vertex, fmemory::STLAllocator<Vertex>>& vertices, 
 		   const std::vector<unsigned int, fmemory::STLAllocator<unsigned int>>& indices, 
 	       const std::vector<Texture, fmemory::STLAllocator<Texture>>& textures)
@@ -22,7 +27,9 @@ Mesh::Mesh(const std::vector<Vertex, fmemory::STLAllocator<Vertex>>& vertices,
 	FL_ENGINE_INFO("INFO: Mesh set up correctly.");
 }
 
-
+/**
+* Destructor for Mesh Class.
+*/
 Mesh::~Mesh()
 {
 	fmemory::fdelete<VertexArray> (m_VAO);
@@ -30,7 +37,7 @@ Mesh::~Mesh()
 	fmemory::fdelete<IndexBuffer> (m_IBO);
 }
 
-
+//TODO: Have to modify the function to remove the draw call from it.
 void Mesh::DrawMesh(Shader shader)
 {
 	// bind appropriate textures

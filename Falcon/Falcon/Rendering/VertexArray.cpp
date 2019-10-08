@@ -1,18 +1,28 @@
 #include "VertexArray.h"
 
+
+/**
+* Main Constructor for the Vertex Array Object Class. 
+*/
 VertexArray::VertexArray():m_rendererID(0), m_vertexbuffer(nullptr)
 {
 	glGenVertexArrays(1, &m_rendererID);// generates a vertex Array
 	glBindVertexArray(0);
 }
 
+/**
+* Main Destructor for the Vertex Array Object Class.
+*/
 VertexArray::~VertexArray()
 {
 	glDeleteVertexArrays(1, &m_rendererID);// deletes the vertex array
 }
 
-//adds a buffer and its respective layout to the vertex array object.
-//note that this function autatically has to bind the vertex buffer and itself to the current context
+/**
+* This function attaches the provided vertex buffer to this vertex array object.
+* 
+* @param[in] A constant pointer to an object of type Vertex Buffer.
+*/
 void VertexArray::AddBuffer( VertexBuffer* const vb)
 {
 	glBindVertexArray(m_rendererID);		// binds the vertex array
@@ -26,7 +36,9 @@ void VertexArray::AddBuffer( VertexBuffer* const vb)
 }
 
 
-
+/**
+* This function Sets up the Attribute layout for the vertex buffer provided.
+*/
 void VertexArray::SetupVertextAttribPointers()
 {
 
@@ -48,13 +60,18 @@ void VertexArray::SetupVertextAttribPointers()
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 }
 
-//binds both the buffer and the vertexbuffer inside if its available
+/**
+* Binds this Vertex array Object.
+*/
 void VertexArray::Bind() const
 {
 	glBindVertexArray(m_rendererID);// binds the vertex array object to the current context
 	if (m_vertexbuffer) m_vertexbuffer->Bind();// if it has a vertex buffer, binds it
 }
 
+/**
+* Unbinds this Vertex Array Object.
+*/
 void VertexArray::Unbind() const
 {
 	glBindVertexArray(0);// unbinds the array

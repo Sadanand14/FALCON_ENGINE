@@ -1,23 +1,34 @@
 #include "Renderer.h"
 #include "Memory/fmemory.h"
 
+/**
+*Constructor for Renderer
+*/
 Renderer::Renderer()
 {
 	Init();
 }
 
+/**
+*Destructor for Renderer
+*/
 Renderer::~Renderer()
 {
 	fmemory::fdelete<Shader>(m_shadyStuff);
 	fmemory::fdelete<Model>(m_nanosuit);
 }
 
-//renderer initialization
+/**
+*Initialization function for Renderer
+*/
 void Renderer::Init()
 {	
 	
 }
 
+/**
+*Function to Create Buffers or Programs to be used in the next Draw cycle
+*/
 void Renderer::CreateDrawStates()
 {
 
@@ -34,6 +45,9 @@ void Renderer::CreateDrawStates()
 	m_shadyStuff = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
 }
 
+/**
+*Function to Set the relevant data in the draw states.
+*/
 void Renderer::SetDrawStates()
 {
 
@@ -41,6 +55,15 @@ void Renderer::SetDrawStates()
 	m_shadyStuff->UseShader();
 }
 
+/**
+* Function that provides consistent updates for the next rendering frame.
+*
+*@param[in] An integer indicating width.
+*@param[in] An integer indicating height.
+*@param[in] A float indicating zoom.
+*@param[in] A 4x4 matrix defined in glm library.
+*@param[in] A float indicating delta time for the current frame. 
+*/
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
@@ -56,6 +79,10 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 	m_shadyStuff->SetMat4("model", model);
 }
 
+/**
+* Main Draw Function for the Renderer
+*/
+//TODO-> Have multiple Renderer Passes functionality
 void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);

@@ -5,6 +5,9 @@
 #include <vector>
 #include "Memory/fmemory.h"
 
+/**
+* Index Buffer CLass to initialize an index buffer and store data on using OpenGL commands.
+*/
 class IndexBuffer
 {
 private:
