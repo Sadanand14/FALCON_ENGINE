@@ -46,6 +46,6 @@ void InputReceiver::cursor_callback(GLFWwindow* window, double xpos, double ypos
 {
 	mouse_x = xpos;
 	mouse_y = ypos;
-	FL_ENGINE_INFO("Mouse moved to Xpos = {0} , Ypos = {1}.", mouse_x, mouse_y);
+	//FL_ENGINE_INFO("Mouse moved to Xpos = {0} , Ypos = {1}.", mouse_x, mouse_y);
 }
 

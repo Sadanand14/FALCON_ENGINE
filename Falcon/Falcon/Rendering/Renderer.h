@@ -12,6 +12,7 @@
 #include "../Core/AssetManager.h"
 #include "../System/ThreadPool.h"
 
+void PrintReception();
 
 class RenderEventSystem : public EventSystem
 {

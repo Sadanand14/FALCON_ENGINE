@@ -2,17 +2,19 @@
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
-void PrintReception();
+
 
 RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
+	std::cout << "RenderEventSystem intialized with address" << this << "\n";
 	subcribedList.push_back(RenderEventCategory);
 	SubscribeToEvents();
 }
 
 void RenderEventSystem::ProcessEvents() 
 {
+	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
 	for (unsigned int i = 0; i < eventQueue.size(); i++)
 	{
 		m_threadPool->submit<void()>(PrintReception);
@@ -75,6 +77,7 @@ void Renderer::SetDrawStates()
 
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
+	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
 	shader->SetMat4("projection", projection);
 

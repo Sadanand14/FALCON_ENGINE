@@ -25,6 +25,11 @@ ThreadPool::~ThreadPool()
 	discard_threadPool = true;
 }
 
+void ThreadPool::ExecutePool() 
+{
+
+}
+
 ThreadPool* ThreadPool::GetThreadPool() 
 {
 	if (!mainThreadPool) 
@@ -52,8 +57,3 @@ void ThreadPool::execute_task()
 	}
 }
 
-template<typename function_type>
-void ThreadPool::submit(function_type func) 
-{
-	workerQueue.push(void_function(func));
-}

@@ -2,6 +2,7 @@
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 
+
 //Camera 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 //Camera Setup	
@@ -30,6 +31,8 @@ WindowClass::~WindowClass()
 
 void WindowClass::Init() 
 {
+	m_threadPool = ThreadPool::GetThreadPool();
+
 	//GLFW Configuration
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
@@ -95,6 +98,9 @@ void WindowClass::Update()
 
 		//Poll I/O events
 		glfwPollEvents();
+
+		//FL_ENGINE_WARN("{0}", m_threadPool->GetSize());
+		m_threadPool->execute_task();
 	}
 }
 
