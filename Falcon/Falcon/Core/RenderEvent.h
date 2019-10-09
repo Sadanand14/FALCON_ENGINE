@@ -3,9 +3,11 @@
 
 #include "Event.h"
 
-class RenderEvent: public Event
+struct RenderEvent : public Event
 {
-	
+	RenderEvent(EventsCategory category = RenderEventCategory): Event(category) {};
 };
 
+
 #endif // !1
+

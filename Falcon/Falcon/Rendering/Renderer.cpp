@@ -1,10 +1,42 @@
 #include "Renderer.h"
 
+RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
+void PrintReception();
+
+RenderEventSystem::RenderEventSystem()
+{
+	m_threadPool = ThreadPool::GetThreadPool();
+	subcribedList.push_back(RenderEventCategory);
+	SubscribeToEvents();
+}
+
+void RenderEventSystem::ProcessEvents() 
+{
+	for (unsigned int i = 0; i < eventQueue.size(); i++)
+	{
+		m_threadPool->submit<void()>(PrintReception);
+	}
+}
+
+void RenderEventSystem::SubscribeToEvents()
+{
+	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	{
+		EventManager::SubscribeToEvent(this, RenderEventCategory);
+	}
+}
+void PrintReception()
+{
+	FL_ENGINE_INFO("Event Executed SuccessFully");
+	std::cout << std::this_thread::get_id() << "\n";
+}
+//////////////////////
 Renderer::Renderer()
 {
 	Init();
 }
+
 
 Renderer::~Renderer()
 {
@@ -14,12 +46,11 @@ Renderer::~Renderer()
 //renderer initialization
 void Renderer::Init()
 {
-
+	m_RES = RenderEventSystem::GetInstance();
 }
 
 void Renderer::CreateDrawStates()
 {
-
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
 

@@ -9,7 +9,6 @@
 #include "Event.h"
 #include "EventSystem.h"
 #include "Types.h"
-#include "TypeToInt.h"
 
 /**
 *Manages events being pushed and what systems are listening to which events.

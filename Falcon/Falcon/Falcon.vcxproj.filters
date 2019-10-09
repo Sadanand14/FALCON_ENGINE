@@ -120,6 +120,12 @@
     <ClInclude Include="Core\KeyEvents.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">
@@ -187,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="Core\KeyEvents.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Material.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
