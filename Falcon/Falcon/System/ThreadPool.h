@@ -1,15 +1,27 @@
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 
-#include <queue>
-#include <thread>
+#include <boost/lockfree/queue.hpp>
+
+#include <boost/thread/thread.hpp>
 #include <atomic>
-#include <functional>
+#include <boost/function.hpp>
 #include <vector>
 
-typedef std::function<void()> void_function;
-typedef std::queue<void_function> ThreadQueue;
+typedef boost::function<void()> void_function;
 
+struct JobCallable
+{
+	void operator()(boost::lockfree::queue<JobCallable> jobs) 
+	{
+		
+	};
+	void_function task;
+	JobCallable(void_function & job) { task = job; }
+	~JobCallable() {};
+};
+
+typedef boost::lockfree::queue<JobCallable> ThreadQueue;
 class ThreadPool
 {
 private:
@@ -18,7 +30,7 @@ private:
 
 	ThreadQueue workerQueue;
 	std::atomic<bool> discard_threadPool;
-	std::vector<std::thread> worker_threads;
+	std::vector<boost::thread> worker_threads;
 	ThreadPool();
 
 public:
@@ -27,7 +39,6 @@ public:
 	~ThreadPool();
 
 	void execute_task();
-	void ExecutePool();
 
 	template<typename function_type>
 	void submit(function_type func);
@@ -37,7 +48,7 @@ public:
 template<typename function_type>
 void ThreadPool::submit(function_type func)
 {
-	workerQueue.push(void_function(func));
+	workerQueue.push(JobCallable(static_cast<void_function>(func)));
 }
 
 

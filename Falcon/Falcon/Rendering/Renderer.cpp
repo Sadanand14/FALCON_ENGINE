@@ -30,8 +30,7 @@ void RenderEventSystem::SubscribeToEvents()
 }
 void PrintReception()
 {
-	FL_ENGINE_INFO("Event Executed SuccessFully");
-	std::cout << std::this_thread::get_id() << "\n";
+	std::cout<<"Event Executed SuccessFully on thread :"<< std::this_thread::get_id()<<"\n";
 }
 //////////////////////
 Renderer::Renderer()

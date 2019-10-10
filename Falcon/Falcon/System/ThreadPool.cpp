@@ -4,13 +4,13 @@ ThreadPool* ThreadPool::mainThreadPool = NULL;
 
 ThreadPool::ThreadPool() :discard_threadPool(false) 
 {
-	int const max_threads = std::thread::hardware_concurrency();
+	int const max_threads = boost::thread::hardware_concurrency();
 
 	try
 	{
 		for (int i = 0; i < max_threads; i++) 
 		{
-			worker_threads.push_back(std::thread(&ThreadPool::execute_task, this));
+			worker_threads.push_back(boost::thread(&ThreadPool::execute_task, this));
 		}
 	}
 	catch(...)
@@ -23,11 +23,6 @@ ThreadPool::ThreadPool() :discard_threadPool(false)
 ThreadPool::~ThreadPool() 
 {
 	discard_threadPool = true;
-}
-
-void ThreadPool::ExecutePool() 
-{
-
 }
 
 ThreadPool* ThreadPool::GetThreadPool() 
@@ -44,16 +39,8 @@ void ThreadPool::execute_task()
 {
 	while (!discard_threadPool)
 	{
-		if (!workerQueue.empty())
-		{
-			void_function task = workerQueue.front();
-			workerQueue.pop();
-			task();
-		}
-		else
-		{
-			std::this_thread::yield();
-		}
+		void_function job;
+		if (workerQueue.pop(job)) job();
 	}
 }
 
