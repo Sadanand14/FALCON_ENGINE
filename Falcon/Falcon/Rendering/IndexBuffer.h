@@ -2,6 +2,7 @@
 #define INDEX_BUFFER_H
 
 #include "framework.h"
+#include "../System/Types.h"
 #include <vector>
 class IndexBuffer
 {

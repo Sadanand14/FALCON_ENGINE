@@ -2,13 +2,14 @@
 #define RENDERER_H
 
 
+#include <cstdlib>
 #include "stb_image.h"
-//#include "Model.h"
 
-#include "../System/Camera.h"
+#include "Camera.h"
 #include "Shader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <boost/container/set.hpp>
 #include "../Core/EntityInterface.h"
 #include "../Core/AssetManager.h"
 
@@ -16,6 +17,7 @@ class Renderer
 {
 	Entity* entity;
 	Shader* shader;
+	boost::container::set<Mesh*> queuedMeshes;
 
 public:
 	Renderer();
