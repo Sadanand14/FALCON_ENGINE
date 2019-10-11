@@ -12,7 +12,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexLayout.h"
-#include "Texture.h"
+#include "Material.h"
 #include "../System/Types.h"
 
 class Mesh {
@@ -26,6 +26,7 @@ private:
 	VertexBuffer* m_VBO1;
 	VertexBuffer* m_VBO2;
 	IndexBuffer* m_IBO;
+	Material* m_material = nullptr;
 
 	boost::container::vector<glm::mat4> m_worldMats;
 
@@ -46,6 +47,8 @@ public:
 	void AddWorldMatrix(const glm::mat4 &mat);
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
+	void SetMaterial(Material* mat);
+	Material* GetMaterial();
 	void Bind();
 
 };

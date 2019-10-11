@@ -58,9 +58,8 @@ struct BasicComponent
 struct RenderComponent :public BasicComponent
 {
 	Mesh* m_mesh;
-	Material* m_material;
 
-	RenderComponent(): m_mesh(nullptr), m_material(nullptr) {}
+	RenderComponent(): m_mesh(nullptr) {}
 	~RenderComponent() {}
 };
 

@@ -29,10 +29,10 @@ void Renderer::CreateDrawStates()
 
 void Renderer::SetDrawStates()
 {
-	entity = new Entity[5000];
+	entity = new Entity[500];
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	Material* mat = AssetManager::LoadMaterial("../Assets/Materials/");
+	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
 	Shader* shad = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
 	shader = shad;
 	for(u32 i = 0; i < 500; i++) {
@@ -40,10 +40,9 @@ void Renderer::SetDrawStates()
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
 		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-		rd->m_material = mat;
-		rd->m_material->shader = shad;
+		rd->m_mesh->GetMaterial()->shader = shad;
 
-		glm::vec3 pos = glm::vec3(float(std::rand() % 500 - 250), float(std::rand() % 500 - 250), float(std::rand() % 500 - 250));
+		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
 		entity[i].GetTransform().SetPosition(pos);
 		entity[i].GetTransform().SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
@@ -65,11 +64,8 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Material* mat = nullptr;
-
 	for(u32 i = 0; i < 500; i++) {
 		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
-		mat = entity[i].GetComponent<RenderComponent>()->m_material;
 
 		m->AddWorldMatrix(entity[i].GetTransform().GetModel());
 
@@ -79,8 +75,6 @@ void Renderer::Draw()
 
 	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
 		(*it)->Bind();
-		if(mat != nullptr)
-			mat->Bind();
 
 		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
 		{

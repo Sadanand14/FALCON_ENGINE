@@ -50,6 +50,16 @@ u32 Mesh::GetWorldMatrixAmount()
 	return m_worldMats.size();
 }
 
+void Mesh::SetMaterial(Material* mat)
+{
+	m_material = mat;
+}
+
+Material* Mesh::GetMaterial()
+{
+	return m_material;
+}
+
 void Mesh::Bind()
 {
 	// Draw Mesh
@@ -58,6 +68,9 @@ void Mesh::Bind()
 	m_VBO2->Bind();
 	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_VBO2->Unbind();
+
+	if(m_material != nullptr)
+		m_material->Bind();
 }
 
 Mesh::~Mesh()
