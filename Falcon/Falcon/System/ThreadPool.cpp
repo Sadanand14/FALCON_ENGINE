@@ -2,7 +2,7 @@
 
 ThreadPool* ThreadPool::mainThreadPool = NULL;
 
-ThreadPool::ThreadPool() :discard_threadPool(false) 
+ThreadPool::ThreadPool() :discard_threadPool(false)
 {
 	int const max_threads = boost::thread::hardware_concurrency();
 
@@ -40,7 +40,10 @@ void ThreadPool::execute_task()
 	while (!discard_threadPool)
 	{
 		void_function job;
-		if (workerQueue.pop(job)) job();
+		if (!workerQueue.empty()) 
+		{
+			job();
+		}
 	}
 }
 
