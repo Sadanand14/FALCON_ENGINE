@@ -1,13 +1,11 @@
 #include "VertexBuffer.h"
 
 //generate and store data into a vertexbuffer
-VertexBuffer::VertexBuffer(const void* databuffer,size_t size)
+VertexBuffer::VertexBuffer(const void* databuffer, size_t size, u32 drawType)
 	:m_renderBufferId(0)
 {
-	glGenBuffers(1, &m_renderBufferId);			   //generates a vertex buffer 
-	glBindBuffer(GL_ARRAY_BUFFER, m_renderBufferId); //binds the vertex buffer to the current context
-	glBufferData(GL_ARRAY_BUFFER, size, databuffer, GL_STATIC_DRAW); // adds data to the bound buffer
-	glBindBuffer(GL_ARRAY_BUFFER, 0);				// unbinds the buffer from the current context.
+	glGenBuffers(1, &m_renderBufferId);			   //generates a vertex buffer
+	BufferData(databuffer, size, drawType);
 }
 
 VertexBuffer::~VertexBuffer()
@@ -21,9 +19,14 @@ void VertexBuffer::Bind() const
 	glBindBuffer(GL_ARRAY_BUFFER, m_renderBufferId);// binds the buffer to the current context
 }
 
-
 void VertexBuffer::Unbind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);			//unbinds the buffer frpom the current context
 }
 
+void VertexBuffer::BufferData(const void* data, size_t size, u32 drawType)
+{
+	Bind();
+	glBufferData(GL_ARRAY_BUFFER, size, data, drawType); // adds data to the bound buffer
+	Unbind();
+}

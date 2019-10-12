@@ -62,17 +62,25 @@ void Renderer::CreateDrawStates()
 
 void Renderer::SetDrawStates()
 {
-	entity = new Entity();
-	entity->AddComponent<RenderComponent>();
-	RenderComponent* rd = entity->GetComponent<RenderComponent>();
-	rd->m_mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-	rd->m_material = AssetManager::LoadMaterial("../Assets/Materials/");
+	entity = new Entity[500];
 
-	rd->m_material->shader = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
-	shader = rd->m_material->shader;
+	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
+	Shader* shad = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	shader = shad;
+	for(u32 i = 0; i < 500; i++) {
+		entity[i].AddComponent<RenderComponent>();
+		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
+		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+		rd->m_mesh->GetMaterial()->shader = shad;
+
+		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+		// Model transformations
+		entity[i].GetTransform().SetPosition(pos);
+		entity[i].GetTransform().SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	}
 	shader->UseShader();
-	entity->GetComponent<RenderComponent>()->m_mesh->DrawMesh();
 }
 
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
@@ -83,12 +91,6 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 
 	// camera/view transformations
 	shader->SetMat4("view", view);
-
-	// Model transformations
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.75f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-	shader->SetMat4("model", model);
 }
 
 void Renderer::Draw()
@@ -96,18 +98,29 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Mesh* m = entity->GetComponent<RenderComponent>()->m_mesh;
-	Material* mat = entity->GetComponent<RenderComponent>()->m_material;
+	for(u32 i = 0; i < 500; i++) {
+		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
 
-	if(mat != nullptr)
-		mat->Bind();
-	for(i32 i = 0; i < m->m_indexOffsets.size(); i++)
-	{
-		i32 count;
-		if(i < m->m_indexOffsets.size() - 1)
-			count = m->m_indexOffsets[i + 1] - m->m_indexOffsets[i];
-		else
-			count = m->m_indexArray.size() - m->m_indexOffsets[i];
-		glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, m->m_indexOffsets[i]);
+		m->AddWorldMatrix(entity[i].GetTransform().GetModel());
+
+		if(queuedMeshes.find(m) == queuedMeshes.end())
+			queuedMeshes.insert(m);
 	}
+
+	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
+		(*it)->Bind();
+
+		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+		{
+			i32 count;
+			if(i < (*it)->m_indexOffsets.size() - 1)
+				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
+			else
+				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
+			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
+		}
+		(*it)->ClearWorldMatrices();
+	}
+
+	queuedMeshes.clear();
 }

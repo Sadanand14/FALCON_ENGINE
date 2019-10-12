@@ -1,201 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{c378ae30-026b-48e9-bc36-c8688777ccc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\System">
-      <UniqueIdentifier>{b131af51-8356-4f75-bbce-64ae57c0ca23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Rendering">
-      <UniqueIdentifier>{edeb0fff-72f1-4b84-9752-9ac01d2b6707}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Rendering">
-      <UniqueIdentifier>{19ff3ea4-963a-4033-8c8e-decd92db6da8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\System">
-      <UniqueIdentifier>{2d7b3ee5-d080-4056-ab0d-f65c7fec1f26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core">
-      <UniqueIdentifier>{cec69a95-347b-4f09-9285-9b19e9264ef2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{235fa173-f588-4032-aa85-5db0636ad3ea}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Core\AssetManager.cpp" />
+    <ClCompile Include="Core\EventManager.cpp" />
+    <ClCompile Include="Core\EventSystem.cpp" />
+    <ClCompile Include="Core\KeyEvents.cpp" />
+    <ClCompile Include="Rendering\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\Material.cpp" />
+    <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\stb_image_implementation.cpp" />
+    <ClCompile Include="Rendering\VertexArray.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\WindowHandler.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="System\Game.cpp" />
+    <ClCompile Include="System\glad.c" />
+    <ClCompile Include="System\InputReceiver.cpp" />
+    <ClCompile Include="System\Log.cpp" />
+    <ClCompile Include="System\ThreadPool.cpp" />
+    <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="System\framework.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Game.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Log.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\targetver.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\ThreadPool.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\TimeBenchmark.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Timer.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Types.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\OpenGLErrorHandler.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\WindowHandler.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\stb_image.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="System\InputReceiver.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Camera.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Mesh.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Renderer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Shader.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\IndexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Texture.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\VertexArray.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\VertexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\VertexLayout.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\EntityInterface.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\AssetManager.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="System\TypeToInt.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Event.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\EventManager.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\EventSystem.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\KeyEvents.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\RenderEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="Core\AssetManager.h" />
+    <ClInclude Include="Core\EntityInterface.h" />
+    <ClInclude Include="Core\Event.h" />
+    <ClInclude Include="Core\EventManager.h" />
+    <ClInclude Include="Core\EventSystem.h" />
+    <ClInclude Include="Core\KeyEvents.h" />
+    <ClInclude Include="Core\RenderEvent.h" />
+    <ClInclude Include="Rendering\IndexBuffer.h" />
+    <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\stb_image.h" />
+    <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Rendering\VertexArray.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexLayout.h" />
+    <ClInclude Include="Rendering\WindowHandler.h" />
+    <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="System\framework.h" />
+    <ClInclude Include="System\Game.h" />
+    <ClInclude Include="System\InputReceiver.h" />
+    <ClInclude Include="System\Log.h" />
+    <ClInclude Include="System\targetver.h" />
+    <ClInclude Include="System\ThreadPool.h" />
+    <ClInclude Include="System\TimeBenchmark.h" />
+    <ClInclude Include="System\Timer.h" />
+    <ClInclude Include="System\Types.h" />
+    <ClInclude Include="System\TypeToInt.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\FragmentShader.frag">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\VertexShader.vert">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="System\glad.c">
-      <Filter>Header Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Game.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Log.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\ThreadPool.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Timer.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Renderer.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\WindowHandler.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="System\InputReceiver.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\stb_image_implementation.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Camera.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Mesh.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Shader.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\IndexBuffer.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\VertexArray.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\VertexBuffer.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\AssetManager.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\EventManager.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\EventSystem.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\KeyEvents.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="Shader\FragmentShader.frag" />
+    <None Include="Shader\VertexShader.vert" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

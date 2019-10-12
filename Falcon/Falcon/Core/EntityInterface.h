@@ -7,6 +7,7 @@
 #include "../Rendering/Material.h"
 #include <glm/glm.hpp>
 #include "..//System/Log.h"
+#include "..//Rendering/Camera.h"
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)
@@ -23,26 +24,42 @@ enum Status { Inactive, Active};
 
 struct Transform
 {
+private:
+	glm::mat4 m_model;
 	glm::vec3 m_position, m_rotation, m_scale;
-	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation({ 0.0f, 0.0f, 0.0f }), m_scale({ 1.0f,1.0f,1.0f})
+
+	void RecalculateMatrix()
+	{
+		m_model = glm::translate(glm::mat4(1.0f), m_position);
+		m_model = glm::scale(m_model, m_scale);
+	}
+public:
+	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation({ 0.0f, 0.0f, 0.0f }), m_scale({ 1.0f,1.0f,1.0f}), m_model(1.0f)
 	{}
 	Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale)
 	{}
+
+	inline void SetPosition(const glm::vec3 &pos) { m_position = pos; RecalculateMatrix(); }
+	inline void SetRotation(const glm::vec3 &rot) { m_rotation = rot; RecalculateMatrix(); }
+	inline void SetScale(const glm::vec3 &scale) { m_scale = scale; RecalculateMatrix(); }
+
+	inline const glm::vec3 & GetPosition() const { return m_position; }
+	inline const glm::vec3 & GetRotation() const { return m_rotation; }
+	inline const glm::vec3 & GetScale() const { return m_scale; }
+	inline const glm::mat4 & GetModel() const { return m_model; }
 };
 
 struct BasicComponent
 {
-	Status status;
-	BasicComponent() :status(Inactive) {}
+	BasicComponent() {};
 	~BasicComponent() {};
 };
 
 struct RenderComponent :public BasicComponent
 {
 	Mesh* m_mesh;
-	Material* m_material;
 
-	RenderComponent(): m_mesh(nullptr), m_material(nullptr) {}
+	RenderComponent(): m_mesh(nullptr) {}
 	~RenderComponent() {}
 };
 
@@ -77,6 +94,20 @@ struct InputComponent : public BasicComponent
 	~InputComponent() {}
 };
 
+struct CameraComponent : public BasicComponent
+{
+private:
+	Camera* m_camera;
+public:
+	CameraComponent(Transform transform)
+	{
+		m_camera->m_Position = transform.GetPosition();
+		//m_camera->m_Position = transform.GetRotation();
+		//m_camera->m_Position = transform.GetScale();
+	};
+	~CameraComponent() {};
+};
+
 class Entity
 {
 private:
@@ -96,6 +127,7 @@ public:
 	{}
 	~Entity() {}
 
+	inline Transform & GetTransform() { return m_transform; }
 
 	template<typename F>
 	inline void AddComponent() {};

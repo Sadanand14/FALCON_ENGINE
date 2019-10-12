@@ -28,9 +28,9 @@ private:
 
 	void Init(GLFWwindow*);
 
-	static void key_callback(GLFWwindow*, int, int, int, int);
-	static void mouse_callback(GLFWwindow*, int, int, int);
-	static void cursor_callback(GLFWwindow*, double, double);
+	//static void key_callback(GLFWwindow*, int, int, int, int);
+	//static void mouse_callback(GLFWwindow*, int, int, int);
+	//static void cursor_callback(GLFWwindow*, double, double);
 };
 
 #endif // !1
