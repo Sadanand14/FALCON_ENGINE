@@ -118,6 +118,7 @@
     <ClInclude Include="System\Memory\fnew.h" />
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
+    <ClInclude Include="System\Memory\StackAllocator.h" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="System\Memory\Allocator.cpp" />
     <ClCompile Include="System\Memory\MemoryInterface.cpp" />
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
+    <ClCompile Include="System\Memory\StackAllocator.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>

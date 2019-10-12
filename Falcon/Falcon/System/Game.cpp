@@ -7,7 +7,9 @@
 int main()
 {
 	Log::Init();
-	fmemory::MemoryManagerInit();
+
+	fmemory::StackAllocator mystack;
+	/*fmemory::MemoryManagerInit();
 
 	WindowClass* window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
 	InputReceiver* input = fmemory::fnew<InputReceiver>(window1);
@@ -20,7 +22,7 @@ int main()
 
 	fmemory::fdelete<InputReceiver>(input);
 	fmemory::fdelete<WindowClass> (window1);
-	fmemory::MeoryManagerShutDown();
+	fmemory::MeoryManagerShutDown();*/
 	return 0;
 }
  

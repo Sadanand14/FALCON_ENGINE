@@ -21,7 +21,7 @@ namespace fmemory {
 
 	};
 
-	static const unsigned POOL_SIZE = 8192; // Each pool will alocate 4096 bytes
+	static const unsigned POOL_SIZE = 400000; // Each pool will alocate 4MB
 
 
 	static const std::size_t BLOCK_SIZE_LIST_COUNT = sizeof(BLOCK_SIZES) / sizeof(BLOCK_SIZES[0]);
