@@ -36,7 +36,7 @@ namespace fmemory
 			void* block_head = reinterpret_cast<void*>(current_top);
 			m_stack_top = reinterpret_cast<void**>(block_end);
 
-			FL_ENGINE_INFO("{0},{1},{2}", reinterpret_cast<std::uintptr_t>(m_stack_top),
+			FL_ENGINE_INFO("{0},{1}", reinterpret_cast<std::uintptr_t>(m_stack_top),
 				reinterpret_cast<std::uintptr_t>(block_head));
 			return block_head;
 		}
