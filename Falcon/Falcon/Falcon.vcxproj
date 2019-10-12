@@ -127,6 +127,7 @@
     <ClInclude Include="System\TypeToInt.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
