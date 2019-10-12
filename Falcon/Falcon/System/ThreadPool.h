@@ -7,6 +7,7 @@
 #include <vector>
 #include <boost/thread/mutex.hpp>
 #include <queue>
+#include "Memory/fmemory.h"
 
 typedef boost::function<void()> void_function;
 typedef std::queue<void_function> ThreadQueue;
@@ -17,10 +18,9 @@ private:
 	ThreadQueue workerQueue;
 	boost::mutex mtx;
 	std::atomic<bool> discard_threadPool;
-	std::vector<boost::thread> worker_threads;
-	
 	static ThreadPool * mainThreadPool;
 	ThreadPool();
+	std::vector<boost::thread,fmemory::STLAllocator<boost::thread>> worker_threads;
 
 public:
 
@@ -34,6 +34,11 @@ public:
 
 };
 
+/**
+* Direct Method for passing in functions to be executed by the thread pool.
+*
+*@param[in] Any type of function pointer(including lambdas).
+*/
 template<typename function_type>
 void ThreadPool::submit(function_type func)
 {

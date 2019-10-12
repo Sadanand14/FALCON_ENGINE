@@ -1,6 +1,7 @@
 #include "WindowHandler.h"
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
+#include "Memory/fmemory.h"
 
 
 //Camera 
@@ -13,8 +14,9 @@ bool firstMouse = true;
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
 {
-	m_renderer = new Renderer(); // creates a new renderer class on the heap
-	m_timer = new Timer(); // creates a new timer class in the heap
+	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
+	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	
@@ -22,8 +24,8 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 
 WindowClass::~WindowClass() 
 {
-	delete m_timer;
-	delete m_renderer;
+	fmemory::fdelete<Timer>(m_timer);
+	fmemory::fdelete<Renderer>(m_renderer);
 	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
 }
@@ -79,8 +81,9 @@ void WindowClass::Update()
 {
 	while (!glfwWindowShouldClose(m_gameWindow))
 	{
+		//testing RenderEvents
 		for (unsigned int i = 0; i < 10; i++)
-			EventManager::PushEvent(boost::shared_ptr<RenderEvent>(new RenderEvent()), RenderEventCategory);
+			EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
 
 		m_timer->update();
 		float dt = m_timer->GetDeltaTime();

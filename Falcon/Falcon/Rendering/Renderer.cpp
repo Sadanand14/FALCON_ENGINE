@@ -1,8 +1,7 @@
 #include "Renderer.h"
+#include "Memory/fmemory.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
-
-
 
 RenderEventSystem::RenderEventSystem()
 {
@@ -15,7 +14,7 @@ RenderEventSystem::RenderEventSystem()
 void RenderEventSystem::ProcessEvents() 
 {
 	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
-	for (unsigned int i = 0; i < eventQueue.size(); i++)
+	for(int i =0; i<eventQueue.size();i++)
 	{
 		eventQueue.pop_front();
 		m_threadPool->submit<void()>(PrintReception);
@@ -34,23 +33,33 @@ void PrintReception()
 	std::cout<<"Event Executed SuccessFully on thread :"<< std::this_thread::get_id()<<"\n";
 }
 //////////////////////
+
+/**
+*Constructor for Renderer
+*/
 Renderer::Renderer()
 {
 	Init();
 }
 
-
+/**
+*Destructor for Renderer
+*/
 Renderer::~Renderer()
 {
-
 }
 
-//renderer initialization
+/**
+*Initialization function for Renderer
+*/
 void Renderer::Init()
 {
 	m_RES = RenderEventSystem::GetInstance();
 }
 
+/**
+*Function to Create Buffers or Programs to be used in the next Draw cycle
+*/
 void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
@@ -60,20 +69,22 @@ void Renderer::CreateDrawStates()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
+/**
+*Function to Set the relevant data in the draw states.
+*/
 void Renderer::SetDrawStates()
 {
-	entity = new Entity[500];
+	entity = fmemory::fnew_arr<Entity>(500);
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
-	Shader* shad = new Shader("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
-	shader = shad;
+	shader = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
 	for(u32 i = 0; i < 500; i++) {
 		entity[i].AddComponent<RenderComponent>();
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
 		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-		rd->m_mesh->GetMaterial()->shader = shad;
+		rd->m_mesh->GetMaterial()->shader = shader;
 
 		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
@@ -83,6 +94,15 @@ void Renderer::SetDrawStates()
 	shader->UseShader();
 }
 
+/**
+* Function that provides consistent updates for the next rendering frame.
+*
+*@param[in] An integer indicating width.
+*@param[in] An integer indicating height.
+*@param[in] A float indicating zoom.
+*@param[in] A 4x4 matrix defined in glm library.
+*@param[in] A float indicating delta time for the current frame. 
+*/
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
 	m_RES->ProcessEvents();
@@ -93,6 +113,10 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 	shader->SetMat4("view", view);
 }
 
+/**
+* Main Draw Function for the Renderer
+*/
+//TODO-> Have multiple Renderer Passes functionality
 void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);

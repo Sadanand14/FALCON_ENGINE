@@ -23,7 +23,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	}
 
 	//Experimental
-	Mesh* newmesh = new Mesh();
+	Mesh* newmesh = fmemory::fnew<Mesh>();
 	newmesh->m_vertexArray.clear();
 	newmesh->m_indexArray.clear();
 	////////////////
@@ -88,7 +88,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
 	//TODO: Change this to actually load a material using json and remove tmp things
-	Material* mat = new Material();
+	Material* mat = fmemory::fnew<Material>();
 	mat->albedoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_albedo.tga");
 	//mat->roughnessTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_rough.tga");
 	//mat->normalTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_normal.tga");
@@ -117,11 +117,10 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
 {
 	// Data to load
-	//unsigned int
 	size_t indexOffset = 0;
-	std::vector<Vertex> vertices;
-	std::vector<u32> indices;
-	std::vector<Texture> textures;
+	std::vector<Vertex, fmemory::STLAllocator<Vertex>> vertices;
+	std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
+	std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
 
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -176,11 +175,11 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 			indices.push_back(face.mIndices[j]);
 	}
 
-
 	for (unsigned int i = 0; i < indices.size(); i++)
 	{
 		newmesh->m_indexArray.push_back(indices[i]);
 	}
+
 }
 
 AssetManager::~AssetManager()

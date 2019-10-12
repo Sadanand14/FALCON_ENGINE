@@ -6,9 +6,10 @@ Mesh::Mesh():m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 
 }
 
+
 void Mesh::SetupMesh()
 {
-	m_VAO = new VertexArray();
+	m_VAO = fmemory::fnew<VertexArray>();
 	m_VAO->Bind();
 	m_VBO1 = new VertexBuffer(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
 	m_VBO2 = new VertexBuffer(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);

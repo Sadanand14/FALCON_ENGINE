@@ -59,5 +59,6 @@
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
     <None Include="ClassDiagram.cd" />
+
   </ItemGroup>
 </Project>

@@ -4,7 +4,9 @@
 #include "framework.h"
 #include "../System/Types.h"
 
-//class to store and initialize a vertex buffer
+/**
+* A Vertex Buffer Class to initialize and store Vertex Data into a buffer using OpenGL commands..
+*/
 class VertexBuffer
 {
 private:

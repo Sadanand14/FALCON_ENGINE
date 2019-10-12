@@ -3,6 +3,9 @@
 
 #include <string>
 
+/**
+*Texture Data Structure
+*/
 struct Texture {
 	unsigned int textureID = 0;
 	std::string type;

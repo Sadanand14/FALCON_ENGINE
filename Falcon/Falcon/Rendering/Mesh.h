@@ -7,6 +7,8 @@
 #include <boost/container/vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
+#include "Memory/fmemory.h"
 #include "Shader.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -15,6 +17,10 @@
 #include "Material.h"
 #include "../System/Types.h"
 
+
+/**
+* Mesh Class tp store Mesh Data for Renderables.
+*/
 class Mesh {
 
 private:
@@ -27,9 +33,8 @@ private:
 	VertexBuffer* m_VBO2;
 	IndexBuffer* m_IBO;
 	Material* m_material = nullptr;
-
 	boost::container::vector<glm::mat4> m_worldMats;
-
+	
 	//Functions
 
 public:

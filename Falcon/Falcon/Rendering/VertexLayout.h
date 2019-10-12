@@ -3,6 +3,10 @@
 
 #include <glm/glm.hpp>
 
+/**
+* Vertex Data Structure
+*/
+
 struct Vertex {
 	//Position
 	glm::vec3 Position;

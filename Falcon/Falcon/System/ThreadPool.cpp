@@ -1,8 +1,10 @@
 #include "ThreadPool.h"
-
 ThreadPool* ThreadPool::mainThreadPool = NULL;
 
-ThreadPool::ThreadPool() :discard_threadPool(false)
+/**
+*ThreadPool Constructor which helps Initialize worker threads	
+*/
+ThreadPool::ThreadPool() :discard_threadPool(false) 
 {
 	int const max_threads = boost::thread::hardware_concurrency();
 
@@ -20,6 +22,9 @@ ThreadPool::ThreadPool() :discard_threadPool(false)
 	}
 }
 
+/**
+ThreadPool Class Destructor	
+*/
 ThreadPool::~ThreadPool() 
 {
 	discard_threadPool = true;
@@ -30,11 +35,15 @@ ThreadPool* ThreadPool::GetThreadPool()
 	if (!mainThreadPool) 
 	{
 		mainThreadPool = new ThreadPool();
+		//mainThreadPool = fmemory::fnew<ThreadPool>();
 	}
 
 	return mainThreadPool;
 }
 
+/**
+*ThreadPoll Executer.
+*/
 void ThreadPool::execute_task()
 {
 	while (!discard_threadPool)
@@ -50,4 +59,3 @@ void ThreadPool::execute_task()
 		if (job) job();
 	}
 }
-

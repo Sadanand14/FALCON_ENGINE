@@ -11,6 +11,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
+
+/**
+* Simple Shader struct to store Shader Code for any type of shader using OpenGL commands..
+*/
 struct SimpleShader
 {
 	unsigned int m_shaderId = 0;
@@ -20,6 +25,9 @@ struct SimpleShader
 	SimpleShader(GLenum type, std::string source) :m_shaderId(0),m_type(type), m_source(source) {}
 };
 
+/**
+* Shader Class to compile and store Simple Shaders using OpenGL commands.
+*/
 class Shader
 {
 

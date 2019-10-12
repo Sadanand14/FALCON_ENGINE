@@ -7,6 +7,10 @@
 #include <iostream>
 #include "Camera.h"
 #include "../System/ThreadPool.h"
+
+/**
+* A class that handles initialization of a window using OpenGL commands.
+*/
 class WindowClass
 {
 
@@ -33,6 +37,7 @@ public:
 	void ProcessInput(GLFWwindow* gameWindow, float deltaTime);	
 
 };
+
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);

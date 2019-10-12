@@ -4,6 +4,11 @@
 #include "framework.h"
 #include "../System/Types.h"
 #include <vector>
+#include "Memory/fmemory.h"
+
+/**
+* Index Buffer CLass to initialize an index buffer and store data on using OpenGL commands.
+*/
 class IndexBuffer
 {
 private:
@@ -14,7 +19,7 @@ private:
 public:
 
 	IndexBuffer(const unsigned int*, size_t);
-	IndexBuffer(const std::vector<unsigned int>& indices, size_t count);
+	IndexBuffer(const std::vector<unsigned int,fmemory::STLAllocator<unsigned int>>& indices, size_t count);
 	~IndexBuffer();
 
 	void Bind() const;
