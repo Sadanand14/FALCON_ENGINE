@@ -13,7 +13,7 @@ namespace fmemory {
 	private:
 		void**	m_stack_top;
 		void* m_stack_ref;
-		void** m_end_address;
+		void** m_stack_end;
 
 	public:
 
