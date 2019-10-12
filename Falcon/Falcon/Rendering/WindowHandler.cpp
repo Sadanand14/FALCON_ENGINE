@@ -2,7 +2,7 @@
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 #include "Memory/fmemory.h"
-
+#include <string>
 
 //Camera 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -79,6 +79,8 @@ void WindowClass::Init()
 
 void WindowClass::Update() 
 {
+	float dt,rate;
+	std::string framerate;
 	while (!glfwWindowShouldClose(m_gameWindow))
 	{
 		//testing RenderEvents
@@ -86,7 +88,10 @@ void WindowClass::Update()
 			EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
 
 		m_timer->update();
-		float dt = m_timer->GetDeltaTime();
+		dt = m_timer->GetDeltaTime();
+		rate = 1 / dt;
+		framerate = std::to_string(rate);
+		glfwSetWindowTitle(m_gameWindow, framerate.c_str());
 
 		//Game Input
 		ProcessInput(m_gameWindow, dt);
