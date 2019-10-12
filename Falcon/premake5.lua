@@ -93,9 +93,8 @@ project "Falcon"
 
 		links 
 		{
-			"boost_thread"
 			"glfw3.lib",
-			"opengl32.lib";
+			"opengl32.lib",
 			"assimp-vc140-mt.lib"
 		}
 
@@ -144,6 +143,8 @@ project "Falcon"
 
 		links 
 		{
+			
+			"boost_thread",
 			"Xrandr",
 	        "Xi",
 			"glfw3",
