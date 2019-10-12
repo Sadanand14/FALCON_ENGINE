@@ -69,7 +69,7 @@ namespace fmemory {
 				std::uintptr_t next_address = current_address + m_element_size_in_bytes;
 
 				void ** current_memory = reinterpret_cast<void**>(current_address);
-				if (current_address >= end_address) {
+				if (next_address >= end_address) {
 					*current_memory = nullptr;
 				}
 				else
