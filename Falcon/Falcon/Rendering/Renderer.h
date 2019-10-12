@@ -29,6 +29,7 @@ public:
 		if (m_instance == nullptr)
 		{
 			m_instance = new RenderEventSystem();
+			//m_instance = fmemory::fnew<RenderEventSystem>();
 		}
 		return m_instance;
 	}
