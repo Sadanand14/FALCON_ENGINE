@@ -126,9 +126,6 @@
     <ClInclude Include="Core\RenderEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System\LockFreeThreadPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag">
@@ -198,9 +195,6 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="System\LockFreeThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -42,7 +42,7 @@ public:
 
 	Event(EventsCategory category):m_eventFlag(category) 
 	{
-		std::cout << category << std::endl;
+		//std::cout << category << std::endl;
 	};
 	virtual ~Event()
 	{

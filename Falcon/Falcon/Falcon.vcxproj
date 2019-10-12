@@ -118,7 +118,6 @@
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
-    <ClInclude Include="System\LockFreeThreadPool.h" />
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
@@ -150,7 +149,6 @@
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
-    <ClCompile Include="System\LockFreeThreadPool.cpp" />
     <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />

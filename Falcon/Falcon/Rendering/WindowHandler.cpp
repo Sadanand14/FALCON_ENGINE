@@ -32,7 +32,6 @@ WindowClass::~WindowClass()
 void WindowClass::Init() 
 {
 	m_threadPool = ThreadPool::GetThreadPool();
-
 	//GLFW Configuration
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
@@ -80,6 +79,9 @@ void WindowClass::Update()
 {
 	while (!glfwWindowShouldClose(m_gameWindow))
 	{
+		for (unsigned int i = 0; i < 10; i++)
+			EventManager::PushEvent(boost::shared_ptr<RenderEvent>(new RenderEvent()), RenderEventCategory);
+
 		m_timer->update();
 		float dt = m_timer->GetDeltaTime();
 
@@ -100,7 +102,7 @@ void WindowClass::Update()
 		glfwPollEvents();
 
 		//FL_ENGINE_WARN("{0}", m_threadPool->GetSize());
-		m_threadPool->execute_task();
+		//m_threadPool->execute_task();
 	}
 }
 

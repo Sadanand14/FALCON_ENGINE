@@ -13,13 +13,12 @@ int main()
 	Log::Init();
 	WindowClass* window1 = new WindowClass("FalconEngine", 1280, 720);
 	InputReceiver* input = new InputReceiver(window1);
-	ThreadPool* threadpool = ThreadPool::GetThreadPool();
+	
 	std::cout << "system is currently running thread : " << std::this_thread::get_id() << "\n";
 
 	while(!window1->WindowCloseStatus())
 	{
-		for (unsigned int i = 0; i < 10; i++)
-			EventManager::PushEvent(boost::shared_ptr<RenderEvent>(new RenderEvent()), RenderEventCategory);
+	
 
 		window1->Update();
 		//std::cout<<threadpool->GetSize()<<"\n";

@@ -39,11 +39,15 @@ void ThreadPool::execute_task()
 {
 	while (!discard_threadPool)
 	{
-		void_function job;
+		void_function job = NULL;
+		mtx.lock();
 		if (!workerQueue.empty()) 
 		{
-			job();
+			job = workerQueue.front();
+			workerQueue.pop();
 		}
+		mtx.unlock();
+		if (job) job();
 	}
 }
 

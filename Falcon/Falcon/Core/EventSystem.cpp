@@ -11,8 +11,5 @@ EventSystem::EventSystem()
 
 void EventSystem::ReceiveEvent(boost::shared_ptr<Event> t)
 {
-	FL_ENGINE_INFO("Pushed an event to event queue");
-	FL_ENGINE_INFO("CIRCULAR BUFFER MAXSIZE: {0}", eventQueue.max_size());
 	this->eventQueue.push_back(t);
-	FL_ENGINE_INFO("event queue size after push {0}", this->eventQueue.size());
 }

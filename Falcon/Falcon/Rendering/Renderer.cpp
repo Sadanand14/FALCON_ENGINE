@@ -7,7 +7,7 @@ RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
-	std::cout << "RenderEventSystem intialized with address" << this << "\n";
+	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
 	subcribedList.push_back(RenderEventCategory);
 	SubscribeToEvents();
 }
@@ -17,6 +17,7 @@ void RenderEventSystem::ProcessEvents()
 	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
 	for (unsigned int i = 0; i < eventQueue.size(); i++)
 	{
+		eventQueue.pop_front();
 		m_threadPool->submit<void()>(PrintReception);
 	}
 }
