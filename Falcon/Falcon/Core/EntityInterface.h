@@ -3,11 +3,11 @@
 
 #include <map>
 #include <vector>
-#include "..//Rendering/Mesh.h"
-#include "../Rendering/Material.h"
+#include <Rendering/Mesh.h>
+#include <Rendering/Material.h>
 #include <glm/glm.hpp>
-#include "..//System/Log.h"
-#include "..//Rendering/Camera.h"
+#include <System/Log.h>
+#include <Rendering/Camera.h>
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)

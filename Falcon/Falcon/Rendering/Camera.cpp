@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include <Rendering/Camera.h>
 #include <GLFW/glfw3.h>
 CameraEventSystem::CameraEventSystem() 
 {

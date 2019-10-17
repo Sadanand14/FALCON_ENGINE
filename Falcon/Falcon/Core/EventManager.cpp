@@ -1,4 +1,4 @@
-#include "EventManager.h"
+#include <Core/EventManager.h>
 
 boost::unordered_map<EventsCategory , std::vector<EventSystem*>> EventManager::systems;
 

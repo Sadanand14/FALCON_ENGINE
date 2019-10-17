@@ -2,8 +2,8 @@
 #include "Log.h"
 #include <iostream>
 #include <thread/thread.hpp>
-#include "../Core/RenderEvent.h"
-#include "../Core/EventManager.h"
+#include <Core/RenderEvent.h>
+#include <Core/EventManager.h>
 #include <Memory/fmemory.h>
 
 

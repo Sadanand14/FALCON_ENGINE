@@ -1,6 +1,5 @@
-#include "AssetManager.h"
-
-#include "Log.h"
+#include <Core/AssetManager.h>
+#include <Log.h>
 
 
 // Pass filepath to 3D model

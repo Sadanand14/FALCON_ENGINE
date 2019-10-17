@@ -1,5 +1,5 @@
-#include "EventSystem.h"
-#include "../System/Log.h"
+#include <Core/EventSystem.h>
+#include <System/Log.h>
 /** Recieves an event and pushes it to the queue
  * @param (std::shared_ptr<T>) t - The event to push to the queue
  */

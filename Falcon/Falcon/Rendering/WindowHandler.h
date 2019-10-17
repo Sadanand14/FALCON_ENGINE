@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include <iostream>
 #include "Camera.h"
-#include "../System/ThreadPool.h"
+#include <System/ThreadPool.h>
 
 /**
 * A class that handles initialization of a window using OpenGL commands.

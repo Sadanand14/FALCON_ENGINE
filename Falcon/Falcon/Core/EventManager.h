@@ -6,9 +6,9 @@
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
-#include "Event.h"
-#include "EventSystem.h"
-#include "Types.h"
+#include <Core/Event.h>
+#include <Core/EventSystem.h>
+#include <System/Types.h>
 
 /**
 *Manages events being pushed and what systems are listening to which events.

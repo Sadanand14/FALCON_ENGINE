@@ -1,7 +1,7 @@
 #ifndef KEY_EVENTS_H
 #define KEY_EVENTS_H
 
-#include "Event.h"
+#include <Core/Event.h>
 
 enum class keyType {Released, Pressed, Repeat};
 

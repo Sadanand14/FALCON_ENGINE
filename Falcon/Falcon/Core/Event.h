@@ -2,7 +2,7 @@
 #define EVENT_H_
 #define BIT(x) (1<<x)
 
-#include "../System/Types.h"
+#include <System/Types.h>
 #include <iostream>
 #include <functional>
 

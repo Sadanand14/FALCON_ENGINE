@@ -15,7 +15,7 @@
 #include "IndexBuffer.h"
 #include "VertexLayout.h"
 #include "Material.h"
-#include "../System/Types.h"
+#include <System/Types.h>
 
 
 /**

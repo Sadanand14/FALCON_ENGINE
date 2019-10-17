@@ -2,8 +2,8 @@
 #define RENDERER_H
 
 
-#include "..//Core/RenderEvent.h"
-#include "..//Core/EventManager.h"
+#include <Core/RenderEvent.h>
+#include <Core/EventManager.h>
 #include <cstdlib>
 #include "stb_image.h"
 #include "Camera.h"
@@ -11,9 +11,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <boost/container/set.hpp>
-#include "../Core/EntityInterface.h"
-#include "../Core/AssetManager.h"
-#include "../System/ThreadPool.h"
+#include <Core/EntityInterface.h>
+#include <Core/AssetManager.h>
+#include <System/ThreadPool.h>
 
 void PrintReception();
 

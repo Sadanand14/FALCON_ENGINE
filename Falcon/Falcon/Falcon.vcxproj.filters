@@ -21,6 +21,9 @@
     <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
+    <ClCompile Include="System\Memory\Allocator.cpp" />
+    <ClCompile Include="System\Memory\MemoryInterface.cpp" />
+    <ClCompile Include="System\Memory\PoolAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -53,12 +56,16 @@
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\TypeToInt.h" />
+    <ClInclude Include="System\Memory\Allocator.hpp" />
+    <ClInclude Include="System\Memory\fmemory.h" />
+    <ClInclude Include="System\Memory\fnew.h" />
+    <ClInclude Include="System\Memory\MemoryInterface.h" />
+    <ClInclude Include="System\Memory\PoolAllocator.hpp" />
+    <ClInclude Include="System\Memory\STLMemoryInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
-    <None Include="ClassDiagram.cd" />
-
   </ItemGroup>
 </Project>
