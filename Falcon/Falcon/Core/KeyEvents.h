@@ -3,8 +3,14 @@
 
 #include <Core/Event.h>
 
+/**
+* Catergorization for Key Event Types
+*/
 enum class keyType {Released, Pressed, Repeat};
 
+/**
+*Structure Definition for Key type Events.
+*/
 struct KeyEvent :public Event
 {
 private:
@@ -19,9 +25,6 @@ public:
 	~KeyEvent();
 };
 
-//////////////////////////////////
-
-
 struct KeyPressed : public KeyEvent 
 {
 
@@ -30,7 +33,6 @@ public:
 	~KeyPressed();
 };
 
-//////////////////////////////////
 struct KeyReleased : public KeyEvent
 {
 public:
@@ -38,7 +40,6 @@ public:
 	~KeyReleased();
 };
 
-///////////////////////////////////
 struct KeyRepeat : public KeyEvent
 {
 public:

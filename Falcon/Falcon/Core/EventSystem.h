@@ -7,6 +7,9 @@
 #include <Core/Event.h>
 #include <System/ThreadPool.h>
 
+/**
+*Basic EventSystem Definition
+*/
 class EventSystem
 {
 protected:

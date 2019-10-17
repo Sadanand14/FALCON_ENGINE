@@ -17,11 +17,9 @@
 
 #pragma warning( pop )
 
-//Enumeration for the type of compoenents we require for our entities
-//enum ComponentType{Rendering, Audio, Animation, Input, Physics, AI};
-
-enum Status { Inactive, Active};
-
+/**
+* Stucture to hold Tranform data for each entity.
+*/
 struct Transform
 {
 private:
@@ -49,12 +47,18 @@ public:
 	inline const glm::mat4 & GetModel() const { return m_model; }
 };
 
+/**
+* Basic Structure Definition for Components.
+*/
 struct BasicComponent
 {
 	BasicComponent() {};
 	~BasicComponent() {};
 };
 
+/**
+*Structure Definition for holding data needed to render the entity.
+*/
 struct RenderComponent :public BasicComponent
 {
 	Mesh* m_mesh;
@@ -63,6 +67,9 @@ struct RenderComponent :public BasicComponent
 	~RenderComponent() {}
 };
 
+/**
+*Structure Definition for holding data needed for animating the entity.
+*/
 struct AnimationComponent :public BasicComponent
 {
 
@@ -70,30 +77,45 @@ struct AnimationComponent :public BasicComponent
 	~AnimationComponent() {}
 };
 
+/**
+*Structure Definition for holding data needed for calculating physics events on the entity.
+*/
 struct PhysicsComponent :public BasicComponent
 {
 	PhysicsComponent() {}
 	~PhysicsComponent() {}
 };
 
+/**
+*Structure definition for holding data needed for playing the relevant audio for the entity.
+*/
 struct AudioComponent :public BasicComponent
 {
 	AudioComponent() {}
 	~AudioComponent() {}
 };
 
+/**
+*Structure definition for holding data for AI calculations for the entity.
+*/
 struct AIComponent :public BasicComponent
 {
 	AIComponent() {}
 	~AIComponent() {}
 };
 
+/**
+*Structure definition for holding data for Input handling on the entity.
+*/
 struct InputComponent : public BasicComponent
 {
 	InputComponent() {}
 	~InputComponent() {}
 };
 
+/**
+*Structure Definition for holding data relevant for getting the view and projection matrices from this entity's location.
+*/
 struct CameraComponent : public BasicComponent
 {
 private:
@@ -108,6 +130,9 @@ public:
 	~CameraComponent() {};
 };
 
+/**
+*Basic Game Object Definition
+*/
 class Entity
 {
 private:

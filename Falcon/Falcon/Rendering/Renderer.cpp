@@ -3,6 +3,9 @@
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
+/**
+*Render Event System Constructor.
+*/
 RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
@@ -11,6 +14,9 @@ RenderEventSystem::RenderEventSystem()
 	SubscribeToEvents();
 }
 
+/**
+* Function to process all the events available in the event queue.
+*/
 void RenderEventSystem::ProcessEvents() 
 {
 	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
@@ -21,6 +27,9 @@ void RenderEventSystem::ProcessEvents()
 	}
 }
 
+/**
+* Function to Subscribe to all the event types listed in the local subscribe list.
+*/
 void RenderEventSystem::SubscribeToEvents()
 {
 	for (unsigned int i = 0; i < subcribedList.size(); i++)
@@ -28,6 +37,8 @@ void RenderEventSystem::SubscribeToEvents()
 		EventManager::SubscribeToEvent(this, RenderEventCategory);
 	}
 }
+
+//test function
 void PrintReception()
 {
 	std::cout<<"Event Executed SuccessFully on thread :"<< std::this_thread::get_id()<<"\n";

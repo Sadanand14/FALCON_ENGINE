@@ -2,13 +2,12 @@
 #include <Log.h>
 
 
-// Pass filepath to 3D model
-AssetManager::AssetManager(std::string const& path, bool gamma /*false*/)
-{
-	LoadModel(path);
-	FL_ENGINE_INFO("INFO: Model loaded sussfully for {0}", path);
-}
-
+/**
+*This function intializes the loading of a model using the ASSIMP Library.
+*
+*@param[in] File Path
+*@param[out] A mesh type data structure of the model.
+*/
 Mesh* AssetManager::LoadModel(std::string const& path)
 {
 	// Read File (Assimp)
@@ -36,6 +35,13 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	return newmesh;
 }
 
+
+/**
+*This function loads a texture file using the STBI library.
+*
+*@param[in] File Location
+*@param[out] Texture ID
+*/
 u32 AssetManager::LoadTexture(std::string const& path)
 {
 	std::string filename(path);
@@ -84,6 +90,9 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	return textureID;
 }
 
+/**
+*
+*/
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
 	//TODO: Change this to actually load a material using json and remove tmp things
@@ -97,13 +106,22 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	return mat;
 }
 
+
+//Private Functions
+/**
+*This function iterates through the scene node provided by Assimp and Retrives all the mesh data.
+*
+*@param[in] An aiNode* type pointer(defined in assimp Library)
+*@param[in] An aiScene* type pointer(defined in assimp Library)
+*@param[in] A new Mesh pointer to store all the mesh data into.
+*/
 void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh)
 {
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ProcessMesh(mesh, scene, newmesh);
+		ProcessMesh(mesh, newmesh);
 		//m_meshes.push_back(ProcessMesh(mesh, scene, newmesh));
 	}
 	//Process children nodes.
@@ -113,7 +131,13 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 	}
 }
 
-void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh)
+/**
+*This function retrieves the mesh data and stores in the provided mesh location.
+*
+*@param[in] An aiNode* type pointer(defined in assimp Library)
+*@param[in] A new Mesh pointer to store all the mesh data into.
+*/
+void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 {
 	// Data to load
 	size_t indexOffset = 0;
@@ -179,9 +203,4 @@ void AssetManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, Mesh* newmesh
 		newmesh->m_indexArray.push_back(indices[i]);
 	}
 
-}
-
-AssetManager::~AssetManager()
-{
-	//for (auto& mesh : m_meshes) delete mesh;
 }

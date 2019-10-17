@@ -12,6 +12,9 @@
 typedef boost::function<void()> void_function;
 typedef std::queue<void_function> ThreadQueue;
 
+/**
+* Class Definition for a job system.
+*/
 class ThreadPool
 {
 private:

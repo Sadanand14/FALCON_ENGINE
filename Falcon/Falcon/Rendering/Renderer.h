@@ -17,6 +17,9 @@
 
 void PrintReception();
 
+/**
+* Class Definition for a Render Event System which will respond to all Render Type Events.
+*/
 class RenderEventSystem : public EventSystem
 {
 private:
@@ -41,7 +44,9 @@ public:
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
+/**
+*Class Definition for the Rendering System Responsible for Rendering each frame.
+*/
 class Renderer
 {
 	Entity* entity;

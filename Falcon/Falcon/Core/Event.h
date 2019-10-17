@@ -7,7 +7,9 @@
 #include <functional>
 
 
-// Rip-off category handling from cherno's Event System
+/**
+* Categorization using bitmasking for differentiating between event types.
+*/
 enum EventsCategory {
 	none					 = 0,
 	WindowsEventCategory	 = BIT(0),
@@ -19,6 +21,9 @@ enum EventsCategory {
 
 typedef std::function<void()> EventFunction;
 
+/**
+* Basic Event Structure Definition
+*/
 struct Event
 {
 	u32 m_eventFlag;

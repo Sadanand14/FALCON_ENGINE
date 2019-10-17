@@ -1,12 +1,17 @@
 #include "Mesh.h"
 #include "Log.h"
 
+/**
+*Basic Mesh Constructor
+*/
 Mesh::Mesh():m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 {
 
 }
 
-
+/**
+*Sets a vertex Array Object with the vertex and indexbuffer values in this mesh class.
+*/
 void Mesh::SetupMesh()
 {
 	m_VAO = fmemory::fnew<VertexArray>();
@@ -31,36 +36,57 @@ void Mesh::SetupMesh()
 	m_VBO2->Unbind();
 }
 
+/**
+*
+*/
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
 	m_worldMats.resize(maxMatrices);
 }
 
+/**
+*
+*/
 void Mesh::AddWorldMatrix(const glm::mat4 &mat)
 {
 	m_worldMats.push_back(mat);
 }
 
+/**
+*
+*/
 void Mesh::ClearWorldMatrices()
 {
 	m_worldMats.clear();
 }
 
+/**
+*
+*/
 u32 Mesh::GetWorldMatrixAmount()
 {
 	return m_worldMats.size();
 }
 
+/**
+*
+*/
 void Mesh::SetMaterial(Material* mat)
 {
 	m_material = mat;
 }
 
+/**
+*
+*/
 Material* Mesh::GetMaterial()
 {
 	return m_material;
 }
 
+/**
+* Binds the VertexArray object held by the mesh along with the relevant vertex and index buffer.
+*/
 void Mesh::Bind()
 {
 	// Draw Mesh
@@ -74,6 +100,9 @@ void Mesh::Bind()
 		m_material->Bind();
 }
 
+/**
+* Mesh class Destructor.
+*/
 Mesh::~Mesh()
 {
 	delete m_VAO;
