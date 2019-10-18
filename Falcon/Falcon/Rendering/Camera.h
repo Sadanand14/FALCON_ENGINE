@@ -1,10 +1,26 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <Core/KeyEvents.h>
+#include <Core/EventManager.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+
+struct CameraEventSystem : public EventSystem
+{
+private:
+	std::vector<unsigned int> keyCodeVector;
+
+	void ProcessKeyEvent(keyType, unsigned int);
+	bool CheckForKey(unsigned int code);
+
+	CameraEventSystem();
+
+	virtual void SubscribeToEvents() override;
+	virtual void ProcessEvents() override;
+};
 
 enum Camera_Movement{ FORWARD, BACKWARD, LEFT, RIGHT};
 
@@ -22,20 +38,20 @@ private:
 	void UpdateCameraVectors();
 
 public:
-	//Camera Attributes
+	float m_Zoom;
 	glm::vec3 m_Position;
-	glm::vec3 m_Front;
+	glm::vec3 m_Forward;
 	glm::vec3 m_Up;
 	glm::vec3 m_Right;
 	glm::vec3 m_WorldUp;
+
+	//Camera Attributes
 	//Euler Angles
 	float m_Yaw;
 	float m_Pitch;
 	//Camera Options
 	float m_MovementSpeed;
 	float m_MouseSensitivity;
-	float m_Zoom;
-
 
 	// Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);

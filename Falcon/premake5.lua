@@ -49,6 +49,10 @@ project "Falcon"
 	--SETTING UP BASIC FILES CONTENT AND INCLUDE DIRS--
 	files
 	{
+		"%{prj.name}/Core/**.h",
+		"%{prj.name}/Core/**.hpp",
+		"%{prj.name}/Core/**.cpp",
+		"%{prj.name}/Core/**.c",
 		"%{prj.name}/System/**.h",
 		"%{prj.name}/System/**.hpp",
 		"%{prj.name}/System/**.cpp",
@@ -63,7 +67,9 @@ project "Falcon"
 	includedirs
 	{
 		"%{prj.name}",
+		"%{prj.name}/Core",
 		"%{prj.name}/System",
+		"%{prj.name}/Rendering",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",
@@ -88,7 +94,7 @@ project "Falcon"
 		links 
 		{
 			"glfw3.lib",
-			"opengl32.lib";
+			"opengl32.lib",
 			"assimp-vc140-mt.lib"
 		}
 
@@ -137,6 +143,8 @@ project "Falcon"
 
 		links 
 		{
+			
+			"boost_thread",
 			"Xrandr",
 	        "Xi",
 			"glfw3",

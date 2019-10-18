@@ -1,78 +1,112 @@
 #include "Mesh.h"
 #include "Log.h"
 
+/**
+*Basic Mesh Constructor
+*/
+Mesh::Mesh():m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
+{
 
+}
 
+/**
+*Sets a vertex Array Object with the vertex and indexbuffer values in this mesh class.
+*/
 void Mesh::SetupMesh()
 {
 	m_VAO = fmemory::fnew<VertexArray>();
 	m_VAO->Bind();
-	m_VBO = fmemory::fnew <VertexBuffer>(&m_vertices[0], m_vertices.size() * sizeof(Vertex));
-	m_IBO = fmemory::fnew <IndexBuffer>(m_indices, m_indices.size());
-	m_VAO->AddBuffer(m_VBO);
-	m_VAO->Unbind();
+	m_VBO1 = new VertexBuffer(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
+	m_VBO2 = new VertexBuffer(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	m_IBO = new IndexBuffer(m_indexArray.data(), m_indexArray.size());
+
+	m_VBO1->Bind();
+	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0, 0);
+	m_VAO->AddVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoords), 0);
+	m_VAO->AddVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Normal), 0);
+	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
+	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
+	m_VBO1->Unbind();
+
+	m_VBO2->Bind();
+	for(u32 i = 0; i < 4; i++)
+	{
+		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
+	}
+	m_VBO2->Unbind();
 }
 
-
 /**
-* Constructor for Mesh Class.
+*
 */
-Mesh::Mesh(const std::vector<Vertex, fmemory::STLAllocator<Vertex>>& vertices, 
-		   const std::vector<unsigned int, fmemory::STLAllocator<unsigned int>>& indices, 
-	       const std::vector<Texture, fmemory::STLAllocator<Texture>>& textures)
-	: m_vertices(vertices) , m_indices(indices) , m_textures(textures),
-	  m_VAO(nullptr), m_VBO(nullptr), m_IBO(nullptr)
+void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
-	SetupMesh();
-	FL_ENGINE_INFO("INFO: Mesh set up correctly.");
+	m_worldMats.resize(maxMatrices);
 }
 
 /**
-* Destructor for Mesh Class.
+*
+*/
+void Mesh::AddWorldMatrix(const glm::mat4 &mat)
+{
+	m_worldMats.push_back(mat);
+}
+
+/**
+*
+*/
+void Mesh::ClearWorldMatrices()
+{
+	m_worldMats.clear();
+}
+
+/**
+*
+*/
+u32 Mesh::GetWorldMatrixAmount()
+{
+	return m_worldMats.size();
+}
+
+/**
+*
+*/
+void Mesh::SetMaterial(Material* mat)
+{
+	m_material = mat;
+}
+
+/**
+*
+*/
+Material* Mesh::GetMaterial()
+{
+	return m_material;
+}
+
+/**
+* Binds the VertexArray object held by the mesh along with the relevant vertex and index buffer.
+*/
+void Mesh::Bind()
+{
+	// Draw Mesh
+	m_VAO->Bind();
+
+	m_VBO2->Bind();
+	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	m_VBO2->Unbind();
+
+	if(m_material != nullptr)
+		m_material->Bind();
+}
+
+/**
+* Mesh class Destructor.
 */
 Mesh::~Mesh()
 {
-	fmemory::fdelete<VertexArray> (m_VAO);
-	fmemory::fdelete<VertexBuffer>(m_VBO);
-	fmemory::fdelete<IndexBuffer> (m_IBO);
-}
-
-//TODO: Have to modify the function to remove the draw call from it.
-void Mesh::DrawMesh(Shader shader)
-{
-	// bind appropriate textures
-	unsigned int diffuseNr = 1;
-	unsigned int specularNr = 1;
-	unsigned int normalNr = 1;
-	unsigned int heightNr = 1;
-	for (unsigned int i = 0; i < m_textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-		// retrieve texture number (the N in diffuse_textureN)
-		std::string number;
-		std::string name = m_textures[i].type;
-		if (name == "texture_diffuse")
-			number = std::to_string(diffuseNr++);
-		else if (name == "texture_specular")
-			number = std::to_string(specularNr++); 
-		else if (name == "texture_normal")
-			number = std::to_string(normalNr++); 
-		else if (name == "texture_height")
-			number = std::to_string(heightNr++); 
-
-	    // Set Sampler
-		glUniform1i(glGetUniformLocation(shader.m_programID, (name + number).c_str()), i);
-		// Bind Texture
-		glBindTexture(GL_TEXTURE_2D, m_textures[i].textureID);
-	}
-
-	// Draw Mesh
-	m_VAO->Bind();
-	m_IBO->Bind();
-	glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
-	m_IBO->Unbind();
-	m_VAO->Unbind();
-
-	// Set back to default
-	glActiveTexture(GL_TEXTURE0);
+	delete m_VAO;
+	delete m_VBO2;
+	delete m_VBO1;
+	delete m_IBO;
 }

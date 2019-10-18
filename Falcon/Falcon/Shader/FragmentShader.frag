@@ -1,12 +1,18 @@
-#version 460 core
+#version 450 core
 
 layout(location = 0) out vec4 FragColor;
 
-in vec2 v_texcoord;
+in V_OUT {
+	vec2 uv;
+	vec3 normal;
+	vec3 tangent;
+	vec3 bitangent;
+} fsIn;
 
-uniform sampler2D texture_diffuse1;
+uniform sampler2D albedo;
 
 void main()
 {
-	FragColor = texture(texture_diffuse1, v_texcoord);
+	vec3 svd = fsIn.normal * fsIn.tangent * fsIn.bitangent;
+	FragColor = vec4(texture(albedo, fsIn.uv).xyz, svd.x + 1.0);
 }
