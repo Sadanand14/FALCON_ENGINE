@@ -46,7 +46,7 @@ namespace fmemory
 			return nullptr;
 		}
 	}
-	void* StackAllocator::FreeMemoryBlock(void* ref)
+	void* StackAllocator::FreeMemoryBlock(void* ref, std::size_t size_in_bytes)
 	{
 		return nullptr;
 	}

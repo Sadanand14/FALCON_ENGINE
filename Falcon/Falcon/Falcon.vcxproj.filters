@@ -24,6 +24,7 @@
     <ClCompile Include="System\Memory\Allocator.cpp" />
     <ClCompile Include="System\Memory\MemoryInterface.cpp" />
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
+    <ClCompile Include="System\Memory\StackAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -62,6 +63,8 @@
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
+    <ClInclude Include="System\Memory\StackAllocator.h" />
+    <ClInclude Include="System\Memory\StackSTLAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

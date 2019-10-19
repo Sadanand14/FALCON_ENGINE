@@ -35,5 +35,10 @@ namespace fmemory
 	* @return true if success, otherwise false
 	*/
 	bool  MeoryManagerShutDown();
+
+
+	void*  AllocateOnStack(const std::size_t size);
+
+	bool FlushStack();
 }
 #endif // !MEMORYINTERFACE_H

@@ -3,7 +3,7 @@
 #include "Allocator.hpp"
 #include "MemoryInterface.h"
 #include "PoolAllocator.hpp"
-
+#include "StackAllocator.h"
 
 namespace fmemory {
 	//memory block size list
@@ -30,7 +30,7 @@ namespace fmemory {
 	static unsigned* pool_lookup = nullptr;
 	static PoolAllocator* pool_allocators = static_cast<PoolAllocator*>(fmemory::AllocateUnaligned(sizeof(PoolAllocator) * BLOCK_SIZE_LIST_COUNT));
 	
-	
+	static StackAllocator* stackAllocator = nullptr;
 	//This is the method which initializes the memory manager. 
 	//Needs to be called when all the subsystems are initiated. And should be the first one.
 	//For now alignement is default to 4. In future need to add the feature to pass in user specified value.
@@ -40,6 +40,11 @@ namespace fmemory {
 		//intializing the lookup pointer
 		try
 		{
+
+			/**Setting up stackAllocator**/
+			stackAllocator = new StackAllocator();
+			
+			/**Setting up pool allocators**/
 			PoolAllocator* tmp;
 			pool_lookup = new unsigned[MAX_BLOCK_SIZE + 1];
 			unsigned block_index = 0;
@@ -79,8 +84,14 @@ namespace fmemory {
 	{
 		try
 		{
+			/**Deleting stack allocator**/
 
-			//delete pool_lookup;
+			FL_ENGINE_INFO("INFO: Cleaning up the stack allocator");
+			delete stackAllocator;
+
+
+			/**Deleting pool allocator**/
+			FL_ENGINE_INFO("INFO: Cleaning up the pool allocator");
 			PoolAllocator* tmp;
 			for (int i = BLOCK_SIZE_LIST_COUNT - 1; i >= 0; --i)
 			{
@@ -165,4 +176,32 @@ namespace fmemory {
 	}
 
 
+
+	void* AllocateOnStack(const std::size_t size)
+	{
+		void* ptr = stackAllocator->GetMemoryBlock(size);
+
+		if (!ptr)
+		{
+			FL_ENGINE_ERROR("ERROR: Failed to allocate memory on stack");
+			return nullptr;
+		}
+		
+		return ptr;
+
+	}
+
+
+	bool FlushStack()
+	{
+		try {
+			stackAllocator->Flush();
+			return true;
+		}
+		catch (std::exception& e)
+		{
+			FL_ENGINE_ERROR("ERROR: Stack flush failed. {0}", e.what());
+			return false;
+		}
+	}
 }

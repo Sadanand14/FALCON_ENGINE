@@ -28,7 +28,7 @@ IndexBuffer::IndexBuffer(const unsigned int* indices,size_t count)
 *@param[in] vector of unsigned int.
 *@param[in] size in unsigned int.
 */
-IndexBuffer::IndexBuffer(const std::vector<unsigned int,fmemory::STLAllocator<unsigned int>>& indices, size_t count = 1)
+IndexBuffer::IndexBuffer(const std::vector<unsigned int,fmemory::StackSTLAllocator<unsigned int>>& indices, size_t count = 1)
 	:m_count(count), m_renderBufferId(0)
 {
 	SetupIndexBuffer(indices.data());// unbinds the index buffer

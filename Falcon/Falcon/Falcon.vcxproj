@@ -126,6 +126,7 @@
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
     <ClInclude Include="System\Memory\StackAllocator.h" />
+    <ClInclude Include="System\Memory\StackSTLAllocator.h" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
