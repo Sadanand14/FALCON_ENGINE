@@ -6,7 +6,7 @@ ThreadPool* ThreadPool::mainThreadPool = NULL;
 */
 ThreadPool::ThreadPool() :discard_threadPool(false) 
 {
-	int const max_threads = boost::thread::hardware_concurrency();
+	int const max_threads = 5;// boost::thread::hardware_concurrency();
 
 	try
 	{
