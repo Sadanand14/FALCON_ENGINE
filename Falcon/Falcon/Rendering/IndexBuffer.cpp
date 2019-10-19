@@ -1,5 +1,10 @@
-#include <cassert>
+
+
+
+
+
 #include "IndexBuffer.h"
+#include <cassert>
 #include "Memory/fmemory.h"
 
 /**
@@ -26,12 +31,7 @@ IndexBuffer::IndexBuffer(const unsigned int* indices,size_t count)
 IndexBuffer::IndexBuffer(const std::vector<unsigned int,fmemory::STLAllocator<unsigned int>>& indices, size_t count = 1)
 	:m_count(count), m_renderBufferId(0)
 {
-	unsigned int* indicesArr = fmemory::fnew_arr <unsigned int>(count);// new unsigned int[count];
-
-	std::copy(indices.begin(), indices.end(), indicesArr);
-	SetupIndexBuffer(indicesArr);// unbinds the index buffer	
-
-	fmemory::fdelete <unsigned int>(indicesArr,count);
+	SetupIndexBuffer(indices.data());// unbinds the index buffer
 }
 
 /**
@@ -51,11 +51,8 @@ void IndexBuffer::SetupIndexBuffer(const unsigned int* indices)
 {
 	glGenBuffers(1, &m_renderBufferId);// generates a buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderBufferId);// binds that buffer to the context
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(u32), indices, GL_STATIC_DRAW);
 	//passes in the data of the index array
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 }
 
 /**

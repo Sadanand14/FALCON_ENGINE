@@ -1,6 +1,50 @@
 #include "Renderer.h"
 #include "Memory/fmemory.h"
 
+RenderEventSystem* RenderEventSystem::m_instance = nullptr;
+
+/**
+*Render Event System Constructor.
+*/
+RenderEventSystem::RenderEventSystem()
+{
+	m_threadPool = ThreadPool::GetThreadPool();
+	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
+	subcribedList.push_back(RenderEventCategory);
+	SubscribeToEvents();
+}
+
+/**
+* Function to process all the events available in the event queue.
+*/
+void RenderEventSystem::ProcessEvents() 
+{
+	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
+	for(int i =0; i<eventQueue.size();i++)
+	{
+		eventQueue.pop_front();
+		m_threadPool->submit<void()>(PrintReception);
+	}
+}
+
+/**
+* Function to Subscribe to all the event types listed in the local subscribe list.
+*/
+void RenderEventSystem::SubscribeToEvents()
+{
+	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	{
+		EventManager::SubscribeToEvent(this, RenderEventCategory);
+	}
+}
+
+//test function
+void PrintReception()
+{
+	std::cout<<"Event Executed SuccessFully on thread :"<< std::this_thread::get_id()<<"\n";
+}
+//////////////////////
+
 /**
 *Constructor for Renderer
 */
@@ -14,16 +58,14 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
-	fmemory::fdelete<Shader>(m_shadyStuff);
-	fmemory::fdelete<Model>(m_nanosuit);
 }
 
 /**
 *Initialization function for Renderer
 */
 void Renderer::Init()
-{	
-	
+{
+	m_RES = RenderEventSystem::GetInstance();
 }
 
 /**
@@ -31,18 +73,11 @@ void Renderer::Init()
 */
 void Renderer::CreateDrawStates()
 {
-
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
 
 	//Draw in Wireframe mode - Comment out
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	
-
-	//Load Model
-	m_nanosuit = fmemory::fnew<Model>("../Assets/Models/nanosuit/nanosuit.obj");	
-
-	//Create Shader Program and bind a Vertex shader and Fragment shader.
-	m_shadyStuff = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 /**
@@ -50,9 +85,24 @@ void Renderer::CreateDrawStates()
 */
 void Renderer::SetDrawStates()
 {
+	entity = fmemory::fnew_arr<Entity>(500);
 
-	//Use the Program Shader
-	m_shadyStuff->UseShader();
+	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
+	shader = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	for(u32 i = 0; i < 500; i++) {
+		entity[i].AddComponent<RenderComponent>();
+		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
+		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+		rd->m_mesh->GetMaterial()->shader = shader;
+
+		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+		// Model transformations
+		entity[i].GetTransform().SetPosition(pos);
+		entity[i].GetTransform().SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	}
+	shader->UseShader();
 }
 
 /**
@@ -66,17 +116,12 @@ void Renderer::SetDrawStates()
 */
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
+	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
-	m_shadyStuff->SetMat4("projection", projection);
+	shader->SetMat4("projection", projection);
 
 	// camera/view transformations
-	m_shadyStuff->SetMat4("view", view);
-
-	// Model transformations
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.75f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-	m_shadyStuff->SetMat4("model", model);
+	shader->SetMat4("view", view);
 }
 
 /**
@@ -87,5 +132,30 @@ void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	m_nanosuit->Draw(*m_shadyStuff);
+
+	for(u32 i = 0; i < 500; i++) {
+		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
+
+		m->AddWorldMatrix(entity[i].GetTransform().GetModel());
+
+		if(queuedMeshes.find(m) == queuedMeshes.end())
+			queuedMeshes.insert(m);
+	}
+
+	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
+		(*it)->Bind();
+
+		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+		{
+			i32 count;
+			if(i < (*it)->m_indexOffsets.size() - 1)
+				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
+			else
+				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
+			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
+		}
+		(*it)->ClearWorldMatrices();
+	}
+
+	queuedMeshes.clear();
 }

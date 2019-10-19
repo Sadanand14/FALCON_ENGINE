@@ -2,6 +2,7 @@
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 #include "Memory/fmemory.h"
+#include <string>
 
 //Camera 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -17,6 +18,8 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
+	glfwSetErrorCallback(&GLErrorHandler::glfwError);
+	
 }
 
 WindowClass::~WindowClass() 
@@ -30,6 +33,7 @@ WindowClass::~WindowClass()
 
 void WindowClass::Init() 
 {
+	m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
@@ -75,10 +79,19 @@ void WindowClass::Init()
 
 void WindowClass::Update() 
 {
+	float dt,rate;
+	std::string framerate;
 	while (!glfwWindowShouldClose(m_gameWindow))
 	{
+		//testing RenderEvents
+		for (unsigned int i = 0; i < 10; i++)
+			EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
+
 		m_timer->update();
-		float dt = m_timer->GetDeltaTime();
+		dt = m_timer->GetDeltaTime();
+		rate = 1 / dt;
+		framerate = std::to_string(rate);
+		glfwSetWindowTitle(m_gameWindow, framerate.c_str());
 
 		//Game Input
 		ProcessInput(m_gameWindow, dt);
@@ -95,6 +108,9 @@ void WindowClass::Update()
 
 		//Poll I/O events
 		glfwPollEvents();
+
+		//FL_ENGINE_WARN("{0}", m_threadPool->GetSize());
+		//m_threadPool->execute_task();
 	}
 }
 

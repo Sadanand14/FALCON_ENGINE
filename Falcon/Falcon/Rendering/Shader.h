@@ -14,7 +14,7 @@
 
 
 /**
-* Simple Shader Class to store Shader Code for any type of shader using OpenGL commands..
+* Simple Shader struct to store Shader Code for any type of shader using OpenGL commands..
 */
 struct SimpleShader
 {
@@ -24,8 +24,6 @@ struct SimpleShader
 	SimpleShader(GLenum type) :m_shaderId(0),m_type(type) {}
 	SimpleShader(GLenum type, std::string source) :m_shaderId(0),m_type(type), m_source(source) {}
 };
-
-
 
 /**
 * Shader Class to compile and store Simple Shaders using OpenGL commands.
