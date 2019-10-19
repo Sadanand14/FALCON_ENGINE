@@ -42,18 +42,25 @@ ThreadPool* ThreadPool::GetThreadPool()
 }
 
 /**
-*ThreadPoll Executer.
+*ThreadPool Executer.
 */
 void ThreadPool::execute_task()
 {
+	void_function job = NULL;
 	while (!discard_threadPool)
 	{
-		void_function job = NULL;
 		mtx.lock();
 		if (!workerQueue.empty()) 
 		{
-			job = workerQueue.front();
-			workerQueue.pop();
+			try 
+			{
+				job = workerQueue.front();
+				workerQueue.pop();
+			}
+			catch(std::exception &e)
+			{
+				FL_ENGINE_ERROR("{0}", e.what());
+			}
 		}
 		mtx.unlock();
 		if (job) job();
