@@ -2,7 +2,7 @@
 
 
 /**
-* Main Constructor for the Vertex Array Object Class. 
+* Main Constructor for the Vertex Array Object Class.
 */
 VertexArray::VertexArray():m_rendererID(0)
 {
@@ -17,11 +17,11 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_rendererID);// deletes the vertex array
 }
 
-void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u32 offset, u32 divisor)
+void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u64 offset, u32 divisor)
 {
 	//Vertex attribute pointers
-	glEnableVertexAttribArray(loc);	// enables the locations for those attributes
-	glVertexAttribPointer(loc, size, type, normalize, byteSize, (const void*)offset);	//designates the various
+	glEnableVertexAttribArray(loc); // enables the locations for those attributes
+	glVertexAttribPointer(loc, size, type, normalize, byteSize, (const void*)offset); //designates the various
 	glVertexAttribDivisor(loc, divisor);
 }
 

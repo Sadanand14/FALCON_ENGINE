@@ -37,48 +37,53 @@ void Mesh::SetupMesh()
 }
 
 /**
-*
-*/
+ * Preallocates the world matrix vector with a specified size
+ * @param maxMatrices - The maximum number of items in the world
+ */
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
 	m_worldMats.resize(maxMatrices);
 }
 
 /**
-*
-*/
+ * Adds a world matrix to the list of matrices for instanced rendering
+ * @param mat - The world matrix to add
+ */
 void Mesh::AddWorldMatrix(const glm::mat4 &mat)
 {
 	m_worldMats.push_back(mat);
 }
 
 /**
-*
-*/
+ * Clears the meshes world matrices
+ */
 void Mesh::ClearWorldMatrices()
 {
 	m_worldMats.clear();
 }
 
 /**
-*
-*/
+ * Gets the size of the world matrices array
+ * @return The size of the world matrix array
+ */
 u32 Mesh::GetWorldMatrixAmount()
 {
 	return m_worldMats.size();
 }
 
 /**
-*
-*/
+ * Sets the material of the mesh
+ * @param mat - The new material for the mesh
+ */
 void Mesh::SetMaterial(Material* mat)
 {
 	m_material = mat;
 }
 
 /**
-*
-*/
+ * Gets the material of the mesh
+ * @return - The material of the mesh
+ */
 Material* Mesh::GetMaterial()
 {
 	return m_material;

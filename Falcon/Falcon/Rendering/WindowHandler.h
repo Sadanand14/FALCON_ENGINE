@@ -4,6 +4,8 @@
 #include "framework.h"
 #include "Renderer.h"
 #include "Timer.h"
+#include "Core/Scene.h"
+
 #include <iostream>
 #include "Camera.h"
 #include <System/ThreadPool.h>
@@ -19,7 +21,7 @@ class WindowClass
 
 	Timer* m_timer;
 	GLFWwindow* m_gameWindow;
-	Renderer* m_renderer;		
+	Renderer* m_renderer;
 	ThreadPool* m_threadPool;
 
 public:
@@ -34,7 +36,7 @@ public:
 	inline bool WindowCloseStatus(){ return glfwWindowShouldClose(m_gameWindow); }
 
 	//Input
-	void ProcessInput(GLFWwindow* gameWindow, float deltaTime);	
+	void ProcessInput(GLFWwindow* gameWindow, float deltaTime);
 
 };
 

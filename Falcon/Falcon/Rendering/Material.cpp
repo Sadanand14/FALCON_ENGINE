@@ -2,16 +2,16 @@
 
 void Material::Bind()
 {
-	BindTo(0, albedoTex, "albedo");
-	BindTo(1, roughnessTex, "roughness");
-	BindTo(2, normalTex, "normal");
-	BindTo(3, metallicTex, "metal");
-	BindTo(4, aoTex, "ao");
+	BindTo(0, m_albedoTex, "albedo");
+	BindTo(1, m_roughnessTex, "roughness");
+	BindTo(2, m_normalTex, "normal");
+	BindTo(3, m_metallicTex, "metal");
+	BindTo(4, m_aoTex, "ao");
 }
 
 void Material::BindTo(int32_t location, Texture tex, const char* locName)
 {
 	glActiveTexture(GL_TEXTURE0 + location);
 	glBindTexture(GL_TEXTURE_2D, tex.textureID);
-	shader->SetInt(locName, location);
+	m_shader->SetInt(locName, location);
 }

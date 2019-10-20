@@ -23,26 +23,36 @@
 struct Transform
 {
 private:
-	glm::mat4 m_model;
-	glm::vec3 m_position, m_rotation, m_scale;
+	glm::mat4 m_model; //* The model matrix of the transform
+	glm::vec3 m_position; //* The position of the Tranform
+	glm::vec3 m_scale; //* The scale of the transform
+	glm::quat m_rotation; //* The rotation of the transform
 
+	/**
+	 * Recalculates the world matrix
+	 */
 	void RecalculateMatrix()
 	{
 		m_model = glm::translate(glm::mat4(1.0f), m_position);
+		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
 	}
 public:
-	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation({ 0.0f, 0.0f, 0.0f }), m_scale({ 1.0f,1.0f,1.0f}), m_model(1.0f)
-	{}
-	Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale)
-	{}
+	Transform():m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f}), m_model(1.0f)
+	{
+		RecalculateMatrix();
+	}
+	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale) : m_position(pos), m_rotation(rot), m_scale(scale)
+	{
+		RecalculateMatrix();
+	}
 
 	inline void SetPosition(const glm::vec3 &pos) { m_position = pos; RecalculateMatrix(); }
-	inline void SetRotation(const glm::vec3 &rot) { m_rotation = rot; RecalculateMatrix(); }
+	inline void SetRotation(const glm::quat &rot) { m_rotation = rot; RecalculateMatrix(); }
 	inline void SetScale(const glm::vec3 &scale) { m_scale = scale; RecalculateMatrix(); }
 
 	inline const glm::vec3 & GetPosition() const { return m_position; }
-	inline const glm::vec3 & GetRotation() const { return m_rotation; }
+	inline const glm::quat & GetRotation() const { return m_rotation; }
 	inline const glm::vec3 & GetScale() const { return m_scale; }
 	inline const glm::mat4 & GetModel() const { return m_model; }
 };
@@ -148,7 +158,7 @@ public:
 
 	Entity() : m_transform(Transform()) , m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr), m_AIComponent(nullptr)
 	{}
-	Entity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale):m_transform(Transform(pos, rot, scale)), m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr), m_AIComponent(nullptr)
+	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale):m_transform(Transform(pos, rot, scale)), m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr), m_AIComponent(nullptr)
 	{}
 	~Entity() {}
 

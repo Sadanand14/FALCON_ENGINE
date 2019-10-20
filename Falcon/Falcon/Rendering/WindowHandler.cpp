@@ -4,9 +4,9 @@
 #include "Memory/fmemory.h"
 #include <string>
 
-//Camera 
+//Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-//Camera Setup	
+//Camera Setup
 float lastX = 0.0f;
 float lastY = 0.0f;
 bool firstMouse = true;
@@ -19,10 +19,10 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
-	
+
 }
 
-WindowClass::~WindowClass() 
+WindowClass::~WindowClass()
 {
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
@@ -31,12 +31,12 @@ WindowClass::~WindowClass()
 }
 
 
-void WindowClass::Init() 
+void WindowClass::Init()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -66,10 +66,10 @@ void WindowClass::Init()
 	//Camera
 	glfwSetCursorPosCallback(m_gameWindow, mouse_callback);
 	glfwSetScrollCallback(m_gameWindow, scroll_callback);
-	
+
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	
+
 	//Create Draw States in Renderer
 	m_renderer->CreateDrawStates();
 
@@ -77,10 +77,14 @@ void WindowClass::Init()
 	m_renderer->SetDrawStates();
 }
 
-void WindowClass::Update() 
+void WindowClass::Update()
 {
 	float dt,rate;
 	std::string framerate;
+
+	Scene scn;
+	scn.LoadScene("../Assets/Scenes/scene.json");
+
 	while (!glfwWindowShouldClose(m_gameWindow))
 	{
 		//testing RenderEvents
@@ -112,6 +116,9 @@ void WindowClass::Update()
 		//FL_ENGINE_WARN("{0}", m_threadPool->GetSize());
 		//m_threadPool->execute_task();
 	}
+
+	scn.SaveScene("../Assets/Scenes/scene2.json");
+	scn.CloseScene();
 }
 
 void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
