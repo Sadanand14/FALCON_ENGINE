@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\EntityInterface.h" />
+    <ClInclude Include="Core\EntityManager.h" />
     <ClInclude Include="Core\Event.h" />
     <ClInclude Include="Core\EventManager.h" />
     <ClInclude Include="Core\EventSystem.h" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
+    <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Core\EventManager.cpp" />
     <ClCompile Include="Core\EventSystem.cpp" />
     <ClCompile Include="Core\KeyEvents.cpp" />
