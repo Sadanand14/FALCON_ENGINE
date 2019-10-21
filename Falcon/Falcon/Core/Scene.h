@@ -6,6 +6,8 @@
 #include <boost/container/vector.hpp>
 #include <boost/unordered_map.hpp>
 #include <glm/glm.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include <rapidjson/document.h>
