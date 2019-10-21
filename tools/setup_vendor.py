@@ -30,7 +30,7 @@ class GDriveDownloader:
 		#downloading the file if not exists
 		full_path = dest_path+file_name
 		if not os.path.exists(full_path):
-			
+
 			download_session = requests.Session()
 			print("Downloading {} to {}".format(file_name,dest_path))
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
 	ASSET_WINDOWS_ID = "1BDYXMAZBQGA4V4i2izkM8B1AGOPUodmc"
 	VENDOR_WINDOW_ID = "1K6funGJKcaJOuOas6qUDLEqo4fd0VUlw"
-	
+
 	ASSET_LINUX_ID  = "1bJrRH7Xyx5oE7EURkM7MOIyVCcdyqOC3"
 	VENDOR_LINUX_ID = "1mWyzqTZAGRuzFfU-S2N1N6L927BzhbaN"
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 		GDriveDownloader.download_file("vendor.zip",VENDOR_WINDOW_ID,VENDOR_PATH)
 		GDriveDownloader.download_file("assets.zip",ASSET_WINDOWS_ID,ASSETS_PATH)
 	elif platform.system() == 'Linux':
-		GDriveDownloader.download_file("vendor_linux.tar",VENDOR_LINUX_ID,VENDOR_PATH)
+		GDriveDownloader.download_file("vendor_linux.tar.gz",VENDOR_LINUX_ID,VENDOR_PATH)
 		GDriveDownloader.download_file("assets.tar",ASSET_LINUX_ID,ASSETS_PATH)
 	else:
 		print ("Unsupported platform")
