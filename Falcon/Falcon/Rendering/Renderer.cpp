@@ -19,11 +19,15 @@ RenderEventSystem::RenderEventSystem()
 */
 void RenderEventSystem::ProcessEvents() 
 {
-	FL_ENGINE_WARN("eventQueue Size: {0}", eventQueue.size());
-	for(int i =0; i<eventQueue.size();i++)
+	unsigned int count = 0;
+	//FL_ENGINE_WARN("eventQueue Size: {0}. \n", eventQueue.size());
+	//std::cout << "eventQueue Size: " << eventQueue.size()<<"\n";
+	//count++;
+	while(!eventQueue.empty())
 	{
 		eventQueue.pop_front();
-		m_threadPool->submit<void()>(PrintReception);
+		std::function<void()>f = std::bind(&RenderEventSystem::PrintReception, this);
+		m_threadPool->submit<>(f);
 	}
 }
 
@@ -39,9 +43,10 @@ void RenderEventSystem::SubscribeToEvents()
 }
 
 //test function
-void PrintReception()
+void RenderEventSystem::PrintReception()
 {
-	std::cout<<"Event Executed SuccessFully on thread :"<< std::this_thread::get_id()<<"\n";
+	FL_GAME_INFO("Event Executed using Job system.");
+	//std::cout<<"Event Executed SuccessFully on thread :"<< boost::this_thread::get_id()<<"\n";
 }
 //////////////////////
 
