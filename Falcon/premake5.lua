@@ -45,7 +45,7 @@ project "Falcon"
 	targetdir ("build/" .. outputdir .. "/bin/%{prj.name}")
 	objdir    ("build/" .. outputdir .. "/intermediates/%{prj.name}")
 
-	
+
 	--SETTING UP BASIC FILES CONTENT AND INCLUDE DIRS--
 	files
 	{
@@ -78,7 +78,7 @@ project "Falcon"
 		"%{IncludeDirs.spdlog}",
 		"%{IncludeDirs.assimp}",
 	}
-	
+
 
 	---SETTING UP THINGS FOR windows--
 	filter "system:windows"
@@ -91,7 +91,7 @@ project "Falcon"
 			"FL_PLATFORM_WINDOWS"
 		}
 
-		links 
+		links
 		{
 			"glfw3.lib",
 			"opengl32.lib",
@@ -101,12 +101,12 @@ project "Falcon"
 		nuget {'glm:0.9.9.500'}
 
 
-	
+
 
 	filter { "system:windows", "configurations:Debug" }
 			defines "BUILD_DEBUG_MODE"
 			symbols "On"
-     		
+
 			libdirs
 			{
 				"%{LinkDebugDirs.GLFW}",
@@ -115,9 +115,9 @@ project "Falcon"
 			}
 
 
-	
+
 	filter { "system:windows", "configurations:Release" }
-     		
+
 			defines "BUILD_RELEASE_MODE"
 			optimize "On"
 
@@ -128,22 +128,23 @@ project "Falcon"
 				"%{LinkReleaseDirs.assimp}"
 			}
 
-	
+
 	--------SETTING UP THINGS FOR LINUX
-	
+
 	filter "system:linux"
 		pic "On"
 		cppdialect "C++17"
 		systemversion "latest"
+		runpathdirs { "%{cfg.targetdir}" }
 
 		defines
 		{
 			"FL_PLATFORM_UNIX"
 		}
 
-		links 
+		links
 		{
-			
+
 			"boost_thread",
 			"Xrandr",
 	        "Xi",
@@ -156,7 +157,7 @@ project "Falcon"
 			"pthread",
 			"assimp"
 		}
-	
+
 
 
 	filter {"system:linux","configurations:Debug"}
@@ -192,13 +193,13 @@ project "Falcon"
 
 
 	--Setting up prebuild commands--
-	
+
 	filter{"configurations:Debug"}
 		assimp_abs_path_deb = path.getabsolute(LinkDebugDirs["assimp"])
-	
+
 		prebuildcommands ('{COPY} "%{assimp_abs_path_deb}" "%{cfg.targetdir}"')
 
 	filter{"configurations:Release"}
 		assimp_abs_path_res = path.getabsolute(LinkReleaseDirs["assimp"])
-	
+
 		prebuildcommands ('{COPY} "%{assimp_abs_path_res}" "%{cfg.targetdir}"')
