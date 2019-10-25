@@ -34,7 +34,7 @@ private:
 	IndexBuffer* m_IBO;
 	Material* m_material = nullptr;
 	boost::container::vector<glm::mat4> m_worldMats;
-	
+
 	//Functions
 
 public:
@@ -42,6 +42,7 @@ public:
 	boost::container::vector<Vertex> m_vertexArray;
 	boost::container::vector<u32> m_indexArray;
 	boost::container::vector<u32> m_indexOffsets;
+	boost::container::vector<glm::mat> m_transforms
 
 	Mesh();
 	~Mesh();
