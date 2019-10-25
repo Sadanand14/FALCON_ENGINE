@@ -1,6 +1,6 @@
 #include "ThreadPool.h"
 ThreadPool* ThreadPool::mainThreadPool = NULL;
-
+unsigned int ThreadPool::count = 0;
 /**
 *ThreadPool Constructor which helps Initialize worker threads	
 */
@@ -27,7 +27,14 @@ ThreadPool Class Destructor
 */
 ThreadPool::~ThreadPool() 
 {
-	discard_threadPool = true;
+	if (--count == 0) 
+	{
+		if (mainThreadPool != nullptr)
+		{
+			discard_threadPool = true;
+			delete mainThreadPool;
+		}
+	}
 }
 
 ThreadPool* ThreadPool::GetThreadPool() 
@@ -37,7 +44,7 @@ ThreadPool* ThreadPool::GetThreadPool()
 		mainThreadPool = new ThreadPool();
 		//mainThreadPool = fmemory::fnew<ThreadPool>();
 	}
-
+	count++;
 	return mainThreadPool;
 }
 
@@ -49,6 +56,7 @@ void ThreadPool::execute_task()
 	void_function job = NULL;
 	while (!discard_threadPool)
 	{
+		job = NULL;
 		mtx.lock();
 		if (!workerQueue.empty()) 
 		{

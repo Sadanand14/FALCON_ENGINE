@@ -40,6 +40,8 @@ public:
 	virtual void SubscribeToEvents();
 
 	virtual void ProcessEvents();
+
+	void PrintReception();
 };
 
 
