@@ -103,6 +103,7 @@
     <ClInclude Include="Core\EventSystem.h" />
     <ClInclude Include="Core\KeyEvents.h" />
     <ClInclude Include="Core\RenderEvent.h" />
+    <ClInclude Include="Core\SceneGraph.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="Core\EventManager.cpp" />
     <ClCompile Include="Core\EventSystem.cpp" />
     <ClCompile Include="Core\KeyEvents.cpp" />
+    <ClCompile Include="Core\SceneGraph.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
