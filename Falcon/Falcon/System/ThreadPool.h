@@ -7,6 +7,7 @@
 #include <vector>
 #include <boost/thread/mutex.hpp>
 #include <queue>
+#include <mutex>
 #include "Memory/fmemory.h"
 
 typedef boost::function<void()> void_function;
@@ -18,6 +19,7 @@ typedef std::queue<void_function> ThreadQueue;
 class ThreadPool
 {
 private:
+	static unsigned int count;
 	ThreadQueue workerQueue;
 	boost::mutex mtx;
 	std::atomic<bool> discard_threadPool;
@@ -45,7 +47,9 @@ public:
 template<typename function_type>
 void ThreadPool::submit(function_type func)
 {
+	mtx.lock();
 	workerQueue.push(static_cast<void_function>(func));
+	mtx.unlock();
 }
 
 
