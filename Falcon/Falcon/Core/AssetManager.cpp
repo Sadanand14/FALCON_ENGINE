@@ -96,7 +96,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
 	//Get file data
-	char* json;
+	char* json = nullptr;
 	int32_t size;
 	std::ifstream jsonFile(path, std::ios::in | std::ios::ate);
 	if(jsonFile.is_open()) {

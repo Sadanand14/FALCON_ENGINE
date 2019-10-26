@@ -1,5 +1,8 @@
 #include "Material.h"
 
+/**
+ * Binds a material for rendering
+ */
 void Material::Bind()
 {
 	BindTo(0, m_albedoTex, "albedo");
@@ -9,6 +12,9 @@ void Material::Bind()
 	BindTo(4, m_aoTex, "ao");
 }
 
+/**
+ * Binds a texture to a location in the shader
+ */
 void Material::BindTo(int32_t location, Texture tex, const char* locName)
 {
 	glActiveTexture(GL_TEXTURE0 + location);

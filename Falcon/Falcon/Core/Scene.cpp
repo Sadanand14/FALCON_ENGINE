@@ -7,7 +7,7 @@
 void Scene::LoadMesh(const std::string &meshPath)
 {
 	//Get file data
-	char* json;
+	char* json = nullptr;
 	int32_t size;
 	std::ifstream jsonFile(meshPath, std::ios::in | std::ios::ate);
 	if(jsonFile.is_open()) {
@@ -61,7 +61,7 @@ void Scene::LoadMaterial(const std::string &matPath)
 void Scene::LoadScene(const char* sceneFilePath)
 {
 	//Get file data
-	char* json;
+	char* json = nullptr;
 	int32_t size;
 	std::ifstream jsonFile(sceneFilePath, std::ios::in | std::ios::ate);
 	if(jsonFile.is_open()) {
