@@ -5,6 +5,7 @@
     <ClCompile Include="Core\EventManager.cpp" />
     <ClCompile Include="Core\EventSystem.cpp" />
     <ClCompile Include="Core\KeyEvents.cpp" />
+    <ClCompile Include="Core\SceneGraph.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
@@ -24,7 +25,7 @@
     <ClCompile Include="System\Memory\Allocator.cpp" />
     <ClCompile Include="System\Memory\MemoryInterface.cpp" />
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
-    <ClCompile Include="Core\SceneGraph.cpp" />
+    <ClCompile Include="System\Memory\StackAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Core\EventSystem.h" />
     <ClInclude Include="Core\KeyEvents.h" />
     <ClInclude Include="Core\RenderEvent.h" />
+    <ClInclude Include="Core\SceneGraph.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -63,7 +65,8 @@
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
-    <ClInclude Include="Core\SceneGraph.h" />
+    <ClInclude Include="System\Memory\StackAllocator.h" />
+    <ClInclude Include="System\Memory\StackSTLAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

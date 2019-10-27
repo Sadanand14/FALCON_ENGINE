@@ -2,9 +2,17 @@
 #define FNEW_H
 #include "Log.h"
 
+#define POOL  0
+#define STACK 1
 
 namespace fmemory
 {
+
+	/*
+	====================================================================================
+						fnew with pool allocators
+	====================================================================================
+	*/
 
 	/**
 	* Exposes allocation API to the outer world.
@@ -147,8 +155,32 @@ namespace fmemory
 			return;
 		}
 	}
+		
 
 
+	/*
+	====================================================================================
+						fnew with stack allocators
+	====================================================================================
+	*/
+	/**
+	* Exposes allocation API to the outer world.
+	* @param All the parameters required for calling constructor
+	* @return pointer to the memory block allocated.
+	*/
+	template<typename T, typename... Args>
+	T* fnew_stack(Args... args)
+	{
+		try
+		{
+			return new (fmemory::AllocateOnStack(sizeof(T))) T(args...);
+		}
+		catch (std::exception e)
+		{
+			FL_ENGINE_ERROR("ERROR: Failed to allocate memory.{0}", e.what());
+			return nullptr;
+		}
+	}
 }
 
 #endif

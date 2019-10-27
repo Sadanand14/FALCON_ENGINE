@@ -1,5 +1,5 @@
-#ifndef STLMEMORYINTERFACE_H
-#define STLMEMORYINTERFACE_H
+#ifndef STACKSTLMEMORYINTERFACE_H
+#define STACKSTLMEMORYINTERFACE_H
 
 #include <memory>
 #include "Log.h"
@@ -22,7 +22,7 @@ namespace fmemory {
 
 
 	template <class T>
-	class STLAllocator
+	class StackSTLAllocator
 	{
 
 	public:
@@ -36,19 +36,19 @@ namespace fmemory {
 		template <class U>
 		struct rebind
 		{
-			typedef STLAllocator<U> other;
+			typedef StackSTLAllocator<U> other;
 		};
 
 
 		/**
 		* Allocators are stateless so we don't need to define the anything in constructors and destructors.
 		*/
-		STLAllocator() = default;
-		~STLAllocator() = default;
+		StackSTLAllocator() = default;
+		~StackSTLAllocator() = default;
 
 
 		template <class U>
-		STLAllocator(const STLAllocator<U>& ref)
+		StackSTLAllocator(const StackSTLAllocator<U>& ref)
 		{
 		}
 
@@ -58,10 +58,10 @@ namespace fmemory {
 		*/
 		pointer allocate(size_t count)
 		{
-		
-			FL_ENGINE_INFO("Allocating using STLAllocator Requesting {0} , {1}",sizeof(T), sizeof(T)*count);
-	
-			return reinterpret_cast<T*>(Allocate(sizeof(T) * count));
+
+			FL_ENGINE_INFO("Allocating using StackSTLAllocator Requesting {0} , {1}", sizeof(T), sizeof(T) * count);
+
+			return reinterpret_cast<T*>(AllocateOnStack(sizeof(T) * count));
 		}
 
 		/**
@@ -71,7 +71,7 @@ namespace fmemory {
 		*/
 		void deallocate(pointer p, size_t count)
 		{
-			//FL_ENGINE_INFO("Dellocating using STLAllocator.");
+			//FL_ENGINE_INFO("Dellocating using StackSTLAllocator.");
 			Free(p, sizeof(T) * count);
 		}
 
@@ -93,7 +93,7 @@ namespace fmemory {
 		* Always returns true.
 	*/
 	template <class T, class U>
-	constexpr bool operator== (const STLAllocator<T>&, const STLAllocator<U>&) noexcept
+	constexpr bool operator== (const StackSTLAllocator<T>&, const StackSTLAllocator<U>&) noexcept
 	{
 		return true;
 	}
@@ -105,11 +105,11 @@ namespace fmemory {
 		* Always returns false.
 	*/
 	template <class T, class U>
-	constexpr bool operator!= (const STLAllocator<T>&, const STLAllocator<U>&) noexcept
+	constexpr bool operator!= (const StackSTLAllocator<T>&, const StackSTLAllocator<U>&) noexcept
 	{
 		return false;
 	}
 
 
 }
-#endif //STLMEMORYINTERFACE_H
+#endif //STACKSTLMEMORYINTERFACE_H
