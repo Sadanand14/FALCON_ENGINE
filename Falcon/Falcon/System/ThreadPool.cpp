@@ -2,20 +2,20 @@
 ThreadPool* ThreadPool::mainThreadPool = NULL;
 unsigned int ThreadPool::count = 0;
 /**
-*ThreadPool Constructor which helps Initialize worker threads	
+*ThreadPool Constructor which helps Initialize worker threads
 */
-ThreadPool::ThreadPool() :discard_threadPool(false) 
+ThreadPool::ThreadPool() :discard_threadPool(false)
 {
 	int const max_threads = boost::thread::hardware_concurrency();
 
 	try
 	{
-		for (int i = 0; i < max_threads; i++) 
+		for (int i = 0; i < max_threads; i++)
 		{
 			worker_threads.push_back(boost::thread(&ThreadPool::execute_task, this));
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		discard_threadPool = true;
 		throw;
@@ -23,23 +23,19 @@ ThreadPool::ThreadPool() :discard_threadPool(false)
 }
 
 /**
-ThreadPool Class Destructor	
+ThreadPool Class Destructor
 */
-ThreadPool::~ThreadPool() 
+ThreadPool::~ThreadPool()
 {
-	if (--count == 0) 
-	{
-		if (mainThreadPool != nullptr)
-		{
-			discard_threadPool = true;
-			delete mainThreadPool;
-		}
-	}
+	discard_threadPool = true;
+	for (unsigned int i = 0; i < boost::thread::hardware_concurrency(); i++)
+		worker_threads[i].join();
+	delete mainThreadPool;
 }
 
-ThreadPool* ThreadPool::GetThreadPool() 
+ThreadPool* ThreadPool::GetThreadPool()
 {
-	if (!mainThreadPool) 
+	if (!mainThreadPool)
 	{
 		mainThreadPool = new ThreadPool();
 		//mainThreadPool = fmemory::fnew<ThreadPool>();
@@ -57,20 +53,26 @@ void ThreadPool::execute_task()
 	while (!discard_threadPool)
 	{
 		job = NULL;
-		mtx.lock();
-		if (!workerQueue.empty()) 
+		if (mtx.try_lock())
 		{
-			try 
+			if (!workerQueue.empty())
 			{
-				job = workerQueue.front();
-				workerQueue.pop();
+				try
+				{
+					job = workerQueue.front();
+					workerQueue.pop();
+				}
+				catch (std::exception & e)
+				{
+					FL_ENGINE_ERROR("{0}", e.what());
+				}
 			}
-			catch(std::exception &e)
-			{
-				FL_ENGINE_ERROR("{0}", e.what());
-			}
+			mtx.unlock();
 		}
-		mtx.unlock();
+		else 
+		{
+			boost::this_thread::yield();
+		}
 		if (job) job();
 	}
 }

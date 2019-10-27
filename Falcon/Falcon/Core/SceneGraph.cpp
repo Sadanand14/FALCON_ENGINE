@@ -1,20 +1,19 @@
 #include "SceneGraph.h"
 
 SceneNode::SceneNode(const char* path)
-	:m_status(Status::Active), m_filePath(path), m_entity(nullptr),m_parent(nullptr)
+	:m_status(Status::Active), m_filePath(path), m_entity(nullptr),m_parent(nullptr),m_worldMatrix(glm::mat4())
 {
-	m_localTransform = Transform();
 }
 
 SceneNode::SceneNode(const char* path, SceneNode* parent) 
 	: m_status(Status::Active), m_filePath(path), m_entity(nullptr), m_parent(parent)
 {
-			
+	m_worldMatrix = m_parent->GetWM();
 }
 
 //empty Scene Node intialization for local transform grouping
 SceneNode::SceneNode(SceneNode** childArray, unsigned int size)
-	: m_status(Status::Active), m_filePath(nullptr), m_entity(nullptr), m_parent(nullptr)
+	: m_status(Status::Active), m_filePath(nullptr), m_entity(nullptr), m_parent(nullptr), m_worldMatrix(glm::mat4())
 {
 	for (unsigned int i = 0; i < size; i++)
 		AddChild(childArray[i]);
@@ -39,11 +38,21 @@ void SceneNode::LoadEntity()
 
 void SceneNode::UpdateEntity()
 {
-
+	if (m_updateFlag) 
+	{
+		Transform* transform = m_entity->GetTransform();
+		transform->SetRelativeSpace(m_parent->GetWM());
+		transform->CheckFlag();
+		m_worldMatrix = transform->GetModel();
+		m_updateFlag = false;
+		for (unsigned int i = 0; i < m_childNodes.size(); i++)
+			m_childNodes[i]->SetUpdateFlag(true);
+	}
 }
 
 void SceneNode::AddChild(SceneNode* node)
 {
+	node->SetParent(this);
 	m_childNodes.push_back(node);
 }
 

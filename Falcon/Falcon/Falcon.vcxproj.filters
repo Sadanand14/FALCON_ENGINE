@@ -24,7 +24,6 @@
     <ClCompile Include="System\Memory\Allocator.cpp" />
     <ClCompile Include="System\Memory\MemoryInterface.cpp" />
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
-    <ClCompile Include="Core\SceneGraph.cpp" />
     <ClCompile Include="Core\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +63,6 @@
     <ClInclude Include="System\Memory\MemoryInterface.h" />
     <ClInclude Include="System\Memory\PoolAllocator.hpp" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
-    <ClInclude Include="Core\SceneGraph.h" />
     <ClInclude Include="Core\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
