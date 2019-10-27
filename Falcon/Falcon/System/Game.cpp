@@ -10,6 +10,7 @@
 int main()
 {
 	Log::Init();
+
 	fmemory::MemoryManagerInit();
 
 	WindowClass* window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);

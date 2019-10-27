@@ -16,9 +16,9 @@ void Mesh::SetupMesh()
 {
 	m_VAO = fmemory::fnew<VertexArray>();
 	m_VAO->Bind();
-	m_VBO1 = new VertexBuffer(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
-	m_VBO2 = new VertexBuffer(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
-	m_IBO = new IndexBuffer(m_indexArray.data(), m_indexArray.size());
+	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
+	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
 
 	m_VBO1->Bind();
 	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0, 0);
@@ -110,8 +110,8 @@ void Mesh::Bind()
 */
 Mesh::~Mesh()
 {
-	delete m_VAO;
-	delete m_VBO2;
-	delete m_VBO1;
-	delete m_IBO;
+	fmemory::fdelete<VertexArray>( m_VAO);
+	fmemory::fdelete<VertexBuffer>(m_VBO2);
+	fmemory::fdelete<VertexBuffer> (m_VBO1);
+	fmemory::fdelete<IndexBuffer>(m_IBO);
 }
