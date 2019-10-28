@@ -19,7 +19,7 @@ private:
 public:
 
 	IndexBuffer(const unsigned int*, size_t);
-	IndexBuffer(const std::vector<unsigned int,fmemory::STLAllocator<unsigned int>>& indices, size_t count);
+	IndexBuffer(const std::vector<unsigned int,fmemory::StackSTLAllocator<unsigned int>>& indices, size_t count);
 	~IndexBuffer();
 
 	void Bind() const;
