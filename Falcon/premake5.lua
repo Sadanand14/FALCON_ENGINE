@@ -18,17 +18,20 @@ IncludeDirs["glad"]   = "Falcon/vendor/include/glad";
 IncludeDirs["assimp"] = "Falcon/vendor/include/assimp";
 IncludeDirs["KHR"]    = "Falcon/vendor/include/KHR";
 IncludeDirs["boost"]  = "Falcon/vendor/include/boost";
+IncludeDirs["ozz"]  = "Falcon/vendor/include/ozz";
 
 
 LinkDebugDirs = {}
 LinkDebugDirs["assimp"] = "Falcon/vendor/libs/assimp/Debug"
 LinkDebugDirs["boost"]  = "Falcon/vendor/libs/boost"
 LinkDebugDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Debug"
+LinkDebugDirs["ozz"]   = "Falcon/vendor/libs/ozz/Debug"
 
 LinkReleaseDirs = {}
 LinkReleaseDirs["assimp"] = "Falcon/vendor/libs/assimp/Release"
 LinkReleaseDirs["boost"]  = "Falcon/vendor/libs/boost"
-LinkReleaseDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Release"
+LinkReleaseDirs["GLFW"]  = "Falcon/vendor/libs/GLFW/Release"
+LinkReleaseDirs["ozz"]   = "Falcon/vendor/libs/ozz/Release"
 
 
 
@@ -95,7 +98,11 @@ project "Falcon"
 		{
 			"glfw3.lib",
 			"opengl32.lib",
-			"assimp-vc140-mt.lib"
+			"assimp-vc140-mt.lib",
+			"ozz_animation.lib",
+			"ozz_base.lib",
+			"ozz_geometry.lib",
+			"ozz_options.lib"
 		}
 
 		nuget {'glm:0.9.9.500'}
@@ -112,6 +119,7 @@ project "Falcon"
 				"%{LinkDebugDirs.GLFW}",
 				"%{LinkDebugDirs.boost}",
 				"%{LinkDebugDirs.assimp}",
+				"%{LinkDebugDirs.ozz}"
 			}
 
 
@@ -125,7 +133,8 @@ project "Falcon"
 			{
 				"%{LinkReleaseDirs.GLFW}",
 				"%{LinkReleaseDirs.boost}",
-				"%{LinkReleaseDirs.assimp}"
+				"%{LinkReleaseDirs.assimp}",
+				"%{LinkReleaseDirs.ozz}"
 			}
 
 
@@ -155,7 +164,11 @@ project "Falcon"
             "X11",
 			"dl",
 			"pthread",
-			"assimp"
+			"assimp",
+			"ozz_animation",
+			"ozz_base",
+			"ozz_geometry",
+			"ozz_options"
 		}
 
 
@@ -171,6 +184,7 @@ project "Falcon"
 			"%{LinkDebugDirs.GLFW}",
 			"%{LinkDebugDirs.boost}",
 			"%{LinkDebugDirs.assimp}",
+			"%{LinkDebugDirs.ozz}",
 			"/usr/local/lib",
 			"/usr/lib"
 		}
@@ -187,6 +201,7 @@ project "Falcon"
 			"%{LinkReleaseDirs.GLFW}",
 			"%{LinkReleaseDirs.boost}",
 			"%{LinkReleaseDirs.assimp}",
+			"%{LinkReleaseDirs.ozz}",
 			"/usr/local/lib",
 			"/usr/lib"
 		}

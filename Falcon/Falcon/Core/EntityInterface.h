@@ -5,6 +5,7 @@
 #include <vector>
 #include <Rendering/Mesh.h>
 #include <Rendering/Material.h>
+#include <Rendering/Animation.h>
 #include <glm/glm.hpp>
 #include <System/Log.h>
 #include <Rendering/Camera.h>
@@ -72,6 +73,7 @@ struct RenderComponent :public BasicComponent
 */
 struct AnimationComponent :public BasicComponent
 {
+	Animation* anim = nullptr;
 
 	AnimationComponent() {}
 	~AnimationComponent() {}

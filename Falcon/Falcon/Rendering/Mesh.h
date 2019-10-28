@@ -42,7 +42,7 @@ public:
 	boost::container::vector<Vertex> m_vertexArray;
 	boost::container::vector<u32> m_indexArray;
 	boost::container::vector<u32> m_indexOffsets;
-	boost::container::vector<glm::mat> m_transforms
+	boost::container::vector<glm::mat4> m_transforms;
 
 	Mesh();
 	~Mesh();
