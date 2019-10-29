@@ -18,20 +18,20 @@ IncludeDirs["glad"]   = "Falcon/vendor/include/glad";
 IncludeDirs["assimp"] = "Falcon/vendor/include/assimp";
 IncludeDirs["KHR"]    = "Falcon/vendor/include/KHR";
 IncludeDirs["boost"]  = "Falcon/vendor/include/boost";
-IncludeDirs["ozz"]  = "Falcon/vendor/include/ozz";
+IncludeDirs["ozz"]    = "Falcon/vendor/include/ozz";
 
 
 LinkDebugDirs = {}
 LinkDebugDirs["assimp"] = "Falcon/vendor/libs/assimp/Debug"
 LinkDebugDirs["boost"]  = "Falcon/vendor/libs/boost"
 LinkDebugDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Debug"
-LinkDebugDirs["ozz"]   = "Falcon/vendor/libs/ozz/Debug"
+LinkDebugDirs["ozz"]    = "Falcon/vendor/libs/ozz/Debug"
 
 LinkReleaseDirs = {}
 LinkReleaseDirs["assimp"] = "Falcon/vendor/libs/assimp/Release"
 LinkReleaseDirs["boost"]  = "Falcon/vendor/libs/boost"
-LinkReleaseDirs["GLFW"]  = "Falcon/vendor/libs/GLFW/Release"
-LinkReleaseDirs["ozz"]   = "Falcon/vendor/libs/ozz/Release"
+LinkReleaseDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Release"
+LinkReleaseDirs["ozz"]    = "Falcon/vendor/libs/ozz/Release"
 
 
 
@@ -80,6 +80,7 @@ project "Falcon"
 		"%{IncludeDirs.boost}",
 		"%{IncludeDirs.spdlog}",
 		"%{IncludeDirs.assimp}",
+		"%{IncludeDirs.ozz}"
 	}
 
 
