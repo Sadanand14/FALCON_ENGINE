@@ -9,7 +9,7 @@ void Scene::LoadMesh(const std::string &meshPath)
 	//Get file data
 	char* json = nullptr;
 	int32_t size;
-	std::ifstream jsonFile(meshPath, std::ios::in | std::ios::ate);
+	std::ifstream jsonFile(meshPath, std::ios::in | std::ios::ate | std::ios::binary);
 	if(jsonFile.is_open()) {
 		size = jsonFile.tellg();
 		jsonFile.seekg(std::ios::beg);
@@ -63,7 +63,7 @@ void Scene::LoadScene(const char* sceneFilePath)
 	//Get file data
 	char* json = nullptr;
 	int32_t size;
-	std::ifstream jsonFile(sceneFilePath, std::ios::in | std::ios::ate);
+	std::ifstream jsonFile(sceneFilePath, std::ios::in | std::ios::ate | std::ios::binary);
 	if(jsonFile.is_open()) {
 		size = jsonFile.tellg();
 		jsonFile.seekg(std::ios::beg);
@@ -184,7 +184,7 @@ void Scene::SaveScene(const char* sceneFilePath)
 		meshDoc.Accept(writer);
 
 		//Write scene to file
-		std::ofstream meshFile(it->first, std::ofstream::out);
+		std::ofstream meshFile(it->first, std::ofstream::out | std::ios::binary);
 		meshFile << sb.GetString();
 		meshFile.close();
 	}
@@ -220,7 +220,7 @@ void Scene::SaveScene(const char* sceneFilePath)
 		matDoc.Accept(writer);
 
 		//Write scene to file
-		std::ofstream matFile(it->first, std::ofstream::out);
+		std::ofstream matFile(it->first, std::ofstream::out | std::ios::binary);
 		matFile << sb.GetString();
 		matFile.close();
 	}
@@ -275,7 +275,7 @@ void Scene::SaveScene(const char* sceneFilePath)
 	doc.Accept(writer);
 
 	//Write scene to file
-	std::ofstream outFile(sceneFilePath, std::ofstream::out);
+	std::ofstream outFile(sceneFilePath, std::ofstream::out | std::ios::binary);
 	outFile << sb.GetString();
 	outFile.close();
 }

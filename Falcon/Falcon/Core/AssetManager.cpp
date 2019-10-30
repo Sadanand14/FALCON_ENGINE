@@ -98,7 +98,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	//Get file data
 	char* json = nullptr;
 	int32_t size;
-	std::ifstream jsonFile(path, std::ios::in | std::ios::ate);
+	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
 	if(jsonFile.is_open()) {
 		size = jsonFile.tellg();
 		jsonFile.seekg(std::ios::beg);
