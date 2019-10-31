@@ -12,14 +12,7 @@
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
-
-//Include the pretty writer in debug mode (easier to read)
-//#if defined BUILD_DEBUG_MODE
-//	#include <rapidjson/prettywriter.h>
-//	#define Writer PrettyWriter
-//#else
 #include <rapidjson/writer.h>
-//#endif
 
 #include "Core/AssetManager.h"
 #include "System/Memory/fmemory.h"
