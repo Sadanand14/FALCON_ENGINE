@@ -94,27 +94,29 @@ void Scene::LoadScene(const char* sceneFilePath)
 		//Load all entities into the scene
 		for(rapidjson::SizeType i = 0; i < world.Size(); i++)
 		{
-			const rapidjson::Value& transform = world[i]["transform"];
-
-			//Get transform matrix
-			float arr[16];
-			for(rapidjson::SizeType j = 0; j < transform.Size(); j++)
+			//Get position, rotation, and scale
+			const rapidjson::Value& pos = world[i]["pos"];
+			glm::vec3 position;
+			for(rapidjson::SizeType j = 0; j < 3; j++)
 			{
-				arr[j] = transform[j].GetDouble();
+				position[j] = pos[j].GetDouble();
 			}
-			glm::mat4 trans = glm::make_mat4(arr);
 
-			//tmp vars
+			const rapidjson::Value& rot = world[i]["rot"];
+			glm::quat rotation;
+			for(rapidjson::SizeType j = 0; j < 4; j++)
+			{
+				rotation[j] = rot[j].GetDouble();
+			}
+
+			const rapidjson::Value& sca = world[i]["scale"];
 			glm::vec3 scale;
-			glm::quat rot;
-			glm::vec3 pos;
-			glm::vec3 skew;
-			glm::vec4 pers;
+			for(rapidjson::SizeType j = 0; j < 3; j++)
+			{
+				scale[j] = sca[j].GetDouble();
+			}
 
-			//Decompose matrix and create new entity with transform and components
-			glm::decompose(trans, scale, rot, pos, skew, pers);
-
-			Entity entity(pos, rot, scale);
+			Entity entity(position, rotation, scale);
 
 			//Add render component
 			if(world[i].HasMember("renderComponent"))
@@ -129,6 +131,14 @@ void Scene::LoadScene(const char* sceneFilePath)
 				if(m == m_meshes.end())
 					LoadMesh(mesh.GetString());
 				entity.GetComponent<RenderComponent>()->m_mesh = m_meshes[mesh.GetString()];
+			}
+
+			//Get children
+			const rapidjson::Value& children = world[i]["children"];
+			for(rapidjson::SizeType j = 0; j < children.Size(); j++)
+			{
+				entity.children.push_back(children[j].GetInt());
+				//printf("%d\n", children[j].GetInt());
 			}
 
 			//TODO: Add the rest of components when we get them
@@ -238,16 +248,27 @@ void Scene::SaveScene(const char* sceneFilePath)
 		//New Entity
 		rapidjson::Value entity(rapidjson::kObjectType);
 
-		//Transform
-		rapidjson::Value transform(rapidjson::kArrayType);
-
-		glm::mat4 mat = m_entities[i].GetTransform().GetModel();
-		for(u32 i = 0; i < 4; i++)
+		//Get position, rotation, and scale
+		rapidjson::Value pos(rapidjson::kArrayType);
+		for(rapidjson::SizeType j = 0; j < 3; j++)
 		{
-			for(u32 j = 0; j < 4; j++)
-				transform.PushBack(mat[i][j], alloc);
+			pos.PushBack(m_entities[i].GetTransform().GetPosition()[j], alloc);
 		}
-		entity.AddMember("transform", transform, alloc);
+		entity.AddMember("pos", pos, alloc);
+
+		rapidjson::Value rot(rapidjson::kArrayType);
+		for(rapidjson::SizeType j = 0; j < 4; j++)
+		{
+			rot.PushBack(m_entities[i].GetTransform().GetRotation()[j], alloc);
+		}
+		entity.AddMember("rot", rot, alloc);
+
+		rapidjson::Value scale(rapidjson::kArrayType);
+		for(rapidjson::SizeType j = 0; j < 3; j++)
+		{
+			scale.PushBack(m_entities[i].GetTransform().GetScale()[j], alloc);
+		}
+		entity.AddMember("scale", scale, alloc);
 
 		//Add render component and mesh
 		if(m_entities[i].GetComponent<RenderComponent>())
@@ -261,6 +282,15 @@ void Scene::SaveScene(const char* sceneFilePath)
 		}
 
 		//TODO Check and add other components
+
+		//Add children
+		rapidjson::Value children(rapidjson::kArrayType);
+		for(i32 j = 0; j < m_entities[i].children.size(); j++)
+		{
+			children.PushBack(m_entities[i].children[j], alloc);
+		}
+
+		entity.AddMember("children", children, alloc);
 
 		entityArray.PushBack(entity, alloc);
 	}

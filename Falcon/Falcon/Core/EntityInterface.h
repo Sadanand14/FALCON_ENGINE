@@ -170,6 +170,9 @@ public:
 
 	template<typename T>
 	inline T* GetComponent() {};
+
+	//TODO: Remove this temporary thing and replace it with something not awful
+	std::vector<int> children;
 };
 
 
