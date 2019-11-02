@@ -2,7 +2,7 @@
 #define RENDER_EVENT_H
 
 #include "Event.h"
-#include <System/Log.h>
+#include <Log.h>
 
 /**
 *Structure Definition for Render Type Event.

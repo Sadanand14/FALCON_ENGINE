@@ -1,14 +1,16 @@
 #ifndef EVENTMANAGER_H_
 #define EVENTMANAGER_H_
 
+#include "Event.h"
+#include "EventSystem.h"
+
 #include <type_traits>
 #include <memory>
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
-#include <Core/Event.h>
-#include <Core/EventSystem.h>
-#include <System/Types.h>
+
+#include <Types.h>
 
 /**
 *Manages events being pushed and what systems are listening to which events.

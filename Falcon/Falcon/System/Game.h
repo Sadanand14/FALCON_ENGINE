@@ -2,10 +2,32 @@
 #define game_h
 
 #include "InputReceiver.h"
+#include "Log.h"
+#include <framework.h>
+#include <thread/thread.hpp>
+#include <Events/RenderEvent.h>
+#include <Events/EventManager.h>
+#include <Memory/fmemory.h>
+#include <PipeLine/Renderer.h>
+#include <Camera.h>
 
+class Game {
 
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 900;
+	Timer* m_timer;
+	Renderer* m_renderer;
+	WindowClass* m_window1;
+	InputReceiver* m_inputClass;
+public:
+	bool m_gameCrashed, m_windowClosed;
 
+	Game();
+	~Game();
+
+	bool Initialize();
+	void Update();
+};
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 #endif
