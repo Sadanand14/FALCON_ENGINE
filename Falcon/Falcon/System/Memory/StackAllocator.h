@@ -2,7 +2,7 @@
 #define STACK_ALLOCATOR_H
 
 #include <cstdlib>
-#include "System/Log.h"
+#include <Log.h>
 #include "Allocator.hpp"
 
 #define STACK_ALLOCATOR_MAX_SIZE 1073741824 //1GB

@@ -4,8 +4,8 @@
 #include <boost/circular_buffer.hpp>
 #include <boost/container/vector.hpp>
 #include <boost/shared_ptr.hpp>
-#include <Core/Event.h>
-#include <System/ThreadPool.h>
+#include "Event.h"
+#include <ThreadPool.h>
 
 /**
 *Basic EventSystem Definition

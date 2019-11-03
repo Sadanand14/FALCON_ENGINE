@@ -94,7 +94,7 @@ void Renderer::SetDrawStates()
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
-	shader = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
+	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	for(u32 i = 0; i < 500; i++) {
 		entity[i].AddComponent<RenderComponent>();
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
@@ -104,8 +104,8 @@ void Renderer::SetDrawStates()
 
 		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
-		entity[i].GetTransform().SetPosition(pos);
-		entity[i].GetTransform().SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+		entity[i].GetTransform()->SetPosition(pos);
+		entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 	}
 	shader->UseShader();
 }
@@ -141,7 +141,7 @@ void Renderer::Draw()
 	for(u32 i = 0; i < 500; i++) {
 		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
 
-		m->AddWorldMatrix(entity[i].GetTransform().GetModel());
+		m->AddWorldMatrix(entity[i].GetTransform()->GetModel());
 
 		if(queuedMeshes.find(m) == queuedMeshes.end())
 			queuedMeshes.insert(m);
