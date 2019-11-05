@@ -4,6 +4,15 @@
 #include "Memory/fmemory.h"
 #include <string>
 
+<<<<<<< HEAD
+=======
+//Camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+//Camera Setup
+float lastX = 0.0f;
+float lastY = 0.0f;
+bool firstMouse = true;
+>>>>>>> 40b9d8aa0cb907f7a410bbfc542de38254fe9fbc
 
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
@@ -12,22 +21,22 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
-	
+
 }
 
-WindowClass::~WindowClass() 
+WindowClass::~WindowClass()
 {
 	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
 }
 
 
-void WindowClass::Init() 
+void WindowClass::Init()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -54,12 +63,109 @@ void WindowClass::Init()
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
+<<<<<<< HEAD
 	
 	
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 
+=======
+	//Camera
+	glfwSetCursorPosCallback(m_gameWindow, mouse_callback);
+	glfwSetScrollCallback(m_gameWindow, scroll_callback);
+
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	//Create Draw States in Renderer
+	m_renderer->CreateDrawStates();
+
+	//Set Draw States in Renderer
+	m_renderer->SetDrawStates();
+}
+
+void WindowClass::Update()
+{
+	float dt,rate;
+	std::string framerate;
+
+	Scene scn;
+	scn.LoadScene("../Assets/Scenes/scene.json");
+
+	while (!glfwWindowShouldClose(m_gameWindow))
+	{
+		//testing RenderEvents
+		for (unsigned int i = 0; i < 10; i++)
+			EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
+
+		m_timer->update();
+		dt = m_timer->GetDeltaTime();
+		rate = 1 / dt;
+		framerate = std::to_string(rate);
+		glfwSetWindowTitle(m_gameWindow, framerate.c_str());
+
+		//Game Input
+		ProcessInput(m_gameWindow, dt);
+
+		//Camera
+		glm::mat4 view = camera.GetViewMatrix();
+
+		//Render
+		m_renderer->Update(m_width, m_height, camera.m_Zoom, view, dt);
+		m_renderer->Draw();
+
+		//Swap Buffers
+		glfwSwapBuffers(m_gameWindow);
+
+		//Poll I/O events
+		glfwPollEvents();
+
+		//FL_ENGINE_WARN("{0}", m_threadPool->GetSize());
+		//m_threadPool->execute_task();
+	}
+
+	scn.SaveScene("../Assets/Scenes/scene2.json");
+	scn.CloseScene();
+}
+
+void WindowClass::ProcessInput(GLFWwindow* window, float deltaTime)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = (float)xpos;
+		lastY = (float)ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = (float)xpos - lastX;
+	float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = (float)xpos;
+	lastY = (float)ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll((float)yoffset);
+>>>>>>> 40b9d8aa0cb907f7a410bbfc542de38254fe9fbc
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)

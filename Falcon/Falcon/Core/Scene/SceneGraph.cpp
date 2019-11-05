@@ -46,7 +46,11 @@ void SceneNode::UpdateEntity()
 		m_worldMatrix = transform->GetModel();
 		m_updateFlag = false;
 		for (unsigned int i = 0; i < m_childNodes.size(); i++)
+		{
 			m_childNodes[i]->SetUpdateFlag(true);
+			m_childNodes[i]->UpdateEntity();
+		}
+
 	}
 }
 
@@ -82,4 +86,5 @@ void SceneGraph::LoadScene()
 
 void SceneGraph::UpdateSCene()
 {
+	m_rootNode->UpdateEntity();
 }

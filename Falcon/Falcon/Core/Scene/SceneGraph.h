@@ -55,7 +55,7 @@ public:
 
 class SceneGraph 
 {
-	SceneNode* rootNode;
+	SceneNode* m_rootNode;
 	
 	void LoadScene();
 	void UpdateSCene();
