@@ -3,7 +3,9 @@
 
 
 #include "PoolAllocator.hpp"
+#include "StackAllocator.h"
 #include "STLMemoryInterface.h"
+#include "StackSTLAllocator.h"
 #include "MemoryInterface.h"
 #include "fnew.h"
 
