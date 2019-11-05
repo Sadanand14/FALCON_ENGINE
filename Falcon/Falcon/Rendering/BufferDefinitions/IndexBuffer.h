@@ -2,7 +2,7 @@
 #define INDEX_BUFFER_H
 
 #include "framework.h"
-#include <System/Types.h>
+#include <Types.h>
 #include <vector>
 #include <Memory/fmemory.h>
 

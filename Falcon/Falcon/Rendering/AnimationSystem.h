@@ -19,11 +19,12 @@
 #include <ozz/animation/runtime/skeleton.h>
 
 //#include <Core/AnimationEvent.h> //This will be done later
-#include <Core/EventManager.h>
-#include "stb_image.h"
-#include <Core/EntityInterface.h>
+#include "Core/Events/EventManager.h"
+#include "Core/EntityInterface.h"
+#include "Core/Components/AnimationComponent.h"
 #include <Core/AssetManager.h>
-#include <System/ThreadPool.h>
+#include "System/ThreadPool.h"
+#include "stb_image.h"
 
 /**
  * Event system for animation systems

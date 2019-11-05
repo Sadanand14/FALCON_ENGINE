@@ -41,6 +41,7 @@ void Mesh::SetupMesh()
 */
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
+	m_animationMats.resize(maxMatrices);
 	m_worldMats.resize(maxMatrices);
 }
 
@@ -53,6 +54,15 @@ void Mesh::AddWorldMatrix(const glm::mat4 &mat)
 }
 
 /**
+ * Adds a matrix to the animation matricies
+ * @param The animation matrix to
+ */
+void Mesh::AddAnimationMatrix(const glm::mat4 &mat)
+{
+	m_animationMats.push_back(mat);
+}
+
+/**
 *
 */
 void Mesh::ClearWorldMatrices()
@@ -61,11 +71,28 @@ void Mesh::ClearWorldMatrices()
 }
 
 /**
+ * Clears the animation matrices
+ */
+void Mesh::ClearAnimationMatrices()
+{
+	m_animationMats.clear();
+}
+
+/**
 *
 */
 u32 Mesh::GetWorldMatrixAmount()
 {
 	return m_worldMats.size();
+}
+
+/**
+ * Gets the amount of animation matrices
+ * @return The size of the animation matrix array
+ */
+u32 Mesh::GetAnimationMatrixAmount()
+{
+	return m_animationMats.size();
 }
 
 /**

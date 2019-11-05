@@ -3,13 +3,14 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <Rendering/stb_image.h>
+#include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <Rendering/Mesh.h>
-#include <Rendering/Material.h>
+#include <PipeLine/Mesh.h>
+#include <PipeLine/Material.h>
+#include <PipeLine/Animation.h>
 
 #include <string>
 #include <fstream>
@@ -37,7 +38,7 @@ public:
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
-
+	static Animation* LoadAnimation(std::string const &path);
 };
 
 

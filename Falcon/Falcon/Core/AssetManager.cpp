@@ -1,4 +1,4 @@
-#include <Core/AssetManager.h>
+#include "AssetManager.h"
 #include <Log.h>
 
 
@@ -104,6 +104,28 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	//mat->aoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_ao.tga");
 
 	return mat;
+}
+
+Animation* AssetManager::LoadAnimation(std::string const &path)
+{
+	ozz::io::File file(path, "rb");
+
+	//Check if open
+	if (!file.opened()) {
+		ozz::log::Err() << "Cannot open file " << filename << "." << std::endl;
+		return nullptr;
+	}
+
+	ozz::io::IArchive archive(&file);
+
+	if (!archive.TestTag<ozz::animation::Skeleton>()) {
+		ozz::log::Err() << "Archive doesn't contain the expected object type." << std::endl;
+		return nullptr;
+	}
+
+	Animation* anim = fmemory::fnew<Animation>();
+	archive >> anim->skeleton;
+// 	/archive >>
 }
 
 

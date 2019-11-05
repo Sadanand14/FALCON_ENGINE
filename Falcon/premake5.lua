@@ -73,6 +73,7 @@ project "Falcon"
 		"%{prj.name}/Core",
 		"%{prj.name}/System",
 		"%{prj.name}/Rendering",
+		"%{prj.name}/Rendering/PipeLine",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",

@@ -10,12 +10,14 @@
 
 #include "Memory/fmemory.h"
 #include "Shader.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexLayout.h"
 #include "Material.h"
-#include <System/Types.h>
+
+#include <BufferDefinitions/VertexArray.h>
+#include <BufferDefinitions/VertexBuffer.h>
+#include <BufferDefinitions/IndexBuffer.h>
+#include <BufferDefinitions/VertexLayout.h>
+
+#include <Types.h>
 
 
 /**
@@ -34,6 +36,7 @@ private:
 	IndexBuffer* m_IBO;
 	Material* m_material = nullptr;
 	boost::container::vector<glm::mat4> m_worldMats;
+	boost::container::vector<glm::mat4> m_animationMats;
 
 	//Functions
 
@@ -51,8 +54,11 @@ public:
 	void SetupMesh();
 	void PreallocMatrixAmount(u32 maxMatrices);
 	void AddWorldMatrix(const glm::mat4 &mat);
+	void AddAnimationMatrix(const glm::mat4 &mat);
 	void ClearWorldMatrices();
+	void ClearAnimationMatrices();
 	u32 GetWorldMatrixAmount();
+	u32 GetAnimationMatrixAmount();
 	void SetMaterial(Material* mat);
 	Material* GetMaterial();
 	void Bind();

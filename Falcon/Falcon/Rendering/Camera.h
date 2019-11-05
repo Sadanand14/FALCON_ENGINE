@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <Core/KeyEvents.h>
-#include <Core/EventManager.h>
+#include <Events/KeyEvents.h>
+#include <Events/EventManager.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
