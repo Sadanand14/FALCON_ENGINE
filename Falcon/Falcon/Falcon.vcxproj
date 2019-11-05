@@ -112,7 +112,6 @@
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
-    <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
@@ -157,7 +156,6 @@
     <ClCompile Include="Core\Events\EventManager.cpp" />
     <ClCompile Include="Core\Events\EventSystem.cpp" />
     <ClCompile Include="Core\Events\KeyEvents.cpp" />
-    <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />

@@ -19,7 +19,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u64 offset, u32 divisor);
+	void AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u32 offset, u32 divisor);
 };
 
 #endif // !1

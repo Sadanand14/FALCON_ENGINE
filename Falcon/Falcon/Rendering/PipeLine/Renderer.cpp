@@ -17,7 +17,7 @@ RenderEventSystem::RenderEventSystem()
 /**
 * Function to process all the events available in the event queue.
 */
-void RenderEventSystem::ProcessEvents()
+void RenderEventSystem::ProcessEvents() 
 {
 	unsigned int count = 0;
 	//FL_ENGINE_WARN("eventQueue Size: {0}. \n", eventQueue.size());
@@ -93,19 +93,14 @@ void Renderer::SetDrawStates()
 	entity = fmemory::fnew_arr<Entity>(500);
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-<<<<<<< HEAD:Falcon/Falcon/Rendering/PipeLine/Renderer.cpp
 	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-=======
-	//mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
-	shader = fmemory::fnew<Shader>("Shader/VertexShader.vert", "Shader/FragmentShader.frag");
->>>>>>> 40b9d8aa0cb907f7a410bbfc542de38254fe9fbc:Falcon/Falcon/Rendering/Renderer.cpp
 	for(u32 i = 0; i < 500; i++) {
 		entity[i].AddComponent<RenderComponent>();
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
 		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-		//rd->m_mesh->GetMaterial()->m_shader = shader;
+		rd->m_mesh->GetMaterial()->shader = shader;
 
 		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
@@ -122,7 +117,7 @@ void Renderer::SetDrawStates()
 *@param[in] An integer indicating height.
 *@param[in] A float indicating zoom.
 *@param[in] A 4x4 matrix defined in glm library.
-*@param[in] A float indicating delta time for the current frame.
+*@param[in] A float indicating delta time for the current frame. 
 */
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
