@@ -1,7 +1,7 @@
 #ifndef OPENGLERRORHANDLER_H
 #define OPENGLERRORHANDLER_H
 
-#include <System/Log.h>
+#include <Log.h>
 namespace GLErrorHandler {
 	void glfwError(int id, const char* description)
 	{

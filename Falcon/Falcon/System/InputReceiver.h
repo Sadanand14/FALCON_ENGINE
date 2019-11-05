@@ -4,9 +4,9 @@
 #define MAX_KEYS 500
 #define MAX_MOUSE_KEYS 32
 
-#include <Core/KeyEvents.h>
-#include <Core/EventManager.h>
-#include <Rendering/WindowHandler.h>
+#include <Events/KeyEvents.h>
+#include <Events/EventManager.h>
+#include <WindowHandler.h>
 #include "Log.h"
 #include <boost/array.hpp>
 

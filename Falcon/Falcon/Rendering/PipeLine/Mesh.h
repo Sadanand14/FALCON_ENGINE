@@ -10,12 +10,14 @@
 
 #include "Memory/fmemory.h"
 #include "Shader.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexLayout.h"
 #include "Material.h"
-#include <System/Types.h>
+
+#include <BufferDefinitions/VertexArray.h>
+#include <BufferDefinitions/VertexBuffer.h>
+#include <BufferDefinitions/IndexBuffer.h>
+#include <BufferDefinitions/VertexLayout.h>
+
+#include <Types.h>
 
 
 /**

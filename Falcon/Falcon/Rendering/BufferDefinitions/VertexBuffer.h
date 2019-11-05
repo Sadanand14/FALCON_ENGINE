@@ -2,7 +2,7 @@
 #define VERTEX_BUFFER_H
 
 #include "framework.h"
-#include <System/Types.h>
+#include <Types.h>
 
 /**
 * A Vertex Buffer Class to initialize and store Vertex Data into a buffer using OpenGL commands..

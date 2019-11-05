@@ -43,13 +43,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Debug;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Debug;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Rendering;$(ProjectDir)Core;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)Rendering;$(ProjectDir)Core;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Release;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Release;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
@@ -60,7 +60,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>&amp;(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -81,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>&amp;(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -97,24 +97,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
+    <ClInclude Include="Core\Components\AIComponent.h" />
+    <ClInclude Include="Core\Components\AnimationComponent.h" />
+    <ClInclude Include="Core\Components\AudioComponent.h" />
+    <ClInclude Include="Core\Components\BasicComponent.h" />
+    <ClInclude Include="Core\Components\CameraComponent.h" />
+    <ClInclude Include="Core\Components\InputComponent.h" />
+    <ClInclude Include="Core\Components\PhysicsComponent.h" />
+    <ClInclude Include="Core\Components\RenderCcomponent.h" />
+    <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
-    <ClInclude Include="Core\Event.h" />
-    <ClInclude Include="Core\EventManager.h" />
-    <ClInclude Include="Core\EventSystem.h" />
-    <ClInclude Include="Core\KeyEvents.h" />
-    <ClInclude Include="Core\RenderEvent.h" />
-    <ClInclude Include="Core\SceneGraph.h" />
-    <ClInclude Include="Rendering\IndexBuffer.h" />
-    <ClInclude Include="Rendering\Material.h" />
-    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Core\Events\Event.h" />
+    <ClInclude Include="Core\Events\EventManager.h" />
+    <ClInclude Include="Core\Events\EventSystem.h" />
+    <ClInclude Include="Core\Events\KeyEvents.h" />
+    <ClInclude Include="Core\Events\RenderEvent.h" />
+    <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
+    <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
+    <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
+    <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
-    <ClInclude Include="Rendering\Renderer.h" />
-    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\PipeLine\Material.h" />
+    <ClInclude Include="Rendering\PipeLine\Mesh.h" />
+    <ClInclude Include="Rendering\PipeLine\Renderer.h" />
+    <ClInclude Include="Rendering\PipeLine\Shader.h" />
+    <ClInclude Include="Rendering\PipeLine\Texture.h" />
     <ClInclude Include="Rendering\stb_image.h" />
-    <ClInclude Include="Rendering\Texture.h" />
-    <ClInclude Include="Rendering\VertexArray.h" />
-    <ClInclude Include="Rendering\VertexBuffer.h" />
-    <ClInclude Include="Rendering\VertexLayout.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="System\framework.h" />
@@ -138,25 +146,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Rendering\Shader\FragmentShader.frag" />
+    <None Include="Rendering\Shader\VertexShader.vert" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
-    <ClCompile Include="Core\EventManager.cpp" />
-    <ClCompile Include="Core\EventSystem.cpp" />
-    <ClCompile Include="Core\KeyEvents.cpp" />
-    <ClCompile Include="Core\SceneGraph.cpp" />
-    <ClCompile Include="Rendering\IndexBuffer.cpp" />
-    <ClCompile Include="Rendering\Material.cpp" />
-    <ClCompile Include="Rendering\Mesh.cpp" />
-    <ClCompile Include="Rendering\Renderer.cpp" />
-    <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Core\Events\EventManager.cpp" />
+    <ClCompile Include="Core\Events\EventSystem.cpp" />
+    <ClCompile Include="Core\Events\KeyEvents.cpp" />
+    <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
+    <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Material.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
-    <ClCompile Include="Rendering\VertexArray.cpp" />
-    <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
