@@ -102,7 +102,8 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	if(jsonFile.is_open()) {
 		size = jsonFile.tellg();
 		jsonFile.seekg(std::ios::beg);
-		json = fmemory::fnew<char>(size + 1);
+		json = fmemory::fnew_arr<char>(size + 1);
+		//json = new char[size + 1];
 		jsonFile.read(json, size);
 		json[size] = 0;
 		jsonFile.close();

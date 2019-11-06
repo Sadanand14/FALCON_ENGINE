@@ -10,6 +10,7 @@
 #include <Memory/fmemory.h>
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
+#include "Core/Scene.h"
 
 class Game {
 

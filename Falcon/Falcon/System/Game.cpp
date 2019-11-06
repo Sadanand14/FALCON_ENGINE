@@ -1,9 +1,9 @@
 #include "Game.h"
 
-//Camera 
+//Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-//Camera Setup	
+//Camera Setup
 float lastX = 0.0f;
 float lastY = 0.0f;
 bool firstMouse = true;
@@ -15,7 +15,7 @@ Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 
 }
 
-Game::~Game() 
+Game::~Game()
 {
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
@@ -24,8 +24,8 @@ Game::~Game()
 	fmemory::MeoryManagerShutDown();
 }
 
-bool Game::Initialize() 
-{	
+bool Game::Initialize()
+{
 	Log::Init();
 
 	fmemory::MemoryManagerInit();
@@ -48,8 +48,10 @@ bool Game::Initialize()
 	return true;
 }
 
-void Game::Update() 
+void Game::Update()
 {
+	Scene testScene;
+	testScene.LoadScene("../Assets/Scenes/scene.json");
 	if (!m_window1->WindowCloseStatus())
 	{
 		float dt, rate;
@@ -72,6 +74,7 @@ void Game::Update()
 		m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera.m_Zoom, view, dt);
 		m_renderer->Draw();
 
+
 		//Game Input
 		ProcessInput(m_window1->GetWindow(), dt);
 
@@ -82,10 +85,12 @@ void Game::Update()
 		glfwPollEvents();
 
 	}
-	else 
+	else
 	{
 		m_windowClosed = true;
 	}
+
+	testScene.SaveScene("../Assets/Scenes/scene2.json");
 }
 
 void ProcessInput(GLFWwindow* window, float deltaTime)

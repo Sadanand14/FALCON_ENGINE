@@ -137,8 +137,7 @@ void Scene::LoadScene(const char* sceneFilePath)
 			const rapidjson::Value& children = world[i]["children"];
 			for(rapidjson::SizeType j = 0; j < children.Size(); j++)
 			{
-				entity.children.push_back(children[j].GetInt());
-				//printf("%d\n", children[j].GetInt());
+				entity.AddChild(children[j].GetInt());
 			}
 
 			//TODO: Add the rest of components when we get them
@@ -252,21 +251,21 @@ void Scene::SaveScene(const char* sceneFilePath)
 		rapidjson::Value pos(rapidjson::kArrayType);
 		for(rapidjson::SizeType j = 0; j < 3; j++)
 		{
-			pos.PushBack(m_entities[i].GetTransform().GetPosition()[j], alloc);
+			pos.PushBack(m_entities[i].GetTransform()->GetPosition()[j], alloc);
 		}
 		entity.AddMember("pos", pos, alloc);
 
 		rapidjson::Value rot(rapidjson::kArrayType);
 		for(rapidjson::SizeType j = 0; j < 4; j++)
 		{
-			rot.PushBack(m_entities[i].GetTransform().GetRotation()[j], alloc);
+			rot.PushBack(m_entities[i].GetTransform()->GetRotation()[j], alloc);
 		}
 		entity.AddMember("rot", rot, alloc);
 
 		rapidjson::Value scale(rapidjson::kArrayType);
 		for(rapidjson::SizeType j = 0; j < 3; j++)
 		{
-			scale.PushBack(m_entities[i].GetTransform().GetScale()[j], alloc);
+			scale.PushBack(m_entities[i].GetTransform()->GetScale()[j], alloc);
 		}
 		entity.AddMember("scale", scale, alloc);
 
@@ -285,9 +284,9 @@ void Scene::SaveScene(const char* sceneFilePath)
 
 		//Add children
 		rapidjson::Value children(rapidjson::kArrayType);
-		for(i32 j = 0; j < m_entities[i].children.size(); j++)
+		for(i32 j = 0; j < m_entities[i].GetChildren().size(); j++)
 		{
-			children.PushBack(m_entities[i].children[j], alloc);
+			children.PushBack(m_entities[i].GetChild(j), alloc);
 		}
 
 		entity.AddMember("children", children, alloc);
