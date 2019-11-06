@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "Memory/fmemory.h"
+#include <Memory/fmemory.h>
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -93,7 +93,6 @@ void Renderer::SetDrawStates()
 	entity = fmemory::fnew_arr<Entity>(500);
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	for(u32 i = 0; i < 500; i++) {
 		entity[i].AddComponent<RenderComponent>();
