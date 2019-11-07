@@ -80,7 +80,8 @@ void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
