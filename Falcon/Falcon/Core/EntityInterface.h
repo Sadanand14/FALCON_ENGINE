@@ -38,6 +38,7 @@ private:
 	InputComponent* m_inputC;
 	AnimationComponent* m_animationC;
 	AIComponent* m_AIComponent;
+	boost::container::vector<i32> m_children;
 
 public:
 
@@ -47,7 +48,7 @@ public:
 	{
 		m_transform = new Transform();
 	}
-	Entity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
 		m_AIComponent(nullptr)
 	{
@@ -56,6 +57,9 @@ public:
 	~Entity() {}
 
 	inline Transform* GetTransform() { return m_transform; }
+	inline boost::container::vector<i32> GetChildren() { return m_children; }
+	inline i32 GetChild(i32 child) { return child < m_children.size() ? m_children[child] : -1; }
+	inline void AddChild(int childIdx) { m_children.push_back(childIdx); }
 
 	template<typename F>
 	inline void AddComponent() {};

@@ -95,6 +95,25 @@ u32 AssetManager::LoadTexture(std::string const& path)
 */
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
+	//Get file data
+	char* json = nullptr;
+	int32_t size;
+	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
+	if(jsonFile.is_open()) {
+		size = jsonFile.tellg();
+		jsonFile.seekg(std::ios::beg);
+		json = fmemory::fnew_arr<char>(size + 1);
+		//json = new char[size + 1];
+		jsonFile.read(json, size);
+		json[size] = 0;
+		jsonFile.close();
+	}
+
+	//Start json doc
+	rapidjson::Document doc;
+	doc.Parse(json);
+	fmemory::fdelete<char>(json);
+
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
 	mat->albedoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_albedo.tga");
