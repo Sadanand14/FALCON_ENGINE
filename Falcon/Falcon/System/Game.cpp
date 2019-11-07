@@ -12,11 +12,13 @@ void ProcessInput(GLFWwindow* window, float deltaTime);
 
 Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 {
-
+	m_scene = new Scene();
 }
 
 Game::~Game()
 {
+	m_scene->SaveScene("../Assets/Scenes/scene2.json");
+	delete m_scene;
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
 	fmemory::fdelete<InputReceiver>(m_inputClass);
@@ -44,14 +46,13 @@ bool Game::Initialize()
 
 	//Set Draw States in Renderer
 	m_renderer->SetDrawStates();
-
+	
+	m_scene->LoadScene("../Assets/Scenes/scene.json");
 	return true;
 }
 
 void Game::Update()
 {
-	Scene testScene;
-	testScene.LoadScene("../Assets/Scenes/scene.json");
 	if (!m_window1->WindowCloseStatus())
 	{
 		float dt, rate;
@@ -90,7 +91,7 @@ void Game::Update()
 		m_windowClosed = true;
 	}
 
-	testScene.SaveScene("../Assets/Scenes/scene2.json");
+	
 }
 
 void ProcessInput(GLFWwindow* window, float deltaTime)

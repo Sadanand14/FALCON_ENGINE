@@ -54,20 +54,20 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	if (data)
 	{
 		GLenum format = 0;
-		switch(nrComponents) {
-			case 1:
-				format = GL_RED;
-				break;
-			case 2:
-				format = GL_RG;
-				break;
-			case 3:
-				format = GL_RGB;
-				break;
-			case 4:
-			default:
-				format = GL_RGBA;
-				break;
+		switch (nrComponents) {
+		case 1:
+			format = GL_RED;
+			break;
+		case 2:
+			format = GL_RG;
+			break;
+		case 3:
+			format = GL_RGB;
+			break;
+		case 4:
+		default:
+			format = GL_RGBA;
+			break;
 		}
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -99,7 +99,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	char* json = nullptr;
 	int32_t size;
 	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
-	if(jsonFile.is_open()) {
+	if (jsonFile.is_open()) {
 		size = jsonFile.tellg();
 		jsonFile.seekg(std::ios::beg);
 		json = fmemory::fnew_arr<char>(size + 1);
@@ -116,11 +116,22 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
-	mat->albedoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_albedo.tga");
-	//mat->roughnessTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_rough.tga");
-	//mat->normalTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_normal.tga");
-	//mat->metallicTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_metal.tga");
-	//mat->aoTex.textureID = LoadTexture("../Assets/Models/cerb/cerberus_ao.tga");
+
+	std::string albedoPath = doc["albedo"].GetString();
+	std::string roughPath = doc["roughness"].GetString();
+	std::string normalPath = doc["normal"].GetString();
+	std::string metallicPath = doc["metallic"].GetString();
+	std::string aoPath = doc["ao"].GetString();
+	mat->m_albedoTex.textureID = LoadTexture(albedoPath);
+	//mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString());
+	//mat->m_normalTex.textureID = LoadTexture(doc["normal"].GetString());
+	//mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString());
+	//mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString());
+	mat->SetTexturePath(albedoPath, 0);
+	mat->SetTexturePath(roughPath, 1);
+	mat->SetTexturePath(normalPath, 2);
+	mat->SetTexturePath(metallicPath, 3);
+	mat->SetTexturePath(aoPath, 4);
 
 	return mat;
 }

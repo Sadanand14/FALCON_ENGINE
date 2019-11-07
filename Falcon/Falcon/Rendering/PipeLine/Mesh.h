@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-#include "Memory/fmemory.h"
+#include <Memory/fmemory.h>
 #include "Shader.h"
 #include "Material.h"
 
@@ -36,7 +36,9 @@ private:
 	IndexBuffer* m_IBO;
 	Material* m_material = nullptr;
 	boost::container::vector<glm::mat4> m_worldMats;
-	
+	std::string m_path;
+	std::string m_jsonPath;
+
 	//Functions
 
 public:
@@ -51,12 +53,17 @@ public:
 	//Functions
 	void SetupMesh();
 	void PreallocMatrixAmount(u32 maxMatrices);
-	void AddWorldMatrix(const glm::mat4 &mat);
+	void AddWorldMatrix(const glm::mat4& mat);
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void SetMaterial(Material* mat);
 	Material* GetMaterial();
 	void Bind();
+
+	inline const std::string& GetJsonPath() const { return m_jsonPath; }
+	inline void SetJsonPath(const std::string& jsonPath) { m_jsonPath = jsonPath; }
+	inline const std::string& GetPath() const { return m_path; }
+	inline void SetPath(const std::string& path) { m_path = path; }
 
 };
 
