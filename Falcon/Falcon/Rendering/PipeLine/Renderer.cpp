@@ -17,13 +17,13 @@ RenderEventSystem::RenderEventSystem()
 /**
 * Function to process all the events available in the event queue.
 */
-void RenderEventSystem::ProcessEvents() 
+void RenderEventSystem::ProcessEvents()
 {
 	unsigned int count = 0;
 	//FL_ENGINE_WARN("eventQueue Size: {0}. \n", eventQueue.size());
 	//std::cout << "eventQueue Size: " << eventQueue.size()<<"\n";
 	//count++;
-	while(!eventQueue.empty())
+	while (!eventQueue.empty())
 	{
 		eventQueue.pop_front();
 		std::function<void()>f = std::bind(&RenderEventSystem::PrintReception, this);
@@ -94,12 +94,12 @@ void Renderer::SetDrawStates()
 
 	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	for(u32 i = 0; i < 500; i++) {
+	for (u32 i = 0; i < 500; i++) {
 		entity[i].AddComponent<RenderComponent>();
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
 		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-		rd->m_mesh->GetMaterial()->shader = shader;
+		//rd->m_mesh->GetMaterial()->m_shader = shader;
 
 		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
@@ -116,7 +116,7 @@ void Renderer::SetDrawStates()
 *@param[in] An integer indicating height.
 *@param[in] A float indicating zoom.
 *@param[in] A 4x4 matrix defined in glm library.
-*@param[in] A float indicating delta time for the current frame. 
+*@param[in] A float indicating delta time for the current frame.
 */
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
@@ -137,22 +137,22 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for(u32 i = 0; i < 500; i++) {
+	for (u32 i = 0; i < 500; i++) {
 		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
 
 		m->AddWorldMatrix(entity[i].GetTransform()->GetModel());
 
-		if(queuedMeshes.find(m) == queuedMeshes.end())
+		if (queuedMeshes.find(m) == queuedMeshes.end())
 			queuedMeshes.insert(m);
 	}
 
 	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
 		(*it)->Bind();
 
-		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+		for (u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
 		{
 			i32 count;
-			if(i < (*it)->m_indexOffsets.size() - 1)
+			if (i < (*it)->m_indexOffsets.size() - 1)
 				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
 			else
 				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];

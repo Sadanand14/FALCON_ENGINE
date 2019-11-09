@@ -4,7 +4,7 @@
 /**
 *Basic Mesh Constructor
 */
-Mesh::Mesh():m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
+Mesh::Mesh() :m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 {
 
 }
@@ -29,7 +29,7 @@ void Mesh::SetupMesh()
 	m_VBO1->Unbind();
 
 	m_VBO2->Bind();
-	for(u32 i = 0; i < 4; i++)
+	for (u32 i = 0; i < 4; i++)
 	{
 		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
 	}
@@ -37,48 +37,53 @@ void Mesh::SetupMesh()
 }
 
 /**
-*
-*/
+ * Preallocates the world matrix vector with a specified size
+ * @param maxMatrices - The maximum number of items in the world
+ */
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
 	m_worldMats.resize(maxMatrices);
 }
 
 /**
-*
-*/
-void Mesh::AddWorldMatrix(const glm::mat4 &mat)
+ * Adds a world matrix to the list of matrices for instanced rendering
+ * @param mat - The world matrix to add
+ */
+void Mesh::AddWorldMatrix(const glm::mat4& mat)
 {
 	m_worldMats.push_back(mat);
 }
 
 /**
-*
-*/
+ * Clears the meshes world matrices
+ */
 void Mesh::ClearWorldMatrices()
 {
 	m_worldMats.clear();
 }
 
 /**
-*
-*/
+ * Gets the size of the world matrices array
+ * @return The size of the world matrix array
+ */
 u32 Mesh::GetWorldMatrixAmount()
 {
 	return m_worldMats.size();
 }
 
 /**
-*
-*/
+ * Sets the material of the mesh
+ * @param mat - The new material for the mesh
+ */
 void Mesh::SetMaterial(Material* mat)
 {
 	m_material = mat;
 }
 
 /**
-*
-*/
+ * Gets the material of the mesh
+ * @return - The material of the mesh
+ */
 Material* Mesh::GetMaterial()
 {
 	return m_material;
@@ -96,7 +101,7 @@ void Mesh::Bind()
 	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_VBO2->Unbind();
 
-	if(m_material != nullptr)
+	if (m_material != nullptr)
 		m_material->Bind();
 }
 
@@ -105,8 +110,8 @@ void Mesh::Bind()
 */
 Mesh::~Mesh()
 {
-	fmemory::fdelete<VertexArray>( m_VAO);
+	fmemory::fdelete<VertexArray>(m_VAO);
 	fmemory::fdelete<VertexBuffer>(m_VBO2);
-	fmemory::fdelete<VertexBuffer> (m_VBO1);
+	fmemory::fdelete<VertexBuffer>(m_VBO1);
 	fmemory::fdelete<IndexBuffer>(m_IBO);
 }
