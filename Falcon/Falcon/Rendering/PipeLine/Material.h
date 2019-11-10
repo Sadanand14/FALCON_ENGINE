@@ -27,10 +27,11 @@ public:
 	glm::vec3 m_normal = glm::vec3(0.5f, 0.5, 1.0f);
 	float m_metallic = 0.0f;
 	float m_ao = 0.0f;
-
 	Shader* m_shader = nullptr;
+	
 
 	void Bind();
+	inline void SetShader(Shader* shader) { m_shader = shader; }
 	inline const std::string& GetPath() { return m_path; }
 	inline void SetPath(const std::string& path) { m_path = path; }
 	inline const std::string& GetTexturePath(u32 idx) { return m_texPaths[idx]; }

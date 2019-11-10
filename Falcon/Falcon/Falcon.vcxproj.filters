@@ -26,8 +26,8 @@
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="System\Application.cpp" />
-    <ClCompile Include="Core\Scene\Scene.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Core\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -77,8 +77,8 @@
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
-    <ClInclude Include="Core\Scene\Scene.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
+    <ClInclude Include="Core\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

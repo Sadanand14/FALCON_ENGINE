@@ -45,7 +45,7 @@ void RenderEventSystem::SubscribeToEvents()
 //test function
 void RenderEventSystem::PrintReception()
 {
-	FL_GAME_INFO("Event Executed using Job system.");
+	//FL_GAME_INFO("Event Executed using Job system.");
 	//std::cout<<"Event Executed SuccessFully on thread :"<< boost::this_thread::get_id()<<"\n";
 }
 //////////////////////
@@ -90,23 +90,27 @@ void Renderer::CreateDrawStates()
 */
 void Renderer::SetDrawStates()
 {
-	entity = fmemory::fnew_arr<Entity>(500);
+	//entity = fmemory::fnew_arr<Entity>(500);
 
-	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	for (u32 i = 0; i < 500; i++) {
-		entity[i].AddComponent<RenderComponent>();
-		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
-		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-		//rd->m_mesh->GetMaterial()->m_shader = shader;
+	//for (u32 i = 0; i < 500; i++) {
+	//	entity[i].AddComponent<RenderComponent>();
+	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
+	//	rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	//	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+	//	//rd->GetMaterial()->m_shader = shader;
 
-		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
-		// Model transformations
-		entity[i].GetTransform()->SetPosition(pos);
-		entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	}
+	//	glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+	//	// Model transformations
+	//	entity[i].GetTransform()->SetPosition(pos);
+	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	//}
 	shader->UseShader();
+	for (unsigned int i = 0; i < m_entity.size(); i++) 
+	{
+		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+	}
 }
 
 /**
@@ -118,14 +122,20 @@ void Renderer::SetDrawStates()
 *@param[in] A 4x4 matrix defined in glm library.
 *@param[in] A float indicating delta time for the current frame.
 */
+
+float temp = 0.0f;
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
+	temp += 1.0f;
 	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
 	shader->SetMat4("projection", projection);
 
 	// camera/view transformations
 	shader->SetMat4("view", view);
+
+	//m_entity[0]->GetTransform()->SetRotation(glm::quat_cast(glm::rotate(glm::mat3(1.0f), ()));
+
 }
 
 /**
@@ -137,10 +147,10 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (u32 i = 0; i < 500; i++) {
-		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
+	for (u32 i = 0; i < m_entity.size(); i++) {
+		Mesh* m = m_entity[i]->GetComponent<RenderComponent>()->m_mesh;
 
-		m->AddWorldMatrix(entity[i].GetTransform()->GetModel());
+		m->AddWorldMatrix(m_entity[i]->GetTransform()->GetModel());
 
 		if (queuedMeshes.find(m) == queuedMeshes.end())
 			queuedMeshes.insert(m);

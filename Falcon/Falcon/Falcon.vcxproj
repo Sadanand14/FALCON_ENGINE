@@ -107,12 +107,12 @@
     <ClInclude Include="Core\Components\RenderCcomponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
+    <ClInclude Include="Core\EntityManager.h" />
     <ClInclude Include="Core\Events\Event.h" />
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
-    <ClInclude Include="Core\Scene\Scene.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
@@ -155,10 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
+    <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Core\Events\EventManager.cpp" />
     <ClCompile Include="Core\Events\EventSystem.cpp" />
     <ClCompile Include="Core\Events\KeyEvents.cpp" />
-    <ClCompile Include="Core\Scene\Scene.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />

@@ -14,21 +14,21 @@ typedef boost::container::vector<SceneNode*,fmemory::STLAllocator<SceneNode*>> n
 
 class SceneNode 
 {
-	const char* m_filePath;
-
 	bool m_updateFlag;
 	SceneNode* m_parent;
 	nodeVector m_childNodes;
 	
-	glm::mat4 m_worldMatrix;
+	glm::mat4 m_ReferenceMatrix;
 	Entity* m_entity;
 	Status m_status;
 
-	inline void UpdateWorldMatrixWM(glm::mat4 matrix) { m_worldMatrix = matrix; }
+	inline void UpdateWorldMatrixWM(glm::mat4 matrix) { m_ReferenceMatrix = matrix; }
 
 public:
-	SceneNode(const char* path);
-	SceneNode(const char* path, SceneNode* parent);
+
+	SceneNode();
+	SceneNode(Entity* entity);
+	SceneNode(SceneNode* parent);
 	SceneNode(SceneNode** childArray, unsigned int size);
 	~SceneNode();
 
@@ -38,7 +38,7 @@ public:
 
 	inline SceneNode* GetParent() { return m_parent; }
 	inline Entity* GetEntity() { return m_entity; }
-	inline glm::mat4 GetWM() { return m_worldMatrix; }
+	inline glm::mat4 GetWM() { return m_ReferenceMatrix; }
 
 
 	void SetStatus(Status status);
@@ -46,19 +46,37 @@ public:
 	void RemoveChild(SceneNode* child);
 	void RemoveChild(unsigned int index);
 
-	void LoadEntity();
 	void UpdateEntity();
 
+	
 	inline SceneNode* GetChildByIndex(unsigned int index) { return m_childNodes[index]; }
 	inline nodeVector GetChildren() { return m_childNodes; }
 };
 
+struct NodeWithOffset
+{
+	SceneNode* m_sceneNode;
+	unsigned int m_nextOffset;
+};
+
 class SceneGraph 
 {
+private:
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> entityList;
+
 	SceneNode* rootNode;
-	
-	void LoadScene();
-	void UpdateSCene();
+	NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index);
+public:
+
+	SceneGraph(const char* sceneFilePath);
+	~SceneGraph();
+	inline boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> GetEntities() 
+	{
+		return entityList;
+	}
+	void UpdateScene();
+
 };
 
 #endif // !1
+

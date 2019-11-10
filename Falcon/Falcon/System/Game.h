@@ -10,7 +10,7 @@
 #include <Memory/fmemory.h>
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
-#include <Scene/Scene.h>
+#include <Scene/SceneGraph.h>
 
 class Game {
 
@@ -18,7 +18,8 @@ class Game {
 	Renderer* m_renderer;
 	WindowClass* m_window1;
 	InputReceiver* m_inputClass;
-	Scene* m_scene;
+	SceneGraph* m_scene;
+	//Scene* m_scene;
 public:
 	bool m_gameCrashed, m_windowClosed;
 
