@@ -18,6 +18,19 @@
 #include <map>
 #include <vector>
 
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+
+//Include the pretty writer in debug mode (easier to read)
+#if defined BUILD_DEBUG_MODE
+#include <rapidjson/prettywriter.h>
+#define Writer PrettyWriter
+#else
+#include <rapidjson/writer.h>
+#endif
+
+#include <Memory/fmemory.h>
+
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
@@ -42,4 +55,3 @@ public:
 
 
 #endif
-

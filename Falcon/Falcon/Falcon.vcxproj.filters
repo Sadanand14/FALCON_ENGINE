@@ -26,6 +26,9 @@
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="System\Application.cpp" />
+    <ClCompile Include="Core\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Core\EntityManager.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -75,12 +78,15 @@
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
+    <ClInclude Include="Core\Scene\SceneGraph.h" />
+    <ClInclude Include="Core\EntityManager.h" />
+    <ClInclude Include="Rendering\PipeLine\Octree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
-    <None Include="packages.config" />
     <None Include="Rendering\Shader\FragmentShader.frag" />
     <None Include="Rendering\Shader\VertexShader.vert" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

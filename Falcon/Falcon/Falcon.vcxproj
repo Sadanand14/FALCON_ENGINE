@@ -107,11 +107,13 @@
     <ClInclude Include="Core\Components\RenderCcomponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
+    <ClInclude Include="Core\EntityManager.h" />
     <ClInclude Include="Core\Events\Event.h" />
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
+    <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
@@ -119,6 +121,7 @@
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
+    <ClInclude Include="Rendering\PipeLine\Octree.h" />
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
@@ -153,14 +156,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
+    <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Core\Events\EventManager.cpp" />
     <ClCompile Include="Core\Events\EventSystem.cpp" />
     <ClCompile Include="Core\Events\KeyEvents.cpp" />
+    <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />

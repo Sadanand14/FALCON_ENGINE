@@ -37,6 +37,8 @@ public:
 	template<typename function_type>
 	void submit(function_type func);
 
+	template<typename function_type, typename ...Args>
+	void submit(function_type func, Args ... as);
 };
 
 /**
@@ -52,5 +54,15 @@ void ThreadPool::submit(function_type func)
 	mtx.unlock();
 }
 
+
+template<typename function_type, typename ...Args>
+void ThreadPool::submit(function_type func, Args ... as)
+{
+	auto function = [func, as...]() {func(as...); };
+
+	mtx.lock();
+	workerQueue.push(function);
+	mtx.unlock();
+}
 
 #endif // !1

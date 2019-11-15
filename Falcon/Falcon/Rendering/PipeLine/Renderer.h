@@ -54,7 +54,7 @@ public:
 */
 class Renderer
 {
-	Entity* entity;
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> m_entity;
 	Shader* shader;
 	RenderEventSystem* m_RES;
 	boost::container::set<Mesh*> queuedMeshes;
@@ -72,6 +72,10 @@ public:
 	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
 	void Draw();
 
+	inline void SetEntities(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> entities) 
+	{
+		m_entity = entities;
+	}
 };
 
 #endif // !RENDERER_H
