@@ -26,86 +26,75 @@ void Mesh::SetupMesh()
 	m_VAO->AddVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Normal), 0);
 	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
 	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
+	m_VAO->AddVertexAttribPointer(5, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, bone), 0);
+	m_VAO->AddVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, bone) + offsetof(Bone, weights), 0);
 	m_VBO1->Unbind();
 
 	m_VBO2->Bind();
 	for(u32 i = 0; i < 4; i++)
 	{
-		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
+		m_VAO->AddVertexAttribPointer(7 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
 	}
 	m_VBO2->Unbind();
 }
 
 /**
-*
-*/
+ * Preallocates the world matrix vector with a specified size
+ * @param maxMatrices - The maximum number of items in the world
+ */
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
-	m_animationMats.resize(maxMatrices);
 	m_worldMats.resize(maxMatrices);
 }
 
 /**
-*
-*/
+ * Adds a world matrix to the list of matrices for instanced rendering
+ * @param The world matrix to add
+ */
 void Mesh::AddWorldMatrix(const glm::mat4 &mat)
 {
 	m_worldMats.push_back(mat);
 }
 
 /**
- * Adds a matrix to the animation matricies
- * @param The animation matrix to
+ * Adds an animation matrix to the list of matrices for instanced rendering
+ * @param The vector of animation matrices to add
  */
-void Mesh::AddAnimationMatrix(const glm::mat4 &mat)
+void Mesh::AddAnimationMatrices(ozz::Vector<ozz::math::Float4x4>::Std* animMats)
 {
-	m_animationMats.push_back(mat);
+	m_animMats = animMats;
 }
 
 /**
-*
-*/
+ * Clears the meshes world matrices
+ */
 void Mesh::ClearWorldMatrices()
 {
 	m_worldMats.clear();
 }
 
 /**
- * Clears the animation matrices
+ * Gets the size of the world matrices array
+ * @return The size of the world matrix array
  */
-void Mesh::ClearAnimationMatrices()
-{
-	m_animationMats.clear();
-}
-
-/**
-*
-*/
 u32 Mesh::GetWorldMatrixAmount()
 {
 	return m_worldMats.size();
 }
 
 /**
- * Gets the amount of animation matrices
- * @return The size of the animation matrix array
+ * Sets the material of the mesh
+ * @param mat - The new material for the mesh
  */
-u32 Mesh::GetAnimationMatrixAmount()
-{
-	return m_animationMats.size();
-}
-
-/**
-*
-*/
 void Mesh::SetMaterial(Material* mat)
 {
 	m_material = mat;
 }
 
 /**
-*
-*/
+ * Gets the material of the mesh
+ * @return - The material of the mesh
+ */
 Material* Mesh::GetMaterial()
 {
 	return m_material;
@@ -122,6 +111,9 @@ void Mesh::Bind()
 	m_VBO2->Bind();
 	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_VBO2->Unbind();
+
+	for(u32 i = 0; i < m_animMats->size(); i++)
+		m_material->shader->SetMat4("boneMats[" + std::to_string(i) + "]", (*m_animMats)[i]);
 
 	if(m_material != nullptr)
 		m_material->Bind();

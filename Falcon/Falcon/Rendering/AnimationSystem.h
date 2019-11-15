@@ -58,7 +58,6 @@ public:
  */
 class AnimationSystem
 {
-	Entity* entity;
 	boost::container::vector<AnimationComponent*> components;
 	//AnimationEventSystem* m_eventSystem;
 
@@ -68,7 +67,7 @@ public:
 
 	void Init();
 	void Update();
-
+	void RegisterComponent(AnimationComponent* anim);
 };
 
 #endif // !RENDERER_H

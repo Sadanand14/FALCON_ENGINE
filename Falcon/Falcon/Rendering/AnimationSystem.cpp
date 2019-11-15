@@ -70,12 +70,13 @@ void AnimationSystem::Update()
 		//Sample Animation at specified animation time
 		ozz::animation::SamplingJob samplingJob;
 		samplingJob.animation = &components[i]->anim->m_anim;
-		samplingJob.cache = &components[i]->anim->m_cache;
-		samplingJob.ratio = 0.0f;//components[i]->anim->m_controller.time_ratio();
+		samplingJob.cache = components[i]->anim->m_cache;
+		samplingJob.ratio = 0.5f;//components[i]->anim->m_controller.time_ratio();
 		samplingJob.output = ozz::make_range(components[i]->anim->m_locals);
 
 		if (!samplingJob.Run()) {
 			//error running job
+			FL_ENGINE_ERROR("Animation sample job failed!");
 		}
 
 		//Convert to model coords
@@ -86,6 +87,12 @@ void AnimationSystem::Update()
 
 		if (!ltmJob.Run()) {
 			//error running job
+			FL_ENGINE_ERROR("Animation LTM job failed!");
 		}
 	}
+}
+
+void AnimationSystem::RegisterComponent(AnimationComponent* anim)
+{
+	this->components.push_back(anim);
 }

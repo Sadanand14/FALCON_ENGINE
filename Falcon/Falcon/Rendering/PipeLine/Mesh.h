@@ -7,6 +7,9 @@
 #include <boost/container/vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <ozz/base/containers/vector.h>
+#include <ozz/base/maths/simd_math.h>
+#include <ozz/base/maths/vec_float.h>
 
 #include "Memory/fmemory.h"
 #include "Shader.h"
@@ -36,8 +39,7 @@ private:
 	IndexBuffer* m_IBO;
 	Material* m_material = nullptr;
 	boost::container::vector<glm::mat4> m_worldMats;
-	boost::container::vector<glm::mat4> m_animationMats;
-
+	ozz::Vector<ozz::math::Float4x4>::Std* m_animMats;
 	//Functions
 
 public:
@@ -45,7 +47,6 @@ public:
 	boost::container::vector<Vertex> m_vertexArray;
 	boost::container::vector<u32> m_indexArray;
 	boost::container::vector<u32> m_indexOffsets;
-	boost::container::vector<glm::mat4> m_transforms;
 
 	Mesh();
 	~Mesh();
@@ -54,15 +55,12 @@ public:
 	void SetupMesh();
 	void PreallocMatrixAmount(u32 maxMatrices);
 	void AddWorldMatrix(const glm::mat4 &mat);
-	void AddAnimationMatrix(const glm::mat4 &mat);
+	void AddAnimationMatrices(ozz::Vector<ozz::math::Float4x4>::Std* animMats);
 	void ClearWorldMatrices();
-	void ClearAnimationMatrices();
 	u32 GetWorldMatrixAmount();
-	u32 GetAnimationMatrixAmount();
 	void SetMaterial(Material* mat);
 	Material* GetMaterial();
 	void Bind();
-
 };
 
 #endif //!MESH_H

@@ -90,18 +90,21 @@ void Renderer::CreateDrawStates()
 */
 void Renderer::SetDrawStates()
 {
-	entity = fmemory::fnew_arr<Entity>(500);
+	entity = fmemory::fnew_arr<Entity>(50);
 
-	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/def/Defender.blend");
+	Mesh* mesh = AssetManager::LoadModel("../Assets/Models/def/astro_max.dae");
 	Animation* anim = AssetManager::LoadAnimation("../Assets/Models/def/skeleton.ozz");
 	mesh->SetMaterial(AssetManager::LoadMaterial("../Assets/Materials/"));
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	for(u32 i = 0; i < 500; i++) {
+	for(u32 i = 0; i < 50; i++) {
 		entity[i].AddComponent<RenderComponent>();
 		RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
 		rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
 		rd->m_mesh->GetMaterial()->shader = shader;
+
+		entity[i].AddComponent<AnimationComponent>();
+		entity[i].GetComponent<AnimationComponent>()->anim = anim;
 
 		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
 		// Model transformations
@@ -133,21 +136,24 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 /**
 * Main Draw Function for the Renderer
 */
-//TODO-> Have multiple Renderer Passes functionality
+//TODO: Have multiple Renderer Passes functionality
 void Renderer::Draw()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	for(u32 i = 0; i < 500; i++) {
+	for(u32 i = 0; i < 50; i++) {
 		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
 
 		m->AddWorldMatrix(entity[i].GetTransform()->GetModel());
 
+		AnimationComponent* animComp = entity[i].GetComponent<AnimationComponent>();
+
+		if(animComp)
+			m->AddAnimationMatrices(&animComp->anim->m_models);
+
 		if(queuedMeshes.find(m) == queuedMeshes.end())
 			queuedMeshes.insert(m);
 	}
-
 	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
 		(*it)->Bind();
 

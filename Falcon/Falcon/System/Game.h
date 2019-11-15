@@ -9,12 +9,14 @@
 #include <Events/EventManager.h>
 #include <Memory/fmemory.h>
 #include <PipeLine/Renderer.h>
+#include <Rendering/AnimationSystem.h>
 #include <Camera.h>
 
 class Game {
 
 	Timer* m_timer;
 	Renderer* m_renderer;
+	AnimationSystem* m_animator;
 	WindowClass* m_window1;
 	InputReceiver* m_inputClass;
 public:

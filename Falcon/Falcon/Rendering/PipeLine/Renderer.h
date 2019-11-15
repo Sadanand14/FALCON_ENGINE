@@ -72,6 +72,9 @@ public:
 	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
 	void Draw();
 
+	//TODO: REMOVE THIS
+	Entity* GetEntities() { return this->entity; }
+
 };
 
 #endif // !RENDERER_H

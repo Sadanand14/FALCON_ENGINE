@@ -2,7 +2,7 @@
 
 
 /**
-* Main Constructor for the Vertex Array Object Class. 
+* Main Constructor for the Vertex Array Object Class.
 */
 VertexArray::VertexArray():m_rendererID(0)
 {
@@ -20,9 +20,22 @@ VertexArray::~VertexArray()
 void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u32 offset, u32 divisor)
 {
 	//Vertex attribute pointers
+	switch(type)
+	{
+		case GL_UNSIGNED_INT:
+		case GL_INT:
+			glVertexAttribIPointer(loc, size, type, byteSize, (const void*)offset);	//designates the various
+			break;
+		case GL_DOUBLE:
+			glVertexAttribLPointer(loc, size, type, byteSize, (const void*)offset);	//designates the various
+			break;
+		case GL_FLOAT:
+		default:
+			glVertexAttribPointer(loc, size, type, normalize, byteSize, (const void*)offset);	//designates the various
+			break;
+	}
 	glEnableVertexAttribArray(loc);	// enables the locations for those attributes
-	glVertexAttribPointer(loc, size, type, normalize, byteSize, (const void*)offset);	//designates the various
-	glVertexAttribDivisor(loc, divisor);
+	glVertexAttribDivisor(loc, divisor); //Sets the vertex attrib divsor
 }
 
 /**

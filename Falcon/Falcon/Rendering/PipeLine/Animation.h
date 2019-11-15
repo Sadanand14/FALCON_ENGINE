@@ -13,14 +13,21 @@
 
 class Animation
 {
-//private:
 public:
 // 	ozz::sample::PlaybackController m_controller;
 	ozz::animation::Animation m_anim;
 	ozz::animation::Skeleton m_skel;
-	ozz::animation::SamplingCache m_cache;
+	ozz::animation::SamplingCache* m_cache = nullptr;
 	ozz::Vector<ozz::math::SoaTransform>::Std m_locals;
 	ozz::Vector<ozz::math::Float4x4>::Std m_models;
+
+	Animation() { }
+	~Animation() { if(m_cache != nullptr) fmemory::fdelete<ozz::animation::SamplingCache>(m_cache); }
+	void update() {
+		m_locals.resize(m_skel.num_soa_joints());
+		m_models.resize(m_skel.num_joints());
+		m_cache = fmemory::fnew<ozz::animation::SamplingCache>(m_skel.num_joints());
+	}
 };
 
 #endif

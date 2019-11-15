@@ -1,9 +1,9 @@
 #include "Game.h"
 
-//Camera 
+//Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-//Camera Setup	
+//Camera Setup
 float lastX = 0.0f;
 float lastY = 0.0f;
 bool firstMouse = true;
@@ -15,7 +15,7 @@ Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 
 }
 
-Game::~Game() 
+Game::~Game()
 {
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
@@ -24,8 +24,8 @@ Game::~Game()
 	fmemory::MeoryManagerShutDown();
 }
 
-bool Game::Initialize() 
-{	
+bool Game::Initialize()
+{
 	Log::Init();
 
 	fmemory::MemoryManagerInit();
@@ -33,6 +33,7 @@ bool Game::Initialize()
 	m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
 	m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
+	m_animator = fmemory::fnew<AnimationSystem>();
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 
 	//Camera
@@ -45,10 +46,16 @@ bool Game::Initialize()
 	//Set Draw States in Renderer
 	m_renderer->SetDrawStates();
 
+	Entity* ents = m_renderer->GetEntities();
+
+	for(u32 i = 0; i < 50; i++) {
+		m_animator->RegisterComponent(ents[i].GetComponent<AnimationComponent>());
+	}
+
 	return true;
 }
 
-void Game::Update() 
+void Game::Update()
 {
 	if (!m_window1->WindowCloseStatus())
 	{
@@ -68,6 +75,9 @@ void Game::Update()
 		//Camera
 		glm::mat4 view = camera.GetViewMatrix();
 
+		//Update animation animation system
+		m_animator->Update();
+
 		//Render
 		m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera.m_Zoom, view, dt);
 		m_renderer->Draw();
@@ -82,7 +92,7 @@ void Game::Update()
 		glfwPollEvents();
 
 	}
-	else 
+	else
 	{
 		m_windowClosed = true;
 	}

@@ -6,12 +6,14 @@
 #include <sstream>
 #include <iostream>
 
+//ozz
+#include <ozz/base/maths/vec_float.h>
+#include <ozz/base/maths/simd_math.h>
+
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-
 
 /**
 * Simple Shader struct to store Shader Code for any type of shader using OpenGL commands..
@@ -62,8 +64,9 @@ public:
 	void SetMat2(const std::string& name, const glm::mat2& mat) const;
 	void SetMat3(const std::string& name, const glm::mat3& mat) const;
 	void SetMat4(const std::string& name, const glm::mat4& mat) const;
+	void SetMat4(const std::string& name, const ozz::math::Float4x4 &mat) const;
 	GLint GetUniform(const GLchar* name);
-	
+
 };
 
 #endif //!SHADER_H

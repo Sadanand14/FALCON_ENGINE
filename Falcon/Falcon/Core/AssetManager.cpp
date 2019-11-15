@@ -28,13 +28,25 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 
 	// Process rootnode
-	ProcessNode(scene->mRootNode, scene, newmesh);
+	boost::container::map<std::string, u32> boneName;
+	boost::container::map<u32, Bone> vertBones;
+	u32 boneCount = 0;
+	ProcessNode(scene->mRootNode, scene, newmesh, boneName, vertBones, boneCount);
+
+	for(auto it = vertBones.begin(); it != vertBones.end(); it++)
+	{
+		printf("%d %d %d %d\n", it->second.ids);
+		printf("%f %f %f %f\n", it->second.weights);
+		newmesh->m_vertexArray[it->first].bone = it->second;
+		//printf("%d %d %d %d\n", newmesh->m_vertexArray[it->first].bone.ids);
+		//printf("%f %f %f %f\n", newmesh->m_vertexArray[it->first].bone.weights);
+	}
+
 	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
 	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->SetupMesh();
 	return newmesh;
 }
-
 
 /**
 *This function loads a texture file using the STBI library.
@@ -108,24 +120,45 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 
 Animation* AssetManager::LoadAnimation(std::string const &path)
 {
-	ozz::io::File file(path, "rb");
+	//Load the skeleton
+	ozz::io::File skeleFile("../Assets/Models/def/astro_max_skeleton.ozz", "rb");
 
 	//Check if open
-	if (!file.opened()) {
-		ozz::log::Err() << "Cannot open file " << filename << "." << std::endl;
+	if (!skeleFile.opened()) {
+		ozz::log::Err() << "Cannot open file " << path << "." << std::endl;
 		return nullptr;
 	}
 
-	ozz::io::IArchive archive(&file);
+	ozz::io::IArchive skeleArchive(&skeleFile);
 
-	if (!archive.TestTag<ozz::animation::Skeleton>()) {
+	if (!skeleArchive.TestTag<ozz::animation::Skeleton>()) {
+		ozz::log::Err() << "Archive doesn't contain the expected object type." << std::endl;
+		return nullptr;
+	}
+
+	//Load the animation
+	ozz::io::File animFile("../Assets/Models/def/astro_max_animation.ozz", "rb");
+
+	//Check if open
+	if (!animFile.opened()) {
+		ozz::log::Err() << "Cannot open file " << path << "." << std::endl;
+		return nullptr;
+	}
+
+	ozz::io::IArchive animArchive(&animFile);
+
+	if (!animArchive.TestTag<ozz::animation::Animation>()) {
 		ozz::log::Err() << "Archive doesn't contain the expected object type." << std::endl;
 		return nullptr;
 	}
 
 	Animation* anim = fmemory::fnew<Animation>();
-	archive >> anim->skeleton;
-// 	/archive >>
+	skeleArchive >> anim->m_skel;
+	animArchive >> anim->m_anim;
+
+	anim->update();
+
+	return anim;
 }
 
 
@@ -137,19 +170,19 @@ Animation* AssetManager::LoadAnimation(std::string const &path)
 *@param[in] An aiScene* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh)
+void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh, boost::container::map<std::string, u32> &bones, boost::container::map<u32, Bone> &vertBones, u32 &boneCount)
 {
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ProcessMesh(mesh, newmesh);
+		ProcessMesh(mesh, newmesh, bones, vertBones, boneCount);
 		//m_meshes.push_back(ProcessMesh(mesh, scene, newmesh));
 	}
 	//Process children nodes.
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene, newmesh);
+		ProcessNode(node->mChildren[i], scene, newmesh, bones, vertBones, boneCount);
 	}
 }
 
@@ -159,7 +192,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 *@param[in] An aiNode* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
+void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh, boost::container::map<std::string, u32> &bones, boost::container::map<u32, Bone> &vertBones, u32 &boneCount)
 {
 	// Data to load
 	size_t indexOffset = 0;
@@ -187,7 +220,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		{
 			glm::vec2 vec;
 			// a vertex can contain up to 8 different texture coordinates.
-			//To-Do: Add support for models that use more than one set of texture coordinates.
+			//TODO: Add support for models that use more than one set of texture coordinates.
 			vec.x = mesh->mTextureCoords[0][i].x;
 			vec.y = mesh->mTextureCoords[0][i].y;
 			vertex.TexCoords = vec;
@@ -207,6 +240,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		vertices.push_back(vertex);
 	}
 
+	ProcessBones(mesh, newmesh, bones, vertBones, boneCount, newmesh->m_vertexArray.size());
 	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 
 	newmesh->m_indexOffsets.push_back(newmesh->m_indexArray.size());
@@ -217,12 +251,49 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		aiFace face = mesh->mFaces[i];
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
-			indices.push_back(face.mIndices[j]);
+			newmesh->m_indexArray.push_back(face.mIndices[j]);
 	}
 
-	for (unsigned int i = 0; i < indices.size(); i++)
+}
+
+void AssetManager::ProcessBones(aiMesh* mesh, Mesh* newmesh, boost::container::map<std::string, u32> &bones, boost::container::map<u32, Bone> &vertBones, u32 &boneCount, u32 vertexOffset)
+{
+	for(u32 i = 0; i < mesh->mNumBones; i++)
 	{
-		newmesh->m_indexArray.push_back(indices[i]);
-	}
+		u32 boneInd = 0;
+		std::string boneName = mesh->mBones[i]->mName.data;
 
+		if(bones.find(boneName) == bones.end())
+		{
+			boneInd = boneCount;
+			boneCount++;
+		}
+
+		else
+			boneInd = bones[boneName];
+
+		bones[boneName] = boneInd;
+
+		for(u32 j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+		{
+			u32 vertID = vertexOffset + mesh->mBones[i]->mWeights[j].mVertexId;
+			float weight = mesh->mBones[i]->mWeights[j].mWeight;
+
+			//auto vert = ;
+			if(vertBones.find(vertID) != vertBones.end())
+			{
+				for(u32 k = 1; k < 4; k++)
+				{
+					if(vertBones[vertID].weights[k] == 0.0f)
+					{
+						vertBones[vertID].ids[k] = boneInd;
+						vertBones[vertID].weights[k] = weight;
+						break;
+					}
+				}
+			}
+			else
+				vertBones[vertID] = Bone { glm::uvec4(boneInd, 0, 0, 0), glm::vec4(weight, 0.0f, 0.0f, 0.0f) };
+		}
+	}
 }

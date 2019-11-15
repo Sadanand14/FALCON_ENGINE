@@ -44,13 +44,13 @@ void Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
 */
 void Shader::CompileShaderCode(SimpleShader& shader)
 {
-	
+
 	shader.m_shaderId = glCreateShader(shader.m_type); //generate the shader buffer
 
 	const char* src = shader.m_source.c_str();	// converts to const char*
 	glShaderSource(shader.m_shaderId, 1, &src, NULL);//binds source to shader id
 	glCompileShader(shader.m_shaderId);//compilder the shader with provided id
-	
+
 	//Print any compilation errors
 	int success;
 	char infoLog[512];
@@ -88,15 +88,15 @@ void Shader::LinkShaders()
 
 
 /*
-* Shader constructor takes in paths to the src files of shaders and takes care of building and linking them with the 
+* Shader constructor takes in paths to the src files of shaders and takes care of building and linking them with the
 * current opengl context.
 * Parameters must be in order of VertexShaderPath, Fragmentshaderpath
 */
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	:m_vertexShader(GL_VERTEX_SHADER),
 	 m_fragmentShader(GL_FRAGMENT_SHADER)
-{	
-	//Read the shaders 
+{
+	//Read the shaders
 	GLenum vertexShader = GL_VERTEX_SHADER;
 	LoadShaderCode(vertexPath, vertexShader);
 	GLenum fragmentShader = GL_FRAGMENT_SHADER;
@@ -179,6 +179,11 @@ void Shader::SetMat3(const std::string& name, const glm::mat3& mat) const
 void Shader::SetMat4(const std::string& name, const glm::mat4& mat) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(m_programID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::SetMat4(const std::string& name, const ozz::math::Float4x4 &mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(m_programID, name.c_str()), 1, GL_FALSE, &mat.cols[0][0]);
 }
 
 GLint Shader::GetUniform(const GLchar* name)

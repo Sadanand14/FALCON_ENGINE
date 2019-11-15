@@ -3,6 +3,11 @@
 
 #include <glm/glm.hpp>
 
+struct Bone {
+	glm::uvec4 ids;
+	glm::vec4 weights;
+};
+
 /**
 * Vertex Data Structure
 */
@@ -18,6 +23,8 @@ struct Vertex {
 	glm::vec3 Tangent;
 	//Bitangent
 	glm::vec3 Bitangent;
+	//Bone
+	Bone bone;
 };
 
 #endif // !VERTEXLAYOUT_H
