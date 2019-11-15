@@ -126,7 +126,7 @@ void Renderer::SetDrawStates()
 float temp = 0.0f;
 void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
 {
-	temp += 1.0f;
+	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
 	shader->SetMat4("projection", projection);
@@ -134,7 +134,8 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 	// camera/view transformations
 	shader->SetMat4("view", view);
 
-	//m_entity[0]->GetTransform()->SetRotation(glm::quat_cast(glm::rotate(glm::mat3(1.0f), ()));
+	m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
 }
 

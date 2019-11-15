@@ -86,7 +86,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		//Start json doc
 		rapidjson::Document doc;
 		doc.Parse(json);
-		fmemory::fdelete<char>(json);
+		//fmemory::fdelete<char>(json);
 
 		//Check if JSON file is not valid
 		if (!doc.IsObject())

@@ -84,10 +84,10 @@ class GDriveDownloader:
 
 if __name__ == '__main__':
 
-	ASSET_WINDOWS_ID = "1BDYXMAZBQGA4V4i2izkM8B1AGOPUodmc"
+	ASSET_WINDOWS_ID = "1lXzUblckjqBw5ZdnKEeIOGwsa4X3WoRd"
 	VENDOR_WINDOW_ID = "1aDkCdbt-LyGK-w04q9-F_TN-zGmIEs3l"
 
-	ASSET_LINUX_ID  = "1ihDprTyv94zj58U8DGqhgaTSK-Gd8GLc"
+	ASSET_LINUX_ID  = "1V2WRjAMlHCOTJoYXXKZzNuE7PgAqw7UY"
 	VENDOR_LINUX_ID = "18iscICo1bDoGShJAOcVhI2Q6F5Ayr7OM"
 
 	current_dir = os.path.dirname(os.path.realpath(__file__))
