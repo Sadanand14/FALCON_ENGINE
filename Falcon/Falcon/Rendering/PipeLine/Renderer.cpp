@@ -45,7 +45,7 @@ void RenderEventSystem::SubscribeToEvents()
 //test function
 void RenderEventSystem::PrintReception()
 {
-	FL_GAME_INFO("Event Executed using Job system.");
+	//FL_GAME_INFO("Event Executed using Job system.");
 	//std::cout<<"Event Executed SuccessFully on thread :"<< boost::this_thread::get_id()<<"\n";
 }
 //////////////////////
@@ -103,7 +103,8 @@ void Renderer::SetDrawStates()
 		//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
 		rd->m_mesh->GetMaterial()->shader = shader;
 
-		glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+		//glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+		glm::vec3 pos = glm::vec3(0, 0, 0);
 		// Model transformations
 		entity[i].GetTransform()->SetPosition(pos);
 		entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
@@ -139,7 +140,7 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for(u32 i = 0; i < 500; i++) {
+	for(u32 i = 0; i < 1; i++) {
 		Mesh* m = entity[i].GetComponent<RenderComponent>()->m_mesh;
 
 		m->AddWorldMatrix(entity[i].GetTransform()->GetModel());
