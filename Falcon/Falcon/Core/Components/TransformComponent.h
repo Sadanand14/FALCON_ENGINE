@@ -25,11 +25,12 @@ private:
 	 */
 	void RecalculateMatrix()
 	{
+		//m_model = m_parentMatrix *glm::mat4(1.0f) ;
 		m_model = glm::translate(glm::mat4(1.0f), m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
-		/*	m_model *= m_parentMatrix;
-			m_updateFlag = false;*/
+	    m_model = m_parentMatrix * m_model;
+		m_updateFlag = false;
 	}
 
 public:
@@ -50,9 +51,10 @@ public:
 		m_parentMatrix = parentMatrix; m_updateFlag = true;
 	}
 
-	inline void SetPosition(const glm::vec3& pos) { m_position = pos; RecalculateMatrix(); }// m_updateFlag = true; }
-	inline void SetRotation(const glm::quat& rot) { m_rotation = rot; RecalculateMatrix(); }//m_updateFlag = true; }
-	inline void SetScale(const glm::vec3& scale) { m_scale = scale; RecalculateMatrix(); }//m_updateFlag = true; }
+	inline const bool GetFlag() const { return m_updateFlag; }
+	inline void SetPosition(const glm::vec3& pos) { m_position = pos; m_updateFlag = true; }// m_updateFlag = true; }
+	inline void SetRotation(const glm::quat& rot) { m_rotation = rot; m_updateFlag = true; }//m_updateFlag = true; }
+	inline void SetScale(const glm::vec3& scale) { m_scale = scale; m_updateFlag = true; }//m_updateFlag = true; }
 
 	inline const glm::vec3& GetPosition() const { return m_position; }
 	inline const glm::quat& GetRotation() const { return m_rotation; }

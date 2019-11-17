@@ -3,7 +3,7 @@
 
 #include <map>
 #include <vector>
-#include <Material.h>
+#include <PipeLine/Material.h>
 #include <glm/glm.hpp>
 #include <Log.h>
 
@@ -51,7 +51,7 @@ public:
 	{
 		m_transform = new Transform();
 	}
-	Entity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
 		m_AIComponent(nullptr)
 	{
