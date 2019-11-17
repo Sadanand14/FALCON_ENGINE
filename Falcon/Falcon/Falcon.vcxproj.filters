@@ -27,6 +27,7 @@
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Physics\Physics.cpp" />
+    <ClCompile Include="System\Physics\PXMathUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
     <ClInclude Include="System\Physics\Physics.h" />
+    <ClInclude Include="System\Physics\PXMathUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

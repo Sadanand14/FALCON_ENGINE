@@ -14,6 +14,8 @@ int main()
 		{
 			game->Update();
 		}
+
+		delete game;
 	}
 	else 
 	{

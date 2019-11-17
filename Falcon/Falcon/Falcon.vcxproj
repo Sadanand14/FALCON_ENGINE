@@ -60,7 +60,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;D:\RIT\capstone_research\PhysX\physx\include;D:\RIT\capstone_research\PhysX\physx\source\physxextensions\src;D:\RIT\capstone_research\PhysX\physx\..\pxshared\include;D:\RIT\capstone_research\PhysX\physx\source\foundation\include;D:\RIT\capstone_research\PhysX\physx\source\geomutils\include;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\contact;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\common;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\convex;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\distance;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\sweep;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\gjk;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\intersection;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\mesh;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\hf;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\pcm;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\ccd</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;D:\RIT\capstone_research\PhysX\physx\include;D:\RIT\capstone_research\PhysX\physx\source\physxextensions\src;D:\RIT\capstone_research\PhysX\physx\..\pxshared\include;D:\RIT\capstone_research\PhysX\physx\source\foundation\include;D:\RIT\capstone_research\PhysX\physx\source\geomutils\include;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\contact;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\common;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\convex;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\distance;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\sweep;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\gjk;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\intersection;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\mesh;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\hf;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\pcm;D:\RIT\capstone_research\PhysX\physx\source\geomutils\src\ccd</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -138,6 +138,7 @@
     <ClInclude Include="System\Memory\StackSTLAllocator.h" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="System\Physics\Physics.h" />
+    <ClInclude Include="System\Physics\PXMathUtils.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
     <ClCompile Include="System\Memory\StackAllocator.cpp" />
     <ClCompile Include="System\Physics\Physics.cpp" />
+    <ClCompile Include="System\Physics\PXMathUtils.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>

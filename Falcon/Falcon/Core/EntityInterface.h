@@ -25,6 +25,10 @@
 
 #pragma warning( pop )
 
+/*
+	TODO: Make use of custom allocators
+*/
+
 /**
 *Basic Game Object Definition
 */
@@ -88,7 +92,7 @@ inline void Entity::AddComponent<PhysicsComponent>()
 	}
 	else
 	{
-		m_physicsC = new PhysicsComponent();
+		m_physicsC = new PhysicsComponent(m_transform);
 	}
 }
 
