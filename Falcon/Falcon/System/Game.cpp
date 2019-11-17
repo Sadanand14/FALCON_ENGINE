@@ -19,7 +19,8 @@ Game::~Game()
 {
 	//m_scene->SaveScene("../Assets/Scenes/scene2.json");
 	//delete m_scene;
-	fmemory::fdelete<SceneGraph>(m_scene);
+	fmemory::fdelete<Scene::SceneGraph>(m_scene);
+	fmemory::fdelete<Scene::Octree>(m_octree);
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
 	fmemory::fdelete<InputReceiver>(m_inputClass);
@@ -37,8 +38,9 @@ bool Game::Initialize()
 	m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
-	m_scene = fmemory::fnew<SceneGraph>("../Assets/Scenes/scene.json");
-
+	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
+	m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-100.0f, -100.0f, -100.0f), glm::vec3(100.0f, 100.0f, 100.0f), 5.0f, m_scene);
+	
 	m_renderer->SetEntities(m_scene->GetEntities());
 
 	//Camera
@@ -52,6 +54,8 @@ bool Game::Initialize()
 	m_renderer->SetDrawStates();
 	
 	//m_scene->LoadScene("../Assets/Scenes/scene.json");
+	m_octree->Distribute();
+
 	return true;
 }
 

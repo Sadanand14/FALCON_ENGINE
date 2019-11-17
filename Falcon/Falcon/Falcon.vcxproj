@@ -121,7 +121,7 @@
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
-    <ClInclude Include="Rendering\PipeLine\Octree.h" />
+    <ClInclude Include="Core\Scene\Octree.h" />
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
@@ -166,7 +166,7 @@
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
+    <ClCompile Include="Core\Scene\Octree.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />

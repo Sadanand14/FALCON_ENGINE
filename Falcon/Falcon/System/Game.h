@@ -11,6 +11,7 @@
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
 #include <Scene/SceneGraph.h>
+#include <Scene/Octree.h>
 
 class Game {
 
@@ -18,7 +19,8 @@ class Game {
 	Renderer* m_renderer;
 	WindowClass* m_window1;
 	InputReceiver* m_inputClass;
-	SceneGraph* m_scene;
+	Scene::SceneGraph* m_scene;
+	Scene::Octree* m_octree;
 	//Scene* m_scene;
 public:
 	bool m_gameCrashed, m_windowClosed;
