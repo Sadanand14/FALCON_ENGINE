@@ -2,6 +2,9 @@
 #define PHYSICS_H
 #include <ctype.h>
 #include "PxPhysicsAPI.h"
+#include "boost/container/vector.hpp"
+
+#include "System/Memory/fmemory.h"
 #include "Core/Components/TransformComponent.h"
 #include "../Log.h"
 
@@ -16,7 +19,7 @@ namespace physics
 {
 	bool InitPhysX();
 	void CreatePhysicsScene();
-	void StepPhysics(float dt);
+	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,const size_t& count);
 	bool ShutdownPhysX();
 
 	void CreatePlane();

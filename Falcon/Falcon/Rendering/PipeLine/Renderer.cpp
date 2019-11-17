@@ -112,6 +112,7 @@ void Renderer::SetDrawStates()
 	for (unsigned int i = 0; i < m_entity.size(); i++) 
 	{
 		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+		m_entity[i]->AddComponent<PhysicsComponent>();
 	}
 }
 

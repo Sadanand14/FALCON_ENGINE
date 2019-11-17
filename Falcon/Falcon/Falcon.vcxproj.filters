@@ -31,6 +31,7 @@
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
+    <ClCompile Include="System\Physics\PhysicsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -85,6 +86,7 @@
     <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Core\EntityManager.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
+    <ClInclude Include="System\Physics\PhysicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

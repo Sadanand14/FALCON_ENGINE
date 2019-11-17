@@ -88,7 +88,7 @@ void Game::Update()
 		//Render
 		m_renderer->Draw();
 
-
+		physics::StepPhysics(dt, m_renderer->GetEntitySet(), m_renderer->GetEntiyCount());
 		//Game Input
 		ProcessInput(m_window1->GetWindow(), dt);
 

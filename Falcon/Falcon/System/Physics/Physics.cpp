@@ -1,7 +1,7 @@
 
 #include "Physics.h"
 #include "PXMathUtils.h"
-
+#include "PhysicsSystem.h"
 
 #define PVD_HOST "127.0.0.1"
 
@@ -58,16 +58,19 @@ namespace physics
 		}
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-
+		CreatePlane();
 		return true;
 	}
 
-	void StepPhysics(float dt)
+	void StepPhysics(float& dt, 
+					 boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,
+					 const size_t& count)
 	{
 		gScene->simulate(1.0f / 60.0f);
 		gScene->fetchResults(true);
 
 		//Update physics System;
+		PhysicsSystem::update(dt, entity,count);
 	}
 
 	void CreatePhysicsScene()

@@ -34,6 +34,8 @@ public:
 		}*/
 	}
 	~PhysicsComponent() {}
+
+	inline const physx::PxRigidActor* GetActor() { return actor; }
 };
 
 
