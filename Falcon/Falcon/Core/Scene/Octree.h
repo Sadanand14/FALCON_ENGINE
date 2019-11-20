@@ -47,7 +47,7 @@ namespace Scene
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_rootNode;
-		entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
+		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 		void UpdateEntityPosition(OctreeNode* node, Entity* entity);
 		OctreeNode* FindNode(Entity* entity);
 		void FilterEntities(entityVector& entities);
@@ -61,6 +61,7 @@ namespace Scene
 		~Octree();
 	};
 
+	entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 }
 
 #endif // !1

@@ -39,7 +39,9 @@ bool Game::Initialize()
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
-	m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-100.0f, -100.0f, -100.0f), glm::vec3(100.0f, 100.0f, 100.0f), 5.0f, m_scene);
+	m_scene->UpdateScene();
+
+	m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(8.0f, 8.0f, 8.0f), glm::vec3(-8.0f, -8.0f, -8.0f), 2.0f, m_scene);
 	
 	m_renderer->SetEntities(m_scene->GetEntities());
 

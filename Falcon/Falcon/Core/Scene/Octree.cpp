@@ -45,10 +45,15 @@ namespace Scene
 			glm::vec3 vert_121 = glm::vec3(CentrePoint.x, m_farBottomRight.y, CentrePoint.z);
 			glm::vec3 vert_221 = glm::vec3(m_farBottomRight.x, m_farBottomRight.y, CentrePoint.z);
 
-			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(m_nearTopLeft, CentrePoint));
+			/*this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(m_nearTopLeft, CentrePoint));
 			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_100, vert_211));
 			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_010, vert_121));
-			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_110, vert_221));
+			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_110, vert_221));*/
+
+			this->m_childNodes.push_back(new OctreeNode(m_nearTopLeft, CentrePoint));
+			this->m_childNodes.push_back(new OctreeNode(vert_100, vert_211));
+			this->m_childNodes.push_back(new OctreeNode(vert_010, vert_121));
+			this->m_childNodes.push_back(new OctreeNode(vert_110, vert_221));
 
 			glm::vec3 vert_001 = glm::vec3(m_nearTopLeft.x, m_nearTopLeft.y, CentrePoint.z);
 			glm::vec3 vert_101 = glm::vec3(CentrePoint.x, m_nearTopLeft.y, CentrePoint.z);
@@ -58,10 +63,15 @@ namespace Scene
 			glm::vec3 vert_212 = glm::vec3(m_farBottomRight.x, CentrePoint.y, m_farBottomRight.z);
 			glm::vec3 vert_122 = glm::vec3(CentrePoint.x, m_farBottomRight.y, m_farBottomRight.z);
 
-			m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_001, vert_112));
+			/*m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_001, vert_112));
 			m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_101, vert_212));
 			m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_011, vert_122));
-			m_childNodes.push_back(fmemory::fnew<OctreeNode>(CentrePoint, m_farBottomRight));
+			m_childNodes.push_back(fmemory::fnew<OctreeNode>(CentrePoint, m_farBottomRight));*/
+
+			m_childNodes.push_back(new OctreeNode(vert_001, vert_112));
+			m_childNodes.push_back(new OctreeNode(vert_101, vert_212));
+			m_childNodes.push_back(new OctreeNode(vert_011, vert_122));
+			m_childNodes.push_back(new OctreeNode(CentrePoint, m_farBottomRight));
 
 			m_childNodes[0]->Subdivide(minSide);
 			m_childNodes[0]->SetParent(this);
@@ -105,9 +115,9 @@ namespace Scene
 			{
 				Entity* entity = m_entities[i];
 				modelMatrix = m_entities[i]->GetTransform()->GetModel();
-				xPos = modelMatrix[1][4];
-				yPos = modelMatrix[2][4];
-				zPos = modelMatrix[3][4];
+				xPos = modelMatrix[3][0];
+				yPos = modelMatrix[3][1];
+				zPos = modelMatrix[3][2];
 
 
 				if (xPos < CentrePoint.x) left = true;
@@ -250,9 +260,9 @@ namespace Scene
 	{
 		Transform* transform = entity->GetTransform();
 		glm::mat4 modelMatrix = transform->GetModel();
-		float xpos = modelMatrix[1][4];
-		float ypos = modelMatrix[2][4];
-		float zpos = modelMatrix[3][4];
+		float xpos = modelMatrix[3][0];
+		float ypos = modelMatrix[3][1];
+		float zpos = modelMatrix[3][2];
 		if (
 			((xpos > node->m_nearTopLeft.x) && (xpos < node->m_farBottomRight.x))
 			&& ((ypos > node->m_nearTopLeft.y) && (ypos < node->m_farBottomRight.y))
@@ -269,7 +279,8 @@ namespace Scene
 		{
 			if (*it == entity) break;
 		}
-		if (it == vector.end()) FL_ENGINE_ERROR("Entity Not Found in the Vecto.r");
+		if (it == vector.end())
+			FL_ENGINE_ERROR("Entity Not Found in the Vector.");
 		return it;
 	}
 
@@ -285,11 +296,20 @@ namespace Scene
 
 	void Octree::FilterEntities(entityVector& entities)
 	{
-		for (unsigned int i = 0; i < entities.size(); i++)
+		unsigned int eraseCount = 0;
+		unsigned int size = entities.size();
+		entityVector::iterator entityPos;
+		for (unsigned int i = 0; i < size; i++)
 		{
 			if (!CheckEntityPosInNode(m_rootNode, entities[i]))
 			{
-				entities.erase(FindEntityInVector(entities[i], entities));
+
+				entityPos = FindEntityInVector(entities[i], entities);
+				entities.erase(entityPos);
+				i--;
+				eraseCount++;
+				size = entities.size();
+				//FindEntityInVector(entities[i], entities)
 			}
 		}
 	}
