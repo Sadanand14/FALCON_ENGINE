@@ -1,4 +1,6 @@
 #include "Octree.h"
+#include <vector>
+#include <cassert>
 namespace Scene
 {
 	OctreeNode::OctreeNode(glm::vec3 nearTopLeft, glm::vec3 farBottomRight) :m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_parent(nullptr)
@@ -17,7 +19,7 @@ namespace Scene
 		m_entities.push_back(entity);
 		for (unsigned int i = 0; i < m_childNodes.size(); i++)
 		{
-			if (CheckEntityPosInNode(m_childNodes[i], entity)) 
+			if (CheckEntityPosInNode(m_childNodes[i], entity))
 			{
 				entity->GetTransform()->pushOTID(i);
 				m_childNodes[i]->AddEntity(entity);
@@ -33,7 +35,7 @@ namespace Scene
 
 	void OctreeNode::Subdivide(float minSide)
 	{
-		if ((this->m_nearTopLeft.x - this->m_farBottomRight.x) >= (2 * minSide))
+		if ((this->m_farBottomRight.x - this->m_nearTopLeft.x) >= (2 * minSide))
 		{
 			glm::vec3 CentrePoint = glm::vec3((this->m_nearTopLeft + this->m_farBottomRight) / 2.0f);
 
@@ -178,6 +180,10 @@ namespace Scene
 	/////////////////////////////////////////////////////////////////////////////////
 	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene)
 	{
+		assert((farBottomRight.x - nearTopLeft.x ) > 0.0f
+			&& (nearTopLeft.y - farBottomRight.y) > 0.0f
+			&& (farBottomRight.z - nearTopLeft.z) > 0.0f);
+
 		m_rootNode = fmemory::fnew<OctreeNode>(m_nearTopLeft, m_farBottomRight);
 		m_rootNode->Subdivide(minSide);
 	}
@@ -186,7 +192,7 @@ namespace Scene
 
 	Octree::~Octree()
 	{
-		delete m_rootNode;
+		fmemory::fdelete<OctreeNode> (m_rootNode);
 	}
 
 	void Octree::AddEntity(Entity* entity)
@@ -226,33 +232,59 @@ namespace Scene
 		{
 			auto transform = entity->GetTransform();
 			auto entities = node->m_entities;
-			entities.erase(FindEntityInVector(entity, entities));
+			auto entityPos = std::find(entities.begin(), entities.end(), entity);
+			if (entityPos == entities.end()) 
+			{
+				FL_ENGINE_INFO("entity doesnt exist in the octree");
+				return;
+			}
+
+			entities.erase((entityPos));
 			transform->popOTID();
 
 			bool nodeFound = false;
+			node = node->m_parent;
 			while (!nodeFound)
 			{
-				node = node->m_parent;
 				if (CheckEntityPosInNode(node, entity))
 				{
 					for (unsigned int i = 0; i < node->m_childNodes.size(); i++)
 					{
 						if (CheckEntityPosInNode(node->m_childNodes[i], entity))
 						{
-							node->m_childNodes[i]->m_entities.push_back(entity);
+							auto currentNode = node->m_childNodes[i];
+							currentNode->m_entities.push_back(entity);
 							transform->pushOTID(i);
-							//TODO::ADD ENTITY 
+
+							if (currentNode->m_childNodes.empty()) nodeFound = true;
+							else node = currentNode;
+
 							break;
 						}
 					}
-					nodeFound = true;
 				}
 				else {
 					entities = node->m_entities;
-					entities.erase(FindEntityInVector(entity, entities));
+					entityPos = std::find(entities.begin(), entities.end(), entity);
+					entities.erase(entityPos);
 					transform->popOTID();
+					if (node->m_parent != nullptr)
+					{
+						FL_ENGINE_INFO("This Entity may have exited the octree space");
+						break;
+					}
+					else 
+					{
+						node = node->m_parent;
+					}
 				}
 			}
+			/*std::cout << "new OTID"; 
+			for (unsigned int i = 0; i < transform->GetOTID().size(); i++) 
+			{
+				std::cout << transform->GetOTID()[i];
+			}
+			std::cout << "\n";*/
 		}
 	}
 
@@ -264,15 +296,15 @@ namespace Scene
 		float ypos = modelMatrix[3][1];
 		float zpos = modelMatrix[3][2];
 		if (
-			((xpos > node->m_nearTopLeft.x) && (xpos < node->m_farBottomRight.x))
-			&& ((ypos > node->m_nearTopLeft.y) && (ypos < node->m_farBottomRight.y))
-			&& ((zpos > node->m_nearTopLeft.z) && (zpos < node->m_farBottomRight.z))
+			((xpos >= node->m_nearTopLeft.x) && (xpos <= node->m_farBottomRight.x))
+			&& ((ypos <= node->m_nearTopLeft.y) && (ypos >= node->m_farBottomRight.y))
+			&& ((zpos >= node->m_nearTopLeft.z) && (zpos <= node->m_farBottomRight.z))
 			)
 			return true;
 		else return false;
 	}
 
-	entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector)
+	/*entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector)
 	{
 		auto it = vector.begin();
 		for (it; it != vector.end(); it++)
@@ -282,7 +314,7 @@ namespace Scene
 		if (it == vector.end())
 			FL_ENGINE_ERROR("Entity Not Found in the Vector.");
 		return it;
-	}
+	}*/
 
 	void Octree::Distribute()
 	{
@@ -303,8 +335,8 @@ namespace Scene
 		{
 			if (!CheckEntityPosInNode(m_rootNode, entities[i]))
 			{
-
-				entityPos = FindEntityInVector(entities[i], entities);
+				//entityPos = FindEntityInVector(entities[i], entities);
+				entityPos = std::find(entities.begin(), entities.end(), entities[i]);
 				entities.erase(entityPos);
 				i--;
 				eraseCount++;

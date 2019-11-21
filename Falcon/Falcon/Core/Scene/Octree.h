@@ -61,7 +61,7 @@ namespace Scene
 		~Octree();
 	};
 
-	entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
+	//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 }
 
 #endif // !1

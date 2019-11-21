@@ -41,7 +41,7 @@ bool Game::Initialize()
 	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 	m_scene->UpdateScene();
 
-	m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(8.0f, 8.0f, 8.0f), glm::vec3(-8.0f, -8.0f, -8.0f), 2.0f, m_scene);
+	m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-8.0f, 8.0f, -8.0f), glm::vec3(8.0f, -8.0f, 8.0f), 2.0f, m_scene);
 	
 	m_renderer->SetEntities(m_scene->GetEntities());
 
@@ -58,6 +58,7 @@ bool Game::Initialize()
 	//m_scene->LoadScene("../Assets/Scenes/scene.json");
 	m_octree->Distribute();
 
+	
 	return true;
 }
 
@@ -87,6 +88,7 @@ void Game::Update()
 		//Update SceneGraph
 		m_scene->UpdateScene();
 
+		m_octree->Update();
 		//Render
 		m_renderer->Draw();
 
