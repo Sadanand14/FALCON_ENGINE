@@ -13,6 +13,14 @@
 
 5. [Using Custom Allocators](Falcon/Falcon/System/Memory/ReadMe.md)
 
+## Library Versions:
+assimp - 5.0.0
+boost - 1.69
+glad - 0.1.30
+glfw3 - 3.3
+glm - 0.9.9.500
+ozz - 0.10.0
+
 ## Coding Standards
 
 ### Coding Style
