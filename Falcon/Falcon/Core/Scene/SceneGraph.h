@@ -53,7 +53,7 @@ namespace Scene
 
 
 		inline SceneNode* GetChildByIndex(unsigned int index) { return m_childNodes[index]; }
-		inline nodeVector GetChildren() { return m_childNodes; }
+		inline nodeVector& GetChildren() { return m_childNodes; }
 	};
 
 	struct NodeWithOffset
@@ -65,15 +65,15 @@ namespace Scene
 	class SceneGraph
 	{
 	private:
-		entityVector  entityList, octreeEntityList;
+		entityVector  m_entityList, m_octreeEntityList;
 		SceneNode* rootNode;
 		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index);
 	public:
 
 		SceneGraph(const char* sceneFilePath);
 		~SceneGraph();
-		inline const entityVector GetEntities() const { return entityList; }
-		inline const entityVector GetOctreeEntities() const { return octreeEntityList; }
+		inline const entityVector GetEntities() const { return m_entityList; }
+		inline const entityVector& GetOctreeEntities() const { return m_octreeEntityList; }
 
 		void UpdateScene();
 

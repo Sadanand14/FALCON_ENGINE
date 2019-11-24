@@ -49,7 +49,7 @@ namespace Scene
 		OctreeNode* m_rootNode;
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 		void UpdateEntityPosition(OctreeNode* node, Entity* entity);
-		OctreeNode* FindNode(Entity* entity);
+		OctreeNode* FindNode(Entity* entity)const;
 		void FilterEntities(entityVector& entities);
 		void AddEntity(Entity* entity);
 		void RemoveEntity(Entity* entity);

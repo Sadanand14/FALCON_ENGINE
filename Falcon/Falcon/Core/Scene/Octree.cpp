@@ -5,7 +5,8 @@ namespace Scene
 {
 	OctreeNode::OctreeNode(glm::vec3 nearTopLeft, glm::vec3 farBottomRight) :m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_parent(nullptr)
 	{
-
+		m_childNodes.reserve(10);
+		m_entities.reserve(10);
 	}
 
 	OctreeNode::~OctreeNode()
@@ -208,19 +209,19 @@ namespace Scene
 
 	void Octree::Update()
 	{
-		const entityVector updatedEntities = m_scene->GetOctreeEntities();
-		for (unsigned int i = 0; i < updatedEntities.size(); i++)
+		const entityVector* updatedEntities = &m_scene->GetOctreeEntities();
+		for (unsigned int i = 0; i < (*updatedEntities).size(); i++)
 		{
-			if (updatedEntities[i]->GetTransform()->GetOTID().empty())
+			if ((*updatedEntities)[i]->GetTransform()->GetOTID().empty())
 			{
-				if (CheckEntityPosInNode(m_rootNode, updatedEntities[i]))
+				if (CheckEntityPosInNode(m_rootNode, (*updatedEntities)[i]))
 				{
-					AddEntity(updatedEntities[i]);
+					AddEntity((*updatedEntities)[i]);
 				}
 			}
 			else
 			{
-				Entity* entity = updatedEntities[i];
+				Entity* entity = (*updatedEntities)[i];
 				UpdateEntityPosition(FindNode(entity), entity);
 			}
 		}
@@ -230,16 +231,16 @@ namespace Scene
 	{
 		if (!CheckEntityPosInNode(node, entity))
 		{
-			auto transform = entity->GetTransform();
-			auto entities = node->m_entities;
-			auto entityPos = std::find(entities.begin(), entities.end(), entity);
-			if (entityPos == entities.end()) 
+			Transform* transform = entity->GetTransform();
+			entityVector* entities = &node->m_entities;
+			auto entityPos = std::find(entities->begin(), entities->end(), entity);
+			if (entityPos == entities->end())
 			{
 				FL_ENGINE_INFO("entity doesnt exist in the octree");
 				return;
 			}
 
-			entities.erase((entityPos));
+			entities->erase((entityPos));
 			transform->popOTID();
 
 			bool nodeFound = false;
@@ -252,30 +253,30 @@ namespace Scene
 					{
 						if (CheckEntityPosInNode(node->m_childNodes[i], entity))
 						{
-							auto currentNode = node->m_childNodes[i];
-							currentNode->m_entities.push_back(entity);
+							//OctreeNode* currentNode = node->m_childNodes[i];
+							node->m_childNodes[i]->m_entities.push_back(entity);
 							transform->pushOTID(i);
 
-							if (currentNode->m_childNodes.empty()) nodeFound = true;
-							else node = currentNode;
+							if (node->m_childNodes[i]->m_childNodes.empty()) nodeFound = true;
+							else node = node->m_childNodes[i];
 
 							break;
 						}
 					}
 				}
 				else {
-					entities = node->m_entities;
-					entityPos = std::find(entities.begin(), entities.end(), entity);
-					entities.erase(entityPos);
+					entities = &node->m_entities;
+					entityPos = std::find(entities->begin(), entities->end(), entity);
+					entities->erase(entityPos);
 					transform->popOTID();
 					if (node->m_parent != nullptr)
 					{
-						FL_ENGINE_INFO("This Entity may have exited the octree space");
-						break;
+						node = node->m_parent;
 					}
 					else 
 					{
-						node = node->m_parent;
+						FL_ENGINE_INFO("This Entity may have exited the octree space");
+						break;
 					}
 				}
 			}
@@ -346,14 +347,16 @@ namespace Scene
 		}
 	}
 
-	OctreeNode* Octree::FindNode(Entity* entity)
+	OctreeNode* Octree::FindNode(Entity* entity)const 
 	{
-		const IDVector OTID = entity->GetTransform()->GetOTID();
+
+		const IDVector* OTID = &entity->GetTransform()->GetOTID();
 		OctreeNode* temp = m_rootNode;
 
-		for (unsigned short int i = 0; i < OTID.size(); i++)
+
+		for (unsigned short int i = 0; i < OTID->size(); i++)
 		{
-			temp = temp->m_childNodes[OTID[i]];
+			temp = temp->m_childNodes[(*OTID)[i]];
 		}
 
 		if (temp == m_rootNode)

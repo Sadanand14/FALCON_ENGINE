@@ -6,18 +6,19 @@ namespace Scene
 	SceneNode::SceneNode()
 		: m_updateFlag(false), m_status(Status::Active), m_entity(nullptr), m_parent(nullptr), m_ReferenceMatrix(glm::mat4(1.0f))
 	{
-
+		//m_childNodes.reserve(10);
 	}
 
 	SceneNode::SceneNode(Entity* entity)
 		: m_updateFlag(false), m_status(Status::Active), m_entity(entity), m_parent(nullptr), m_ReferenceMatrix(glm::mat4(1.0f))
 	{
-
+		//m_childNodes.reserve(10);
 	}
 
 	SceneNode::SceneNode(SceneNode* parent)
 		: m_updateFlag(true), m_status(Status::Active), m_entity(nullptr), m_parent(parent)
 	{
+		//m_childNodes.reserve(10);
 		m_ReferenceMatrix = m_parent->GetWM();
 	}
 
@@ -25,6 +26,7 @@ namespace Scene
 	SceneNode::SceneNode(SceneNode** childArray, unsigned int size)
 		: m_updateFlag(false), m_status(Status::Active), m_entity(nullptr), m_parent(nullptr), m_ReferenceMatrix(glm::mat4(1.0f))
 	{
+		//m_childNodes.reserve(10);
 		for (unsigned int i = 0; i < size; i++)
 			AddChild(childArray[i]);
 	}
@@ -126,7 +128,7 @@ namespace Scene
 		}
 
 		Entity* temp = EntityManager::CreateEntity(objTemplate, position, rotation, scale);
-		entityList.push_back(temp);
+		m_entityList.push_back(temp);
 		SceneNode* newNode = new SceneNode(temp);
 
 
@@ -163,7 +165,10 @@ namespace Scene
 
 	SceneGraph::SceneGraph(const char* sceneFilePath)
 	{
+		m_entityList.reserve(10);
+		m_octreeEntityList.reserve(10);
 		rootNode = new SceneNode();
+		
 		//Get file data
 		char* json = nullptr;
 		int32_t size;
@@ -215,9 +220,9 @@ namespace Scene
 
 	void SceneGraph::UpdateScene()
 	{
-		octreeEntityList.clear();
-		nodeVector childArr = rootNode->GetChildren();
-		for (unsigned int i = 0; i < childArr.size(); i++)
-			childArr[i]->UpdateEntity(octreeEntityList);
+		m_octreeEntityList.clear();
+		nodeVector* childArr = &rootNode->GetChildren();
+		for (unsigned int i = 0; i < childArr->size(); i++)
+			(*childArr)[i]->UpdateEntity(m_octreeEntityList);
 	}
 }

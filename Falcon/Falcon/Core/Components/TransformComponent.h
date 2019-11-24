@@ -63,7 +63,7 @@ public:
 		else return -1;
 	}
 	
-	inline const IDVector GetOTID() const { return octreeID; }
+	inline const IDVector& GetOTID() const { return octreeID; }
 	inline void ClearOTID() { octreeID.clear(); }
 	inline void pushOTID(unsigned short int value) { octreeID.push_back(value); }
 	//inline void setUpdatedflag(bool value) { m_updated = value; }

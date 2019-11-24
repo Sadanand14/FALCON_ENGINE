@@ -72,7 +72,7 @@ public:
 	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
 	void Draw();
 
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities) 
+	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities)
 	{
 		m_entity = entities;
 	}
