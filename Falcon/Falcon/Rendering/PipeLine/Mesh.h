@@ -19,6 +19,7 @@
 
 #include <Types.h>
 
+typedef boost::container::vector<glm::vec3, fmemory::StackSTLAllocator<glm::vec3>> boundingVector;
 
 /**
 * Mesh Class tp store Mesh Data for Renderables.
@@ -39,9 +40,17 @@ private:
 	std::string m_path;
 	std::string m_jsonPath;
 
+	//bounding Box stuff
+	boundingVector m_boundingCorners;
+
 	//Functions
 
 public:
+
+	//bounding Box stuff
+	inline boundingVector GetMesh() { return m_boundingCorners; }
+	inline void SetBoundingVector(boundingVector value) { m_boundingCorners = value; }
+
 	//Mesh Data
 	boost::container::vector<Vertex> m_vertexArray;
 	boost::container::vector<u32> m_indexArray;
