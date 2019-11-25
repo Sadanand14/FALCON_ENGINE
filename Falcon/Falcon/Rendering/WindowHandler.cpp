@@ -45,6 +45,7 @@ void WindowClass::Init()
 		return;
 	}
 	glfwMakeContextCurrent(m_gameWindow);
+	glfwSwapInterval(0);
 	glfwSetFramebufferSizeCallback(m_gameWindow, framebuffer_size_callback);
 	glfwSetWindowUserPointer(m_gameWindow, this);
 
