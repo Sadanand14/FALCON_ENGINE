@@ -29,10 +29,9 @@ private:
 	void RecalculateMatrix()
 	{
 		//m_model = m_parentMatrix *glm::mat4(1.0f) ;
-		m_model = glm::translate(glm::mat4(1.0f), m_position);
+		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
-	    m_model = m_parentMatrix * m_model;
 		//m_updated = true;
 		m_updateFlag = false;
 	}

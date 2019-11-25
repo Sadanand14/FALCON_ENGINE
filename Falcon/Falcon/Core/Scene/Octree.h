@@ -7,6 +7,7 @@
 #include <Memory/fmemory.h>
 //#include <boost/iterator.hpp>
 #include <Scene/SceneGraph.h>
+#include <Camera.h>
 
 namespace Scene
 {
@@ -20,11 +21,13 @@ namespace Scene
 		friend class Octree;
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
 
+
 		entityVector m_entities;
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_parent;
 		OctreeNodeVector m_childNodes;
+		
 
 		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
 		void Subdivide(float minSide);
@@ -47,7 +50,12 @@ namespace Scene
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_rootNode;
+		Camera* m_camera;
+		
+
+
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
+		void GetPlanes();
 		void UpdateEntityPosition(OctreeNode* node, Entity* entity);
 		OctreeNode* FindNode(Entity* entity)const;
 		void FilterEntities(entityVector& entities);
@@ -55,7 +63,7 @@ namespace Scene
 		void RemoveEntity(Entity* entity);
 	public:
 
-		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene);
+		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera);
 		void Distribute();
 		void Update();
 		~Octree();

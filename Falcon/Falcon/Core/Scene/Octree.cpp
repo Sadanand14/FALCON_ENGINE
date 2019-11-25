@@ -179,7 +179,7 @@ namespace Scene
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////
-	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene)
+	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene), m_camera(camera)
 	{
 		assert((farBottomRight.x - nearTopLeft.x ) > 0.0f
 			&& (nearTopLeft.y - farBottomRight.y) > 0.0f
@@ -188,8 +188,6 @@ namespace Scene
 		m_rootNode = fmemory::fnew<OctreeNode>(m_nearTopLeft, m_farBottomRight);
 		m_rootNode->Subdivide(minSide);
 	}
-
-
 
 	Octree::~Octree()
 	{
@@ -210,6 +208,7 @@ namespace Scene
 	void Octree::Update()
 	{
 		const entityVector* updatedEntities = &m_scene->GetOctreeEntities();
+		//TODO: Add Function Call to extract plane Equations
 		for (unsigned int i = 0; i < (*updatedEntities).size(); i++)
 		{
 			if ((*updatedEntities)[i]->GetTransform()->GetOTID().empty())
@@ -225,6 +224,12 @@ namespace Scene
 				UpdateEntityPosition(FindNode(entity), entity);
 			}
 		}
+	}
+
+	void Octree::GetPlanes() 
+	{
+		glm::mat4 View = m_camera->GetViewMatrix();
+
 	}
 
 	void Octree::UpdateEntityPosition(OctreeNode* node, Entity* entity)
