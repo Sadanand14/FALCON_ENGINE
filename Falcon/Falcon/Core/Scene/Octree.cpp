@@ -36,76 +36,78 @@ namespace Scene
 
 	void OctreeNode::Subdivide(float minSide)
 	{
-		if ((this->m_farBottomRight.x - this->m_nearTopLeft.x) >= (2 * minSide))
-		{
-			glm::vec3 CentrePoint = glm::vec3((this->m_nearTopLeft + this->m_farBottomRight) / 2.0f);
+		//if ((this->m_farBottomRight.x - this->m_nearTopLeft.x) >= (2 * minSide))
+		//{
+		//	glm::vec3 CentrePoint = glm::vec3((this->m_nearTopLeft + this->m_farBottomRight) / 2.0f);
 
-			glm::vec3 vert_100 = glm::vec3(CentrePoint.x, m_nearTopLeft.y, m_nearTopLeft.z);
-			glm::vec3 vert_010 = glm::vec3(m_nearTopLeft.x, CentrePoint.y, m_nearTopLeft.z);
-			glm::vec3 vert_110 = glm::vec3(CentrePoint.x, CentrePoint.y, m_nearTopLeft.z);
+		//	glm::vec3 vert_100 = glm::vec3(CentrePoint.x, m_nearTopLeft.y, m_nearTopLeft.z);
+		//	glm::vec3 vert_010 = glm::vec3(m_nearTopLeft.x, CentrePoint.y, m_nearTopLeft.z);
+		//	glm::vec3 vert_110 = glm::vec3(CentrePoint.x, CentrePoint.y, m_nearTopLeft.z);
 
-			glm::vec3 vert_211 = glm::vec3(m_farBottomRight.x, CentrePoint.y, CentrePoint.z);
-			glm::vec3 vert_121 = glm::vec3(CentrePoint.x, m_farBottomRight.y, CentrePoint.z);
-			glm::vec3 vert_221 = glm::vec3(m_farBottomRight.x, m_farBottomRight.y, CentrePoint.z);
+		//	glm::vec3 vert_211 = glm::vec3(m_farBottomRight.x, CentrePoint.y, CentrePoint.z);
+		//	glm::vec3 vert_121 = glm::vec3(CentrePoint.x, m_farBottomRight.y, CentrePoint.z);
+		//	glm::vec3 vert_221 = glm::vec3(m_farBottomRight.x, m_farBottomRight.y, CentrePoint.z);
 
-			/*this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(m_nearTopLeft, CentrePoint));
-			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_100, vert_211));
-			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_010, vert_121));
-			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_110, vert_221));*/
+		//	/*this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(m_nearTopLeft, CentrePoint));
+		//	this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_100, vert_211));
+		//	this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_010, vert_121));
+		//	this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_110, vert_221));*/
 
-			this->m_childNodes.push_back(new OctreeNode(m_nearTopLeft, CentrePoint));
-			this->m_childNodes.push_back(new OctreeNode(vert_100, vert_211));
-			this->m_childNodes.push_back(new OctreeNode(vert_010, vert_121));
-			this->m_childNodes.push_back(new OctreeNode(vert_110, vert_221));
+		//	this->m_childNodes.push_back(new OctreeNode(m_nearTopLeft, CentrePoint));
+		//	this->m_childNodes.push_back(new OctreeNode(vert_100, vert_211));
+		//	this->m_childNodes.push_back(new OctreeNode(vert_010, vert_121));
+		//	this->m_childNodes.push_back(new OctreeNode(vert_110, vert_221));
 
-			glm::vec3 vert_001 = glm::vec3(m_nearTopLeft.x, m_nearTopLeft.y, CentrePoint.z);
-			glm::vec3 vert_101 = glm::vec3(CentrePoint.x, m_nearTopLeft.y, CentrePoint.z);
-			glm::vec3 vert_011 = glm::vec3(m_nearTopLeft.x, CentrePoint.y, CentrePoint.z);
+		//	glm::vec3 vert_001 = glm::vec3(m_nearTopLeft.x, m_nearTopLeft.y, CentrePoint.z);
+		//	glm::vec3 vert_101 = glm::vec3(CentrePoint.x, m_nearTopLeft.y, CentrePoint.z);
+		//	glm::vec3 vert_011 = glm::vec3(m_nearTopLeft.x, CentrePoint.y, CentrePoint.z);
 
-			glm::vec3 vert_112 = glm::vec3(CentrePoint.x, CentrePoint.y, m_farBottomRight.z);
-			glm::vec3 vert_212 = glm::vec3(m_farBottomRight.x, CentrePoint.y, m_farBottomRight.z);
-			glm::vec3 vert_122 = glm::vec3(CentrePoint.x, m_farBottomRight.y, m_farBottomRight.z);
+		//	glm::vec3 vert_112 = glm::vec3(CentrePoint.x, CentrePoint.y, m_farBottomRight.z);
+		//	glm::vec3 vert_212 = glm::vec3(m_farBottomRight.x, CentrePoint.y, m_farBottomRight.z);
+		//	glm::vec3 vert_122 = glm::vec3(CentrePoint.x, m_farBottomRight.y, m_farBottomRight.z);
 
-			/*m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_001, vert_112));
-			m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_101, vert_212));
-			m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_011, vert_122));
-			m_childNodes.push_back(fmemory::fnew<OctreeNode>(CentrePoint, m_farBottomRight));*/
+		//	/*m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_001, vert_112));
+		//	m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_101, vert_212));
+		//	m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_011, vert_122));
+		//	m_childNodes.push_back(fmemory::fnew<OctreeNode>(CentrePoint, m_farBottomRight));*/
 
-			m_childNodes.push_back(new OctreeNode(vert_001, vert_112));
-			m_childNodes.push_back(new OctreeNode(vert_101, vert_212));
-			m_childNodes.push_back(new OctreeNode(vert_011, vert_122));
-			m_childNodes.push_back(new OctreeNode(CentrePoint, m_farBottomRight));
+		//	m_childNodes.push_back(new OctreeNode(vert_001, vert_112));
+		//	m_childNodes.push_back(new OctreeNode(vert_101, vert_212));
+		//	m_childNodes.push_back(new OctreeNode(vert_011, vert_122));
+		//	m_childNodes.push_back(new OctreeNode(CentrePoint, m_farBottomRight));
 
-			m_childNodes[0]->Subdivide(minSide);
-			m_childNodes[0]->SetParent(this);
+		//	m_childNodes[0]->Subdivide(minSide);
+		//	m_childNodes[0]->SetParent(this);
 
-			m_childNodes[1]->Subdivide(minSide);
-			m_childNodes[1]->SetParent(this);
+		//	m_childNodes[1]->Subdivide(minSide);
+		//	m_childNodes[1]->SetParent(this);
 
-			m_childNodes[2]->Subdivide(minSide);
-			m_childNodes[2]->SetParent(this);
+		//	m_childNodes[2]->Subdivide(minSide);
+		//	m_childNodes[2]->SetParent(this);
 
-			m_childNodes[3]->Subdivide(minSide);
-			m_childNodes[3]->SetParent(this);
+		//	m_childNodes[3]->Subdivide(minSide);
+		//	m_childNodes[3]->SetParent(this);
 
-			m_childNodes[4]->Subdivide(minSide);
-			m_childNodes[4]->SetParent(this);
+		//	m_childNodes[4]->Subdivide(minSide);
+		//	m_childNodes[4]->SetParent(this);
 
-			m_childNodes[5]->Subdivide(minSide);
-			m_childNodes[5]->SetParent(this);
+		//	m_childNodes[5]->Subdivide(minSide);
+		//	m_childNodes[5]->SetParent(this);
 
-			m_childNodes[6]->Subdivide(minSide);
-			m_childNodes[6]->SetParent(this);
+		//	m_childNodes[6]->Subdivide(minSide);
+		//	m_childNodes[6]->SetParent(this);
 
-			m_childNodes[7]->Subdivide(minSide);
-			m_childNodes[7]->SetParent(this);
+		//	m_childNodes[7]->Subdivide(minSide);
+		//	m_childNodes[7]->SetParent(this);
 
-		}
+		//}
 	}
 
 	void OctreeNode::Segregate()
 	{
-		if ((m_childNodes.size() == 8) && (m_entities.size() > 0))
+		
+
+		/*if ((m_childNodes.size() == 8) && (m_entities.size() > 0))
 		{
 			glm::vec3 CentrePoint = glm::vec3((m_nearTopLeft + m_farBottomRight) / 2.0f);
 			entityVector nearTopLeftVector, nearTopRightVector, nearBottomLeftVector, nearBottomRightVector;
@@ -175,7 +177,7 @@ namespace Scene
 
 			m_childNodes[7]->m_entities = farBottomRightVector;
 			m_childNodes[7]->Segregate();
-		}
+		}*/
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +188,15 @@ namespace Scene
 			&& (farBottomRight.z - nearTopLeft.z) > 0.0f);
 
 		m_rootNode = fmemory::fnew<OctreeNode>(m_nearTopLeft, m_farBottomRight);
-		m_rootNode->Subdivide(minSide);
+
+		auto entityList = m_scene->GetEntities();
+		for (unsigned int i = 0; i < entityList.size(); i++)
+			entityList[i]->GetTransform()->ClearOTID();
+		FilterEntities(entityList);
+		//m_rootNode->m_entities = entityList;
+		m_entities = entityList;
+
+		//m_rootNode->Subdivide(minSide);
 	}
 
 	Octree::~Octree()
@@ -228,7 +238,15 @@ namespace Scene
 
 	void Octree::GetPlanes() 
 	{
-		glm::mat4 View = m_camera->GetViewMatrix();
+		using namespace glm;
+		mat4 View = m_camera->GetViewMatrix();
+		mat4 VP = m_projection * View;
+
+		vec4 xColumn = VP[0];
+		vec4 yColumn = VP[1];
+		vec4 zColumn = VP[2];
+		vec4 wColumn = VP[3];
+		
 
 	}
 
@@ -324,11 +342,7 @@ namespace Scene
 
 	void Octree::Distribute()
 	{
-		auto entityList = m_scene->GetEntities();
-		for (unsigned int i = 0; i < entityList.size(); i++)
-			entityList[i]->GetTransform()->ClearOTID();
-		FilterEntities(entityList);
-		m_rootNode->m_entities = entityList;
+		
 		m_rootNode->Segregate();
 	}
 

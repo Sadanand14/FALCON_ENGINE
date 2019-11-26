@@ -58,6 +58,7 @@ namespace gameLoop
 		//calculate Projection temporarily here
 		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window1->GetWidth() / (float)m_window1->GetHeight(), 0.1f, 100.0f);
 
+		m_octree->SetProjection(projection);
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates( projection);
 

@@ -43,6 +43,7 @@ public:
 	{
 		RecalculateMatrix();
 	}
+
 	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true), m_parentMatrix(glm::mat4())
 	{

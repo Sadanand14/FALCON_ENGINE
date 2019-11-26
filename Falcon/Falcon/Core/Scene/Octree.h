@@ -27,7 +27,6 @@ namespace Scene
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_parent;
 		OctreeNodeVector m_childNodes;
-		
 
 		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
 		void Subdivide(float minSide);
@@ -47,12 +46,15 @@ namespace Scene
 	class Octree
 	{
 		SceneGraph* m_scene;
+		entityVector m_entities;
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_rootNode;
 		Camera* m_camera;
-		
+		glm::mat4 m_projection;
 
+		//plane Array storing plane equation's coefficients in the order x,y,z,w	
+		glm::vec4* m_planeArr;
 
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 		void GetPlanes();
@@ -63,6 +65,7 @@ namespace Scene
 		void RemoveEntity(Entity* entity);
 	public:
 
+		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }
 		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera);
 		void Distribute();
 		void Update();

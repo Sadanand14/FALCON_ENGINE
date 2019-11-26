@@ -51,10 +51,7 @@ namespace Scene
 			transform->SetRelativeSpace(m_parent->GetWM());
 			transform->CheckFlag();
 			m_ReferenceMatrix = transform->GetModel();
-			if (m_entity->GetComponent<RenderComponent>() != nullptr && m_status == Status::Active)
-			{
-				vector.push_back(m_entity);
-			}
+			if (m_entity->GetComponent<RenderComponent>() != nullptr && m_status == Status::Active) vector.push_back(m_entity);
 			m_updateFlag = false;
 			for (unsigned int i = 0; i < m_childNodes.size(); i++)
 			{

@@ -172,10 +172,10 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	// Data to load
 	size_t indexOffset = 0;
 	std::vector<Vertex, fmemory::STLAllocator<Vertex>> vertices;
-	std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
-	std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
-
-	float minX = FLT_MIN, maxX = FLT_MIN, minY = FLT_MIN, minZ = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+	vertices.reserve(mesh->mNumVertices);
+	std::vector<u32, fmemory::STLAllocator<u32>> indices;
+	indices.reserve(mesh->mNumVertices*3);
+	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
 
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -184,16 +184,13 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		glm::vec3 vector;
 		// Positions
 		vector.x = mesh->mVertices[i].x;
-		if (minX > vector.x) minX = vector.x;
-		if (maxX < vector.x) maxX = vector.x;
+	
 
 		vector.y = mesh->mVertices[i].y;
-		if (minY > vector.y) minY = vector.y;
-		if (maxY < vector.y) maxY = vector.y;
+		
 
 		vector.z = mesh->mVertices[i].z;
-		if (minZ > vector.z) minZ = vector.z;
-		if (maxZ < vector.z) maxZ = vector.z;
+	
 
 		vertex.Position = vector;
 		// Normals
@@ -225,18 +222,6 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		vertex.Bitangent = vector;
 		vertices.push_back(vertex);
 	}
-
-	boundingVector temp;
-	temp.push_back(glm::vec3(minX, maxY, minZ));
-	temp.push_back(glm::vec3(maxX, maxY, minZ));
-	temp.push_back(glm::vec3(minX, minY, minZ));
-	temp.push_back(glm::vec3(maxX, minY, minZ));
-
-	temp.push_back(glm::vec3(minX, maxY, maxZ));
-	temp.push_back(glm::vec3(maxX, maxY, maxZ));
-	temp.push_back(glm::vec3(minX, minY, maxZ));
-	temp.push_back(glm::vec3(maxX, minY, maxZ));
-	newmesh->SetBoundingVector(temp);
 
 	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
 
