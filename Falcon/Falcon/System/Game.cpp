@@ -44,7 +44,7 @@ namespace gameLoop
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_scene->UpdateScene();
 
-		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-8.0f, 8.0f, -8.0f), glm::vec3(8.0f, -8.0f, 8.0f), 2.0f, m_scene, &camera);
+		//m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-8.0f, 8.0f, -8.0f), glm::vec3(8.0f, -8.0f, 8.0f), 2.0f, m_scene, &camera);
 
 		m_renderer->SetEntities(m_scene->GetEntities());
 
@@ -58,12 +58,12 @@ namespace gameLoop
 		//calculate Projection temporarily here
 		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window1->GetWidth() / (float)m_window1->GetHeight(), 0.1f, 100.0f);
 
-		m_octree->SetProjection(projection);
+		//m_octree->SetProjection(projection);
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates( projection);
 
 		//m_scene->LoadScene("../Assets/Scenes/scene.json");
-		m_octree->Distribute();
+		//m_octree->Distribute();
 
 
 
@@ -93,7 +93,7 @@ namespace gameLoop
 			//Update SceneGraph
 			m_scene->UpdateScene();
 
-			m_octree->Update();
+			//m_octree->Update();
 			//Render
 			m_renderer->Draw();
 

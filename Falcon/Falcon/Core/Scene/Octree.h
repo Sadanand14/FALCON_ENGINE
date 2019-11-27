@@ -20,7 +20,7 @@ namespace Scene
 	{
 		friend class Octree;
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
-
+		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL , glm::vec3 FBR);
 
 		entityVector m_entities;
 		glm::vec3 m_nearTopLeft;
@@ -47,6 +47,7 @@ namespace Scene
 	{
 		SceneGraph* m_scene;
 		entityVector m_entities;
+		float m_minSide;
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_rootNode;
@@ -63,6 +64,7 @@ namespace Scene
 		void FilterEntities(entityVector& entities);
 		void AddEntity(Entity* entity);
 		void RemoveEntity(Entity* entity);
+		void AssignNode(Entity* entity);
 	public:
 
 		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }

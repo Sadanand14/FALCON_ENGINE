@@ -11,7 +11,7 @@ typedef boost::container::vector<glm::vec3, fmemory::STLAllocator<glm::vec3>> bo
 /**
 *Structure Definition for holding data needed to render the entity.
 */
-struct RenderComponent: public BasicComponent
+struct RenderComponent : public BasicComponent
 {
 	Mesh* m_mesh;
 
@@ -22,11 +22,12 @@ struct RenderComponent: public BasicComponent
 
 	RenderComponent() : m_mesh(nullptr) { m_boundingCorners.reserve(8); }
 	~RenderComponent() {}
-	void CalculateBounds() 
+	void CalculateBounds()
 	{
-		boost::container::vector<Vertex,fmemory::STLAllocator<Vertex>>* vertexArr = &m_mesh->m_vertexArray;
+		boost::container::vector<Vertex, fmemory::STLAllocator<Vertex>>* vertexArr = &m_mesh->m_vertexArray;
 
-		float minX = FLT_MIN, maxX = FLT_MIN, minY = FLT_MIN, minZ = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX;
+		float maxX = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
 		for (unsigned int i = 0; i < vertexArr->size(); i++)
 		{
 			glm::vec3 pos = (*vertexArr)[i].Position;
