@@ -5,11 +5,9 @@
 #include "System/Physics/Physics.h"
 #include "TransformComponent.h"
 
-enum PhysicsBodyType
-{
-	ESTATIC_BODY,
-	ERIGID_BODY
-};
+
+typedef physx::PxRigidActor Rigidbody;
+typedef physx::PxShape      Collider;
 
 /**
 *Structure Definition for holding data needed for calculating physics events on the entity.
@@ -18,13 +16,15 @@ struct PhysicsComponent: public BasicComponent
 {
 	
 private:
-	physx::PxRigidActor* actor;
+	Rigidbody* actor;
+	Collider* collider;
 
 public:
-	PhysicsComponent(const Transform* transform):
-		actor(nullptr) 
+	PhysicsComponent() :
+		actor(nullptr),
+		collider(nullptr)
 	{
-		actor = physics::CreateDynamicRigidActor(transform);
+		
 		/*switch (type)
 		{
 			case PhysicsBodyType::ERIGID_BODY:
@@ -32,6 +32,45 @@ public:
 				break;
 
 		}*/
+	}
+
+	void SetBoxCollider(const float& halfX, const float& halfY, const float& halfZ)
+	{
+		collider = physics::GetBoxCollider(halfX, halfY, halfZ);
+		if (!collider)
+		{
+			FL_ENGINE_ERROR("Failed to create box collider");
+		}
+	}
+
+	void SetSphereCollider(const float& radius)
+	{
+		if (collider != nullptr)
+		{
+			FL_ENGINE_ERROR("Collider alread assigned!.");
+		}
+		collider = physics::GetSphereCollider(radius);
+		if (!collider)
+		{
+			FL_ENGINE_ERROR("Failed to create box collider");
+		}
+	}
+
+	bool SetPhysicsBodyType(const Transform* transform,physics::PhysicsBodyType type)
+	{
+		switch (type)
+		{
+			case physics::PhysicsBodyType::EPLANE:
+				actor = physics::CreatePlane();
+				break;
+			case physics::PhysicsBodyType::EDYNAMIC_BODY:
+				actor = physics::CreateDynamicRigidActor(transform,collider);
+				break;
+			case physics::PhysicsBodyType::ESTATIC_BODY:
+				actor = physics::CreateStaticRigidActor(transform,collider);
+				break;
+		}
+		return actor != nullptr;
 	}
 	~PhysicsComponent() {}
 

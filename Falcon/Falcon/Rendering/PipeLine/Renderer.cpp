@@ -113,6 +113,17 @@ void Renderer::SetDrawStates()
 	{
 		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
 		m_entity[i]->AddComponent<PhysicsComponent>();
+		if (i == 0)
+		{
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetBoxCollider(5, 5, 5);
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(),physics::PhysicsBodyType::ESTATIC_BODY);
+
+		}
+		else
+		{
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(1.0f);
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+		}
 	}
 }
 
@@ -137,8 +148,8 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 	// camera/view transformations
 	shader->SetMat4("view", view);
 
-	m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	//m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	//m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
 }
 

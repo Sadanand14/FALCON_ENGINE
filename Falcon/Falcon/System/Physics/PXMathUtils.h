@@ -16,6 +16,7 @@ public:
 	static void			  PxQuattoQuat(const physx::PxQuat quat_s, glm::quat& vec_d);
 
 	inline static glm::vec3 lerp(const glm::vec3& from, const glm::vec3& to, float dt) {return (from + (to - from) * dt);}
+	inline static glm::quat lerp(const glm::quat& from, const glm::quat& to, float dt) { return (from + (to - from) * dt); }
 };
 
 #endif // !PXMATHCONVERSIONUTIL

@@ -92,7 +92,7 @@ inline void Entity::AddComponent<PhysicsComponent>()
 	}
 	else
 	{
-		m_physicsC = new PhysicsComponent(m_transform);
+		m_physicsC = new PhysicsComponent();
 	}
 }
 

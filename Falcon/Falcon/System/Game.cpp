@@ -2,7 +2,7 @@
 #include "Physics/Physics.h"
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 50.0f));
 
 //Camera Setup
 float lastX = 0.0f;
@@ -40,7 +40,6 @@ bool Game::Initialize()
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 	m_scene = fmemory::fnew<SceneGraph>("../Assets/Scenes/scene.json");
-
 	m_renderer->SetEntities(m_scene->GetEntities());
 
 	//Camera
