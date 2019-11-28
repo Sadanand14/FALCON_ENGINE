@@ -45,6 +45,7 @@ void WindowClass::Init()
 		return;
 	}
 	glfwMakeContextCurrent(m_gameWindow);
+	glfwSwapInterval(0);
 	glfwSetFramebufferSizeCallback(m_gameWindow, framebuffer_size_callback);
 	glfwSetWindowUserPointer(m_gameWindow, this);
 
@@ -58,7 +59,7 @@ void WindowClass::Init()
 	
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	
+		
 
 }
 
