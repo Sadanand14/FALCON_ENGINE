@@ -28,6 +28,8 @@ namespace Scene
 		OctreeNode* m_parent;
 		OctreeNodeVector m_childNodes;
 
+
+
 		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
 		void Subdivide(float minSide);
 		void Segregate();

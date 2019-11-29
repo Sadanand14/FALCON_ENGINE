@@ -15,25 +15,6 @@ namespace Scene
 		m_entities.clear();
 	}
 
-	void OctreeNode::AddEntity(Entity* entity)
-	{
-		m_entities.push_back(entity);
-		for (unsigned int i = 0; i < m_childNodes.size(); i++)
-		{
-			if (CheckEntityPosInNode(m_childNodes[i], entity))
-			{
-				entity->GetTransform()->pushOTID(i);
-				m_childNodes[i]->AddEntity(entity);
-				break;
-			}
-		}
-	}
-
-	void OctreeNode::RemoveEntity(Entity* entity)
-	{
-
-	}
-
 	void OctreeNode::Subdivide(float minSide)
 	{
 		if ((this->m_farBottomRight.x - this->m_nearTopLeft.x) >= (2 * minSide))
@@ -94,87 +75,10 @@ namespace Scene
 		}
 	}
 
-	void OctreeNode::Segregate()
-	{
-		
-
-		/*if ((m_childNodes.size() == 8) && (m_entities.size() > 0))
-		{
-			glm::vec3 CentrePoint = glm::vec3((m_nearTopLeft + m_farBottomRight) / 2.0f);
-			entityVector nearTopLeftVector, nearTopRightVector, nearBottomLeftVector, nearBottomRightVector;
-			entityVector farTopLeftVector, farTopRightVector, farBottomLeftVector, farBottomRightVector;
-
-			float xPos, yPos, zPos;
-			bool close = false, top = false, left = false;
-			glm::mat4 modelMatrix;
-			for (unsigned int i = 0; i < m_entities.size(); i++)
-			{
-				Entity* entity = m_entities[i];
-				modelMatrix = m_entities[i]->GetTransform()->GetModel();
-				xPos = modelMatrix[3][0];
-				yPos = modelMatrix[3][1];
-				zPos = modelMatrix[3][2];
-
-
-				if (xPos < CentrePoint.x) left = true;
-				else left = false;
-
-				if (yPos > CentrePoint.y) top = true;
-				else top = false;
-
-				if (zPos < CentrePoint.z) close = true;
-				else close = false;
-
-
-				if (left && top && close) { entity->GetTransform()->pushOTID(0); nearTopLeftVector.push_back(entity); }
-
-				else if (!left && top && close) { entity->GetTransform()->pushOTID(1); nearTopRightVector.push_back(entity); }
-
-				else if (left && !top && close) { entity->GetTransform()->pushOTID(2); nearBottomLeftVector.push_back(entity); }
-
-				else if (!left && !top && close) { entity->GetTransform()->pushOTID(3); nearBottomRightVector.push_back(entity); }
-
-				else if (left && top && !close) { entity->GetTransform()->pushOTID(4); farTopLeftVector.push_back(entity); }
-
-				else if (!left && top && !close) { entity->GetTransform()->pushOTID(5); farTopRightVector.push_back(entity); }
-
-				else if (left && !top && !close) { entity->GetTransform()->pushOTID(6); farBottomLeftVector.push_back(entity); }
-
-				else if (!left && !top && !close) { entity->GetTransform()->pushOTID(7); farBottomRightVector.push_back(entity); }
-
-				else FL_GAME_ERROR("Entity exists outside the octree dimensions!");
-			}
-
-			m_childNodes[0]->m_entities = nearTopLeftVector;
-			m_childNodes[0]->Segregate();
-
-			m_childNodes[1]->m_entities = nearTopRightVector;
-			m_childNodes[1]->Segregate();
-
-			m_childNodes[2]->m_entities = nearBottomLeftVector;
-			m_childNodes[2]->Segregate();
-
-			m_childNodes[3]->m_entities = nearBottomRightVector;
-			m_childNodes[3]->Segregate();
-
-			m_childNodes[4]->m_entities = farTopLeftVector;
-			m_childNodes[4]->Segregate();
-
-			m_childNodes[5]->m_entities = farTopRightVector;
-			m_childNodes[5]->Segregate();
-
-			m_childNodes[6]->m_entities = farBottomLeftVector;
-			m_childNodes[6]->Segregate();
-
-			m_childNodes[7]->m_entities = farBottomRightVector;
-			m_childNodes[7]->Segregate();
-		}*/
-	}
-
 	/////////////////////////////////////////////////////////////////////////////////
 	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene), m_camera(camera)
 	{
-		assert((farBottomRight.x - nearTopLeft.x ) > 0.0f
+		assert((farBottomRight.x - nearTopLeft.x) > 0.0f
 			&& (nearTopLeft.y - farBottomRight.y) > 0.0f
 			&& (farBottomRight.z - nearTopLeft.z) > 0.0f);
 
@@ -202,32 +106,43 @@ namespace Scene
 	void Octree::AssignNode(Entity* entity)
 	{
 		//get bounding corners
-		boundingVector* objectBounds = &entity->GetComponent<RenderComponent>()->GetBounds();
+		RenderComponent* rd = entity->GetComponent<RenderComponent>();
+		boundingVector objectBounds = entity->GetComponent<RenderComponent>()->GetBounds();
+		Transform* transform = entity->GetTransform();
+		entity->GetTransform()->ClearOTID();
+
 		glm::mat4 modelMatrix = entity->GetTransform()->GetModel();
 		glm::vec3 temp;
 		glm::vec4 result;
 
-		//multiply the corners with the current model matrix
-		for (unsigned short i = 0; i < objectBounds->size(); i++) 
-		{
-			result = modelMatrix * glm::vec4((*objectBounds)[i], 1.0f);
-			(*objectBounds)[i] = glm::vec3(result.x, result.y, result.z);
-		}
-
 		//get new axis aligned boudning corners
 		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+
+		//multiply the corners with the current model matrix
+		for (unsigned short i = 0; i < objectBounds.size(); i++)
+		{
+			result = modelMatrix * glm::vec4(objectBounds[i], 1.0f);
+			if (minX > result.x) minX = result.x;
+			if (maxX < result.x) maxX = result.x;
+
+			if (minY > result.y) minY = result.y;
+			if (maxY < result.y) maxY = result.y;
+
+			if (minZ > result.z) minZ = result.z;
+			if (maxZ < result.z) maxZ = result.z;
+		}
 
 		glm::vec3 NTL = glm::vec3(minX, minY, minZ);
 
 		glm::vec3 FBR = glm::vec3(maxX, maxY, maxZ);
-		
+
 		//go into a while loop that keeps checking if the children of the current node are able to contain the object completely
 		//if they cant then the current node is the bounding node
 		OctreeNode* node;
 		node = m_rootNode;
-
+		entity->GetTransform()->pushOTID(0);
 		bool nodeFound = false, fitsInChild = false;
-		while (!nodeFound) 
+		while (!nodeFound)
 		{
 			fitsInChild = false;
 			if (node->m_childNodes.empty())
@@ -237,9 +152,9 @@ namespace Scene
 			OctreeNodeVector* childVector = &node->m_childNodes;
 			for (unsigned short i = 0; i < childVector->size(); i++)
 			{
-				if (CheckBounds((*childVector)[i], NTL , FBR))
+				if (CheckBounds((*childVector)[i], NTL, FBR))
 				{
-					//TODO: Assign OTID
+					transform->pushOTID(i);
 					fitsInChild = true;
 					node = (*childVector)[i];
 					break;
@@ -249,12 +164,21 @@ namespace Scene
 		}
 
 		//Assign entity to the node
+		node->m_entities.push_back(entity);
+
+		std::cout << "Node Asssigned : ";
+		const IDVector* IDarr = &transform->GetOTID();
+		for (unsigned int i = 0; i < transform->GetOTID().size(); i++)
+		{
+			std::cout << (*IDarr)[i];
+		}
+		std::cout << "\n";
 	}
 
 	void Octree::AddEntity(Entity* entity)
 	{
 		entity->GetTransform()->ClearOTID();
-		m_rootNode->AddEntity(entity);
+		AssignNode(entity);
 	}
 
 	void Octree::RemoveEntity(Entity* entity)
@@ -264,26 +188,28 @@ namespace Scene
 
 	void Octree::Update()
 	{
-		const entityVector* updatedEntities = &m_scene->GetOctreeEntities();
+		//const entityVector updatedEntities = m_scene->GetOctreeEntities();
+		entityVector& updatedEntities = m_scene->GetOctreeEntities();
+		FilterEntities(updatedEntities);
+
 		//TODO: Add Function Call to extract plane Equations
-		for (unsigned int i = 0; i < (*updatedEntities).size(); i++)
+		for (unsigned int i = 0; i < updatedEntities.size(); i++)
 		{
-			if ((*updatedEntities)[i]->GetTransform()->GetOTID().empty())
+			if (updatedEntities[i]->GetTransform()->GetOTID().empty())
 			{
-				if (CheckEntityPosInNode(m_rootNode, (*updatedEntities)[i]))
+				if (CheckEntityPosInNode(m_rootNode, updatedEntities[i]))
 				{
-					AddEntity((*updatedEntities)[i]);
+					AddEntity(updatedEntities[i]);
 				}
 			}
 			else
 			{
-				Entity* entity = (*updatedEntities)[i];
-				UpdateEntityPosition(FindNode(entity), entity);
+				UpdateEntityPosition(FindNode(updatedEntities[i]), updatedEntities[i]);
 			}
 		}
 	}
 
-	void Octree::GetPlanes() 
+	void Octree::GetPlanes()
 	{
 		using namespace glm;
 		mat4 View = m_camera->GetViewMatrix();
@@ -293,82 +219,139 @@ namespace Scene
 		vec4 yColumn = VP[1];
 		vec4 zColumn = VP[2];
 		vec4 wColumn = VP[3];
-		
 
 	}
 
 	void Octree::UpdateEntityPosition(OctreeNode* node, Entity* entity)
 	{
-		if (!CheckEntityPosInNode(node, entity))
+		//recalculate bounding box
+		const boundingVector& BV = entity->GetComponent<RenderComponent>()->GetBounds();
+		Transform* transform = entity->GetTransform();
+		//entity->GetTransform()->ClearOTID();
+
+		glm::mat4 modelMatrix = entity->GetTransform()->GetModel();
+		glm::vec3 temp;
+		glm::vec4 result;
+
+		//get new axis aligned boudning corners
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+
+		//multiply the corners with the current model matrix
+		for (unsigned short i = 0; i < BV.size(); i++)
+		{
+			result = modelMatrix * glm::vec4(BV[i], 1.0f);
+			if (minX > result.x) minX = result.x;
+			if (maxX < result.x) maxX = result.x;
+
+			if (minY > result.y) minY = result.y;
+			if (maxY < result.y) maxY = result.y;
+
+			if (minZ > result.z) minZ = result.z;
+			if (maxZ < result.z) maxZ = result.z;
+		}
+
+		glm::vec3 NTL = glm::vec3(minX, minY, minZ);
+
+		glm::vec3 FBR = glm::vec3(maxX, maxY, maxZ);
+
+		if (!CheckBounds(node, NTL, FBR))
 		{
 			Transform* transform = entity->GetTransform();
-			entityVector* entities = &node->m_entities;
-			auto entityPos = std::find(entities->begin(), entities->end(), entity);
-			if (entityPos == entities->end())
-			{
-				FL_ENGINE_INFO("entity doesnt exist in the octree");
-				return;
-			}
+			entityVector& entities = node->m_entities;
+			auto entityPos = std::find(entities.begin(), entities.end(), entity);
 
-			entities->erase((entityPos));
+			assert(entityPos != entities.end());
+		
+			entities.erase((entityPos));
 			transform->popOTID();
 
-			bool nodeFound = false;
-			node = node->m_parent;
+			//go up the heirarchy to find the boudning node
+			while (true)
+			{
+				node = node->m_parent;
+				if (CheckBounds(node, NTL, FBR)) break;
+				else transform->popOTID();
+				if (node == m_rootNode)
+				{
+					m_rootNode->m_entities.push_back(entity);
+					transform->pushOTID(0);
+					return;
+				}
+			}
+
+			//go down from there to find the lowest bounding node
+			bool nodeFound = false, fitsInChild = false;
 			while (!nodeFound)
 			{
-				if (CheckEntityPosInNode(node, entity))
+				fitsInChild = false;
+				if (node->m_childNodes.empty())
 				{
-					for (unsigned int i = 0; i < node->m_childNodes.size(); i++)
-					{
-						if (CheckEntityPosInNode(node->m_childNodes[i], entity))
-						{
-							//OctreeNode* currentNode = node->m_childNodes[i];
-							node->m_childNodes[i]->m_entities.push_back(entity);
-							transform->pushOTID(i);
-
-							if (node->m_childNodes[i]->m_childNodes.empty()) nodeFound = true;
-							else node = node->m_childNodes[i];
-
-							break;
-						}
-					}
+					node->Subdivide(m_minSide);
 				}
-				else {
-					entities = &node->m_entities;
-					entityPos = std::find(entities->begin(), entities->end(), entity);
-					entities->erase(entityPos);
-					transform->popOTID();
-					if (node->m_parent != nullptr)
+				OctreeNodeVector* childVector = &node->m_childNodes;
+				for (unsigned short i = 0; i < childVector->size(); i++)
+				{
+					if (CheckBounds((*childVector)[i], NTL, FBR))
 					{
-						node = node->m_parent;
-					}
-					else 
-					{
-						FL_ENGINE_INFO("This Entity may have exited the octree space");
+						transform->pushOTID(i);
+						fitsInChild = true;
+						node = (*childVector)[i];
 						break;
 					}
 				}
+				if (!fitsInChild) nodeFound = true;
 			}
-			/*std::cout << "new OTID"; 
-			for (unsigned int i = 0; i < transform->GetOTID().size(); i++) 
-			{
-				std::cout << transform->GetOTID()[i];
-			}
-			std::cout << "\n";*/
+			node->m_entities.push_back(entity);
 		}
+		else 
+		{
+			OctreeNode* original = node;
+			//check if it fits inside children
+			bool nodeFound = false, fitsInChild = false;
+			while (!nodeFound)
+			{
+				fitsInChild = false;
+				if (node->m_childNodes.empty())
+				{
+					node->Subdivide(m_minSide);
+				}
+				OctreeNodeVector* childVector = &node->m_childNodes;
+				for (unsigned short i = 0; i < childVector->size(); i++)
+				{
+					if (CheckBounds((*childVector)[i], NTL, FBR))
+					{
+						transform->pushOTID(i);
+						fitsInChild = true;
+						node = (*childVector)[i];
+						break;
+					}
+				}
+				if (!fitsInChild) nodeFound = true;
+			}
+			if (original != node) node->m_entities.push_back(entity);
+		}
+		//node->m_entities.push_back(entity);
+
+		//std::cout << "Updated Node Asssigned : ";
+		//const IDVector* IDarr = &transform->GetOTID();
+		/*for (unsigned int i = 0; i < transform->GetOTID().size(); i++)
+		{
+			std::cout << (*IDarr)[i];
+		}
+		std::cout << "\n";*/
+		
 	}
 
-	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR) 
+	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR)
 	{
 		glm::vec3 nodeNTL = node->m_nearTopLeft;
 		glm::vec3 nodeFBR = node->m_farBottomRight;
 
-		if (NTL.x < nodeNTL.x) 
+		if (NTL.x < nodeNTL.x)
 		{
 			return false;
 		}
-		if (NTL.y > nodeNTL.x)
+		if (NTL.y > nodeNTL.y)
 		{
 			return false;
 		}
@@ -419,11 +402,11 @@ namespace Scene
 		return it;
 	}*/
 
-	void Octree::Distribute()
-	{
-		
-		m_rootNode->Segregate();
-	}
+	//void Octree::Distribute()
+	//{
+
+	//	m_rootNode->Segregate();
+	//}
 
 	void Octree::FilterEntities(entityVector& entities)
 	{
@@ -434,6 +417,7 @@ namespace Scene
 		{
 			if (!CheckEntityPosInNode(m_rootNode, entities[i]))
 			{
+
 				//entityPos = FindEntityInVector(entities[i], entities);
 				entityPos = std::find(entities.begin(), entities.end(), entities[i]);
 				entities.erase(entityPos);
@@ -445,23 +429,16 @@ namespace Scene
 		}
 	}
 
-	OctreeNode* Octree::FindNode(Entity* entity)const 
+	OctreeNode* Octree::FindNode(Entity* entity)const
 	{
-
 		const IDVector* OTID = &entity->GetTransform()->GetOTID();
 		OctreeNode* temp = m_rootNode;
 
-
-		for (unsigned short int i = 0; i < OTID->size(); i++)
+		for (unsigned short int i = 1; i < OTID->size(); i++)
 		{
 			temp = temp->m_childNodes[(*OTID)[i]];
 		}
 
-		if (temp == m_rootNode)
-		{
-			FL_ENGINE_ERROR("Could not find the object node or the octree does not have any nodes.");
-			return nullptr;
-		}
-		else return temp;
+		return temp;
 	}
 }

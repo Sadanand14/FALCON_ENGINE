@@ -6,19 +6,19 @@ namespace Scene
 	SceneNode::SceneNode()
 		: m_updateFlag(false), m_status(Status::Active), m_entity(nullptr), m_parent(nullptr), m_ReferenceMatrix(glm::mat4(1.0f))
 	{
-		//m_childNodes.reserve(10);
+		m_childNodes.reserve(10);
 	}
 
 	SceneNode::SceneNode(Entity* entity)
 		: m_updateFlag(false), m_status(Status::Active), m_entity(entity), m_parent(nullptr), m_ReferenceMatrix(glm::mat4(1.0f))
 	{
-		//m_childNodes.reserve(10);
+		m_childNodes.reserve(10);
 	}
 
 	SceneNode::SceneNode(SceneNode* parent)
 		: m_updateFlag(true), m_status(Status::Active), m_entity(nullptr), m_parent(parent)
 	{
-		//m_childNodes.reserve(10);
+		m_childNodes.reserve(10);
 		m_ReferenceMatrix = m_parent->GetWM();
 	}
 
