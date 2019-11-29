@@ -7,7 +7,7 @@
 #include "System/Memory/fmemory.h"
 #include "Core/Components/TransformComponent.h"
 #include "../Log.h"
-
+#include "glm/vec3.hpp"
 
 class Entity;
 
@@ -42,6 +42,8 @@ namespace physics
 
 	physx::PxShape* GetBoxCollider(const float& halfX, const float& halfY, const float& halfZ);
 	physx::PxShape* GetSphereCollider(const float& radius);
+	physx::PxShape* GetCapsuleCollider(const float& radius,const float& halfHeight);
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertextData, const float& stride, bool directInsert = false);
 
 }
 

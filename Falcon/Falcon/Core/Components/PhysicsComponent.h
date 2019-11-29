@@ -4,7 +4,7 @@
 #include "BasicComponent.h"
 #include "System/Physics/Physics.h"
 #include "TransformComponent.h"
-
+#include "glm/vec3.hpp"
 
 typedef physx::PxRigidActor Rigidbody;
 typedef physx::PxShape      Collider;
@@ -36,6 +36,12 @@ public:
 
 	void SetBoxCollider(const float& halfX, const float& halfY, const float& halfZ)
 	{
+		if (collider != nullptr)
+		{
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ",collider->getGeometryType());
+			return;
+		}
+		
 		collider = physics::GetBoxCollider(halfX, halfY, halfZ);
 		if (!collider)
 		{
@@ -43,16 +49,50 @@ public:
 		}
 	}
 
+
 	void SetSphereCollider(const float& radius)
 	{
 		if (collider != nullptr)
 		{
-			FL_ENGINE_ERROR("Collider alread assigned!.");
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ", collider->getGeometryType());
+			return;
 		}
+		
 		collider = physics::GetSphereCollider(radius);
 		if (!collider)
 		{
-			FL_ENGINE_ERROR("Failed to create box collider");
+			FL_ENGINE_ERROR("Failed to create sphere collider");
+		}
+	}
+
+	void SetCapsuleCollider(const float& radius, const float& halfHeight)
+	{
+		if (collider != nullptr)
+		{
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ", collider->getGeometryType());
+			return;
+		}
+
+		collider = physics::GetCapsuleCollider(radius,halfHeight);
+		if (!collider)
+		{
+			FL_ENGINE_ERROR("Failed to create capsule collider");
+		}
+	}
+
+	void SetMeshCollider(const glm::vec3* vertexData, const int& count, const int& stride)
+	{
+
+		if (collider != nullptr)
+		{
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ", collider->getGeometryType());
+			return;
+		}
+
+		collider = physics::GetMeshCollider(vertexData, stride, count);
+		if (!collider)
+		{
+			FL_ENGINE_ERROR("Failed to create mesh collider");
 		}
 	}
 

@@ -121,7 +121,8 @@ void Renderer::SetDrawStates()
 		}
 		else
 		{
-			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(1.0f);
+			//RenderComponent* renderComp = m_entity[i]->GetComponent<RenderComponent>();
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(1);
 			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 		}
 	}
