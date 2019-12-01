@@ -158,12 +158,23 @@ namespace Scene
 		return returnValue;
 	}
 
-
+	void SceneGraph::SegregateEntities()
+	{
+		m_renderables.clear();
+		//segregate all renderable objects into one vector list
+		for (unsigned int i = 0; i < m_entityList.size(); i++) 
+		{
+			if (m_entityList[i]->GetComponent<RenderComponent>() != nullptr) 
+			{
+				m_renderables.push_back(m_entityList[i]);
+			}
+		}
+	}
 
 	SceneGraph::SceneGraph(const char* sceneFilePath)
 	{
 		m_entityList.reserve(10);
-		m_octreeEntityList.reserve(10);
+		m_updatedRenderables.reserve(10);
 		rootNode = new SceneNode();
 		
 		//Get file data
@@ -208,6 +219,8 @@ namespace Scene
 				nextEntityOffset = temp.m_nextOffset;
 			}
 		}
+
+		SegregateEntities();
 	}
 
 	SceneGraph::~SceneGraph()
@@ -217,9 +230,9 @@ namespace Scene
 
 	void SceneGraph::UpdateScene()
 	{
-		m_octreeEntityList.clear();
+		m_updatedRenderables.clear();
 		nodeVector* childArr = &rootNode->GetChildren();
 		for (unsigned int i = 0; i < childArr->size(); i++)
-			(*childArr)[i]->UpdateEntity(m_octreeEntityList);
+			(*childArr)[i]->UpdateEntity(m_updatedRenderables);
 	}
 }

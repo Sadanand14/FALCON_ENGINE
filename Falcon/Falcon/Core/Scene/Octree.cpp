@@ -7,6 +7,11 @@ namespace Scene
 	{
 		m_childNodes.reserve(10);
 		m_entities.reserve(10);
+		m_centre = (m_nearTopLeft + m_farBottomRight) / 2.0f;
+		float x = (m_nearTopLeft.x - m_centre.x);
+		float y = (m_nearTopLeft.y - m_centre.y);
+		float z = (m_nearTopLeft.z - m_centre.z);
+		m_radius = glm::sqrt(x * x + y * y + z * z);
 	}
 
 	OctreeNode::~OctreeNode()
@@ -84,23 +89,24 @@ namespace Scene
 
 		m_rootNode = fmemory::fnew<OctreeNode>(m_nearTopLeft, m_farBottomRight);
 
+		m_planeArr.reserve(6);
 		m_minSide = minSide;
 
-		auto entityList = m_scene->GetEntities();
+		auto entityList = m_scene->GetRenderables();
 		for (unsigned int i = 0; i < entityList.size(); i++)
 			entityList[i]->GetTransform()->ClearOTID();
 
 		FilterEntities(entityList);
-		m_entities = entityList;
-		for (unsigned int i = 0; i < m_entities.size(); i++)
+		m_renderables = entityList;
+		for (unsigned int i = 0; i < m_renderables.size(); i++)
 		{
-			AssignNode(m_entities[i]);
+			AssignNode(m_renderables[i]);
 		}
 	}
 
 	Octree::~Octree()
 	{
-		//fmemory::fdelete<OctreeNode> (m_rootNode);
+		//fmemory::fdelete<OctreeNode>(m_rootNode);
 	}
 
 	void Octree::AssignNode(Entity* entity)
@@ -192,7 +198,10 @@ namespace Scene
 		entityVector& updatedEntities = m_scene->GetOctreeEntities();
 		FilterEntities(updatedEntities);
 
-		//TODO: Add Function Call to extract plane Equations
+		//extract plane equations in world Space 
+		GetPlanes();
+
+		//update all entities whose model matrices may have changed
 		for (unsigned int i = 0; i < updatedEntities.size(); i++)
 		{
 			if (updatedEntities[i]->GetTransform()->GetOTID().empty())
@@ -207,19 +216,93 @@ namespace Scene
 				UpdateEntityPosition(FindNode(updatedEntities[i]), updatedEntities[i]);
 			}
 		}
+
+		CullObjects();
+	}
+
+	void Octree::CullObjects() 
+	{
+		m_viewables.clear();
+		bool shouldDraw = false;
+		for (unsigned int i = 0; i < m_renderables.size(); i++) 
+		{
+			shouldDraw = true;
+			OctreeNode* node = FindNode(m_renderables[i]);
+			glm::vec3 centre= node->m_centre;
+			for (unsigned int i = 0; i < m_planeArr.size(); i++) 
+			{
+				glm::vec4 plane = m_planeArr[i];
+				if ((plane.x * centre.x + plane.y * centre.y + plane.z * centre.z + plane.w + node->m_radius) < 0) 
+				{
+					shouldDraw = false;
+					break;
+				}
+			}
+			if (shouldDraw)m_viewables.push_back(m_renderables[i]);
+		}
 	}
 
 	void Octree::GetPlanes()
 	{
+		//float zmin = -m_projection[2][3]/ m_projection[2][2];
+		//float farClip = 100.0f;
+		//float r = farClip / farClip - zmin;
+		//m_projection[2][2] = r;
+		//m_projection[2][3] = -r * zmin;
+		m_planeArr.clear();
 		using namespace glm;
 		mat4 View = m_camera->GetViewMatrix();
-		mat4 VP = m_projection * View;
+		mat4 VP =  m_projection * View;
 
-		vec4 xColumn = VP[0];
-		vec4 yColumn = VP[1];
-		vec4 zColumn = VP[2];
-		vec4 wColumn = VP[3];
+		//vec4 xColumn = VP[0];
+		//vec4 yColumn = VP[1];
+		//vec4 zColumn = VP[2];
+		//vec4 wColumn = VP[3];
 
+		m_planeArr.push_back(VP[3] + VP[0]);//Left Plane
+		NormalizePlaneCoeff(m_planeArr[0]);
+
+		m_planeArr.push_back(VP[3] - VP[0]);//Right Plane
+		NormalizePlaneCoeff(m_planeArr[1]);
+
+		m_planeArr.push_back(VP[3] + VP[1]);//Bottom Plane
+		NormalizePlaneCoeff(m_planeArr[2]);
+
+		m_planeArr.push_back(VP[3] - VP[1]);//Top Plane
+		NormalizePlaneCoeff(m_planeArr[3]);
+
+		m_planeArr.push_back(VP[3] + VP[2]);//Near Plane
+		NormalizePlaneCoeff(m_planeArr[4]);
+
+		m_planeArr.push_back(VP[3] - VP[2]);//Far Plane
+		NormalizePlaneCoeff(m_planeArr[5]);
+
+		//bool check = true;
+		//float total = 0;
+		//for (unsigned int i = 0; i < 6; i++)
+		//{
+		//	if (m_planeArr[i].x*3 + m_planeArr[i].w < 0)
+		//		check = false;
+		//}
+		//if (check)
+		//{
+		//	FL_ENGINE_TRACE("reference inside frustum");
+		//}
+		//else
+		//{
+		//	FL_ENGINE_TRACE("reference outside frustum");
+		//}
+	}
+
+
+
+	void NormalizePlaneCoeff(glm::vec4& plane) 
+	{
+		float magnitude = glm::sqrt( plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
+		plane.x /= magnitude;
+		plane.y /= magnitude;
+		plane.z /= magnitude;
+		plane.w /= magnitude;
 	}
 
 	void Octree::UpdateEntityPosition(OctreeNode* node, Entity* entity)
@@ -261,7 +344,7 @@ namespace Scene
 			auto entityPos = std::find(entities.begin(), entities.end(), entity);
 
 			assert(entityPos != entities.end());
-		
+
 			entities.erase((entityPos));
 			transform->popOTID();
 
@@ -303,7 +386,7 @@ namespace Scene
 			}
 			node->m_entities.push_back(entity);
 		}
-		else 
+		else
 		{
 			OctreeNode* original = node;
 			//check if it fits inside children
@@ -328,7 +411,8 @@ namespace Scene
 				}
 				if (!fitsInChild) nodeFound = true;
 			}
-			if (original != node) node->m_entities.push_back(entity);
+			if (original != node) 
+				node->m_entities.push_back(entity);
 		}
 		//node->m_entities.push_back(entity);
 
@@ -339,7 +423,7 @@ namespace Scene
 			std::cout << (*IDarr)[i];
 		}
 		std::cout << "\n";*/
-		
+
 	}
 
 	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR)

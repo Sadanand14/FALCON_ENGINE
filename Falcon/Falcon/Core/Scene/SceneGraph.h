@@ -65,15 +65,20 @@ namespace Scene
 	class SceneGraph
 	{
 	private:
-		entityVector  m_entityList, m_octreeEntityList;
+		entityVector  m_entityList, m_renderables, m_updatedRenderables;
 		SceneNode* rootNode;
+
 		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index);
+		void SegregateEntities();
+
 	public:
 
 		SceneGraph(const char* sceneFilePath);
 		~SceneGraph();
+
+		inline entityVector& GetRenderables() { return m_renderables; }
 		inline const entityVector GetEntities() const { return m_entityList; }
-		inline entityVector& GetOctreeEntities() { return m_octreeEntityList; }
+		inline entityVector& GetOctreeEntities() { return m_updatedRenderables; }
 
 		void UpdateScene();
 

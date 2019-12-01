@@ -111,10 +111,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			rc->m_mesh = m_meshes[mesh.GetString()];
 			rc->CalculateBounds();
 		}
-
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
 	}
-
 	return newEntity;
 }
 
