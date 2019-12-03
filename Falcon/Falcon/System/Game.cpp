@@ -19,7 +19,7 @@ Game::~Game()
 {
 	//m_scene->SaveScene("../Assets/Scenes/scene2.json");
 	//delete m_scene;
-	fmemory::fdelete<SceneGraph>(m_scene);
+	fmemory::fdelete<Scene::SceneGraph>(m_scene);
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
 	fmemory::fdelete<InputReceiver>(m_inputClass);
@@ -37,7 +37,7 @@ bool Game::Initialize()
 	m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
-	m_scene = fmemory::fnew<SceneGraph>("../Assets/Scenes/scene.json");
+	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 
 	m_renderer->SetEntities(m_scene->GetEntities());
 
