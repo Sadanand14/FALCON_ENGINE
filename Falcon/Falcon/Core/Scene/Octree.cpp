@@ -224,7 +224,7 @@ namespace Scene
 	{
 		m_viewables.clear();
 		bool shouldDraw = false;
-		for (unsigned int i = 0; i < m_renderables.size(); i++) 
+		/*for (unsigned int i = 0; i < m_renderables.size(); i++) 
 		{
 			shouldDraw = true;
 			OctreeNode* node = FindNode(m_renderables[i]);
@@ -236,6 +236,25 @@ namespace Scene
 				{
 					shouldDraw = false;
 					break;
+				}
+			}
+			if (shouldDraw)m_viewables.push_back(m_renderables[i]);
+		}*/
+		for (unsigned int i = 0; i < m_renderables.size(); i++) 
+		{
+			shouldDraw = true;
+			Transform* transform = m_renderables[i]->GetTransform();
+			glm::mat4 modelMatrix = transform->GetModel();
+			float xpos = modelMatrix[3][0];
+			float ypos = modelMatrix[3][1];
+			float zpos = modelMatrix[3][2];
+			for (unsigned int i = 0; i < m_planeArr.size(); i++) 
+			{
+				if (m_planeArr[i].x * xpos + m_planeArr[i].y * ypos + m_planeArr[i].z * zpos + m_planeArr[i].w < 0) 
+				{
+					shouldDraw = false;
+					break;
+
 				}
 			}
 			if (shouldDraw)m_viewables.push_back(m_renderables[i]);
@@ -253,45 +272,45 @@ namespace Scene
 		using namespace glm;
 		mat4 View = m_camera->GetViewMatrix();
 		mat4 VP =  m_projection * View;
-
+		mat4 TVP = glm::transpose(VP);
 		//vec4 xColumn = VP[0];
 		//vec4 yColumn = VP[1];
 		//vec4 zColumn = VP[2];
 		//vec4 wColumn = VP[3];
 
-		m_planeArr.push_back(VP[3] + VP[0]);//Left Plane
+		m_planeArr.push_back(TVP[3] + TVP[0]);//Left Plane
 		NormalizePlaneCoeff(m_planeArr[0]);
 
-		m_planeArr.push_back(VP[3] - VP[0]);//Right Plane
+		m_planeArr.push_back(TVP[3] - TVP[0]);//Right Plane
 		NormalizePlaneCoeff(m_planeArr[1]);
 
-		m_planeArr.push_back(VP[3] + VP[1]);//Bottom Plane
+		m_planeArr.push_back(TVP[3] + TVP[1]);//Bottom Plane
 		NormalizePlaneCoeff(m_planeArr[2]);
 
-		m_planeArr.push_back(VP[3] - VP[1]);//Top Plane
+		m_planeArr.push_back(TVP[3] - TVP[1]);//Top Plane
 		NormalizePlaneCoeff(m_planeArr[3]);
 
-		m_planeArr.push_back(VP[3] + VP[2]);//Near Plane
+		m_planeArr.push_back(TVP[3] + TVP[2]);//Near Plane
 		NormalizePlaneCoeff(m_planeArr[4]);
 
-		m_planeArr.push_back(VP[3] - VP[2]);//Far Plane
+		m_planeArr.push_back(TVP[3] - TVP[2]);//Far Plane
 		NormalizePlaneCoeff(m_planeArr[5]);
 
-		//bool check = true;
-		//float total = 0;
-		//for (unsigned int i = 0; i < 6; i++)
-		//{
-		//	if (m_planeArr[i].x*3 + m_planeArr[i].w < 0)
-		//		check = false;
-		//}
-		//if (check)
-		//{
-		//	FL_ENGINE_TRACE("reference inside frustum");
-		//}
-		//else
-		//{
-		//	FL_ENGINE_TRACE("reference outside frustum");
-		//}
+	/*	bool check = true;
+		float total = 0;
+		for (unsigned int i = 0; i < 6; i++)
+		{
+			if (-50*m_planeArr[i].z +  m_planeArr[i].w < 0)
+				check = false;
+		}
+		if (check)
+		{
+			FL_ENGINE_TRACE("reference inside frustum");
+		}
+		else
+		{
+			FL_ENGINE_TRACE("reference outside frustum");
+		}*/
 	}
 
 
@@ -473,24 +492,6 @@ namespace Scene
 			return true;
 		else return false;
 	}
-
-	/*entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector)
-	{
-		auto it = vector.begin();
-		for (it; it != vector.end(); it++)
-		{
-			if (*it == entity) break;
-		}
-		if (it == vector.end())
-			FL_ENGINE_ERROR("Entity Not Found in the Vector.");
-		return it;
-	}*/
-
-	//void Octree::Distribute()
-	//{
-
-	//	m_rootNode->Segregate();
-	//}
 
 	void Octree::FilterEntities(entityVector& entities)
 	{

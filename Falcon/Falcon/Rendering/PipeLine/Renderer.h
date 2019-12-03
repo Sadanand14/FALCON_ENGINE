@@ -72,9 +72,10 @@ public:
 	void Update(glm::mat4 view,float dt);
 	void Draw();
 
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities)
+	inline void SetEntities(const boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>& entities)
 	{
 		m_entity = entities;
+		//m_entity.push_back(new Entity());
 	}
 };
 

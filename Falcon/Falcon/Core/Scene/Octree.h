@@ -67,6 +67,8 @@ namespace Scene
 		void CullObjects();
 
 	public:
+
+		inline const entityVector& GetViewables()const { return m_viewables; }
 		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }
 		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera);
 		void Update();

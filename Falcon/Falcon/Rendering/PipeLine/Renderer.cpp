@@ -98,10 +98,7 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 	shader->UseShader();
 	shader->SetMat4("projection", projection);
 	
-	for (unsigned int i = 0; i < m_entity.size(); i++) 
-	{
-		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
-	}
+	
 }
 
 /**
@@ -116,15 +113,21 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 
 float temp = 0.0f;
 void Renderer::Update(glm::mat4 view,float dt)
-{
+{ 
+
+	FL_ENGINE_INFO("Draw Count: {0}", m_entity.size());
+	for (unsigned int i = 0; i < m_entity.size(); i++)
+	{
+		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+	}
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 
 	//
 	// camera/view transformations
 	shader->SetMat4("view", view);
-	m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	/*m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));*/
 
 }
 

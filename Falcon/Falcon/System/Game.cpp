@@ -38,7 +38,7 @@ namespace gameLoop
 
 		fmemory::MemoryManagerInit();
 
-		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
+		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1920, 1080);
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
@@ -47,7 +47,7 @@ namespace gameLoop
 
 		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 10.0f, m_scene, &camera);
 
-		m_renderer->SetEntities(m_scene->GetEntities());
+		
 
 		//Camera
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
@@ -88,14 +88,16 @@ namespace gameLoop
 			framerate = std::to_string(rate);
 			glfwSetWindowTitle(m_window1->GetWindow(), framerate.c_str());
 
-			//renderer Update
-			m_renderer->Update(camera.GetViewMatrix(),dt);
 
 			//Update SceneGraph
 			m_scene->UpdateScene();
 
 			m_octree->Update();
 			//Render
+			m_renderer->SetEntities(m_octree->GetViewables());
+
+			//renderer Update
+			m_renderer->Update(camera.GetViewMatrix(),dt);
 			m_renderer->Draw();
 
 
