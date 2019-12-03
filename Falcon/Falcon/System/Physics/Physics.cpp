@@ -191,7 +191,7 @@ namespace physics
 
 
 	template<physx::PxConvexMeshCookingType::Enum convexMeshCookingType, bool directInsertion, int gaussMapLimit>
-	physx::PxConvexMesh* createRandomConvex(int numVerts, const glm::vec3 * verts, int stride)
+	physx::PxConvexMesh* createRandomConvex(int numVerts, const physx::PxVec3 * verts, int stride)
 	{
 		physx::PxCookingParams params = gCooking->getParams();
 
@@ -208,8 +208,9 @@ namespace physics
 
 		// We provide points only, therefore the PxConvexFlag::eCOMPUTE_CONVEX flag must be specified
 		desc.points.data = verts;
-		desc.points.count = numVerts;
-		desc.points.stride = stride;
+		desc.points.count = 64;
+		desc.points.stride = sizeof(physx::PxVec3);;
+		//desc.quantizedCount = numVerts ;
 		desc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		int meshSize = 0;
@@ -257,15 +258,29 @@ namespace physics
 
 
 
-	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const float& stride, const int& vertCount,bool directInsert /*= false*/)
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount,bool directInsert /*= false*/)
 	{
 		physx::PxConvexMesh* convexMesh = nullptr;
+		std::vector<physx::PxVec3> pxvertarry;
+		pxvertarry.resize(vertCount);
+		
+		for (int i =0;i<vertCount; ++i)
+		{
+			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
+		}
 		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
-		 convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 16>(vertCount,vertexData,stride);
-	
+		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, true, 16>(vertCount,&pxvertarry[0],stride);
+		
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
 		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);
 		return shape;
+		
+		/*for (int i = 0; i < vertCount; ++i)
+		{
+			FL_ENGINE_INFO("X:{0}, Y:{1}, Z:{2} ", vertexData[i].x, vertexData[i].y, vertexData[i].z);
+		}
+
+		return nullptr;*/
 	}
 
 }

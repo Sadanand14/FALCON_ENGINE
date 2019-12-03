@@ -6,6 +6,15 @@
 #include "glm/gtc/quaternion.hpp"
 #include "Memory/fmemory.h"
 
+void PXMathUtils::Vec3ToPxVec3(const glm::vec3& vec_s, physx::PxVec3& vec_d)
+{
+	/// TODO: Use memcopy insted
+	vec_d.x = vec_s.x;
+	vec_d.y = vec_s.y;
+	vec_d.z = vec_s.z;
+}
+
+
 physx::PxVec3* PXMathUtils::Vec3ToPxVec3(const glm::vec3& vec)
 {
 	/// TODO: Use memcopy insted

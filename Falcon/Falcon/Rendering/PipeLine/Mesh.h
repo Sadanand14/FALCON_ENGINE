@@ -59,6 +59,8 @@ public:
 	void SetMaterial(Material* mat);
 	Material* GetMaterial();
 	void Bind();
+	glm::vec3* GetVertexPositionsArray();
+
 
 	inline const std::string& GetJsonPath() const { return m_jsonPath; }
 	inline void SetJsonPath(const std::string& jsonPath) { m_jsonPath = jsonPath; }

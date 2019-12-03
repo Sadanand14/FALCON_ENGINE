@@ -105,6 +105,19 @@ void Mesh::Bind()
 		m_material->Bind();
 }
 
+glm::vec3* Mesh::GetVertexPositionsArray()
+{
+	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
+	vertPosArray.resize(m_vertexArray.size());
+
+	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
+	{
+		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
+	}
+
+	return &vertPosArray[0];
+}
+
 /**
 * Mesh class Destructor.
 */

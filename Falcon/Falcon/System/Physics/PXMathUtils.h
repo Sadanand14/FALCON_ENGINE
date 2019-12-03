@@ -9,6 +9,7 @@
 class PXMathUtils
 {
 public:
+	static void Vec3ToPxVec3(const glm::vec3& vec_s, physx::PxVec3 &vec_d);
 	static physx::PxVec3* Vec3ToPxVec3(const glm::vec3& vec);
 	static physx::PxQuat* Vec3ToPxQuat(const glm::vec3& vec);
 	static physx::PxQuat* QuatToPxQuat(const glm::quat& quat);
