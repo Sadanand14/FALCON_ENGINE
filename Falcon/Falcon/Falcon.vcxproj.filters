@@ -26,12 +26,12 @@
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="System\Application.cpp" />
-    <ClCompile Include="System\Physics\Physics.cpp" />
-    <ClCompile Include="System\Physics\PXMathUtils.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
-    <ClCompile Include="System\Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="Physics\PXMathUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -81,12 +81,12 @@
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
-    <ClInclude Include="System\Physics\Physics.h" />
-    <ClInclude Include="System\Physics\PXMathUtils.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Core\EntityManager.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
-    <ClInclude Include="System\Physics\PhysicsSystem.h" />
+    <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Physics\PhysicsSystem.h" />
+    <ClInclude Include="Physics\PXMathUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

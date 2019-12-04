@@ -6,7 +6,7 @@
 
 #include "System/Memory/fmemory.h"
 #include "Core/Components/TransformComponent.h"
-#include "../Log.h"
+#include "System/Log.h"
 #include "glm/vec3.hpp"
 #include "Rendering/BufferDefinitions/VertexLayout.h"
 

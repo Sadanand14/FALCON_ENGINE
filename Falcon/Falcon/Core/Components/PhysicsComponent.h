@@ -2,7 +2,7 @@
 #define PHYSICS_COMPONENT_H
 
 #include "BasicComponent.h"
-#include "System/Physics/Physics.h"
+#include "Physics/Physics.h"
 #include "TransformComponent.h"
 #include "glm/vec3.hpp"
 

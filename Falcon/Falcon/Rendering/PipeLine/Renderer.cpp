@@ -123,7 +123,7 @@ void Renderer::SetDrawStates()
 		{
 			RenderComponent* renderComp = m_entity[i]->GetComponent<RenderComponent>();
 			glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
-			m_entity[i]->GetComponent<PhysicsComponent>()->/*SetSphereCollider(10);*/SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+			m_entity[i]->GetComponent<PhysicsComponent>()->/*SetSphereCollider(2);*/SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 			//delete temp;
 		}

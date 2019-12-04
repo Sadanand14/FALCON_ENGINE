@@ -4,8 +4,8 @@
 #include "boost/container/vector.hpp"
 #include "Core/EntityInterface.h"
 #include "System/Memory/fmemory.h"
-#include "System/Physics/Physics.h"
-#include "System/Physics/PXMathUtils.h"
+#include "Physics.h"
+#include "PXMathUtils.h"
 
 class PhysicsSystem
 {
