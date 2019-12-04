@@ -153,7 +153,7 @@ namespace physics
 	*/
 
 	void StepPhysics(float& dt,
-		boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,
+		boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,
 		const size_t& count)
 	{
 		gScene->simulate(1.0f / 60.0f);

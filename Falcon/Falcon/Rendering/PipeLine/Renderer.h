@@ -77,7 +77,7 @@ public:
 		m_entity = entities;
 	}
 
-	inline boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }
+	inline boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }
 	inline const size_t GetEntiyCount() { return m_entity.size(); }
 
 };

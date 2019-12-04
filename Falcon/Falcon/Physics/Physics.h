@@ -18,23 +18,29 @@ class Entity;
 
 namespace physics
 {
+	/**
+	* This is an enum class specifying body type
+	*/
 	enum PhysicsBodyType
 	{
-		ESTATIC_BODY,
-		EDYNAMIC_BODY,
+		ESTATIC_BODY, /*! < this is static body*/
+		EDYNAMIC_BODY,/*! < this is dynamic body*/
 		EPLANE
 	};
 
-
+	/**
+	* This is an enum class specifying coillider shape
+	*/
 	enum PhysicsCollider
 	{
-		ESPHERE_COLLIDER,
-		EBOX_COLLIDER
+		ESPHERE_COLLIDER, /*! < Sphere collider*/
+		EBOX_COLLIDER,    /*! < Box collider*/
+		ECAPSULE_COLLIDER,/*! < Capsule collider*/
 	};
 
 	bool InitPhysX();
 	void CreatePhysicsScene();
-	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,const size_t& count);
+	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,const size_t& count);
 	bool ShutdownPhysX();
 
 	physx::PxRigidStatic* CreatePlane();
