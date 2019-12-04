@@ -25,7 +25,7 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 		pre_sim_rot = entitySet[i]->GetTransform()->GetRotation();
 		FL_ENGINE_INFO("New POS= {0},{1},{2}", post_sim_pos.x, post_sim_pos.y, post_sim_pos.z);
 		lerp_pos = PXMathUtils::lerp(pre_sim_pos, post_sim_pos, dt);
-		lerp_rot = PXMathUtils::lerp(pre_sim_rot, post_sim_rot, dt);
+		lerp_rot = glm::slerp(pre_sim_rot, post_sim_rot, dt);
 
 		entitySet[i]->GetTransform()->SetPosition(lerp_pos);
 		entitySet[i]->GetTransform()->SetRotation(lerp_rot);
