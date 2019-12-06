@@ -71,7 +71,7 @@ namespace Scene
 
 		SceneGraph(const char* sceneFilePath);
 		~SceneGraph();
-		inline const entityVector GetEntities() const { return m_entityList; }
+		inline entityVector* GetEntities() { return &m_entityList; }
 		inline const entityVector& GetOctreeEntities() const { return m_octreeEntityList; }
 
 		void UpdateScene();

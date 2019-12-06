@@ -19,6 +19,7 @@ Game::~Game()
 {
 	//m_scene->SaveScene("../Assets/Scenes/scene2.json");
 	//delete m_scene;
+	fmemory::fdelete<ParticleSystem>(m_particleSystem);
 	fmemory::fdelete<Scene::SceneGraph>(m_scene);
 	fmemory::fdelete<Timer>(m_timer);
 	fmemory::fdelete<Renderer>(m_renderer);
@@ -38,8 +39,7 @@ bool Game::Initialize()
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
-
-	m_renderer->SetEntities(m_scene->GetEntities());
+	m_particleSystem = fmemory::fnew<ParticleSystem>();
 
 	//Camera
 	glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
@@ -49,8 +49,8 @@ bool Game::Initialize()
 	m_renderer->CreateDrawStates();
 
 	//Set Draw States in Renderer
-	m_renderer->SetDrawStates();
-	
+	m_renderer->SetDrawStates(m_scene->GetEntities());
+
 	//m_scene->LoadScene("../Assets/Scenes/scene.json");
 	return true;
 }
@@ -73,16 +73,16 @@ void Game::Update()
 		glfwSetWindowTitle(m_window1->GetWindow(), framerate.c_str());
 
 		//Camera
-		glm::mat4 view = camera.GetViewMatrix();
+		m_particleSystem->Update(dt, m_scene->GetEntities());
 
 		//renderer Update
-		m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera.m_Zoom, view, dt);
-		
+		m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_scene->GetEntities());
+
 		//Update SceneGraph
 		m_scene->UpdateScene();
 
 		//Render
-		m_renderer->Draw();
+		m_renderer->Draw(m_scene->GetEntities());
 
 
 		//Game Input

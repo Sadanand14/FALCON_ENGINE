@@ -113,6 +113,13 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
 	}
 
+	newEntity->AddComponent<ParticleEmitterComponent>();
+	LoadMaterial(std::string("../Assets/Textures/material.json"));
+	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle = fmemory::fnew<Particle>();
+	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->Setup();
+	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->PreallocParticleDataAmount(20);
+	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->SetMaterial(m_materials["../Assets/Textures/material.json"]);
+
 	return newEntity;
 }
 

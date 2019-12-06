@@ -11,6 +11,7 @@
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
 #include <Scene/SceneGraph.h>
+#include "ParticleSystem.h"
 
 class Game {
 
@@ -19,6 +20,7 @@ class Game {
 	WindowClass* m_window1;
 	InputReceiver* m_inputClass;
 	Scene::SceneGraph* m_scene;
+	ParticleSystem* m_particleSystem = nullptr;
 	//Scene* m_scene;
 public:
 	bool m_gameCrashed, m_windowClosed;
