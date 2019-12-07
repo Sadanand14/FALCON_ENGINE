@@ -110,15 +110,64 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			newEntity->GetComponent<RenderComponent>()->m_mesh = m_meshes[mesh.GetString()];
 		}
 
+		if (doc.HasMember("particleEmitterComponent"))
+		{
+			newEntity->AddComponent<ParticleEmitterComponent>();
+
+			ParticleEmitterComponent* particleComp = newEntity->GetComponent<ParticleEmitterComponent>();
+
+			const rapidjson::Value& amount = doc["particleEmitterComponent"]["particleAmount"];
+			particleComp->SetMaxParticles(amount.GetInt());
+
+			const rapidjson::Value& emRate = doc["particleEmitterComponent"]["emissionRate"];
+			particleComp->m_emissionRate = emRate.GetInt();
+
+			const rapidjson::Value& vel = doc["particleEmitterComponent"]["velocity"];
+			glm::vec3 velocity;
+			for (rapidjson::SizeType i = 0; i < 3; i++)
+			{
+				velocity[i] = vel[i].GetDouble();
+			}
+			particleComp->m_velocity = velocity;
+
+			const rapidjson::Value& playTime = doc["particleEmitterComponent"]["particlePlayTimer"];
+			particleComp->m_particlePlayTimer = playTime.GetDouble();
+
+			const rapidjson::Value& lifeTime = doc["particleEmitterComponent"]["particleLifetime"];
+			particleComp->m_particleLifetime = lifeTime.GetDouble();
+
+			const rapidjson::Value& startSize = doc["particleEmitterComponent"]["startSize"];
+			particleComp->m_startSize = startSize.GetDouble();
+
+			const rapidjson::Value& endSize = doc["particleEmitterComponent"]["endSize"];
+			particleComp->m_endSize = endSize.GetDouble();
+
+			const rapidjson::Value& fadeTo = doc["particleEmitterComponent"]["fadeTo"];
+			particleComp->m_fadeTo = fadeTo.GetDouble();
+
+			const rapidjson::Value& spawnRange = doc["particleEmitterComponent"]["spawnRange"];
+			glm::vec3 range;
+			for (rapidjson::SizeType i = 0; i < 3; i++)
+			{
+				range[i] = spawnRange[i].GetDouble();
+			}
+			particleComp->m_spawnRange = range;
+
+			const rapidjson::Value& loop = doc["particleEmitterComponent"]["loop"];
+			particleComp->m_loop = loop.GetBool();
+
+			//Get mesh
+			const rapidjson::Value& mat = doc["particleEmitterComponent"]["material"];
+			LoadMaterial(mat.GetString());
+			particleComp->m_particle = fmemory::fnew<Particle>();
+			particleComp->m_particle->Setup();
+			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
+			particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+
+		}
+
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
 	}
-
-	newEntity->AddComponent<ParticleEmitterComponent>();
-	LoadMaterial(std::string("../Assets/Textures/material.json"));
-	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle = fmemory::fnew<Particle>();
-	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->Setup();
-	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->PreallocParticleDataAmount(20);
-	newEntity->GetComponent<ParticleEmitterComponent>()->m_particle->SetMaterial(m_materials["../Assets/Textures/material.json"]);
 
 	return newEntity;
 }

@@ -80,8 +80,8 @@ void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -92,27 +92,13 @@ void Renderer::CreateDrawStates()
 */
 void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
-	//entity = fmemory::fnew_arr<Entity>(500);
-
-	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
-	//for (u32 i = 0; i < 500; i++) {
-	//	entity[i].AddComponent<RenderComponent>();
-	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
-	//	rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	//	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-	//	//rd->GetMaterial()->m_shader = shader;
 
-	//	glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
-	//	// Model transformations
-	//	entity[i].GetTransform()->SetPosition(pos);
-	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	//}
-	//shader->UseShader();
 	for (unsigned int i = 0; i < entities->size(); i++)
 	{
-		entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+		if(entities->at(i)->GetComponent<RenderComponent>())
+			entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
 
 		if(entities->at(i)->GetComponent<ParticleEmitterComponent>()) {
 			entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->SetShader(particleShader);
@@ -145,7 +131,7 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 	particleShader->SetMat4("view", cam.GetViewMatrix());
 	particleShader->SetVec3("camPos", cam.m_Position);
 
-	entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
 	entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
 }
@@ -156,13 +142,6 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 //TODO-> Have multiple Renderer Passes functionality
 void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
-	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-
 	for (u32 i = 0; i < entities->size(); i++) {
 		Transform* trans = entities->at(i)->GetTransform();
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
@@ -182,15 +161,18 @@ void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator
 		{
 			particleComp->m_particle->SetWorldMatrix(trans->GetModel());
 			for(auto it = particleComp->m_particleBuffer.begin(); it != particleComp->m_particleBuffer.end(); it++)
-			{
 				particleComp->m_particle->AddParticleData(*it);
 
-				//if(queuedParticles.find(particleComp->m_particle) == queuedParticles.end())
-				//	queuedParticles.insert(particleComp->m_particle);
-			}
 			queuedParticles.push_back(particleComp->m_particle);
 		}
 	}
+
+	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+	glDisable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for(auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++)
 	{
@@ -205,14 +187,17 @@ void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator
 				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
 			else
 				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
-			//glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
+			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
 		}
 		(*it)->ClearWorldMatrices();
 	}
 
+	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
+	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glDepthMask(false);
+
 	for(u32 i = 0; i < queuedParticles.size(); i++)
 	{
 		Shader* shad = queuedParticles[i]->GetMaterial()->m_shader;
@@ -222,7 +207,8 @@ void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator
 		glDrawArraysInstanced(GL_POINTS, 0, 1, queuedParticles[i]->GetParticleDataAmount());
 		queuedParticles[i]->ClearParticleData();
 	}
+	glDepthMask(true);
 
 	queuedMeshes.clear();
-
+	queuedParticles.clear();
 }
