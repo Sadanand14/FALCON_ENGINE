@@ -95,6 +95,9 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
 
+	skyShader = fmemory::fnew<Shader>("Rendering/Shader/Sky.vert", "Rendering/Shader/Sky.frag");
+	postProcessShader = fmemory::fnew<Shader>("Rendering/Shader/Post.vert", "Rendering/Shader/Post.frag");
+
 	for (unsigned int i = 0; i < entities->size(); i++)
 	{
 		if(entities->at(i)->GetComponent<RenderComponent>())
@@ -104,6 +107,42 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 			entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->SetShader(particleShader);
 		}
 	}
+
+	glGenTextures(1, &renTex);
+	glBindTexture(GL_TEXTURE_2D, renTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1280, 720, 0, GL_RGBA, GL_FLOAT, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenTextures(1, &depthTex);
+	glBindTexture(GL_TEXTURE_2D, depthTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1280, 720, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenFramebuffers(1, &fb);
+	glBindFramebuffer(GL_FRAMEBUFFER, fb);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renTex, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
+	GLenum drawBuffer[] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT };
+	glDrawBuffers(2, drawBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenVertexArrays(1, &vao1);
+	glBindVertexArray(vao1);
+	glBindVertexArray(0);
+
+	glGenVertexArrays(1, &vao2);
+	glBindVertexArray(0);
+
 }
 
 /**
@@ -131,6 +170,16 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 	particleShader->SetMat4("view", cam.GetViewMatrix());
 	particleShader->SetVec3("camPos", cam.m_Position);
 
+	skyShader->UseShader();
+	skyShader->SetMat4("P", projection);
+	skyShader->SetMat4("V", cam.GetViewMatrix());
+	skyShader->SetFloat("time", temp);
+
+	postProcessShader->UseShader();
+	postProcessShader->SetMat4("projection", projection);
+	postProcessShader->SetMat4("view", cam.GetViewMatrix());
+
+
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
 	entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
@@ -142,6 +191,18 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 //TODO-> Have multiple Renderer Passes functionality
 void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, fb);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	skyShader->UseShader();
+	glBindVertexArray(vao1);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+	glEnable(GL_DEPTH_TEST);
+
 	for (u32 i = 0; i < entities->size(); i++) {
 		Transform* trans = entities->at(i)->GetTransform();
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
@@ -167,11 +228,9 @@ void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator
 		}
 	}
 
-	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for(auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++)
@@ -208,6 +267,19 @@ void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator
 		queuedParticles[i]->ClearParticleData();
 	}
 	glDepthMask(true);
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	postProcessShader->UseShader();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, renTex);
+	postProcessShader->SetInt("tex[0]", 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTex);
+	postProcessShader->SetInt("tex[1]", 1);
+	glBindVertexArray(vao2);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	queuedMeshes.clear();
 	queuedParticles.clear();

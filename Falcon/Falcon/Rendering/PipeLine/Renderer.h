@@ -56,9 +56,17 @@ class Renderer
 {
 	Shader* shader;
 	Shader* particleShader;
+	Shader* skyShader;
+	Shader* postProcessShader;
 	RenderEventSystem* m_RES;
 	boost::container::set<Mesh*> queuedMeshes;
 	boost::container::vector<Particle*> queuedParticles;
+
+	uint32_t vao1;
+	uint32_t vao2;
+	uint32_t renTex;
+	uint32_t depthTex;
+	uint32_t fb;
 
 public:
 	Renderer();
