@@ -4,14 +4,7 @@
 #include <boost/circular_buffer.hpp>
 #include "BasicComponent.h"
 #include <PipeLine/Particle.h>
-
-struct ParticleData
-{
-	glm::vec3 m_pos = glm::vec3(0.0f);
-	float m_size = 1.0f;
-	float m_opacity = 1.0f;
-	float m_age = 0.0f;
-};
+#include "Rendering/PipeLine/ParticleData.h"
 
 /**
  * Structure definition for particle components
