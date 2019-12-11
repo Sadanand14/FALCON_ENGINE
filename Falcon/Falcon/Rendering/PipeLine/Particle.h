@@ -9,6 +9,7 @@
 #include <Memory/fmemory.h>
 #include "Shader.h"
 #include "Material.h"
+#include "Rendering/PipeLine/ParticleData.h"
 
 #include <BufferDefinitions/VertexArray.h>
 #include <BufferDefinitions/VertexBuffer.h>
@@ -16,8 +17,6 @@
 #include <BufferDefinitions/VertexLayout.h>
 
 #include <Types.h>
-
-class ParticleData;
 
 /**
  * Particle Class tp store Particle Data for Renderables.

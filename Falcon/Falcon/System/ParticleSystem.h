@@ -3,13 +3,13 @@
 
 #include <cstdlib>
 
-#include "Shader.h"
+#include <PipeLine/Shader.h>
 
 #include <Events/ParticleEvent.h>
 #include <Events/EventManager.h>
 #include <EntityInterface.h>
 
-#include <Core/Components/ParticleEmitterComponent.h>
+#include <Components/ParticleEmitterComponent.h>
 
 #include <ThreadPool.h>
 
