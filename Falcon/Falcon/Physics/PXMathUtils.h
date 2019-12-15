@@ -61,7 +61,7 @@ public:
 	* @param ending glm::vec3
 	* @param float dt
 	*/
-	inline static glm::vec3 lerp(const glm::vec3& from, const glm::vec3& to, float dt) {return (from + (to - from) * dt);}
+	inline static glm::vec3 lerp(const glm::vec3& from, const glm::vec3& to, float dt) {return glm::mix(from,to,dt);}
 	
 	/**
 	* Slerp for quat
@@ -69,7 +69,10 @@ public:
 	* @param ending glm::quat
 	* @param float dt
 	*/
-	inline static glm::quat slerp(const glm::quat& from, const glm::quat& to, float dt) { return (from + (to - from) * dt); }
+	static glm::quat slerp(glm::quat from, glm::quat to, float dt)
+       	{ 
+		return glm::slerp(from,to,dt);      
+	}
 };
 
 #endif // !PXMATHCONVERSIONUTIL
