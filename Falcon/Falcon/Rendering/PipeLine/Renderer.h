@@ -54,7 +54,7 @@ public:
 */
 class Renderer
 {
-	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> m_entity;
+	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> m_entity;
 	Shader* shader;
 	RenderEventSystem* m_RES;
 	boost::container::set<Mesh*> queuedMeshes;
@@ -72,12 +72,12 @@ public:
 	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
 	void Draw();
 
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> entities) 
+	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities) 
 	{
 		m_entity = entities;
 	}
 
-	inline boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }
+	inline boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }
 	inline const size_t GetEntiyCount() { return m_entity.size(); }
 
 };
