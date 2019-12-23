@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "Physics/Physics.h"
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 50.0f));
 
 //Camera Setup
 float lastX = 0.0f;
@@ -25,6 +26,7 @@ Game::~Game()
 	fmemory::fdelete<InputReceiver>(m_inputClass);
 	fmemory::fdelete<WindowClass>(m_window1);
 	fmemory::MeoryManagerShutDown();
+	physics::ShutdownPhysX();
 }
 
 bool Game::Initialize()
@@ -38,7 +40,6 @@ bool Game::Initialize()
 	m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 	m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 	m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
-
 	m_renderer->SetEntities(m_scene->GetEntities());
 
 	//Camera
@@ -48,6 +49,8 @@ bool Game::Initialize()
 	//Create Draw States in Renderer
 	m_renderer->CreateDrawStates();
 
+	//Booting up physics
+	physics::InitPhysX();
 	//Set Draw States in Renderer
 	m_renderer->SetDrawStates();
 	
@@ -84,7 +87,7 @@ void Game::Update()
 		//Render
 		m_renderer->Draw();
 
-
+		physics::StepPhysics(dt, m_renderer->GetEntitySet(), m_renderer->GetEntiyCount());
 		//Game Input
 		ProcessInput(m_window1->GetWindow(), dt);
 

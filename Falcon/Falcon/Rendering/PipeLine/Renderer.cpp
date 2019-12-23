@@ -95,6 +95,7 @@ void Renderer::SetDrawStates()
 
 	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
+
 	//for (u32 i = 0; i < 500; i++) {
 	//	entity[i].AddComponent<RenderComponent>();
 	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
@@ -111,6 +112,21 @@ void Renderer::SetDrawStates()
 	for (unsigned int i = 0; i < m_entity.size(); i++) 
 	{
 		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+		m_entity[i]->AddComponent<PhysicsComponent>();
+		if (i == 0)
+		{
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetBoxCollider(5, 5, 5);
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(),physics::PhysicsBodyType::ESTATIC_BODY);
+
+		}
+		else
+		{
+			RenderComponent* renderComp = m_entity[i]->GetComponent<RenderComponent>();
+			glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+			//delete temp;
+		}
 	}
 }
 
@@ -135,8 +151,8 @@ void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float d
 	// camera/view transformations
 	shader->SetMat4("view", view);
 
-	m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	//m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	//m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
 }
 
