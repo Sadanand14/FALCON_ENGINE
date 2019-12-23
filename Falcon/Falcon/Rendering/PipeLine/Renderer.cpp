@@ -80,7 +80,8 @@ void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
@@ -99,6 +100,38 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 	shader->SetMat4("projection", projection);
 	
 	
+
+	//for (u32 i = 0; i < 500; i++) {
+	//	entity[i].AddComponent<RenderComponent>();
+	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
+	//	rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
+	//	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+	//	//rd->GetMaterial()->m_shader = shader;
+
+	//	glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
+	//	// Model transformations
+	//	entity[i].GetTransform()->SetPosition(pos);
+	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	//}
+	for (unsigned int i = 0; i < m_entity.size(); i++) 
+	{
+		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+		m_entity[i]->AddComponent<PhysicsComponent>();
+		if (i == 0)
+		{
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetBoxCollider(5, 5, 5);
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(),physics::PhysicsBodyType::ESTATIC_BODY);
+
+		}
+		else
+		{
+			RenderComponent* renderComp = m_entity[i]->GetComponent<RenderComponent>();
+			glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+			//delete temp;
+		}
+	}
 }
 
 /**

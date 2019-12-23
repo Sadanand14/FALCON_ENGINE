@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Physics/Physics.h"
 
 namespace gameLoop
 
@@ -13,23 +14,23 @@ namespace gameLoop
 	bool firstMouse = true;
 
 	void ProcessInput(GLFWwindow* window, float deltaTime);
+Game::~Game()
+{
+	//m_scene->SaveScene("../Assets/Scenes/scene2.json");
+	//delete m_scene;
+	fmemory::fdelete<Scene::SceneGraph>(m_scene);
+	fmemory::fdelete<Scene::Octree>(m_octree);
+	fmemory::fdelete<Timer>(m_timer);
+	fmemory::fdelete<Renderer>(m_renderer);
+	fmemory::fdelete<InputReceiver>(m_inputClass);
+	fmemory::fdelete<WindowClass>(m_window1);
+	fmemory::MeoryManagerShutDown();
+	physics::ShutdownPhysX();
+}
 
 	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 	{
 		//m_scene = new Scene();
-	}
-
-	Game::~Game()
-	{
-		//m_scene->SaveScene("../Assets/Scenes/scene2.json");
-		//delete m_scene;
-		fmemory::fdelete<Scene::SceneGraph>(m_scene);
-		fmemory::fdelete<Scene::Octree>(m_octree);
-		fmemory::fdelete<Timer>(m_timer);
-		fmemory::fdelete<Renderer>(m_renderer);
-		fmemory::fdelete<InputReceiver>(m_inputClass);
-		fmemory::fdelete<WindowClass>(m_window1);
-		fmemory::MeoryManagerShutDown();
 	}
 
 	bool Game::Initialize()
@@ -47,7 +48,14 @@ namespace gameLoop
 
 		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
 
-		
+	//Booting up physics
+	physics::InitPhysX();
+	//Set Draw States in Renderer
+	m_renderer->SetDrawStates();
+	
+	//m_scene->LoadScene("../Assets/Scenes/scene.json");
+	return true;
+}
 
 		//Camera
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
@@ -99,6 +107,7 @@ namespace gameLoop
 			//renderer Update
 			m_renderer->Update(camera.GetViewMatrix(),dt);
 			m_renderer->Draw();
+			physics::StepPhysics(dt, m_renderer->GetEntitySet(), m_renderer->GetEntiyCount());
 
 
 			//Game Input

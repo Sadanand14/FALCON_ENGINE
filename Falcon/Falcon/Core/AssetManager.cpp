@@ -176,50 +176,64 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	std::vector<u32, fmemory::STLAllocator<u32>> indices;
 	indices.reserve(mesh->mNumVertices*3);
 	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
+	//std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
+	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
+	
+	bool uvs = false;
+	bool normals = false;
+	bool tanBitan = false;
+	
+	if(mesh->HasTextureCoords(0))
+		uvs = true;
+	if(mesh->HasNormals())
+		normals = true;
+	if(mesh->HasTangentsAndBitangents())
+		tanBitan = true;
+	
 
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
-		Vertex vertex;
-		glm::vec3 vector;
-		// Positions
-		vector.x = mesh->mVertices[i].x;
-	
-
-		vector.y = mesh->mVertices[i].y;
+		//position
+		vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		
-
-		vector.z = mesh->mVertices[i].z;
-	
-
-		vertex.Position = vector;
 		// Normals
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
-		vertex.Normal = vector;
+		
+		vertex.Normal =  glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		
 		// Texture Coordinates
-		if (mesh->mTextureCoords[0])
+		if (uvs)
 		{
-			glm::vec2 vec;
 			// a vertex can contain up to 8 different texture coordinates.
 			//To-Do: Add support for models that use more than one set of texture coordinates.
-			vec.x = mesh->mTextureCoords[0][i].x;
-			vec.y = mesh->mTextureCoords[0][i].y;
-			vertex.TexCoords = vec;
+			vertex.TexCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		}
 		else
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-		// Tangent
-		vector.x = mesh->mTangents[i].x;
-		vector.y = mesh->mTangents[i].y;
-		vector.z = mesh->mTangents[i].z;
-		vertex.Tangent = vector;
-		// Bitangent
-		vector.x = mesh->mBitangents[i].x;
-		vector.y = mesh->mBitangents[i].y;
-		vector.z = mesh->mBitangents[i].z;
-		vertex.Bitangent = vector;
+		
+		if(normals)
+		{
+			// Normals
+			vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		}
+		else
+			vertex.Normal = glm::vec3(0.0f, 0.0f, 0.0f);
+		
+		
+		if(tanBitan) {
+			// Tangent
+			vertex.Tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+			
+			// Bitangent
+			vertex.Bitangent = glm::vec3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+		}
+		
+		else {
+			
+			vertex.Tangent = glm::vec3(0.0f, 0.0f, 0.0f);
+			vertex.Bitangent = glm::vec3(0.0f, 0.0f, 0.0f);
+		}
+		
 		vertices.push_back(vertex);
 	}
 
