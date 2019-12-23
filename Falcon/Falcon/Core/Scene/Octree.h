@@ -30,9 +30,10 @@ namespace Scene
 		OctreeNode* m_parent;
 		OctreeNodeVector m_childNodes;
 
-		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
 		void Subdivide(float minSide);
+		
 
+		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
 		inline void SetParent(OctreeNode* parent) { m_parent = parent; }
 		inline const OctreeNode* GetParent() const { return m_parent; }
 
@@ -52,12 +53,14 @@ namespace Scene
 		OctreeNode* m_rootNode;
 		Camera* m_camera;
 		glm::mat4 m_projection;
+		boost::circular_buffer<OctreeNode> m_freeNodes;
 
 		//plane Array storing plane equation's coefficients in the order x,y,z,w	
 		planeArray m_planeArr;
 
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 		OctreeNode* FindNode(Entity* entity)const;
+		void CacheNodes();
 		void GetPlanes();
 		void UpdateEntityPosition(OctreeNode* node, Entity* entity);
 		void FilterEntities(entityVector& entities);

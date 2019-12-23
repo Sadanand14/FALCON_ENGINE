@@ -5,7 +5,7 @@ namespace gameLoop
 {
 
 	//Camera
-	Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	Camera camera(glm::vec3(100.0f, 100.0f, -67.0f));
 
 	//Camera Setup
 	float lastX = 0.0f;
@@ -38,14 +38,14 @@ namespace gameLoop
 
 		fmemory::MemoryManagerInit();
 
-		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1920, 1080);
+		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_scene->UpdateScene();
 
-		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 10.0f, m_scene, &camera);
+		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
 
 		
 
@@ -62,9 +62,8 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates( projection);
-
+		//m_renderer->SetEntities(m_scene->GetEntities());
 		//m_scene->LoadScene("../Assets/Scenes/scene.json");
-		//m_octree->Distribute();
 
 
 
@@ -93,6 +92,7 @@ namespace gameLoop
 			m_scene->UpdateScene();
 
 			m_octree->Update();
+
 			//Render
 			m_renderer->SetEntities(m_octree->GetViewables());
 

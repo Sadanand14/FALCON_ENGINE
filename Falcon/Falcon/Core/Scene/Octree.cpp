@@ -16,7 +16,9 @@ namespace Scene
 
 	OctreeNode::~OctreeNode()
 	{
-		for (auto& entity : m_entities) { delete entity; }
+		//TODO:: change this to fdelete de-allocation
+		for (auto& node : m_childNodes) { delete node; }
+		m_childNodes.clear();
 		m_entities.clear();
 	}
 
@@ -106,7 +108,7 @@ namespace Scene
 
 	Octree::~Octree()
 	{
-		//fmemory::fdelete<OctreeNode>(m_rootNode);
+		fmemory::fdelete<OctreeNode>(m_rootNode);
 	}
 
 	void Octree::AssignNode(Entity* entity)
@@ -122,20 +124,26 @@ namespace Scene
 		glm::vec4 result;
 
 		//get new axis aligned boudning corners
-		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1) * FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
 
 		//multiply the corners with the current model matrix
 		for (unsigned short i = 0; i < objectBounds.size(); i++)
 		{
 			result = modelMatrix * glm::vec4(objectBounds[i], 1.0f);
-			if (minX > result.x) minX = result.x;
-			if (maxX < result.x) maxX = result.x;
+			if (minX > result.x)
+				minX = result.x;
+			if (maxX < result.x)
+				maxX = result.x;
 
-			if (minY > result.y) minY = result.y;
-			if (maxY < result.y) maxY = result.y;
+			if (minY > result.y)
+				minY = result.y;
+			if (maxY < result.y)
+				maxY = result.y;
 
-			if (minZ > result.z) minZ = result.z;
-			if (maxZ < result.z) maxZ = result.z;
+			if (minZ > result.z)
+				minZ = result.z;
+			if (maxZ < result.z)
+				maxZ = result.z;
 		}
 
 		glm::vec3 NTL = glm::vec3(minX, minY, minZ);
@@ -181,6 +189,11 @@ namespace Scene
 		std::cout << "\n";
 	}
 
+	void Octree::CacheNodes() 
+	{
+		
+	}
+
 	void Octree::AddEntity(Entity* entity)
 	{
 		entity->GetTransform()->ClearOTID();
@@ -196,7 +209,7 @@ namespace Scene
 	{
 		//const entityVector updatedEntities = m_scene->GetOctreeEntities();
 		entityVector& updatedEntities = m_scene->GetOctreeEntities();
-		FilterEntities(updatedEntities);
+		//FilterEntities(updatedEntities);
 
 		//extract plane equations in world Space 
 		GetPlanes();
@@ -220,27 +233,27 @@ namespace Scene
 		CullObjects();
 	}
 
-	void Octree::CullObjects() 
+	void Octree::CullObjects()
 	{
 		m_viewables.clear();
 		bool shouldDraw = false;
-		/*for (unsigned int i = 0; i < m_renderables.size(); i++) 
+		for (unsigned int i = 0; i < m_renderables.size(); i++)
 		{
 			shouldDraw = true;
 			OctreeNode* node = FindNode(m_renderables[i]);
-			glm::vec3 centre= node->m_centre;
-			for (unsigned int i = 0; i < m_planeArr.size(); i++) 
+			glm::vec3 centre = node->m_centre;
+			for (unsigned int i = 0; i < m_planeArr.size(); i++)
 			{
 				glm::vec4 plane = m_planeArr[i];
-				if ((plane.x * centre.x + plane.y * centre.y + plane.z * centre.z + plane.w + node->m_radius) < 0) 
+				if ((plane.x * centre.x + plane.y * centre.y + plane.z * centre.z + plane.w + node->m_radius) < 0)
 				{
 					shouldDraw = false;
 					break;
 				}
 			}
 			if (shouldDraw)m_viewables.push_back(m_renderables[i]);
-		}*/
-		for (unsigned int i = 0; i < m_renderables.size(); i++) 
+		}
+		/*for (unsigned int i = 0; i < m_renderables.size(); i++)
 		{
 			shouldDraw = true;
 			Transform* transform = m_renderables[i]->GetTransform();
@@ -248,9 +261,9 @@ namespace Scene
 			float xpos = modelMatrix[3][0];
 			float ypos = modelMatrix[3][1];
 			float zpos = modelMatrix[3][2];
-			for (unsigned int i = 0; i < m_planeArr.size(); i++) 
+			for (unsigned int i = 0; i < m_planeArr.size(); i++)
 			{
-				if (m_planeArr[i].x * xpos + m_planeArr[i].y * ypos + m_planeArr[i].z * zpos + m_planeArr[i].w < 0) 
+				if (m_planeArr[i].x * xpos + m_planeArr[i].y * ypos + m_planeArr[i].z * zpos + m_planeArr[i].w < 0)
 				{
 					shouldDraw = false;
 					break;
@@ -258,7 +271,7 @@ namespace Scene
 				}
 			}
 			if (shouldDraw)m_viewables.push_back(m_renderables[i]);
-		}
+		}*/
 	}
 
 	void Octree::GetPlanes()
@@ -271,7 +284,7 @@ namespace Scene
 		m_planeArr.clear();
 		using namespace glm;
 		mat4 View = m_camera->GetViewMatrix();
-		mat4 VP =  m_projection * View;
+		mat4 VP = m_projection * View;
 		mat4 TVP = glm::transpose(VP);
 		//vec4 xColumn = VP[0];
 		//vec4 yColumn = VP[1];
@@ -296,28 +309,28 @@ namespace Scene
 		m_planeArr.push_back(TVP[3] - TVP[2]);//Far Plane
 		NormalizePlaneCoeff(m_planeArr[5]);
 
-	/*	bool check = true;
-		float total = 0;
-		for (unsigned int i = 0; i < 6; i++)
-		{
-			if (-50*m_planeArr[i].z +  m_planeArr[i].w < 0)
-				check = false;
-		}
-		if (check)
-		{
-			FL_ENGINE_TRACE("reference inside frustum");
-		}
-		else
-		{
-			FL_ENGINE_TRACE("reference outside frustum");
-		}*/
+		/*	bool check = true;
+			float total = 0;
+			for (unsigned int i = 0; i < 6; i++)
+			{
+				if (-50*m_planeArr[i].z +  m_planeArr[i].w < 0)
+					check = false;
+			}
+			if (check)
+			{
+				FL_ENGINE_TRACE("reference inside frustum");
+			}
+			else
+			{
+				FL_ENGINE_TRACE("reference outside frustum");
+			}*/
 	}
 
 
 
-	void NormalizePlaneCoeff(glm::vec4& plane) 
+	void NormalizePlaneCoeff(glm::vec4& plane)
 	{
-		float magnitude = glm::sqrt( plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
+		float magnitude = glm::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
 		plane.x /= magnitude;
 		plane.y /= magnitude;
 		plane.z /= magnitude;
@@ -326,6 +339,7 @@ namespace Scene
 
 	void Octree::UpdateEntityPosition(OctreeNode* node, Entity* entity)
 	{
+		static bool udpated = false;
 		//recalculate bounding box
 		const boundingVector& BV = entity->GetComponent<RenderComponent>()->GetBounds();
 		Transform* transform = entity->GetTransform();
@@ -336,7 +350,7 @@ namespace Scene
 		glm::vec4 result;
 
 		//get new axis aligned boudning corners
-		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN, maxZ = FLT_MIN;
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1)* FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
 
 		//multiply the corners with the current model matrix
 		for (unsigned short i = 0; i < BV.size(); i++)
@@ -377,6 +391,7 @@ namespace Scene
 				{
 					m_rootNode->m_entities.push_back(entity);
 					transform->pushOTID(0);
+					udpated = true;
 					return;
 				}
 			}
@@ -398,6 +413,7 @@ namespace Scene
 						transform->pushOTID(i);
 						fitsInChild = true;
 						node = (*childVector)[i];
+						udpated = true;
 						break;
 					}
 				}
@@ -422,6 +438,7 @@ namespace Scene
 				{
 					if (CheckBounds((*childVector)[i], NTL, FBR))
 					{
+						udpated = true;
 						transform->pushOTID(i);
 						fitsInChild = true;
 						node = (*childVector)[i];
@@ -430,19 +447,22 @@ namespace Scene
 				}
 				if (!fitsInChild) nodeFound = true;
 			}
-			if (original != node) 
+			if (original != node)
 				node->m_entities.push_back(entity);
 		}
 		//node->m_entities.push_back(entity);
 
-		//std::cout << "Updated Node Asssigned : ";
-		//const IDVector* IDarr = &transform->GetOTID();
-		/*for (unsigned int i = 0; i < transform->GetOTID().size(); i++)
-		{
-			std::cout << (*IDarr)[i];
-		}
-		std::cout << "\n";*/
-
+		//if (udpated)
+		//{
+		//	udpated = false;
+		//	std::cout << "Updated Node Asssigned : ";
+		//	const IDVector* IDarr = &transform->GetOTID();
+		//	for (unsigned int i = 0; i < transform->GetOTID().size(); i++)
+		//	{
+		//		std::cout << (*IDarr)[i];
+		//	}
+		//	std::cout << "\n";
+		//}
 	}
 
 	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR)

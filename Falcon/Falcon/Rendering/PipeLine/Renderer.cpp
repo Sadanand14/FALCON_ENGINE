@@ -111,23 +111,36 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 *@param[in] A float indicating delta time for the current frame.
 */
 
-float temp = 0.0f;
+float tempX = 0.0f;
 void Renderer::Update(glm::mat4 view,float dt)
 { 
-
+	static float multiplier = 10.0f;
+	//FL_ENGINE_INFO("Temp VAlue : {0}, multiplier: {1}", tempX, multiplier);
 	FL_ENGINE_INFO("Draw Count: {0}", m_entity.size());
 	for (unsigned int i = 0; i < m_entity.size(); i++)
 	{
 		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
 	}
-	temp += 1.0f * dt;
+	if (tempX > 100.0f)
+	{
+		multiplier *= -1.0f; tempX = 10.0f - FLT_MIN;
+	}
+	if (tempX < -100.0f) 
+	{ multiplier *= -1.0f; tempX = -10.0f + FLT_MIN; }
+
+		
+	tempX += dt * multiplier;
 	m_RES->ProcessEvents();
 
 	//
 	// camera/view transformations
-	shader->SetMat4("view", view);
+	shader->SetMat4("view", view); 
+	//m_entity[0]->GetTransform()->SetPosition(glm::vec3(tempX, 10.0f,-10.0f));
 	/*m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));*/
+	for (unsigned int i = 1; i < m_entity.size(); i++) 
+	{
+		m_entity[i]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	}*/
 
 }
 
