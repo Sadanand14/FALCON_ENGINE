@@ -15,7 +15,7 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 	glm::quat pre_sim_rot,lerp_rot, post_sim_rot;
 	const physx::PxRigidActor* actor;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entitySet = *entity;
-	for (size_t i = 0; i < entity_count; ++i)
+	for (size_t i = 1; i < entity_count; ++i)
 	{
 		//Update logic
 		actor = entitySet[i]->GetComponent<PhysicsComponent>()->GetActor();;

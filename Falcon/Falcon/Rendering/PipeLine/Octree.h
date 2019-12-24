@@ -9,20 +9,24 @@
 #include <Scene/SceneGraph.h>
 #include <Camera.h>
 
-namespace Scene
+namespace Rendering
 {
+	//forward declarations
 	class OctreeNode;
 	class Octree;
 
 	typedef boost::container::vector<OctreeNode*, fmemory::StackSTLAllocator<OctreeNode*>> OctreeNodeVector;
 
+	/**
+	* Data structure to hold all data and implementations related to a single node inside our dynamic Octree
+	*/
 	class OctreeNode
 	{
 		friend class Octree;
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
-		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL , glm::vec3 FBR);
+		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR);
 
-		entityVector m_entities;
+		Scene::entityVector m_entities;
 		glm::vec3 m_centre;
 		float m_radius;
 		glm::vec3 m_nearTopLeft;
@@ -31,9 +35,9 @@ namespace Scene
 		OctreeNodeVector m_childNodes;
 
 		void Subdivide(float minSide);
-		
 
-		inline void SetEntities(entityVector entityList) { m_entities = entityList; }
+
+		inline void SetEntities(Scene::entityVector entityList) { m_entities = entityList; }
 		inline void SetParent(OctreeNode* parent) { m_parent = parent; }
 		inline const OctreeNode* GetParent() const { return m_parent; }
 
@@ -43,10 +47,14 @@ namespace Scene
 	};
 
 	typedef boost::container::vector<glm::vec4, fmemory::StackSTLAllocator<glm::vec4>> planeArray;
+
+	/**
+	* Data structure to hold all data and implementations related to the entire octree.
+	*/
 	class Octree
 	{
-		SceneGraph* m_scene;
-		entityVector m_renderables, m_viewables;
+		Scene::SceneGraph* m_scene;
+		Scene::entityVector m_renderables, m_viewables;
 		float m_minSide;
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
@@ -60,20 +68,17 @@ namespace Scene
 
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
 		OctreeNode* FindNode(Entity* entity)const;
-		void CacheNodes();
 		void GetPlanes();
 		void UpdateEntityPosition(OctreeNode* node, Entity* entity);
-		void FilterEntities(entityVector& entities);
-		void AddEntity(Entity* entity);
-		void RemoveEntity(Entity* entity);
+		void FilterEntities(Scene::entityVector& entities);
 		void AssignNode(Entity* entity);
 		void CullObjects();
 
 	public:
 
-		inline const entityVector& GetViewables()const { return m_viewables; }
+		inline const Scene::entityVector& GetViewables()const { return m_viewables; }
 		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }
-		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera);
+		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene, Camera* camera);
 		void Update();
 		~Octree();
 	};

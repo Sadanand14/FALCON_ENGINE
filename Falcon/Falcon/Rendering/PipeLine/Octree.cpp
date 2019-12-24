@@ -1,8 +1,15 @@
 #include "Octree.h"
 #include <vector>
 #include <cassert>
-namespace Scene
+namespace Rendering
 {
+
+	/**
+	* Octree Node Constructor function
+	*
+	*@param[in] the corner point of one of the cuboidal space covered in the scene by the octreenode.
+	*@param[in] the diagonally opposite corner of the octreenode.
+	*/
 	OctreeNode::OctreeNode(glm::vec3 nearTopLeft, glm::vec3 farBottomRight) :m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_parent(nullptr)
 	{
 		m_childNodes.reserve(10);
@@ -14,6 +21,10 @@ namespace Scene
 		m_radius = glm::sqrt(x * x + y * y + z * z);
 	}
 
+	/**
+	* Octree Node Destructor
+	*/
+
 	OctreeNode::~OctreeNode()
 	{
 		//TODO:: change this to fdelete de-allocation
@@ -22,6 +33,10 @@ namespace Scene
 		m_entities.clear();
 	}
 
+	/**
+	* Function that divides the space covered by the octree node into 8 octants owned by 8 new childnodes.
+	*@param[in] Minimum possible size of an octreenode. 
+	*/
 	void OctreeNode::Subdivide(float minSide)
 	{
 		if ((this->m_farBottomRight.x - this->m_nearTopLeft.x) >= (2 * minSide))
@@ -83,7 +98,16 @@ namespace Scene
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////
-	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, SceneGraph* scene, Camera* camera) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene), m_camera(camera)
+
+	/**
+	* Main Constructor method for Octree.
+	*
+	*@param[in] The corner point of one of the cuboidal space covered in the scene by the octree.
+	*@param[in] The diagonally opposite corner of the octree.
+	*@param[in] Pointer to the main SceneGraph managing the scene.
+	*@param[in] Pointer to the Current viewing Camera
+	*/
+	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene, Camera* camera) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene), m_camera(camera)
 	{
 		assert((farBottomRight.x - nearTopLeft.x) > 0.0f
 			&& (nearTopLeft.y - farBottomRight.y) > 0.0f
@@ -106,13 +130,24 @@ namespace Scene
 		}
 	}
 
+
+	/**
+	* Default Destructor for the Octree.
+	*/
 	Octree::~Octree()
 	{
 		fmemory::fdelete<OctreeNode>(m_rootNode);
 	}
 
+	/**
+	* Function that assigns a node in the octree to the entity it recieves as argument, based on its position in scene.
+	*
+	*@param[in] pointer to the entity that needs to be assigned a node.
+	*/
 	void Octree::AssignNode(Entity* entity)
 	{
+		entity->GetTransform()->ClearOTID();
+
 		//get bounding corners
 		RenderComponent* rd = entity->GetComponent<RenderComponent>();
 		boundingVector objectBounds = entity->GetComponent<RenderComponent>()->GetBounds();
@@ -189,30 +224,20 @@ namespace Scene
 		std::cout << "\n";
 	}
 
-	void Octree::CacheNodes() 
-	{
-		
-	}
-
-	void Octree::AddEntity(Entity* entity)
-	{
-		entity->GetTransform()->ClearOTID();
-		AssignNode(entity);
-	}
-
-	void Octree::RemoveEntity(Entity* entity)
-	{
-
-	}
-
+	/**
+	* Main Update Function for Octree. 
+	* Checks for moved entities and reasssigns them to a new node if necessary. 
+	* Assigns nodes to entities entering the octree space. 
+	* Extracts viewing plane equations for the current frame
+	* Culls objects based on whether their nodes intersect with the viewing plane.
+	*/
 	void Octree::Update()
 	{
 		//const entityVector updatedEntities = m_scene->GetOctreeEntities();
-		entityVector& updatedEntities = m_scene->GetOctreeEntities();
+		Scene::entityVector& updatedEntities = m_scene->GetOctreeEntities();
 		//FilterEntities(updatedEntities);
 
-		//extract plane equations in world Space 
-		GetPlanes();
+		
 
 		//update all entities whose model matrices may have changed
 		for (unsigned int i = 0; i < updatedEntities.size(); i++)
@@ -221,7 +246,7 @@ namespace Scene
 			{
 				if (CheckEntityPosInNode(m_rootNode, updatedEntities[i]))
 				{
-					AddEntity(updatedEntities[i]);
+					AssignNode(updatedEntities[i]);
 				}
 			}
 			else
@@ -230,9 +255,16 @@ namespace Scene
 			}
 		}
 
+		//extract plane equations in world Space 
+		GetPlanes();
+
 		CullObjects();
 	}
 
+
+	/**
+	* Function that filters objects for the rendering engine based on whether they are being seen on the camera or not.
+	*/
 	void Octree::CullObjects()
 	{
 		m_viewables.clear();
@@ -274,6 +306,9 @@ namespace Scene
 		}*/
 	}
 
+	/**
+	* Function that extracts the viewing plane equations.
+	*/
 	void Octree::GetPlanes()
 	{
 		//float zmin = -m_projection[2][3]/ m_projection[2][2];
@@ -327,7 +362,9 @@ namespace Scene
 	}
 
 
-
+	/**
+	* Non-member function for normalizing plane equations
+	*/
 	void NormalizePlaneCoeff(glm::vec4& plane)
 	{
 		float magnitude = glm::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
@@ -337,6 +374,12 @@ namespace Scene
 		plane.w /= magnitude;
 	}
 
+	/**
+	*Function that checks the provided entity for updated positions and reassigns node in the tree if required.
+	*
+	*@param[in] Pointer the node that the provided entity belongs to.
+	*@param[in] Pointer to the entity contained by the node provided.
+	*/
 	void Octree::UpdateEntityPosition(OctreeNode* node, Entity* entity)
 	{
 		static bool udpated = false;
@@ -373,7 +416,7 @@ namespace Scene
 		if (!CheckBounds(node, NTL, FBR))
 		{
 			Transform* transform = entity->GetTransform();
-			entityVector& entities = node->m_entities;
+			Scene::entityVector& entities = node->m_entities;
 			auto entityPos = std::find(entities.begin(), entities.end(), entity);
 
 			assert(entityPos != entities.end());
@@ -465,6 +508,15 @@ namespace Scene
 		//}
 	}
 
+	/**
+	* Non-Member Function that checks if the diagonally opposite corners of a bounding box are within the bounds of the provided octreenode.
+	*
+	*@param[in] Pointer to the Octreenode used as reference. 
+	*@param[in] The corner point of the bounding box.
+	*@param[in] The diagonally opposite corner point of the bounding box.
+	*
+	*@param[out] boolean value indicating if the test was positive or negative (false if outside, true if inside).
+	*/
 	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR)
 	{
 		glm::vec3 nodeNTL = node->m_nearTopLeft;
@@ -497,6 +549,14 @@ namespace Scene
 		return true;
 	}
 
+	/**
+	* Non-member Function that checks if the provided entity
+	*
+	*@param[in] Pointer to the OctreeNode. 
+	*@param[in] Pointer to the enitity.
+	*
+	*@param[out] boolean value indicating if the test was positive or negative (false if outside, true if inside).
+	*/
 	bool CheckEntityPosInNode(OctreeNode* node, Entity* entity)
 	{
 		Transform* transform = entity->GetTransform();
@@ -513,11 +573,14 @@ namespace Scene
 		else return false;
 	}
 
-	void Octree::FilterEntities(entityVector& entities)
+	/**
+	* Function that filters out all entities that are not present inside the bounding space of the octree.
+	*/
+	void Octree::FilterEntities(Scene::entityVector& entities)
 	{
 		unsigned int eraseCount = 0;
 		unsigned int size = entities.size();
-		entityVector::iterator entityPos;
+		Scene::entityVector::iterator entityPos;
 		for (unsigned int i = 0; i < size; i++)
 		{
 			if (!CheckEntityPosInNode(m_rootNode, entities[i]))
@@ -534,6 +597,11 @@ namespace Scene
 		}
 	}
 
+	/**
+	* Function that returns the assigned node of the Octree to the provided entity.
+	*
+	*@param[in] Pointer to the entity.
+	*/
 	OctreeNode* Octree::FindNode(Entity* entity)const
 	{
 		const IDVector* OTID = &entity->GetTransform()->GetOTID();

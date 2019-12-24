@@ -29,8 +29,8 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	// Process rootnode
 	ProcessNode(scene->mRootNode, scene, newmesh);
-	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
-	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
+	//FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
+	//FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->SetupMesh();
 	return newmesh;
 }
@@ -194,6 +194,8 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
+		Vertex vertex;
+
 		//position
 		vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		

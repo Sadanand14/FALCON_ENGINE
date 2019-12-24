@@ -11,7 +11,7 @@
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
 #include <Scene/SceneGraph.h>
-#include <Scene/Octree.h>
+#include <PipeLine/Octree.h>
 
 namespace gameLoop
 {
@@ -22,7 +22,7 @@ namespace gameLoop
 		WindowClass* m_window1;
 		InputReceiver* m_inputClass;
 		Scene::SceneGraph* m_scene;
-		Scene::Octree* m_octree;
+		Rendering::Octree* m_octree;
 		//Scene* m_scene;
 	public:
 		bool m_gameCrashed, m_windowClosed;

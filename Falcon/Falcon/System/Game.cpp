@@ -6,27 +6,27 @@ namespace gameLoop
 {
 
 	//Camera
-	Camera camera(glm::vec3(100.0f, 100.0f, -67.0f));
+	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 	//Camera Setup
 	float lastX = 0.0f;
 	float lastY = 0.0f;
 	bool firstMouse = true;
-
 	void ProcessInput(GLFWwindow* window, float deltaTime);
-Game::~Game()
-{
-	//m_scene->SaveScene("../Assets/Scenes/scene2.json");
-	//delete m_scene;
-	fmemory::fdelete<Scene::SceneGraph>(m_scene);
-	fmemory::fdelete<Scene::Octree>(m_octree);
-	fmemory::fdelete<Timer>(m_timer);
-	fmemory::fdelete<Renderer>(m_renderer);
-	fmemory::fdelete<InputReceiver>(m_inputClass);
-	fmemory::fdelete<WindowClass>(m_window1);
-	fmemory::MeoryManagerShutDown();
-	physics::ShutdownPhysX();
-}
+
+	Game::~Game()
+	{
+		//m_scene->SaveScene("../Assets/Scenes/scene2.json");
+		//delete m_scene;
+		fmemory::fdelete<Scene::SceneGraph>(m_scene);
+		fmemory::fdelete<Rendering::Octree>(m_octree);
+		fmemory::fdelete<Timer>(m_timer);
+		fmemory::fdelete<Renderer>(m_renderer);
+		fmemory::fdelete<InputReceiver>(m_inputClass);
+		fmemory::fdelete<WindowClass>(m_window1);
+		fmemory::MeoryManagerShutDown();
+		physics::ShutdownPhysX();
+	}
 
 	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 	{
@@ -46,16 +46,11 @@ Game::~Game()
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_scene->UpdateScene();
 
-		m_octree = fmemory::fnew<Scene::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
+		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
 
-	//Booting up physics
-	physics::InitPhysX();
-	//Set Draw States in Renderer
-	m_renderer->SetDrawStates();
-	
-	//m_scene->LoadScene("../Assets/Scenes/scene.json");
-	return true;
-}
+		//Booting up physics
+		physics::InitPhysX();
+
 
 		//Camera
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
@@ -69,9 +64,8 @@ Game::~Game()
 
 		m_octree->SetProjection(projection);
 		//Set Draw States in Renderer
-		m_renderer->SetDrawStates( projection);
+		m_renderer->SetDrawStates(projection);
 		//m_renderer->SetEntities(m_scene->GetEntities());
-		//m_scene->LoadScene("../Assets/Scenes/scene.json");
 
 
 
@@ -105,7 +99,7 @@ Game::~Game()
 			m_renderer->SetEntities(m_octree->GetViewables());
 
 			//renderer Update
-			m_renderer->Update(camera.GetViewMatrix(),dt);
+			m_renderer->Update(camera.GetViewMatrix(), dt);
 			m_renderer->Draw();
 			physics::StepPhysics(dt, m_renderer->GetEntitySet(), m_renderer->GetEntiyCount());
 

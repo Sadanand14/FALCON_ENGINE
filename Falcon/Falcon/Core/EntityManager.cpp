@@ -68,7 +68,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	Entity* newEntity = nullptr;
 	if (objTemplate != NULL)
 	{
-		newEntity = new Entity(pos, rot, scale);
+		newEntity = fmemory::fnew<Entity>(pos, rot, scale);
 
 		//Get file data
 		char* json = nullptr;
