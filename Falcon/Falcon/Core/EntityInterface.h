@@ -26,6 +26,10 @@
 
 #pragma warning( pop )
 
+/*
+	TODO: Make use of custom allocators
+*/
+
 /**
 *Basic Game Object Definition
 */

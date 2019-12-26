@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Physics/Physics.h"
 
 //Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -26,6 +27,7 @@ Game::~Game()
 	fmemory::fdelete<InputReceiver>(m_inputClass);
 	fmemory::fdelete<WindowClass>(m_window1);
 	fmemory::MeoryManagerShutDown();
+	physics::ShutdownPhysX();
 }
 
 bool Game::Initialize()
@@ -48,6 +50,8 @@ bool Game::Initialize()
 	//Create Draw States in Renderer
 	m_renderer->CreateDrawStates();
 
+	//Booting up physics
+	physics::InitPhysX();
 	//Set Draw States in Renderer
 	m_renderer->SetDrawStates(m_scene->GetEntities());
 
@@ -84,7 +88,7 @@ void Game::Update()
 		//Render
 		m_renderer->Draw(m_scene->GetEntities());
 
-
+		//physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 		//Game Input
 		ProcessInput(m_window1->GetWindow(), dt);
 
