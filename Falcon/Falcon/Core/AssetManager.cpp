@@ -31,7 +31,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	ProcessNode(scene->mRootNode, scene, newmesh);
 	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
 	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
-	newmesh->SetupMesh();
+	newmesh->Setup();
 	return newmesh;
 }
 
@@ -174,18 +174,18 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	std::vector<Vertex, fmemory::STLAllocator<Vertex>> vertices;
 	std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
 	std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
-	
+
 	bool uvs = false;
 	bool normals = false;
 	bool tanBitan = false;
-	
+
 	if(mesh->HasTextureCoords(0))
 		uvs = true;
 	if(mesh->HasNormals())
 		normals = true;
 	if(mesh->HasTangentsAndBitangents())
 		tanBitan = true;
-	
+
 
 	// Walk through each of the mesh's vertices.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -193,7 +193,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		Vertex vertex;
 		// Positions
 		vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-		
+
 		// Texture Coordinates
 		if (uvs)
 		{
@@ -203,7 +203,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		}
 		else
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-		
+
 		if(normals)
 		{
 			// Normals
@@ -211,22 +211,22 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		}
 		else
 			vertex.Normal = glm::vec3(0.0f, 0.0f, 0.0f);
-		
-		
+
+
 		if(tanBitan) {
 			// Tangent
 			vertex.Tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
-			
+
 			// Bitangent
 			vertex.Bitangent = glm::vec3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
 		}
-		
+
 		else {
-			
+
 			vertex.Tangent = glm::vec3(0.0f, 0.0f, 0.0f);
 			vertex.Bitangent = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
-		
+
 		vertices.push_back(vertex);
 	}
 

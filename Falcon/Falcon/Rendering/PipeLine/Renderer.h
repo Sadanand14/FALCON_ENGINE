@@ -17,6 +17,8 @@
 #include <stb_image.h>
 
 #include <ThreadPool.h>
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
 
 void PrintReception();
 
@@ -59,6 +61,8 @@ class Renderer
 	RenderEventSystem* m_RES;
 	boost::container::set<Mesh*> queuedMeshes;
 
+	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
+
 public:
 	Renderer();
 	~Renderer();
@@ -72,7 +76,7 @@ public:
 	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
 	void Draw();
 
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities) 
+	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities)
 	{
 		m_entity = entities;
 	}

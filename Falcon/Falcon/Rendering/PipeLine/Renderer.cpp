@@ -79,9 +79,9 @@ void Renderer::Init()
 void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
@@ -109,7 +109,7 @@ void Renderer::SetDrawStates()
 	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 	//}
 	shader->UseShader();
-	for (unsigned int i = 0; i < m_entity.size(); i++) 
+	for (unsigned int i = 0; i < m_entity.size(); i++)
 	{
 		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
 		m_entity[i]->AddComponent<PhysicsComponent>();
@@ -128,6 +128,8 @@ void Renderer::SetDrawStates()
 			//delete temp;
 		}
 	}
+
+	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 }
 
 /**
@@ -165,29 +167,17 @@ void Renderer::Draw()
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (u32 i = 0; i < m_entity.size(); i++) {
+	for (u32 i = 0; i < m_entity.size(); i++)
+	{
 		Mesh* m = m_entity[i]->GetComponent<RenderComponent>()->m_mesh;
 
 		m->AddWorldMatrix(m_entity[i]->GetTransform()->GetModel());
 
-		if (queuedMeshes.find(m) == queuedMeshes.end())
-			queuedMeshes.insert(m);
+		m_renderPasses[0]->QueueRenderable(m);
 	}
 
-	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
-		(*it)->Bind();
-
-		for (u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
-		{
-			i32 count;
-			if (i < (*it)->m_indexOffsets.size() - 1)
-				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
-			else
-				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
-			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
-		}
-		(*it)->ClearWorldMatrices();
+	for (u32 i = 0; i < m_renderPasses.size(); i++)
+	{
+		m_renderPasses[i]->Render();
 	}
-
-	queuedMeshes.clear();
 }
