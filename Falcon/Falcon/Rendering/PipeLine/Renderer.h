@@ -68,13 +68,14 @@ public:
 
 	void Init();
 	void CreateDrawStates();
-	void SetDrawStates();
-	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
+	void SetDrawStates(glm::mat4 projection);
+	void Update(glm::mat4 view,float dt);
 	void Draw();
 
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities) 
+	inline void SetEntities(const boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>& entities)
 	{
 		m_entity = entities;
+		//m_entity.push_back(new Entity());
 	}
 
 	inline boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }

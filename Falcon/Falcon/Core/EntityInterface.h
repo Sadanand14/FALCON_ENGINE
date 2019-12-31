@@ -49,15 +49,24 @@ public:
 		:m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
 		m_AIComponent(nullptr)
 	{
-		m_transform = new Transform();
+		m_transform = fmemory::fnew<Transform>();
 	}
 	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
 		m_AIComponent(nullptr)
 	{
-		m_transform = new Transform(pos, rot, scale);
+		m_transform = fmemory::fnew<Transform>(pos, rot, scale);
 	}
-	~Entity() {}
+	~Entity()
+	{
+		fmemory::fdelete<Transform>(m_transform);
+		fmemory::fdelete<RenderComponent>(m_renderC);
+		fmemory::fdelete<AudioComponent>(m_audioC);
+		fmemory::fdelete<PhysicsComponent>(m_physicsC);
+		fmemory::fdelete<AnimationComponent>(m_animationC);
+		fmemory::fdelete<AIComponent>(m_AIComponent);
+		fmemory::fdelete<InputComponent>(m_inputC);
+	}
 
 	inline Transform* GetTransform() { return m_transform; }
 
@@ -79,7 +88,7 @@ inline void Entity::AddComponent<RenderComponent>()
 	}
 	else
 	{
-		m_renderC = new RenderComponent();
+		m_renderC = fmemory::fnew<RenderComponent>();
 	}
 }
 
@@ -92,7 +101,7 @@ inline void Entity::AddComponent<PhysicsComponent>()
 	}
 	else
 	{
-		m_physicsC = new PhysicsComponent();
+		m_physicsC = fmemory::fnew<PhysicsComponent>();
 	}
 }
 
@@ -105,7 +114,7 @@ inline void Entity::AddComponent<AudioComponent>()
 	}
 	else
 	{
-		m_audioC = new AudioComponent();
+		m_audioC = fmemory::fnew<AudioComponent>();
 	}
 }
 
@@ -118,7 +127,7 @@ inline void Entity::AddComponent<AnimationComponent>()
 	}
 	else
 	{
-		m_animationC = new AnimationComponent();
+		m_animationC = fmemory::fnew<AnimationComponent>();
 	}
 }
 
@@ -131,7 +140,7 @@ inline void Entity::AddComponent<AIComponent>()
 	}
 	else
 	{
-		m_AIComponent = new AIComponent();
+		m_AIComponent = fmemory::fnew<AIComponent>();
 	}
 }
 
@@ -144,7 +153,7 @@ inline void Entity::AddComponent<InputComponent>()
 	}
 	else
 	{
-		m_inputC = new InputComponent();
+		m_inputC = fmemory::fnew <InputComponent>();
 	}
 }
 

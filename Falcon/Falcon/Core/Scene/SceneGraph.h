@@ -7,6 +7,9 @@
 
 namespace Scene
 {
+	/**
+	* Enum class for entites to allow them to be exempted or included in the updateloop for the game.
+	*/
 	enum class Status { Active, Inactive };
 
 	class SceneNode;
@@ -14,6 +17,9 @@ namespace Scene
 	typedef boost::container::vector<SceneNode*, fmemory::StackSTLAllocator<SceneNode*>> nodeVector;
 	typedef boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entityVector;
 
+	/**
+	* Data structure to hold the data and implementations for a Node inside the SceneGraph.
+	*/
 	class SceneNode
 	{
 		bool m_updateFlag;
@@ -55,24 +61,35 @@ namespace Scene
 		inline nodeVector& GetChildren() { return m_childNodes; }
 	};
 
+	/**
+	* Data structure that is explicitly used to pass data around in the function that loads the scene from json.
+	*/
 	struct NodeWithOffset
 	{
 		SceneNode* m_sceneNode;
 		unsigned int m_nextOffset;
 	};
 
+	/**
+	* Data Structure that holds the data and implementaion for a SceneGraph.
+	*/
 	class SceneGraph
 	{
 	private:
-		entityVector  m_entityList, m_octreeEntityList;
-		SceneNode* rootNode;
+		entityVector  m_entityList, m_renderables, m_updatedRenderables;
+		SceneNode* m_rootNode;
+
 		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index);
+		void SegregateEntities();
+
 	public:
 
 		SceneGraph(const char* sceneFilePath);
 		~SceneGraph();
+
+		inline entityVector& GetRenderables() { return m_renderables; }
 		inline const entityVector GetEntities() const { return m_entityList; }
-		inline const entityVector& GetOctreeEntities() const { return m_octreeEntityList; }
+		inline entityVector& GetOctreeEntities() { return m_updatedRenderables; }
 
 		void UpdateScene();
 

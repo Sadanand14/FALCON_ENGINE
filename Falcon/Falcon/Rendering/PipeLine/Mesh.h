@@ -20,6 +20,7 @@
 #include <Types.h>
 
 
+
 /**
 * Mesh Class tp store Mesh Data for Renderables.
 */
@@ -39,13 +40,12 @@ private:
 	std::string m_path;
 	std::string m_jsonPath;
 
-	//Functions
-
 public:
+
 	//Mesh Data
-	boost::container::vector<Vertex> m_vertexArray;
-	boost::container::vector<u32> m_indexArray;
-	boost::container::vector<u32> m_indexOffsets;
+	boost::container::vector<Vertex, fmemory::STLAllocator<Vertex>> m_vertexArray;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
 
 	Mesh();
 	~Mesh();

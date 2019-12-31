@@ -2,6 +2,8 @@
 #define TRANSFORM_COMPONENT_H
 
 #include "BasicComponent.h"
+#include <boost/container/vector.hpp>
+#include <Memory/fmemory.h>
 #include "glm/glm.hpp"
 #include "glm/vec4.hpp"
 #include "glm/vec3.hpp"
@@ -9,14 +11,19 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
 
+typedef boost::container::vector<unsigned short int, fmemory::StackSTLAllocator<unsigned short int>> IDVector;
 
 /**
-* Stucture to hold Tranform data for each entity.
+* Stucture to hold Transform data for each entity.
 */
 struct Transform: public BasicComponent
 {
 private:
 	bool m_updateFlag;
+	//m_updated;//m_updated for choosing to recalculate matrix and m_updated for reassigning in octree
+
+	IDVector octreeID;
+
 	glm::mat4 m_model; //* The model matrix of the transform
 	glm::vec3 m_position; //* The position of the Tranform
 	glm::vec3 m_scale; //* The scale of the transform
@@ -28,10 +35,10 @@ private:
 	void RecalculateMatrix()
 	{
 		//m_model = m_parentMatrix *glm::mat4(1.0f) ;
-		m_model = glm::translate(glm::mat4(1.0f), m_position);
+		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
-	    m_model = m_parentMatrix * m_model;
+		//m_updated = true;
 		m_updateFlag = false;
 	}
 
@@ -40,11 +47,14 @@ public:
 		:m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f }), m_model(1.0f),
 		m_updateFlag(true), m_parentMatrix(glm::mat4())
 	{
+		octreeID.reserve(6);
 		RecalculateMatrix();
 	}
+
 	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true), m_parentMatrix(glm::mat4())
 	{
+		octreeID.reserve(6);
 		RecalculateMatrix();
 	}
 
@@ -52,6 +62,21 @@ public:
 	{
 		m_parentMatrix = parentMatrix; m_updateFlag = true;
 	}
+
+	//for octree Calculations
+	void popOTID() { if (octreeID.size() > 0) octreeID.pop_back(); }
+
+	short int topOTID() { 
+		if (octreeID.size() > 0) return octreeID[octreeID.size() - 1];
+		else return -1;
+	}
+	
+	inline const IDVector& GetOTID() const { return octreeID; }
+	inline void ClearOTID() { octreeID.clear(); }
+	inline void pushOTID(unsigned short int value) { octreeID.push_back(value); }
+	//inline void setUpdatedflag(bool value) { m_updated = value; }
+	//inline const bool GetUpdatedflag() const { return m_updated; }
+	/////////////////////////////////////
 
 	inline const bool GetFlag() const { return m_updateFlag; }
 	inline void SetPosition(const glm::vec3& pos) { m_position = pos; m_updateFlag = true; }// m_updateFlag = true; }
