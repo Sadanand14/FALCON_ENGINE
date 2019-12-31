@@ -132,6 +132,7 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 			//delete temp;
 		}
 	}
+
 }
 
 /**

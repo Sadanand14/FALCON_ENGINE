@@ -47,6 +47,10 @@ namespace gameLoop
 		m_scene->UpdateScene();
 
 		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
+		//calculate Projection temporarily here
+		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window1->GetWidth() / (float)m_window1->GetHeight(), 0.1f, 100.0f);
+		m_octree->SetProjection(projection);
+		m_octree->Update();
 
 		//Booting up physics
 		physics::InitPhysX();
@@ -59,14 +63,12 @@ namespace gameLoop
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
 
-		//calculate Projection temporarily here
-		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window1->GetWidth() / (float)m_window1->GetHeight(), 0.1f, 100.0f);
 
-		m_octree->SetProjection(projection);
+		m_renderer->SetEntities(m_octree->GetViewables());
+
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(projection);
 		//m_renderer->SetEntities(m_scene->GetEntities());
-
 
 
 		return true;
