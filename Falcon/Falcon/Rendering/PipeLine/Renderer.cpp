@@ -98,10 +98,29 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
 
-	for (unsigned int i = 0; i < entities->size(); i++)
+	for (u32 i = 0; i < entities->size(); i++)
 	{
-		if(entities->at(i)->GetComponent<RenderComponent>())
-			entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
+		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+
+		if(renderComp) {
+			renderComp->m_mesh->GetMaterial()->SetShader(shader);
+			entities->at(i)->AddComponent<PhysicsComponent>();
+			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
+
+			if (i == 0 || i == 2)
+			{
+				physComp->SetBoxCollider(5, 5, 5);
+				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+
+			}
+			else
+			{
+				glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+				physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+				//delete temp;
+			}
+		}
 
 		if(entities->at(i)->GetComponent<ParticleEmitterComponent>()) {
 			entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->SetShader(particleShader);

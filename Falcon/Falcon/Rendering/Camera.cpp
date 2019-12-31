@@ -38,8 +38,8 @@ void CameraEventSystem::ProcessKeyEvent(keyType type, unsigned int code)
 {
 	if (CheckForKey(code)) 
 	{
-		if (code == GLFW_KEY_W) {}
 			//call ProcessKeyBoard of camera Class;
+		if (code == GLFW_KEY_W) {}
 		else if (code == GLFW_KEY_S){}
 		else if (code == GLFW_KEY_D){}
 		else if (code == GLFW_KEY_A){}

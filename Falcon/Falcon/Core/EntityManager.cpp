@@ -68,7 +68,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	Entity* newEntity = nullptr;
 	if (objTemplate != NULL)
 	{
-		newEntity = new Entity(pos, rot, scale);
+		newEntity = fmemory::fnew<Entity>(pos, rot, scale);
 
 		//Get file data
 		char* json = nullptr;
@@ -107,7 +107,9 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			if (m == m_meshes.end())
 				LoadMesh(mesh.GetString());
-			newEntity->GetComponent<RenderComponent>()->m_mesh = m_meshes[mesh.GetString()];
+			RenderComponent* rc = newEntity->GetComponent<RenderComponent>();
+			rc->m_mesh = m_meshes[mesh.GetString()];
+			rc->CalculateBounds();
 		}
 
 		if (doc.HasMember("particleEmitterComponent"))

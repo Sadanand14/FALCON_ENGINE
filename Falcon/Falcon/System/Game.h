@@ -11,28 +11,33 @@
 #include <PipeLine/Renderer.h>
 #include <Camera.h>
 #include <Scene/SceneGraph.h>
+#include <PipeLine/Octree.h>
 #include "ParticleSystem.h"
 
-class Game {
+namespace gameLoop
+{
+	class Game {
 
-	Timer* m_timer;
-	Renderer* m_renderer;
-	WindowClass* m_window1;
-	InputReceiver* m_inputClass;
-	Scene::SceneGraph* m_scene;
-	ParticleSystem* m_particleSystem = nullptr;
-	//Scene* m_scene;
-public:
-	bool m_gameCrashed, m_windowClosed;
+		Timer* m_timer;
+		Renderer* m_renderer;
+		WindowClass* m_window1;
+		InputReceiver* m_inputClass;
+		Scene::SceneGraph* m_scene;
+		Rendering::Octree* m_octree;
+		ParticleSystem* m_particleSystem = nullptr;
+		//Scene* m_scene;
+	public:
+		bool m_gameCrashed, m_windowClosed;
 
-	Game();
-	~Game();
+		Game();
+		~Game();
 
-	bool Initialize();
-	void Update();
-};
+		bool Initialize();
+		void Update();
+	};
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 #endif
+}
