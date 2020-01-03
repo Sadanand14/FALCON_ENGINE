@@ -139,6 +139,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="Rendering\ParticleSystem.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
@@ -153,7 +154,6 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\PXMathUtils.h" />
-    <ClInclude Include="System\ParticleSystem.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
@@ -194,6 +194,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="Rendering\ParticleSystem.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
@@ -205,7 +206,6 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClCompile Include="System\Memory\StackAllocator.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Physics\PXMathUtils.cpp" />
-    <ClCompile Include="System\ParticleSystem.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
