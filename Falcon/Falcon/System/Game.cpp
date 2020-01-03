@@ -97,7 +97,7 @@ namespace gameLoop
 			m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_octree->GetViewables());
 			m_renderer->Draw(m_octree->GetViewables());
 
-			//physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
+			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
 			//Poll I/O events
 			glfwPollEvents();
@@ -110,7 +110,6 @@ namespace gameLoop
 
 			//Poll I/O events
 			glfwPollEvents();
-
 		}
 	}
 

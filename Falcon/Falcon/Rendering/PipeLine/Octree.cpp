@@ -35,7 +35,7 @@ namespace Rendering
 
 	/**
 	* Function that divides the space covered by the octree node into 8 octants owned by 8 new childnodes.
-	*@param[in] Minimum possible size of an octreenode. 
+	*@param[in] Minimum possible size of an octreenode.
 	*/
 	void OctreeNode::Subdivide(float minSide)
 	{
@@ -225,9 +225,9 @@ namespace Rendering
 	}
 
 	/**
-	* Main Update Function for Octree. 
-	* Checks for moved entities and reasssigns them to a new node if necessary. 
-	* Assigns nodes to entities entering the octree space. 
+	* Main Update Function for Octree.
+	* Checks for moved entities and reasssigns them to a new node if necessary.
+	* Assigns nodes to entities entering the octree space.
 	* Extracts viewing plane equations for the current frame
 	* Culls objects based on whether their nodes intersect with the viewing plane.
 	*/
@@ -235,9 +235,9 @@ namespace Rendering
 	{
 		//const entityVector updatedEntities = m_scene->GetOctreeEntities();
 		Scene::entityVector& updatedEntities = m_scene->GetOctreeEntities();
-		//FilterEntities(updatedEntities);
+		FilterEntities(updatedEntities);
 
-		
+
 
 		//update all entities whose model matrices may have changed
 		for (unsigned int i = 0; i < updatedEntities.size(); i++)
@@ -255,7 +255,7 @@ namespace Rendering
 			}
 		}
 
-		//extract plane equations in world Space 
+		//extract plane equations in world Space
 		GetPlanes();
 
 		CullObjects();
@@ -511,7 +511,7 @@ namespace Rendering
 	/**
 	* Non-Member Function that checks if the diagonally opposite corners of a bounding box are within the bounds of the provided octreenode.
 	*
-	*@param[in] Pointer to the Octreenode used as reference. 
+	*@param[in] Pointer to the Octreenode used as reference.
 	*@param[in] The corner point of the bounding box.
 	*@param[in] The diagonally opposite corner point of the bounding box.
 	*
@@ -552,7 +552,7 @@ namespace Rendering
 	/**
 	* Non-member Function that checks if the provided entity
 	*
-	*@param[in] Pointer to the OctreeNode. 
+	*@param[in] Pointer to the OctreeNode.
 	*@param[in] Pointer to the enitity.
 	*
 	*@param[out] boolean value indicating if the test was positive or negative (false if outside, true if inside).
