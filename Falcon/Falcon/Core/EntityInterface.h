@@ -16,6 +16,7 @@
 #include <Components/InputComponent.h>
 #include <Components/AIComponent.h>
 #include <Components/CameraComponent.h>
+#include <Components/ParticleEmitterComponent.h>
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)
@@ -42,18 +43,19 @@ private:
 	InputComponent* m_inputC;
 	AnimationComponent* m_animationC;
 	AIComponent* m_AIComponent;
+	ParticleEmitterComponent* m_particleEmitterC;
 
 public:
 
 	Entity()
 		:m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr)
+		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
 		m_transform = fmemory::fnew<Transform>();
 	}
 	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr)
+		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
 		m_transform = fmemory::fnew<Transform>(pos, rot, scale);
 	}
@@ -158,6 +160,19 @@ inline void Entity::AddComponent<InputComponent>()
 }
 
 template<>
+inline void Entity::AddComponent<ParticleEmitterComponent>()
+{
+	if (m_particleEmitterC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_particleEmitterC = new ParticleEmitterComponent();
+	}
+}
+
+template<>
 inline RenderComponent* Entity::GetComponent<RenderComponent>() { return m_renderC; }
 
 template<>
@@ -174,5 +189,8 @@ inline InputComponent* Entity::GetComponent<InputComponent>() { return m_inputC;
 
 template<>
 inline AIComponent* Entity::GetComponent <AIComponent>() { return m_AIComponent; }
+
+template<>
+inline ParticleEmitterComponent* Entity::GetComponent<ParticleEmitterComponent>() { return m_particleEmitterC; }
 
 #endif // !1

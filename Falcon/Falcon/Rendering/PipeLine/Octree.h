@@ -63,7 +63,7 @@ namespace Rendering
 		glm::mat4 m_projection;
 		boost::circular_buffer<OctreeNode> m_freeNodes;
 
-		//plane Array storing plane equation's coefficients in the order x,y,z,w	
+		//plane Array storing plane equation's coefficients in the order x,y,z,w
 		planeArray m_planeArr;
 
 		//entityVector::iterator FindEntityInVector(Entity* entity, entityVector vector);
@@ -76,7 +76,7 @@ namespace Rendering
 
 	public:
 
-		inline const Scene::entityVector& GetViewables()const { return m_viewables; }
+		inline Scene::entityVector* GetViewables() { return &m_viewables; }
 		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }
 		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene, Camera* camera);
 		void Update();

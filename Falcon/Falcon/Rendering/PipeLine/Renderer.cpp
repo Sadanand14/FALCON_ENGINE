@@ -80,8 +80,9 @@ void Renderer::CreateDrawStates()
 {
 	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
@@ -89,50 +90,42 @@ void Renderer::CreateDrawStates()
 /**
 *Function to Set the relevant data in the draw states.
 */
-void Renderer::SetDrawStates( glm::mat4 projection)
+void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
 	//entity = fmemory::fnew_arr<Entity>(500);
 
 	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
 	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	
-	shader->UseShader();
-	shader->SetMat4("projection", projection);
-	
-	
+	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
 
-	//for (u32 i = 0; i < 500; i++) {
-	//	entity[i].AddComponent<RenderComponent>();
-	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
-	//	rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	//	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-	//	//rd->GetMaterial()->m_shader = shader;
-
-	//	glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
-	//	// Model transformations
-	//	entity[i].GetTransform()->SetPosition(pos);
-	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	//}
-	for (unsigned int i = 0; i < m_entity.size(); i++) 
+	for (u32 i = 0; i < entities->size(); i++)
 	{
-		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
-		m_entity[i]->AddComponent<PhysicsComponent>();
-		if (i == 0)
-		{
-			m_entity[i]->GetComponent<PhysicsComponent>()->SetBoxCollider(5, 5, 5);
-			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(),physics::PhysicsBodyType::ESTATIC_BODY);
+		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
 
+		if(renderComp) {
+			renderComp->m_mesh->GetMaterial()->SetShader(shader);
+			entities->at(i)->AddComponent<PhysicsComponent>();
+			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
+
+			if (i == 0 || i == 2)
+			{
+				physComp->SetBoxCollider(5, 5, 5);
+				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+
+			}
+			else
+			{
+				glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+				physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+				//delete temp;
+			}
 		}
-		else
-		{
-			RenderComponent* renderComp = m_entity[i]->GetComponent<RenderComponent>();
-			glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
-			m_entity[i]->GetComponent<PhysicsComponent>()->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-			m_entity[i]->GetComponent<PhysicsComponent>()->SetPhysicsBodyType(m_entity[i]->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-			//delete temp;
+
+		if(entities->at(i)->GetComponent<ParticleEmitterComponent>()) {
+			entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->SetShader(particleShader);
 		}
 	}
-
 }
 
 /**
@@ -140,41 +133,28 @@ void Renderer::SetDrawStates( glm::mat4 projection)
 *
 *@param[in] An integer indicating width.
 *@param[in] An integer indicating height.
-*@param[in] A float indicating zoom.
-*@param[in] A 4x4 matrix defined in glm library.
+*@param[in] A camera to use for rendering
 *@param[in] A float indicating delta time for the current frame.
 */
 
-float tempX = 0.0f;
-void Renderer::Update(glm::mat4 view,float dt)
-{ 
-	static float multiplier = 10.0f;
-	//FL_ENGINE_INFO("Temp VAlue : {0}, multiplier: {1}", tempX, multiplier);
-	FL_ENGINE_INFO("Draw Count: {0}", m_entity.size());
-	for (unsigned int i = 0; i < m_entity.size(); i++)
-	{
-		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
-	}
-	if (tempX > 100.0f)
-	{
-		multiplier *= -1.0f; tempX = 10.0f - FLT_MIN;
-	}
-	if (tempX < -100.0f) 
-	{ multiplier *= -1.0f; tempX = -10.0f + FLT_MIN; }
-
-		
-	tempX += dt * multiplier;
+float temp = 0.0f;
+void Renderer::Update(int width, int height, Camera &cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+{
+	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
+	glm::mat4 projection = glm::perspective(glm::radians(cam.m_Zoom), (float)width / (float)height, 0.1f, 100.0f);
 
-	//
-	// camera/view transformations
-	shader->SetMat4("view", view); 
-	//m_entity[0]->GetTransform()->SetPosition(glm::vec3(tempX, 10.0f,-10.0f));
-	/*m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	for (unsigned int i = 1; i < m_entity.size(); i++) 
-	{
-		m_entity[i]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
-	}*/
+	shader->UseShader();
+	shader->SetMat4("projection", projection);
+	shader->SetMat4("view", cam.GetViewMatrix());
+
+	particleShader->UseShader();
+	particleShader->SetMat4("projection", projection);
+	particleShader->SetMat4("view", cam.GetViewMatrix());
+	particleShader->SetVec3("camPos", cam.m_Position);
+
+	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
+	entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
 
 }
 
@@ -182,24 +162,47 @@ void Renderer::Update(glm::mat4 view,float dt)
 * Main Draw Function for the Renderer
 */
 //TODO-> Have multiple Renderer Passes functionality
-void Renderer::Draw()
+void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
+	for (u32 i = 0; i < entities->size(); i++) {
+		Transform* trans = entities->at(i)->GetTransform();
+		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+
+		if(renderComp)
+		{
+			Mesh* m = renderComp->m_mesh;
+			m->AddWorldMatrix(trans->GetModel());
+
+			if (queuedMeshes.find(m) == queuedMeshes.end())
+				queuedMeshes.insert(m);
+		}
+
+		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+
+		if(particleComp)
+		{
+			particleComp->m_particle->SetWorldMatrix(trans->GetModel());
+			for(auto it = particleComp->m_particleBuffer.begin(); it != particleComp->m_particleBuffer.end(); it++)
+				particleComp->m_particle->AddParticleData(*it);
+
+			queuedParticles.push_back(particleComp->m_particle);
+		}
+	}
+
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (u32 i = 0; i < m_entity.size(); i++) {
-		Mesh* m = m_entity[i]->GetComponent<RenderComponent>()->m_mesh;
+	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+	glDisable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		m->AddWorldMatrix(m_entity[i]->GetTransform()->GetModel());
-
-		if (queuedMeshes.find(m) == queuedMeshes.end())
-			queuedMeshes.insert(m);
-	}
-
-	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
+	for(auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++)
+	{
+		Shader* shad = (*it)->GetMaterial()->m_shader;
+		shad->UseShader();
 		(*it)->Bind();
 
-		for (u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
 		{
 			i32 count;
 			if (i < (*it)->m_indexOffsets.size() - 1)
@@ -211,5 +214,23 @@ void Renderer::Draw()
 		(*it)->ClearWorldMatrices();
 	}
 
+	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glDepthMask(false);
+
+	for(u32 i = 0; i < queuedParticles.size(); i++)
+	{
+		Shader* shad = queuedParticles[i]->GetMaterial()->m_shader;
+		shad->UseShader();
+		shad->SetMat4("model", queuedParticles[i]->GetWorldMatrix());
+		queuedParticles[i]->Bind();
+		glDrawArraysInstanced(GL_POINTS, 0, 1, queuedParticles[i]->GetParticleDataAmount());
+		queuedParticles[i]->ClearParticleData();
+	}
+	glDepthMask(true);
+
 	queuedMeshes.clear();
+	queuedParticles.clear();
 }

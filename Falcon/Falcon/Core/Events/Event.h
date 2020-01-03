@@ -15,7 +15,8 @@ enum EventsCategory {
 	WindowsEventCategory	 = BIT(0),
 	KeyEventCategory		 = BIT(1),
 	MouseEventCategory		 = BIT(2),
-	RenderEventCategory		 = BIT(3)
+	RenderEventCategory		 = BIT(3),
+	ParticleEventCategory	 = BIT(3)
 };
 
 
@@ -30,7 +31,7 @@ struct Event
 
 public:
 
-	inline void SetFlag(EventsCategory category) 
+	inline void SetFlag(EventsCategory category)
 	{
 		m_eventFlag = (m_eventFlag | category);
 	}
@@ -45,7 +46,7 @@ public:
 		return (m_eventFlag & referenceType);
 	}
 
-	Event(EventsCategory category):m_eventFlag(category) 
+	Event(EventsCategory category):m_eventFlag(category)
 	{
 		//std::cout << category << std::endl;
 	};

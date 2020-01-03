@@ -88,7 +88,7 @@ namespace Scene
 		~SceneGraph();
 
 		inline entityVector& GetRenderables() { return m_renderables; }
-		inline const entityVector GetEntities() const { return m_entityList; }
+		inline entityVector* GetEntities() { return &m_entityList; }
 		inline entityVector& GetOctreeEntities() { return m_updatedRenderables; }
 
 		void UpdateScene();

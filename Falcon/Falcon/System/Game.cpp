@@ -2,9 +2,7 @@
 #include "Physics/Physics.h"
 
 namespace gameLoop
-
 {
-
 	//Camera
 	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
@@ -21,6 +19,7 @@ namespace gameLoop
 		fmemory::fdelete<Scene::SceneGraph>(m_scene);
 		fmemory::fdelete<Rendering::Octree>(m_octree);
 		fmemory::fdelete<Timer>(m_timer);
+		fmemory::fdelete<ParticleSystem>(m_particleSystem);
 		fmemory::fdelete<Renderer>(m_renderer);
 		fmemory::fdelete<InputReceiver>(m_inputClass);
 		fmemory::fdelete<WindowClass>(m_window1);
@@ -44,6 +43,7 @@ namespace gameLoop
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
+		m_particleSystem = fmemory::fnew<ParticleSystem>();
 		m_scene->UpdateScene();
 
 		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
@@ -62,13 +62,8 @@ namespace gameLoop
 
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
-
-
-		m_renderer->SetEntities(m_octree->GetViewables());
-
 		//Set Draw States in Renderer
-		m_renderer->SetDrawStates(projection);
-		//m_renderer->SetEntities(m_scene->GetEntities());
+		m_renderer->SetDrawStates(m_octree->GetViewables());
 
 
 		return true;
@@ -91,20 +86,21 @@ namespace gameLoop
 			framerate = std::to_string(rate);
 			glfwSetWindowTitle(m_window1->GetWindow(), framerate.c_str());
 
-
 			//Update SceneGraph
 			m_scene->UpdateScene();
 
 			m_octree->Update();
 
-			//Render
-			m_renderer->SetEntities(m_octree->GetViewables());
+			m_particleSystem->Update(dt, m_octree->GetViewables());
 
 			//renderer Update
-			m_renderer->Update(camera.GetViewMatrix(), dt);
-			m_renderer->Draw();
-			physics::StepPhysics(dt, m_renderer->GetEntitySet(), m_renderer->GetEntiyCount());
+			m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_octree->GetViewables());
+			m_renderer->Draw(m_octree->GetViewables());
 
+			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
+
+			//Poll I/O events
+			glfwPollEvents();
 
 			//Game Input
 			ProcessInput(m_window1->GetWindow(), dt);
@@ -114,7 +110,6 @@ namespace gameLoop
 
 			//Poll I/O events
 			glfwPollEvents();
-
 		}
 	}
 
@@ -155,5 +150,4 @@ namespace gameLoop
 	{
 		camera.ProcessMouseScroll((float)yoffset);
 	}
-
 }

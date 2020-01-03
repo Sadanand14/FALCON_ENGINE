@@ -12,6 +12,7 @@
 #include <Camera.h>
 #include <Scene/SceneGraph.h>
 #include <PipeLine/Octree.h>
+#include "ParticleSystem.h"
 
 namespace gameLoop
 {
@@ -23,6 +24,7 @@ namespace gameLoop
 		InputReceiver* m_inputClass;
 		Scene::SceneGraph* m_scene;
 		Rendering::Octree* m_octree;
+		ParticleSystem* m_particleSystem = nullptr;
 		//Scene* m_scene;
 	public:
 		bool m_gameCrashed, m_windowClosed;
