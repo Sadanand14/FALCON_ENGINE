@@ -33,7 +33,7 @@
     <ClCompile Include="Physics\PXMathUtils.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
     <ClCompile Include="Rendering\PipeLine\Particle.cpp" />
-    <ClCompile Include="System\ParticleSystem.cpp" />
+    <ClCompile Include="Rendering\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -91,7 +91,7 @@
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
     <ClInclude Include="Rendering\PipeLine\Particle.h" />
     <ClInclude Include="Rendering\PipeLine\ParticleData.h" />
-    <ClInclude Include="System\ParticleSystem.h" />
+    <ClInclude Include="Rendering\ParticleSystem.h" />
     <ClInclude Include="Core\Events\ParticleEvent.h" />
     <ClInclude Include="Core\Components\ParticleEmitterComponent.h" />
   </ItemGroup>
