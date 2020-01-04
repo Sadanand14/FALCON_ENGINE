@@ -129,6 +129,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
     <ClInclude Include="Rendering\PipeLine\Particle.h" />
@@ -137,7 +138,6 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
     <ClInclude Include="Rendering\PipeLine\Renderable.h" />
-    <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
@@ -190,13 +190,13 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
+	<ClInclude Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
     <ClCompile Include="Rendering\PipeLine\Particle.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
 	<ClInclude Include="Rendering\PipeLine\Renderable.cpp" />
-	<ClInclude Include="Rendering\PipeLine\RenderPass.cpp" />
 	<ClInclude Include="Rendering\PipeLine\MeshRenderPass.cpp" />
 	<ClInclude Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
