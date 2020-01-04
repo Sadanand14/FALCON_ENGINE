@@ -18,7 +18,7 @@ struct RenderComponent : public BasicComponent
 	//bounding Box stuff
 	boundingVector m_boundingCorners;
 
-	inline const boundingVector& GetBounds() const { return m_boundingCorners; }
+	inline boundingVector* GetBounds() { return &m_boundingCorners; }
 
 	RenderComponent() : m_mesh(nullptr) { m_boundingCorners.reserve(8); }
 	~RenderComponent() {}
