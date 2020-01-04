@@ -12,23 +12,23 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
-	
+
 }
 
-WindowClass::~WindowClass() 
+WindowClass::~WindowClass()
 {
 	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
 }
 
 
-void WindowClass::Init() 
+void WindowClass::Init()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//For MacOS X
@@ -55,12 +55,10 @@ void WindowClass::Init()
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
-	
-	
+
+
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		
-
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)

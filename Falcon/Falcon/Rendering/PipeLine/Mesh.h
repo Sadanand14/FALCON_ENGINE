@@ -17,16 +17,14 @@ private:
 	VertexBuffer* m_VBO1;
 	VertexBuffer* m_VBO2;
 	IndexBuffer* m_IBO;
-	boost::container::vector<glm::mat4> m_worldMats;
+	boost::container::vector<glm::mat4, fmemory::STLAllocator<glm::mat4>> m_worldMats;
 	std::string m_path;
 	std::string m_jsonPath;
 
-	//Functions
-
 public:
 	//Mesh Data
-	boost::container::vector<u32> m_indexArray;
-	boost::container::vector<u32> m_indexOffsets;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
 
 	Mesh();
 	~Mesh();

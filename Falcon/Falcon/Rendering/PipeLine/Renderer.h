@@ -19,6 +19,7 @@
 #include <ThreadPool.h>
 #include "RenderPass.h"
 #include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
 
 void PrintReception();
 
@@ -56,11 +57,9 @@ public:
 */
 class Renderer
 {
-	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> m_entity;
 	Shader* shader;
+	Shader* particleShader;
 	RenderEventSystem* m_RES;
-	boost::container::set<Mesh*> queuedMeshes;
-
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 
 public:
@@ -72,18 +71,9 @@ public:
 
 	void Init();
 	void CreateDrawStates();
-	void SetDrawStates();
-	void Update(int width, int height, float zoom, glm::mat4 view, float deltaTime);
-	void Draw();
-
-	inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>> entities)
-	{
-		m_entity = entities;
-	}
-
-	inline boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* GetEntitySet() { return &m_entity; }
-	inline const size_t GetEntiyCount() { return m_entity.size(); }
-
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Update(int width, int height, Camera &cam, float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 };
 
 #endif // !RENDERER_H

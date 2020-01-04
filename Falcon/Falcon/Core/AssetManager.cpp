@@ -29,8 +29,8 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	// Process rootnode
 	ProcessNode(scene->mRootNode, scene, newmesh);
-	FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
-	FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
+	//FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
+	//FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->Setup();
 	return newmesh;
 }
@@ -172,9 +172,13 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	// Data to load
 	size_t indexOffset = 0;
 	std::vector<Vertex, fmemory::STLAllocator<Vertex>> vertices;
-	std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
-	std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
-
+	vertices.reserve(mesh->mNumVertices);
+	std::vector<u32, fmemory::STLAllocator<u32>> indices;
+	indices.reserve(mesh->mNumVertices*3);
+	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
+	//std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
+	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
+	
 	bool uvs = false;
 	bool normals = false;
 	bool tanBitan = false;
@@ -191,7 +195,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		// Positions
+		//Position
 		vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 
 		// Texture Coordinates
