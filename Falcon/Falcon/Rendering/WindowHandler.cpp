@@ -59,8 +59,6 @@ void WindowClass::Init()
 
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)

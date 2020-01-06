@@ -62,6 +62,7 @@ namespace Rendering
 		Camera* m_camera;
 		glm::mat4 m_projection;
 		boost::circular_buffer<OctreeNode> m_freeNodes;
+		boundingVector defaultVolume;
 
 		//plane Array storing plane equation's coefficients in the order x,y,z,w
 		planeArray m_planeArr;

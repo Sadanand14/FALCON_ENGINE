@@ -165,7 +165,6 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			particleComp->m_particle->Setup();
 			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
 			particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
-
 		}
 
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE

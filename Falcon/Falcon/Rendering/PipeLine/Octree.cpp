@@ -128,6 +128,16 @@ namespace Rendering
 		{
 			AssignNode(m_renderables[i]);
 		}
+
+		defaultVolume = { glm::vec3(-1.0f,  1.0f, -1.0f),
+			glm::vec3( 1.0f,  1.0f, -1.0f),
+			glm::vec3(-1.0f, -1.0f, -1.0f),
+			glm::vec3( 1.0f, -1.0f, -1.0f),
+
+			glm::vec3(-1.0f,  1.0f,  1.0f),
+			glm::vec3( 1.0f,  1.0f,  1.0f),
+			glm::vec3(-1.0f, -1.0f,  1.0f),
+			glm::vec3( 1.0f, -1.0f,  1.0f) };
 	}
 
 
@@ -149,8 +159,16 @@ namespace Rendering
 		entity->GetTransform()->ClearOTID();
 
 		//get bounding corners
+		boundingVector* objectBounds;
+
 		RenderComponent* rd = entity->GetComponent<RenderComponent>();
-		boundingVector objectBounds = entity->GetComponent<RenderComponent>()->GetBounds();
+
+		if(rd)
+			objectBounds = rd->GetBounds();
+
+		else
+			objectBounds = &defaultVolume;
+
 		Transform* transform = entity->GetTransform();
 		entity->GetTransform()->ClearOTID();
 
@@ -162,9 +180,9 @@ namespace Rendering
 		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1) * FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
 
 		//multiply the corners with the current model matrix
-		for (unsigned short i = 0; i < objectBounds.size(); i++)
+		for (unsigned short i = 0; i < objectBounds->size(); i++)
 		{
-			result = modelMatrix * glm::vec4(objectBounds[i], 1.0f);
+			result = modelMatrix * glm::vec4(objectBounds->at(i), 1.0f);
 			if (minX > result.x)
 				minX = result.x;
 			if (maxX < result.x)
@@ -384,7 +402,16 @@ namespace Rendering
 	{
 		static bool udpated = false;
 		//recalculate bounding box
-		const boundingVector& BV = entity->GetComponent<RenderComponent>()->GetBounds();
+		boundingVector* BV;
+
+		RenderComponent* rd = entity->GetComponent<RenderComponent>();
+
+		if(rd)
+			BV = rd->GetBounds();
+
+		else
+			BV = &defaultVolume;
+
 		Transform* transform = entity->GetTransform();
 		//entity->GetTransform()->ClearOTID();
 
@@ -396,9 +423,9 @@ namespace Rendering
 		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1)* FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
 
 		//multiply the corners with the current model matrix
-		for (unsigned short i = 0; i < BV.size(); i++)
+		for (unsigned short i = 0; i < BV->size(); i++)
 		{
-			result = modelMatrix * glm::vec4(BV[i], 1.0f);
+			result = modelMatrix * glm::vec4(BV->at(i), 1.0f);
 			if (minX > result.x) minX = result.x;
 			if (maxX < result.x) maxX = result.x;
 

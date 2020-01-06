@@ -55,7 +55,7 @@ namespace Scene
 	SceneNode::~SceneNode()
 	{
 		if (m_entity != nullptr)fmemory::fdelete<Entity>(m_entity);
-		for (unsigned int i = 0; i < m_childNodes.size(); ++i) 
+		for (unsigned int i = 0; i < m_childNodes.size(); ++i)
 		{
 			fmemory::fdelete<SceneNode>(m_childNodes[i]);
 		}
@@ -85,7 +85,7 @@ namespace Scene
 			transform->SetRelativeSpace(m_parent->GetWM());
 			transform->CheckFlag();
 			m_ReferenceMatrix = transform->GetModel();
-			if (m_entity->GetComponent<RenderComponent>() != nullptr && m_status == Status::Active) vector.push_back(m_entity);
+			if ((m_entity->GetComponent<RenderComponent>() != nullptr || m_entity->GetComponent<ParticleEmitterComponent>() != nullptr) && m_status == Status::Active) vector.push_back(m_entity);
 			m_updateFlag = false;
 			for (unsigned int i = 0; i < m_childNodes.size(); i++)
 			{
@@ -140,7 +140,7 @@ namespace Scene
 
 	/**
 	* Function that Creates a node and also instructs entity manager to create an entity based on the data read from the rapidjson document provided.
-	* 
+	*
 	* @param[in] The document containing the data for all the enitities in this scene.
 	* @param[in] The index for the entity to be read in the document.
 	*
@@ -224,9 +224,9 @@ namespace Scene
 	{
 		m_renderables.clear();
 		//segregate all renderable objects into one vector list
-		for (unsigned int i = 0; i < m_entityList.size(); i++) 
+		for (unsigned int i = 0; i < m_entityList.size(); i++)
 		{
-			if (m_entityList[i]->GetComponent<RenderComponent>() != nullptr) 
+			if (m_entityList[i]->GetComponent<RenderComponent>() != nullptr || m_entityList[i]->GetComponent<ParticleEmitterComponent>() != nullptr)
 			{
 				m_renderables.push_back(m_entityList[i]);
 			}
@@ -243,7 +243,7 @@ namespace Scene
 		m_entityList.reserve(10);
 		m_updatedRenderables.reserve(10);
 		m_rootNode = new SceneNode();
-		
+
 		//Get file data
 		char* json = nullptr;
 		int32_t size;
@@ -296,7 +296,7 @@ namespace Scene
 	SceneGraph::~SceneGraph()
 	{
 		nodeVector* childArr = &m_rootNode->GetChildren();
-		for (unsigned int i = 0; i < childArr->size(); i++) 
+		for (unsigned int i = 0; i < childArr->size(); i++)
 		{
 			fmemory::fdelete<SceneNode>(childArr->at(i));
 		}

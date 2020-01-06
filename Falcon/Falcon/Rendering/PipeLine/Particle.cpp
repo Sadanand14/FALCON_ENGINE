@@ -4,7 +4,7 @@
 /**
  * Basic Particle Constructor
  */
-Particle::Particle() :m_VAO(nullptr), m_VBO(nullptr)
+Particle::Particle() : Renderable(), m_VBO(nullptr)
 {
 
 }
@@ -14,8 +14,7 @@ Particle::Particle() :m_VAO(nullptr), m_VBO(nullptr)
  */
 void Particle::Setup()
 {
-	m_VAO = fmemory::fnew<VertexArray>();
-	m_VAO->Bind();
+	Renderable::Setup();
 	m_VBO = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::vec3), GL_DYNAMIC_DRAW);
 
 	m_VBO->Bind();
@@ -60,24 +59,6 @@ u32 Particle::GetParticleDataAmount()
 	return m_particles.size();
 }
 
-/**
- * Sets the material of the mesh
- * @param mat - The new material for the mesh
- */
-void Particle::SetMaterial(Material* mat)
-{
-	m_material = mat;
-}
-
-/**
- * Gets the material of the mesh
- * @return - The material of the mesh
- */
-Material* Particle::GetMaterial()
-{
-	return m_material;
-}
-
 void Particle::SetWorldMatrix(glm::mat4 mat)
 {
 	m_worldMat = mat;
@@ -92,15 +73,10 @@ glm::mat4 & Particle::GetWorldMatrix()
  */
 void Particle::Bind()
 {
-	// Draw Particle
-	m_VAO->Bind();
-
+	Renderable::Bind();
 	m_VBO->Bind();
 	m_VBO->BufferData(m_particles.data(), m_particles.size() * sizeof(ParticleData), GL_DYNAMIC_DRAW);
 	m_VBO->Unbind();
-
-	if (m_material != nullptr)
-		m_material->Bind();
 }
 
 /**
@@ -108,6 +84,5 @@ void Particle::Bind()
  */
 Particle::~Particle()
 {
-	fmemory::fdelete<VertexArray>(m_VAO);
 	fmemory::fdelete<VertexBuffer>(m_VBO);
 }

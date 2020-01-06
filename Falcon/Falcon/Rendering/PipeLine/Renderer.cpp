@@ -78,13 +78,9 @@ void Renderer::Init()
 */
 void Renderer::CreateDrawStates()
 {
-	// Configure global opengl state
-	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_PROGRAM_POINT_SIZE);
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
 /**
@@ -101,31 +97,43 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	for (u32 i = 0; i < entities->size(); i++)
 	{
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
 
-		if(renderComp) {
-			renderComp->m_mesh->GetMaterial()->SetShader(shader);
+		if(renderComp || particleComp)
+		{
 			entities->at(i)->AddComponent<PhysicsComponent>();
 			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-			if (i == 0 || i == 2)
+			if(renderComp)
 			{
+				renderComp->m_mesh->GetMaterial()->SetShader(shader);
+
+				if (i == 0)
+				{
+					physComp->SetBoxCollider(5, 5, 5);
+					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+
+				}
+				else
+				{
+					glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+					physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+					//delete temp;
+				}
+			}
+
+			if(particleComp)
+			{
+				particleComp->m_particle->GetMaterial()->SetShader(particleShader);
 				physComp->SetBoxCollider(5, 5, 5);
 				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
-
 			}
-			else
-			{
-				glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
-				physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-				//delete temp;
-			}
-		}
-
-		if(entities->at(i)->GetComponent<ParticleEmitterComponent>()) {
-			entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->SetShader(particleShader);
 		}
 	}
+
+	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
+	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 }
 
 /**
@@ -155,7 +163,6 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
 	entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
-
 }
 
 /**
@@ -164,73 +171,35 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 //TODO-> Have multiple Renderer Passes functionality
 void Renderer::Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
-	for (u32 i = 0; i < entities->size(); i++) {
-		Transform* trans = entities->at(i)->GetTransform();
-		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
-
-		if(renderComp)
-		{
-			Mesh* m = renderComp->m_mesh;
-			m->AddWorldMatrix(trans->GetModel());
-
-			if (queuedMeshes.find(m) == queuedMeshes.end())
-				queuedMeshes.insert(m);
-		}
-
-		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
-
-		if(particleComp)
-		{
-			particleComp->m_particle->SetWorldMatrix(trans->GetModel());
-			for(auto it = particleComp->m_particleBuffer.begin(); it != particleComp->m_particleBuffer.end(); it++)
-				particleComp->m_particle->AddParticleData(*it);
-
-			queuedParticles.push_back(particleComp->m_particle);
-		}
-	}
-
+	glDepthMask(true);
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-	glDisable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	for(auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++)
+	for (u32 i = 0; i < entities->size(); i++)
 	{
-		Shader* shad = (*it)->GetMaterial()->m_shader;
-		shad->UseShader();
-		(*it)->Bind();
+		Transform* trans = entities->at(i)->GetTransform();
 
-		for(u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+		RenderComponent* rc = entities->at(i)->GetComponent<RenderComponent>();
+		if(rc)
 		{
-			i32 count;
-			if (i < (*it)->m_indexOffsets.size() - 1)
-				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
-			else
-				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
-			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
+			Mesh* m = rc->m_mesh;
+			m->AddWorldMatrix(trans->GetModel());
+			m_renderPasses[0]->QueueRenderable(m);
 		}
-		(*it)->ClearWorldMatrices();
+
+		ParticleEmitterComponent* pec = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+		if(pec)
+		{
+			Particle* p = pec->m_particle;
+			p->SetWorldMatrix(trans->GetModel());
+			for(auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
+				p->AddParticleData(*it);
+			m_renderPasses[1]->QueueRenderable(p);
+		}
 	}
 
-	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glDepthMask(false);
-
-	for(u32 i = 0; i < queuedParticles.size(); i++)
+	for (u32 i = 0; i < m_renderPasses.size(); i++)
 	{
-		Shader* shad = queuedParticles[i]->GetMaterial()->m_shader;
-		shad->UseShader();
-		shad->SetMat4("model", queuedParticles[i]->GetWorldMatrix());
-		queuedParticles[i]->Bind();
-		glDrawArraysInstanced(GL_POINTS, 0, 1, queuedParticles[i]->GetParticleDataAmount());
-		queuedParticles[i]->ClearParticleData();
+		m_renderPasses[i]->Render();
 	}
-	glDepthMask(true);
-
-	queuedMeshes.clear();
-	queuedParticles.clear();
 }

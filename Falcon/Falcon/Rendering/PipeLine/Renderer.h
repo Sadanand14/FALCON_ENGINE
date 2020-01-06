@@ -17,6 +17,9 @@
 #include <stb_image.h>
 
 #include <ThreadPool.h>
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
 
 void PrintReception();
 
@@ -57,8 +60,7 @@ class Renderer
 	Shader* shader;
 	Shader* particleShader;
 	RenderEventSystem* m_RES;
-	boost::container::set<Mesh*> queuedMeshes;
-	boost::container::vector<Particle*> queuedParticles;
+	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 
 public:
 	Renderer();

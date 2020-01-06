@@ -61,13 +61,22 @@ public:
 	}
 	~Entity()
 	{
-		fmemory::fdelete<Transform>(m_transform);
-		fmemory::fdelete<RenderComponent>(m_renderC);
-		fmemory::fdelete<AudioComponent>(m_audioC);
-		fmemory::fdelete<PhysicsComponent>(m_physicsC);
-		fmemory::fdelete<AnimationComponent>(m_animationC);
-		fmemory::fdelete<AIComponent>(m_AIComponent);
-		fmemory::fdelete<InputComponent>(m_inputC);
+		if(m_transform)
+			fmemory::fdelete<Transform>(m_transform);
+		if(m_renderC)
+			fmemory::fdelete<RenderComponent>(m_renderC);
+		if(m_audioC)
+			fmemory::fdelete<AudioComponent>(m_audioC);
+		if(m_physicsC)
+			fmemory::fdelete<PhysicsComponent>(m_physicsC);
+		if(m_animationC)
+			fmemory::fdelete<AnimationComponent>(m_animationC);
+		if(m_AIComponent)
+			fmemory::fdelete<AIComponent>(m_AIComponent);
+		if(m_inputC)
+			fmemory::fdelete<InputComponent>(m_inputC);
+		if(m_particleEmitterC)
+			fmemory::fdelete<ParticleEmitterComponent>(m_particleEmitterC);
 	}
 
 	inline Transform* GetTransform() { return m_transform; }
@@ -168,7 +177,7 @@ inline void Entity::AddComponent<ParticleEmitterComponent>()
 	}
 	else
 	{
-		m_particleEmitterC = new ParticleEmitterComponent();
+		m_particleEmitterC = fmemory::fnew<ParticleEmitterComponent>();
 	}
 }
 
