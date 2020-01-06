@@ -17,7 +17,8 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 
 WindowClass::~WindowClass()
 {
-	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
+	if (m_gameWindow) { glfwDestroyWindow(m_gameWindow);  }
+
 	glfwTerminate();
 }
 

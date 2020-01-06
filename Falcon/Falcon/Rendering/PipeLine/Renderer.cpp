@@ -14,6 +14,11 @@ RenderEventSystem::RenderEventSystem()
 	SubscribeToEvents();
 }
 
+void RenderEventSystem::ShutDown() 
+{
+	delete m_instance;
+}
+
 /**
 * Function to process all the events available in the event queue.
 */
@@ -63,6 +68,7 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	RenderEventSystem::ShutDown();
 }
 
 /**

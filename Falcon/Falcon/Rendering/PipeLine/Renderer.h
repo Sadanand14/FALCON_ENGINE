@@ -43,6 +43,9 @@ public:
 		return m_instance;
 	}
 
+	static void ShutDown();
+
+	//static void ShutDown() 
 	virtual void SubscribeToEvents();
 
 	virtual void ProcessEvents();

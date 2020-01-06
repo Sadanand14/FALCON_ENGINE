@@ -86,7 +86,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		//Start json doc
 		rapidjson::Document doc;
 		doc.Parse(json);
-		//fmemory::fdelete<char>(json);
+
+		if(json!=nullptr)fmemory::fdelete<char>(json);
 
 		//Check if JSON file is not valid
 		if (!doc.IsObject())
@@ -172,6 +173,24 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 	return newEntity;
 }
+
+void EntityManager::ClearManager() 
+{
+	/*for (boost::unordered_map<std::string, Mesh*>::iterator  iterator = m_meshes.begin(); iterator != m_meshes.end(); ++iterator)
+	{
+		fmemory::fdelete<>(iterator->second);
+	}*/
+
+	/*for (boost::unordered_map<std::string, Material*>::iterator iterator = m_materials.begin(); iterator != m_materials.end(); ++iterator)
+	{
+		fmemory::fdelete<Material>(iterator->second);
+	}*/
+
+	m_meshes.clear();
+	m_materials.clear();
+}
+
+	
 
 /**
  * Saves a scene

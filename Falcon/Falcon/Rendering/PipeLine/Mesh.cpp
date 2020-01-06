@@ -11,7 +11,7 @@
 /**
 *Basic Mesh Constructor
 */
-Mesh::Mesh() : Renderable(), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
+Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 {
 	m_vertexArray.reserve(110000);
 	m_indexArray.reserve(330000);
