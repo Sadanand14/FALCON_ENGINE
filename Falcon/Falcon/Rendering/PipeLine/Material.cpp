@@ -21,3 +21,12 @@ void Material::BindTo(int32_t location, Texture tex, const char* locName)
 	glBindTexture(GL_TEXTURE_2D, tex.textureID);
 	m_shader->SetInt(locName, location);
 }
+
+Material::~Material()
+{
+	glDeleteTextures(1, &m_albedoTex.textureID);
+	glDeleteTextures(1, &m_roughnessTex.textureID);
+	glDeleteTextures(1, &m_normalTex.textureID);
+	glDeleteTextures(1, &m_metallicTex.textureID);
+	glDeleteTextures(1, &m_aoTex.textureID);
+}

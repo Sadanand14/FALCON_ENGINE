@@ -28,7 +28,7 @@ public:
 	float m_metallic = 0.0f;
 	float m_ao = 0.0f;
 	Shader* m_shader = nullptr;
-	
+
 
 	void Bind();
 	inline void SetShader(Shader* shader) { m_shader = shader; }
@@ -36,6 +36,7 @@ public:
 	inline void SetPath(const std::string& path) { m_path = path; }
 	inline const std::string& GetTexturePath(u32 idx) { return m_texPaths[idx]; }
 	inline void SetTexturePath(const std::string& path, u32 idx) { m_texPaths[idx] = path; }
+	~Material();
 };
 
 #endif
