@@ -60,7 +60,7 @@ public:
 */
 class Renderer
 {
-	Shader* shader;
+	//Shader* shader;
 	Shader* particleShader;
 	RenderEventSystem* m_RES;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;

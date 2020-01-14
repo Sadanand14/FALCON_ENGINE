@@ -97,7 +97,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	//entity = fmemory::fnew_arr<Entity>(500);
 
 	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
+	//shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
 	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
 
 	for (u32 i = 0; i < entities->size(); i++)
@@ -112,7 +112,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 
 			if(renderComp)
 			{
-				renderComp->m_mesh->GetMaterial()->SetShader(shader);
+				//renderComp->m_mesh->GetMaterial()->SetShader(shader);
 
 				if (i == 0)
 				{
@@ -158,9 +158,13 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(cam.m_Zoom), (float)width / (float)height, 0.1f, 100.0f);
 
-	shader->UseShader();
-	shader->SetMat4("projection", projection);
-	shader->SetMat4("view", cam.GetViewMatrix());
+	for (unsigned int i = 0; i < entities->size(); ++i) 
+	{
+		Shader* shader = entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
+		shader->UseShader();
+		shader->SetMat4("projection", projection);
+		shader->SetMat4("view", cam.GetViewMatrix());
+	}
 
 	particleShader->UseShader();
 	particleShader->SetMat4("projection", projection);
