@@ -109,12 +109,13 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			//Get mesh
 			const rapidjson::Value& mat = doc["particleEmitterComponent"]["material"];
-			AssetManager::GetMaterial(mat.GetString());
+			
 			//LoadMaterial(mat.GetString());
 			particleComp->m_particle = fmemory::fnew<Particle>();
 			particleComp->m_particle->Setup();
 			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
-			particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			//particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			particleComp->m_particle->SetMaterial(AssetManager::GetMaterial(mat.GetString()));
 		}
 
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE

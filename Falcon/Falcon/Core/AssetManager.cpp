@@ -182,7 +182,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
 
-	if (doc.HasMember("Vshader") && doc.HasMember("Vshader")) 
+	if (doc.HasMember("Vshader") && doc.HasMember("Fshader")) 
 	{
 		std::string Vshader = doc["Vshader"].GetString();
 		std::string Fshader = doc["Fshader"].GetString();
