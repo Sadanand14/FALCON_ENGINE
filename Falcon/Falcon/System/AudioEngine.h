@@ -10,6 +10,8 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include "Log.h"
+
 
 using namespace std;
 //Vector3 struct to place sound in 3D space.

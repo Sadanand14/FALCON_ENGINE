@@ -234,7 +234,8 @@ float  CAudioEngine::VolumeTodB(float volume)
 int CAudioEngine::ErrorCheck(FMOD_RESULT result)
 {
 	if (result != FMOD_OK) {
-		cout << "FMOD ERROR " << result << endl;
+		FL_ENGINE_ERROR("FMOD ERROR");
+		FL_ENGINE_ERROR(result);
 		return 1;
 	}
 	// cout << "FMOD all good" << endl;
