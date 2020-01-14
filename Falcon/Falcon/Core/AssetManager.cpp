@@ -1,6 +1,61 @@
 #include "AssetManager.h"
 #include <Log.h>
 
+boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
+boost::unordered_map<std::string, Material*> AssetManager::m_materials;
+
+
+//Mesh* AssetManager::GetMesh( const char* path)
+//{
+//	//return if mesh is already loaded
+//	auto iterator = m_meshes.find(path);
+//	if (iterator != m_meshes.end())
+//		return iterator->second;
+//
+//	//Get file data
+//	char* json = nullptr;
+//	int32_t size;
+//	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
+//	if (jsonFile.is_open()) {
+//		size = jsonFile.tellg();
+//		jsonFile.seekg(std::ios::beg);
+//		json = fmemory::fnew_arr<char>(size + 1);
+//		jsonFile.read(json, size);
+//		json[size] = 0;
+//		jsonFile.close();
+//	}
+//
+//	//Start json doc
+//	rapidjson::Document doc;
+//	doc.Parse(json);
+//	fmemory::fdelete<char>(json);
+//
+//	//Set the mesh path
+//	//std::string const& temp = path;
+//	std::string meshPath = doc["path"].GetString();
+//	Mesh* mesh = LoadModel(path);
+//	mesh->SetJsonPath(path);
+//	mesh->SetPath(meshPath);
+//	
+//	mesh->SetMaterial(GetMaterial(doc["material"].GetString()));
+//	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
+//	
+//	m_meshes[meshPath] = mesh;
+//	return mesh;
+//}
+
+//Material* AssetManager::GetMaterial(std::string const& path) 
+//{
+//	//return if material is already loaded
+//	auto mat = m_materials.find(path);
+//	if (mat != m_materials.end())
+//		return mat->second;
+//
+//	//Load material if it doesn't exist
+//	Material* material = LoadMaterial(path);
+//	m_materials[path] = material;
+//	return material;
+//}
 
 /**
 *This function intializes the loading of a model using the ASSIMP Library.
@@ -32,6 +87,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	//FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
 	//FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
 	newmesh->Setup();
+	
 	return newmesh;
 }
 
@@ -116,6 +172,9 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
+
+	/*std::string shader = doc["shader"].GetString();
+	mat->SetShader()*/
 
 	std::string albedoPath = doc["albedo"].GetString();
 	std::string roughPath = doc["roughness"].GetString();

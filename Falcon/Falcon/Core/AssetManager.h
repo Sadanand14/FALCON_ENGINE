@@ -17,6 +17,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <boost/unordered_map.hpp>
+
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
@@ -38,6 +40,8 @@
 class AssetManager
 {
 private:
+	static boost::unordered_map<std::string, Mesh*> m_meshes;
+	static boost::unordered_map<std::string, Material*> m_materials;
 
 	// Process nodes
 	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);
@@ -47,6 +51,8 @@ private:
 	// The required info is returned as a Texture struct.
 
 public:
+	//static Material* GetMaterial(std::string const& path);
+	//static Mesh* GetMesh(const char* path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);

@@ -40,9 +40,9 @@ public:
 
 
 	inline const std::string& GetJsonPath() const { return m_jsonPath; }
-	inline void SetJsonPath(const std::string& jsonPath) { m_jsonPath = jsonPath; }
+	inline void SetJsonPath(const std::string& jsonPath) {m_jsonPath = jsonPath; }
 	inline const std::string& GetPath() const { return m_path; }
-	inline void SetPath(const std::string& path) { m_path = path; }
+	inline void SetPath(const std::string&path) {m_path = path; }
 
 };
 
