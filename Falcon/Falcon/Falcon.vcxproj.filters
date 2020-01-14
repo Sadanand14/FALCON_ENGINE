@@ -38,6 +38,7 @@
     <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderable.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
+    <ClCompile Include="System\AudioEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Renderable.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
+    <ClInclude Include="System\AudioEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

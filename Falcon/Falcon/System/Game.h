@@ -13,6 +13,7 @@
 #include <Scene/SceneGraph.h>
 #include <PipeLine/Octree.h>
 #include "ParticleSystem.h"
+#include "AudioEngine.h"
 
 namespace gameLoop
 {
@@ -28,6 +29,8 @@ namespace gameLoop
 		//Scene* m_scene;
 	public:
 		bool m_gameCrashed, m_windowClosed;
+		//Audio Engine
+		CAudioEngine Sound;
 
 		Game();
 		~Game();
@@ -38,6 +41,7 @@ namespace gameLoop
 
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 
 #endif
 }
