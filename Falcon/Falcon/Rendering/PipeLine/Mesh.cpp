@@ -9,13 +9,11 @@
 #endif
 
 /**
-*Basic Mesh Constructor
+* Basic Mesh Constructor
 */
 Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 {
-	m_vertexArray.reserve(110000);
-	m_indexArray.reserve(330000);
-	m_indexOffsets.reserve(10000);
+
 }
 
 /**
@@ -24,9 +22,9 @@ Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 void Mesh::Setup()
 {
 	Renderable::Setup();
-	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
+	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray, m_vertexCount * sizeof(Vertex), GL_STATIC_DRAW);
 	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
-	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
+	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray, m_indexCount);
 
 	m_VBO1->Bind();
 	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0, 0);
@@ -90,22 +88,22 @@ void Mesh::Bind()
 	m_VBO2->Unbind();
 }
 
-glm::vec3* Mesh::GetVertexPositionsArray()
-{
-	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
-	vertPosArray.resize(m_vertexArray.size());
-
-	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
-	{
-#ifdef FL_PLATFORM_WINDOWS
-		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
-#else
-		memcpy(&vertPosArray[itr],  &m_vertexArray[itr], sizeof(glm::vec3));
-#endif
-	}
-
-	return &vertPosArray[0];
-}
+//glm::vec3* Mesh::GetVertexPositionsArray()
+//{
+//	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
+//	vertPosArray.resize(m_vertexArray.size());
+//
+//	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
+//	{
+//#ifdef FL_PLATFORM_WINDOWS
+//		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
+//#else
+//		memcpy(&vertPosArray[itr],  &m_vertexArray[itr], sizeof(glm::vec3));
+//#endif
+//	}
+//
+//	return &vertPosArray[0];
+//}
 
 /**
 * Mesh class Destructor.
@@ -115,4 +113,11 @@ Mesh::~Mesh()
 	fmemory::fdelete<VertexBuffer>(m_VBO2);
 	fmemory::fdelete<VertexBuffer>(m_VBO1);
 	fmemory::fdelete<IndexBuffer>(m_IBO);
+
+	delete [] m_vertexArray;//fmemory::fdelete<Vertex>(m_vertexArray);
+	m_vertexArray = nullptr;
+	delete [] m_indexArray;//fmemory::fdelete<u32>(m_indexArray);
+	m_indexArray = nullptr;
+	delete [] m_indexOffsets;//fmemory::fdelete<u32>(m_indexOffsets);
+	m_indexOffsets = nullptr;
 }

@@ -14,7 +14,7 @@ RenderEventSystem::RenderEventSystem()
 	SubscribeToEvents();
 }
 
-void RenderEventSystem::ShutDown() 
+void RenderEventSystem::ShutDown()
 {
 	delete m_instance;
 }
@@ -122,7 +122,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				}
 				else
 				{
-					glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+					//glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
 					physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;
@@ -158,7 +158,7 @@ void Renderer::Update(int width, int height, Camera &cam, float dt, boost::conta
 	m_RES->ProcessEvents();
 	glm::mat4 projection = glm::perspective(glm::radians(cam.m_Zoom), (float)width / (float)height, 0.1f, 100.0f);
 
-	for (unsigned int i = 0; i < entities->size(); ++i) 
+	for (unsigned int i = 0; i < entities->size(); ++i)
 	{
 		Shader* shader = entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
 		shader->UseShader();

@@ -44,8 +44,8 @@ private:
 	static boost::unordered_map<std::string, Material*> m_materials;
 
 	// Process nodes
-	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);
-	static void ProcessMesh(aiMesh* mesh, Mesh* newmesh);
+	static void ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
+	static void ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
@@ -56,7 +56,7 @@ public:
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
-
+	static void Clean();
 };
 
 

@@ -22,6 +22,7 @@ namespace gameLoop
 		fmemory::fdelete(m_renderer);
 		fmemory::fdelete(m_inputClass);
 		fmemory::fdelete(m_window1);
+		AssetManager::Clean();
 		fmemory::MeoryManagerShutDown();
 		EntityManager::ClearManager();
 		physics::ShutdownPhysX();

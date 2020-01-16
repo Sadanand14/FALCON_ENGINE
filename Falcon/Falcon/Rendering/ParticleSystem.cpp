@@ -53,6 +53,7 @@ ParticleSystem::ParticleSystem()
  */
 ParticleSystem::~ParticleSystem()
 {
+	delete m_PES;
 }
 
 /**

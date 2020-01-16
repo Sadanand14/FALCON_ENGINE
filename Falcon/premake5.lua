@@ -26,7 +26,7 @@ IncludeDirs["glad"]   = "Falcon/vendor/include/glad";
 IncludeDirs["assimp"] = "Falcon/vendor/include/assimp";
 IncludeDirs["KHR"]    = "Falcon/vendor/include/KHR";
 IncludeDirs["boost"]  = "Falcon/vendor/include/boost";
-IncludeDirs["physx"]  = "Falcon/vendor/include/Physx/physx/include"; 
+IncludeDirs["physx"]  = "Falcon/vendor/include/Physx/physx/include";
 IncludeDirs["physxExtensions"]= "Falcon/vendor/include/Physx/physx/source/physxextensions/src";
 IncludeDirs["pxshared"]= "Falcon/vendor/include/Physx/pxshared/include";
 IncludeDirs["physxSource"]="Falcon/vendor/include/Physx/physx/source/";
@@ -164,8 +164,8 @@ project "Falcon"
 
 
 	filter { "system:windows", "configurations:Debug" }
-			defines 
-			{ 
+			defines
+			{
 				"BUILD_DEBUG_MODE",
 				"_DEBUG"
 			}
@@ -183,11 +183,11 @@ project "Falcon"
 
 	filter { "system:windows", "configurations:Release" }
 
-			defines 
+			defines
 			{
 				"BUILD_RELEASE_MODE",
 				"_NDEBUG"
-			}	
+			}
 			optimize "On"
 
 			libdirs
@@ -226,7 +226,7 @@ project "Falcon"
 			"dl",
 			"pthread",
 			"assimp",
-			
+
 			--Linux order for physxlibs https://github.com/NVIDIAGameWorks/PhysX/issues/92 --
 			"PhysX_static_64",
 			"PhysXPvdSDK_static_64",
@@ -240,8 +240,8 @@ project "Falcon"
 
 
 	filter {"system:linux","configurations:Debug"}
-		defines 
-		{ 
+		defines
+		{
 			"BUILD_DEBUG_MODE",
 			"_DEBUG"
 		}
@@ -262,12 +262,12 @@ project "Falcon"
 
 
 	filter {"system:linux","configurations:Release"}
-		defines 
+		defines
 		{
 			"BUILD_RELEASE_MODE",
-			"_NDEBUG"
+			"NDEBUG"
 		}
-	
+
 		optimize "On"
 
 

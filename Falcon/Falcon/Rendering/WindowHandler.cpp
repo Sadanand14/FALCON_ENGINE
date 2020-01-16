@@ -56,8 +56,6 @@ void WindowClass::Init()
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
-
-
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
