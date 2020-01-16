@@ -1,12 +1,14 @@
 #include "Mesh.h"
 #include "Log.h"
 
-
 // On g++, string.f contains the implementation of memcpy_s
 #ifdef FL_PLATFORM_UNIX
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
 #endif
+
+
+
 
 /**
 * Basic Mesh Constructor
@@ -114,10 +116,10 @@ Mesh::~Mesh()
 	fmemory::fdelete<VertexBuffer>(m_VBO1);
 	fmemory::fdelete<IndexBuffer>(m_IBO);
 
-	delete [] m_vertexArray;//fmemory::fdelete<Vertex>(m_vertexArray);
-	m_vertexArray = nullptr;
+	//delete [] m_vertexArray;//fmemory::fdelete<Vertex>(m_vertexArray);
+	//m_vertexArray = nullptr;
 	delete [] m_indexArray;//fmemory::fdelete<u32>(m_indexArray);
-	m_indexArray = nullptr;
+	//m_indexArray = nullptr;
 	delete [] m_indexOffsets;//fmemory::fdelete<u32>(m_indexOffsets);
 	m_indexOffsets = nullptr;
 }

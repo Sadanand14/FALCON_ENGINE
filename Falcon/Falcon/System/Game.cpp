@@ -24,7 +24,6 @@ namespace gameLoop
 		fmemory::fdelete(m_window1);
 		AssetManager::Clean();
 		fmemory::MeoryManagerShutDown();
-		EntityManager::ClearManager();
 		physics::ShutdownPhysX();
 		ThreadPool::ShutDown();
 	}
@@ -60,9 +59,9 @@ namespace gameLoop
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
 		glfwSetScrollCallback(m_window1->GetWindow(), scroll_callback);
 
-		////Create Draw States in Renderer
+		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
-		////Set Draw States in Renderer
+		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(m_octree->GetViewables());
 
 
@@ -98,9 +97,6 @@ namespace gameLoop
 			m_renderer->Draw(m_octree->GetViewables());
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
-
-			//Poll I/O events
-			glfwPollEvents();
 
 			//Game Input
 			ProcessInput(m_window1->GetWindow(), dt);

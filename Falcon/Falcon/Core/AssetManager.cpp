@@ -1,4 +1,5 @@
 #include "AssetManager.h"
+#include "PipeLine/Mesh.h"
 #include <Log.h>
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
@@ -38,13 +39,11 @@ Mesh* AssetManager::GetMesh( const std::string& path)
 	//std::string const& temp = path;
 	std::string meshPath = doc["path"].GetString();
 	Mesh* mesh = LoadModel(meshPath);
-	//mesh->SetJsonPath(path);
-	//mesh->SetPath(meshPath);
-
+	
 	mesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
 
-	m_meshes[meshPath] = mesh;
+	m_meshes[path] = mesh;
 	return mesh;
 }
 
@@ -108,7 +107,6 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 	std::copy(indOffsets.begin(), indOffsets.end(), newmesh->m_indexOffsets);
 
 	newmesh->Setup();
-
 	return newmesh;
 }
 

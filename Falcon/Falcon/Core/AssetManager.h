@@ -8,7 +8,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <PipeLine/Mesh.h>
 #include <PipeLine/Material.h>
 
 #include <string>
@@ -17,8 +16,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <boost/container/vector.hpp>
 #include <boost/unordered_map.hpp>
-
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
@@ -33,6 +32,8 @@
 
 #include <Memory/fmemory.h>
 
+class Mesh;
+class Vertex;
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
