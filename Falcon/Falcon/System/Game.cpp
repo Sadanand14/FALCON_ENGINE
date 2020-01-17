@@ -95,7 +95,7 @@ namespace gameLoop
 
 			//renderer Update
 			m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_octree->GetViewables());
-			m_renderer->Draw(m_octree->GetViewables());
+			m_renderer->Draw(camera, m_octree->GetViewables());
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 

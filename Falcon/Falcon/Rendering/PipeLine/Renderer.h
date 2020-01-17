@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <boost/container/set.hpp>
+#include <boost/container/flat_map.hpp>
 
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
@@ -20,6 +21,7 @@
 #include "RenderPass.h"
 #include "MeshRenderPass.h"
 #include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
 
 void PrintReception();
 
@@ -53,11 +55,12 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
-*Class Definition for the Rendering System Responsible for Rendering each frame.
-*/
+ *Class Definition for the Rendering System Responsible for Rendering each frame.
+ */
 class Renderer
 {
 	Shader* shader;
+	Shader* transShader;
 	Shader* particleShader;
 	RenderEventSystem* m_RES;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
@@ -72,8 +75,8 @@ public:
 	void Init();
 	void CreateDrawStates();
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Update(int width, int height, Camera &cam, float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Update(int width, int height, const Camera &cam, float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Draw(const Camera &cam, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 };
 
 #endif // !RENDERER_H

@@ -33,6 +33,9 @@ void EntityManager::LoadMesh(const std::string& meshPath)
 	m->SetJsonPath(meshPath);
 	m->SetPath(path);
 
+	bool transparent = doc["transparent"].GetBool();
+	m->SetTransparent(transparent);
+
 	//Check if the material already exists
 	auto mat = m_materials.find(doc["material"].GetString());
 
