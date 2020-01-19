@@ -106,12 +106,12 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
 		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
 
-		if(renderComp || particleComp)
+		if (renderComp || particleComp)
 		{
 			entities->at(i)->AddComponent<PhysicsComponent>();
 			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-			if(renderComp)
+			if (renderComp)
 			{
 				//renderComp->m_mesh->GetMaterial()->SetShader(shader);
 
@@ -130,7 +130,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				}
 			}
 
-			if(particleComp)
+			if (particleComp)
 			{
 				particleComp->m_particle->GetMaterial()->SetShader(particleShader);
 				physComp->SetBoxCollider(5, 5, 5);
@@ -153,27 +153,30 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 */
 
 float temp = 0.0f;
-void Renderer::Update(Camera &cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
-		Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
-		shader->UseShader();
-		shader->SetMat4("projection", m_projection);
-		shader->SetMat4("view", cam.GetViewMatrix());
+		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
+		{
+			Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
+			shader->UseShader();
+			shader->SetMat4("projection", m_projection);
+			shader->SetMat4("view", cam.GetViewMatrix());
+		}
 	}
 
 	particleShader->UseShader();
-	
+
 	particleShader->SetMat4("projection", m_projection);
 	particleShader->SetMat4("view", cam.GetViewMatrix());
 	particleShader->SetVec3("camPos", cam.m_Position);
 
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 /**
@@ -191,7 +194,7 @@ void Renderer::Draw()
 		Transform* trans = m_entities->at(i)->GetTransform();
 
 		RenderComponent* rc = m_entities->at(i)->GetComponent<RenderComponent>();
-		if(rc)
+		if (rc)
 		{
 			Mesh* m = rc->m_mesh;
 			m->AddWorldMatrix(trans->GetModel());
@@ -199,11 +202,11 @@ void Renderer::Draw()
 		}
 
 		ParticleEmitterComponent* pec = m_entities->at(i)->GetComponent<ParticleEmitterComponent>();
-		if(pec)
+		if (pec)
 		{
 			Particle* p = pec->m_particle;
 			p->SetWorldMatrix(trans->GetModel());
-			for(auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
+			for (auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
 				p->AddParticleData(*it);
 			m_renderPasses[1]->QueueRenderable(p);
 		}
