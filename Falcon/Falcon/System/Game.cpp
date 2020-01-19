@@ -15,8 +15,8 @@ namespace gameLoop
 
 	Game::~Game()
 	{
-		fmemory::fdelete(m_scene);
-		fmemory::fdelete(m_octree);
+		if (m_scene != nullptr)fmemory::fdelete(m_scene);
+		if(m_octree!= nullptr)fmemory::fdelete(m_octree);
 		fmemory::fdelete(m_timer);
 		fmemory::fdelete(m_particleSystem);
 		fmemory::fdelete(m_renderer);
@@ -62,7 +62,7 @@ namespace gameLoop
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
 		//Set Draw States in Renderer
-		m_renderer->SetDrawStates(m_octree->GetViewables());
+		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 
 
 		return true;
@@ -91,10 +91,9 @@ namespace gameLoop
 			m_octree->Update();
 
 			m_particleSystem->Update(dt, m_octree->GetViewables());
-
 			////renderer Update
-			m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_octree->GetViewables());
-			m_renderer->Draw(m_octree->GetViewables());
+			m_renderer->Update(camera, dt, m_octree->GetViewables());
+			m_renderer->Draw();
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 

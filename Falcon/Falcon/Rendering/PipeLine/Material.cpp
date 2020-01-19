@@ -24,6 +24,7 @@ void Material::BindTo(int32_t location, Texture tex, const char* locName)
 
 Material::~Material()
 {
+	fmemory::fdelete<>(m_shader);
 	glDeleteTextures(1, &m_albedoTex.textureID);
 	glDeleteTextures(1, &m_roughnessTex.textureID);
 	glDeleteTextures(1, &m_normalTex.textureID);
