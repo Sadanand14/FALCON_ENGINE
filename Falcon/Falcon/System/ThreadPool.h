@@ -24,13 +24,15 @@ private:
 	boost::mutex mtx;
 	std::atomic<bool> discard_threadPool;
 	static ThreadPool * mainThreadPool;
+	std::vector<boost::thread> worker_threads;
+	//std::vector<boost::thread,fmemory::STLAllocator<boost::thread>> worker_threads;
+	~ThreadPool();
 	ThreadPool();
-	std::vector<boost::thread,fmemory::STLAllocator<boost::thread>> worker_threads;
-
 public:
 
 	static ThreadPool* GetThreadPool();
-	~ThreadPool();
+	static void ShutDown();
+	
 
 	void execute_task();
 

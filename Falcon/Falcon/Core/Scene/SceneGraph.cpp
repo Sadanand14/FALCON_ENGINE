@@ -242,7 +242,7 @@ namespace Scene
 	{
 		m_entityList.reserve(10);
 		m_updatedRenderables.reserve(10);
-		m_rootNode = new SceneNode();
+		m_rootNode = fmemory::fnew<SceneNode>();
 
 		//Get file data
 		char* json = nullptr;
@@ -295,11 +295,8 @@ namespace Scene
 	*/
 	SceneGraph::~SceneGraph()
 	{
-		nodeVector* childArr = &m_rootNode->GetChildren();
-		for (unsigned int i = 0; i < childArr->size(); i++)
-		{
-			fmemory::fdelete<SceneNode>(childArr->at(i));
-		}
+		//nodeVector* childArr = &m_rootNode->GetChildren();
+		fmemory::fdelete<SceneNode>(m_rootNode);
 	}
 
 	/**

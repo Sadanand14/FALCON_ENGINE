@@ -177,7 +177,7 @@ namespace Rendering
 		glm::vec4 result;
 
 		//get new axis aligned boudning corners
-		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1) * FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
 
 		//multiply the corners with the current model matrix
 		for (unsigned short i = 0; i < objectBounds->size(); i++)
@@ -420,7 +420,7 @@ namespace Rendering
 		glm::vec4 result;
 
 		//get new axis aligned boudning corners
-		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = (-1)* FLT_MAX, maxY = (-1) * FLT_MAX, maxZ = (-1) * FLT_MAX;
+		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
 
 		//multiply the corners with the current model matrix
 		for (unsigned short i = 0; i < BV->size(); i++)

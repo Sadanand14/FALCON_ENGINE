@@ -43,6 +43,9 @@ public:
 		return m_instance;
 	}
 
+	static void ShutDown();
+
+	//static void ShutDown() 
 	virtual void SubscribeToEvents();
 
 	virtual void ProcessEvents();
@@ -57,23 +60,24 @@ public:
 */
 class Renderer
 {
-	Shader* shader;
+	//Shader* shader;
 	Shader* particleShader;
 	RenderEventSystem* m_RES;
+	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
-
+	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 public:
 	Renderer();
 	~Renderer();
 
-	//Shader* m_shadyStuff = nullptr;
-	//Model* m_nanosuit = nullptr;
 
+	//inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities) { m_entities = entities; }
+	//inline void SetProjection(glm::mat4 projection) { m_projection = projection; }
 	void Init();
 	void CreateDrawStates();
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Update(int width, int height, Camera &cam, float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
+	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Draw();
 };
 
 #endif // !RENDERER_H

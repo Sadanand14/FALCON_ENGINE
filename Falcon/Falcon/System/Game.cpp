@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Physics/Physics.h"
-
+#include <EntityManager.h>
+#include <ThreadPool.h>
 namespace gameLoop
 {
 	//Camera
@@ -14,22 +15,21 @@ namespace gameLoop
 
 	Game::~Game()
 	{
-		//m_scene->SaveScene("../Assets/Scenes/scene2.json");
-		//delete m_scene;
-		fmemory::fdelete<Scene::SceneGraph>(m_scene);
-		fmemory::fdelete<Rendering::Octree>(m_octree);
-		fmemory::fdelete<Timer>(m_timer);
-		fmemory::fdelete<ParticleSystem>(m_particleSystem);
-		fmemory::fdelete<Renderer>(m_renderer);
-		fmemory::fdelete<InputReceiver>(m_inputClass);
-		fmemory::fdelete<WindowClass>(m_window1);
+		if (m_scene != nullptr)fmemory::fdelete(m_scene);
+		if(m_octree!= nullptr)fmemory::fdelete(m_octree);
+		fmemory::fdelete(m_timer);
+		fmemory::fdelete(m_particleSystem);
+		fmemory::fdelete(m_renderer);
+		fmemory::fdelete(m_inputClass);
+		fmemory::fdelete(m_window1);
+		AssetManager::Clean();
 		fmemory::MeoryManagerShutDown();
 		physics::ShutdownPhysX();
+		ThreadPool::ShutDown();
 	}
 
 	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 	{
-		//m_scene = new Scene();
 	}
 
 	bool Game::Initialize()
@@ -52,18 +52,17 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		m_octree->Update();
 
-		//Booting up physics
+		////Booting up physics
 		physics::InitPhysX();
 
 
-		//Camera
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
 		glfwSetScrollCallback(m_window1->GetWindow(), scroll_callback);
 
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
 		//Set Draw States in Renderer
-		m_renderer->SetDrawStates(m_octree->GetViewables());
+		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 
 
 		return true;
@@ -77,8 +76,8 @@ namespace gameLoop
 			std::string framerate;
 
 			//testing RenderEvents
-			for (unsigned int i = 0; i < 10; i++)
-				EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
+			//for (unsigned int i = 0; i < 10; i++)
+			//	EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
 
 			m_timer->update();
 			dt = m_timer->GetDeltaTime();
@@ -92,15 +91,11 @@ namespace gameLoop
 			m_octree->Update();
 
 			m_particleSystem->Update(dt, m_octree->GetViewables());
-
-			//renderer Update
-			m_renderer->Update(m_window1->GetWidth(), m_window1->GetHeight(), camera, dt, m_octree->GetViewables());
-			m_renderer->Draw(m_octree->GetViewables());
+			////renderer Update
+			m_renderer->Update(camera, dt, m_octree->GetViewables());
+			m_renderer->Draw();
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
-
-			//Poll I/O events
-			glfwPollEvents();
 
 			//Game Input
 			ProcessInput(m_window1->GetWindow(), dt);
