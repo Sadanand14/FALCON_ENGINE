@@ -45,6 +45,8 @@ public:
 		return m_instance;
 	}
 
+	static void ShutDown();
+
 	virtual void SubscribeToEvents();
 
 	virtual void ProcessEvents();
@@ -55,28 +57,23 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
- *Class Definition for the Rendering System Responsible for Rendering each frame.
+ * Class Definition for the Rendering System Responsible for Rendering each frame.
  */
 class Renderer
 {
-	Shader* shader;
-	Shader* transShader;
-	Shader* particleShader;
 	RenderEventSystem* m_RES;
+	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
-
+	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 public:
 	Renderer();
 	~Renderer();
 
-	//Shader* m_shadyStuff = nullptr;
-	//Model* m_nanosuit = nullptr;
-
 	void Init();
 	void CreateDrawStates();
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Update(int width, int height, const Camera &cam, float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(const Camera &cam, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
+	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Draw(Camera &cam);
 };
 
 #endif // !RENDERER_H

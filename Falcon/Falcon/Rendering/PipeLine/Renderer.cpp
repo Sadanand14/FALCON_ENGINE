@@ -14,6 +14,11 @@ RenderEventSystem::RenderEventSystem()
 	SubscribeToEvents();
 }
 
+void RenderEventSystem::ShutDown()
+{
+	delete m_instance;
+}
+
 /**
 * Function to process all the events available in the event queue.
 */
@@ -63,6 +68,7 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	RenderEventSystem::ShutDown();
 }
 
 /**
@@ -86,32 +92,21 @@ void Renderer::CreateDrawStates()
 /**
 *Function to Set the relevant data in the draw states.
 */
-void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
-	//entity = fmemory::fnew_arr<Entity>(500);
-
-	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	transShader = fmemory::fnew<Shader>("Rendering/Shader/Transparent.vert", "Rendering/Shader/Transparent.frag");
-	particleShader = fmemory::fnew<Shader>("Rendering/Shader/Particle.vert", "Rendering/Shader/Particle.frag");
-
+	m_projection = projection;
 	for (u32 i = 0; i < entities->size(); i++)
 	{
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
 		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
 
-		if(renderComp || particleComp)
+		if (renderComp || particleComp)
 		{
 			entities->at(i)->AddComponent<PhysicsComponent>();
 			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-			if(renderComp)
+			if (renderComp)
 			{
-				if(!renderComp->m_mesh->GetTransparent())
-					renderComp->m_mesh->GetMaterial()->SetShader(shader);
-				else
-					renderComp->m_mesh->GetMaterial()->SetShader(transShader);
-
 				if (i != 1)
 				{
 					physComp->SetBoxCollider(5, 5, 5);
@@ -120,16 +115,15 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				}
 				else
 				{
-					glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
+					//glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
 					physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;
 				}
 			}
 
-			if(particleComp)
+			if (particleComp)
 			{
-				particleComp->m_particle->GetMaterial()->SetShader(particleShader);
 				physComp->SetBoxCollider(5, 5, 5);
 				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 			}
@@ -151,47 +145,50 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
  */
 
 float temp = 0.0f;
-void Renderer::Update(int width, int height, const Camera &cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
-	glm::mat4 projection = glm::perspective(glm::radians(cam.m_Zoom), (float)width / (float)height, 0.1f, 100.0f);
+	m_entities = entities;
+	for (unsigned int i = 0; i < m_entities->size(); ++i)
+	{
+		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
+		{
+			Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
+			shader->UseShader();
+			shader->SetMat4("projection", m_projection);
+			shader->SetMat4("view", cam.GetViewMatrix());
+		}
 
-	shader->UseShader();
-	shader->SetMat4("projection", projection);
-	shader->SetMat4("view", cam.GetViewMatrix());
-
-	transShader->UseShader();
-	transShader->SetMat4("projection", projection);
-	transShader->SetMat4("view", cam.GetViewMatrix());
-
-
-	particleShader->UseShader();
-	particleShader->SetMat4("projection", projection);
-	particleShader->SetMat4("view", cam.GetViewMatrix());
-	particleShader->SetVec3("camPos", cam.m_Position);
-
+		if(m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
+		{
+			Shader* shader = m_entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->m_shader;
+			shader->UseShader();
+			shader->SetMat4("projection", m_projection);
+			shader->SetMat4("view", cam.GetViewMatrix());
+			shader->SetVec3("camPos", cam.m_Position);
+		}
+	}
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 /**
  * Main Draw Function for the Renderer
  */
-void Renderer::Draw(const Camera &cam, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::Draw(Camera &cam)
 {
 	glDepthMask(true);
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	boost::container::flat_map<float, int> distanceEntityMap;
-
-	for (u32 i = 0; i < entities->size(); i++)
+	for (u32 i = 0; i < m_entities->size(); i++)
 	{
-		Transform* trans = entities->at(i)->GetTransform();
+		Transform* trans = m_entities->at(i)->GetTransform();
 
-		RenderComponent* rc = entities->at(i)->GetComponent<RenderComponent>();
-		if(rc)
+		RenderComponent* rc = m_entities->at(i)->GetComponent<RenderComponent>();
+		if (rc)
 		{
 			Mesh* m = rc->m_mesh;
 
@@ -208,12 +205,12 @@ void Renderer::Draw(const Camera &cam, boost::container::vector<Entity*, fmemory
 			}
 		}
 
-		ParticleEmitterComponent* pec = entities->at(i)->GetComponent<ParticleEmitterComponent>();
-		if(pec)
+		ParticleEmitterComponent* pec = m_entities->at(i)->GetComponent<ParticleEmitterComponent>();
+		if (pec)
 		{
 			Particle* p = pec->m_particle;
 			p->SetWorldMatrix(trans->GetModel());
-			for(auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
+			for (auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
 				p->AddParticleData(*it);
 			m_renderPasses[1]->QueueRenderable(p);
 		}
@@ -223,13 +220,13 @@ void Renderer::Draw(const Camera &cam, boost::container::vector<Entity*, fmemory
 	//Transparent meshes
 	for(auto it = distanceEntityMap.rbegin(); it != distanceEntityMap.rend(); it++)
 	{
-		RenderComponent* rc = entities->at(it->second)->GetComponent<RenderComponent>();
-		rc->m_mesh->AddWorldMatrix(entities->at(it->second)->GetTransform()->GetModel());
+		RenderComponent* rc = m_entities->at(it->second)->GetComponent<RenderComponent>();
+		rc->m_mesh->AddWorldMatrix(m_entities->at(it->second)->GetTransform()->GetModel());
 		count++;
 
 		auto next = it;
 		next++;
-		if(entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
+		if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
 		{
 			m_renderPasses[2]->QueueRenderable(rc->m_mesh);
 			static_cast<TransparentRenderPass*>(m_renderPasses[2])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);

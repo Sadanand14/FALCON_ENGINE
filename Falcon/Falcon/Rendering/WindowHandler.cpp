@@ -17,7 +17,8 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 
 WindowClass::~WindowClass()
 {
-	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
+	if (m_gameWindow) { glfwDestroyWindow(m_gameWindow);  }
+
 	glfwTerminate();
 }
 
@@ -54,8 +55,6 @@ void WindowClass::Init()
 	{
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
-
-
 
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

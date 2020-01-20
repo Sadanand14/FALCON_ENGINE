@@ -27,5 +27,6 @@ void Renderable::Bind()
 
 Renderable::~Renderable()
 {
+	delete[] m_vertexArray;
 	fmemory::fdelete<VertexArray>(m_VAO);
 }

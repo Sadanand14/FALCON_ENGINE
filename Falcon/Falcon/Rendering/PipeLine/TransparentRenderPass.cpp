@@ -5,7 +5,6 @@ TransparentRenderPass::TransparentRenderPass(uint32_t priority) : RenderPass(pri
 	AddEnabledProperty(GL_DEPTH_TEST);
 	AddEnabledProperty(GL_BLEND);
 	AddEnabledProperty(GL_CULL_FACE);
-	//AddDisabledProperty(GL_CULL_FACE);
 
 	SetCullFace(GL_BACK);
 	SetBlendEquation(GL_FUNC_ADD);
@@ -25,17 +24,16 @@ void TransparentRenderPass::Render()
 		shad->UseShader();
 		m->Bind();
 
-		for(u32 j = 0; j < m->m_indexOffsets.size(); j++)
+		for(u32 j = 0; j < m->m_indexOffsetCount; j++)
 		{
 			i32 count;
-			if (j < m->m_indexOffsets.size() - 1)
+			if (j < m->m_indexOffsetCount - 1)
 				count = m->m_indexOffsets[j + 1] - m->m_indexOffsets[j];
 			else
-				count = m->m_indexArray.size() - m->m_indexOffsets[j];
+				count = m->m_indexCount - m->m_indexOffsets[j];
 			glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, m_counts[counter], m->m_indexOffsets[j], m_offsets[counter]);
 		}
 		counter++;
-		//m->ClearWorldMatrices();
 	}
 
 	for(u32 i = 0; i < renderables.size(); i++)

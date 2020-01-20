@@ -8,7 +8,7 @@
 #include <Log.h>
 
 
-#include <Components/RenderCcomponent.h>
+#include <Components/RenderComponent.h>
 #include <Components/TransformComponent.h>
 #include <Components/AnimationComponent.h>
 #include <Components/AudioComponent.h>
