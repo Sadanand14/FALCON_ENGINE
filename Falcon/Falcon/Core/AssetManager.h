@@ -52,8 +52,8 @@ private:
 	// The required info is returned as a Texture struct.
 
 public:
-	//static Material* GetMaterial(std::string const& path);
-	//static Mesh* GetMesh(const char* path);
+	static Material* GetMaterial(const std::string& path);
+	static Mesh* GetMesh(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
