@@ -117,7 +117,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Core\Components\InputComponent.h" />
     <ClInclude Include="Core\Components\ParticleEmitterComponent.h" />
     <ClInclude Include="Core\Components\PhysicsComponent.h" />
-    <ClInclude Include="Core\Components\RenderCcomponent.h" />
+    <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Core\EntityManager.h" />

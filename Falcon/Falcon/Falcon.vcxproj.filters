@@ -65,7 +65,6 @@
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
     <ClInclude Include="System\Memory\StackAllocator.h" />
     <ClInclude Include="System\Memory\StackSTLAllocator.h" />
-    <ClInclude Include="Core\Components\RenderCcomponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\Components\AnimationComponent.h" />
     <ClInclude Include="Core\Components\PhysicsComponent.h" />
@@ -104,6 +103,7 @@
     <ClInclude Include="Rendering\PipeLine\Renderable.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="System\AudioEngine.h" />
+    <ClInclude Include="Core\Components\RenderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

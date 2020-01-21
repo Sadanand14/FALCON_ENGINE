@@ -4,7 +4,6 @@
 #include "InputReceiver.h"
 #include "Log.h"
 #include <framework.h>
-#include <thread/thread.hpp>
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
 #include <Memory/fmemory.h>
@@ -14,6 +13,7 @@
 #include <PipeLine/Octree.h>
 #include "ParticleSystem.h"
 #include "AudioEngine.h"
+
 
 namespace gameLoop
 {

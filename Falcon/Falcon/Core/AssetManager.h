@@ -8,7 +8,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <PipeLine/Mesh.h>
 #include <PipeLine/Material.h>
 
 #include <string>
@@ -17,8 +16,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <boost/container/vector.hpp>
 #include <boost/unordered_map.hpp>
-
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
@@ -33,6 +32,8 @@
 
 #include <Memory/fmemory.h>
 
+class Mesh;
+class Vertex;
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
@@ -44,8 +45,8 @@ private:
 	static boost::unordered_map<std::string, Material*> m_materials;
 
 	// Process nodes
-	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);
-	static void ProcessMesh(aiMesh* mesh, Mesh* newmesh);
+	static void ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
+	static void ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
@@ -56,7 +57,7 @@ public:
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
-
+	static void Clean();
 };
 
 

@@ -1,61 +1,5 @@
 #include "EntityManager.h"
 
-boost::unordered_map<std::string, Mesh*> EntityManager::m_meshes;
-boost::unordered_map<std::string, Material*> EntityManager::m_materials;
-
-/**
- * Loads a mesh into the scene
- * @param meshPath - The path to the mesh json file
- */
-void EntityManager::LoadMesh(const std::string& meshPath)
-{
-	//Get file data
-	char* json = nullptr;
-	int32_t size;
-	std::ifstream jsonFile(meshPath, std::ios::in | std::ios::ate | std::ios::binary);
-	if (jsonFile.is_open()) {
-		size = jsonFile.tellg();
-		jsonFile.seekg(std::ios::beg);
-		json = fmemory::fnew_arr<char>(size + 1);
-		jsonFile.read(json, size);
-		json[size] = 0;
-		jsonFile.close();
-	}
-
-	//Start json doc
-	rapidjson::Document doc;
-	doc.Parse(json);
-	fmemory::fdelete<char>(json);
-
-	//Set the mesh path
-	std::string path = doc["path"].GetString();
-	Mesh* m = AssetManager::LoadModel(path);
-	m->SetJsonPath(meshPath);
-	m->SetPath(path);
-
-	//Check if the material already exists
-	auto mat = m_materials.find(doc["material"].GetString());
-
-	//Load material if it doesn't exist
-	if (mat == m_materials.end())
-		LoadMaterial(doc["material"].GetString());
-
-	//Set material and alloc the amount of instances for the matrices
-	m->SetMaterial(m_materials[doc["material"].GetString()]);
-	m->PreallocMatrixAmount(doc["instances"].GetInt());
-	m_meshes[meshPath] = m;
-}
-
-/**
- * Loads a material into the scene
- * @param matPath - The path to the material json file
- */
-void EntityManager::LoadMaterial(const std::string& matPath)
-{
-	Material* mat = AssetManager::LoadMaterial(matPath);
-	mat->SetPath(matPath);
-	m_materials[matPath] = mat;
-}
 
 /**
  * Loads a scene
@@ -163,12 +107,13 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			//Get mesh
 			const rapidjson::Value& mat = doc["particleEmitterComponent"]["material"];
-			//AssetManager::GetMaterial(mat.GetString());
-			LoadMaterial(mat.GetString());
+			
+			//LoadMaterial(mat.GetString());
 			particleComp->m_particle = fmemory::fnew<Particle>();
 			particleComp->m_particle->Setup();
 			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
-			particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			//particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			particleComp->m_particle->SetMaterial(AssetManager::GetMaterial(mat.GetString()));
 		}
 
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
@@ -176,23 +121,6 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 	return newEntity;
 }
-
-void EntityManager::ClearManager() 
-{
-	/*for (boost::unordered_map<std::string, Mesh*>::iterator  iterator = m_meshes.begin(); iterator != m_meshes.end(); ++iterator)
-	{
-		fmemory::fdelete<>(iterator->second);
-	}*/
-
-	/*for (boost::unordered_map<std::string, Material*>::iterator iterator = m_materials.begin(); iterator != m_materials.end(); ++iterator)
-	{
-		fmemory::fdelete<Material>(iterator->second);
-	}*/
-
-	m_meshes.clear();
-	m_materials.clear();
-}
-
 	
 
 /**
