@@ -226,7 +226,21 @@ void Renderer::Draw(Camera &cam)
 
 		auto next = it;
 		next++;
-		if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
+
+		if(next != distanceEntityMap.rend())
+		{
+			if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
+			{
+				m_renderPasses[2]->QueueRenderable(rc->m_mesh);
+				static_cast<TransparentRenderPass*>(m_renderPasses[2])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+				count = 0;
+			}
+
+			else
+				continue;
+		}
+
+		else
 		{
 			m_renderPasses[2]->QueueRenderable(rc->m_mesh);
 			static_cast<TransparentRenderPass*>(m_renderPasses[2])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
