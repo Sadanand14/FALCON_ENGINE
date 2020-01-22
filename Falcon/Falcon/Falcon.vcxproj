@@ -140,6 +140,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
+    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
@@ -199,6 +200,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
+    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />

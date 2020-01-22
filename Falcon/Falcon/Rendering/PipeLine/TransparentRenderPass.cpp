@@ -54,3 +54,8 @@ void TransparentRenderPass::QueueRenderable(Renderable* renderable)
 {
 	renderables.push_back(renderable);
 }
+
+TransparentRenderPass::~TransparentRenderPass() 
+{
+	
+}

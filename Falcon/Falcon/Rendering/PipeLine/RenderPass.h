@@ -32,6 +32,10 @@ public:
 	inline void SetCullFace(uint32_t cullFace) { m_cullFace = cullFace; }
 	inline void SetBlendEquation(uint32_t blendEq) { m_blendEquation = blendEq; }
 	inline void SetBlendFunctions(uint32_t srcFunc, uint32_t dstFunc) { m_srcBlendFunc = srcFunc; m_dstBlendFunc = dstFunc; }
+	virtual ~RenderPass()
+	{
+
+	}
 };
 
 #endif

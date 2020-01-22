@@ -12,6 +12,8 @@ private:
 	boost::container::vector<Renderable*> renderables;
 
 public:
+	virtual ~TransparentRenderPass();
+
 	TransparentRenderPass(uint32_t priority);
 	void Render() override;
 	void AddCountAndOffset(u32 count, u32 offset);
