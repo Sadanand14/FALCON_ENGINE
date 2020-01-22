@@ -68,6 +68,11 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	for(auto pass : m_renderPasses)
+	{
+		fmemory::fdelete(pass);
+	}
+
 	RenderEventSystem::ShutDown();
 }
 
