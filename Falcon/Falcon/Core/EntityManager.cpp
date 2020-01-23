@@ -1,13 +1,10 @@
 #include "EntityManager.h"
 
-boost::unordered_map<std::string, Mesh*> EntityManager::m_meshes;
-boost::unordered_map<std::string, Material*> EntityManager::m_materials;
-
-
 /**
  * Loads a scene
  * @param sceneFilePath - The path to the scene file
  */
+
 
 Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 {
@@ -109,12 +106,13 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			//Get mesh
 			const rapidjson::Value& mat = doc["particleEmitterComponent"]["material"];
-			AssetManager::GetMaterial(mat.GetString());
+			
 			//LoadMaterial(mat.GetString());
 			particleComp->m_particle = fmemory::fnew<Particle>();
 			particleComp->m_particle->Setup();
 			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
-			particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			//particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
+			particleComp->m_particle->SetMaterial(AssetManager::GetMaterial(mat.GetString()));
 		}
 
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
@@ -122,24 +120,6 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 	return newEntity;
 }
-
-void EntityManager::ClearManager() 
-{
-	/*for (boost::unordered_map<std::string, Mesh*>::iterator  iterator = m_meshes.begin(); iterator != m_meshes.end(); ++iterator)
-	{
-		fmemory::fdelete<>(iterator->second);
-	}*/
-
-	/*for (boost::unordered_map<std::string, Material*>::iterator iterator = m_materials.begin(); iterator != m_materials.end(); ++iterator)
-	{
-		fmemory::fdelete<Material>(iterator->second);
-	}*/
-
-	m_meshes.clear();
-	m_materials.clear();
-}
-
-	
 
 /**
  * Saves a scene

@@ -18,16 +18,17 @@ private:
 	VertexBuffer* m_VBO2;
 	IndexBuffer* m_IBO;
 	boost::container::vector<glm::mat4, fmemory::STLAllocator<glm::mat4>> m_worldMats;
-	std::string m_path;
-	std::string m_jsonPath;
+	bool m_transparent = false;
 
 public:
 	//Mesh Data
-	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
-	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
+	u32* m_indexArray = nullptr;
+	u32* m_indexOffsets = nullptr;
+	u32 m_indexCount;
+	u32 m_indexOffsetCount;
 
 	Mesh();
-	~Mesh();
+	virtual ~Mesh();
 
 	//Functions
 	void Setup() override;
@@ -38,12 +39,8 @@ public:
 	void Bind() override;
 	glm::vec3* GetVertexPositionsArray();
 
-
-	inline const std::string& GetJsonPath() const { return m_jsonPath; }
-	inline void SetJsonPath(const std::string& jsonPath) {m_jsonPath = jsonPath; }
-	inline const std::string& GetPath() const { return m_path; }
-	inline void SetPath(const std::string&path) {m_path = path; }
-
+	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
+	inline bool GetTransparent() { return m_transparent; }
 };
 
 #endif //!MESH_H

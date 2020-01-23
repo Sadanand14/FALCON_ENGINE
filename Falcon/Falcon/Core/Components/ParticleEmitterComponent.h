@@ -12,10 +12,7 @@
 struct ParticleEmitterComponent: public BasicComponent
 {
 	boost::circular_buffer<ParticleData> m_particleBuffer;
-	//u32 m_maxParticles = 20; /// The max particles that can exist at a time
 	u32 m_emissionRate = 5; /// The rate of emmision of new particles
-	//unsigned int newest = 0; //! The index of the newest particle
-	//unsigned int oldest = 0; //! The index of the oldest particle
 
 	glm::vec3 m_velocity = glm::vec3(0.0f, 1.0f, 0.0f); /// The velocity for the particles
 	float m_timer = 0.0f; /// The timer for spawning new particles
@@ -32,7 +29,7 @@ struct ParticleEmitterComponent: public BasicComponent
 	Particle* m_particle = nullptr;
 
 	ParticleEmitterComponent() : m_particleBuffer(20.0f) {}
-	~ParticleEmitterComponent() {}
+	~ParticleEmitterComponent() { if (m_particle != nullptr)fmemory::fdelete<Particle>(m_particle); }
 	void SetMaxParticles(u32 maxParticles) { m_particleBuffer.set_capacity(maxParticles); }
 };
 

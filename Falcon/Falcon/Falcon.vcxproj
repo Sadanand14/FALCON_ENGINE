@@ -111,7 +111,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Core\Components\InputComponent.h" />
     <ClInclude Include="Core\Components\ParticleEmitterComponent.h" />
     <ClInclude Include="Core\Components\PhysicsComponent.h" />
-    <ClInclude Include="Core\Components\RenderCcomponent.h" />
+    <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Core\EntityManager.h" />
@@ -140,6 +140,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
+    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
@@ -199,6 +200,7 @@ copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)bui
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
+    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />

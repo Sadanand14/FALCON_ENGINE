@@ -1,4 +1,5 @@
 #include "AssetManager.h"
+#include "PipeLine/Mesh.h"
 #include <Log.h>
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
@@ -38,13 +39,14 @@ Mesh* AssetManager::GetMesh( const std::string& path)
 	//std::string const& temp = path;
 	std::string meshPath = doc["path"].GetString();
 	Mesh* mesh = LoadModel(meshPath);
-	//mesh->SetJsonPath(path);
-	//mesh->SetPath(meshPath);
-	
+
+	bool transparent = doc["transparent"].GetBool();
+	mesh->SetTransparent(transparent);
+
 	mesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
-	
-	m_meshes[meshPath] = mesh;
+
+	m_meshes[path] = mesh;
 	return mesh;
 }
 
@@ -86,17 +88,28 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	//Experimental
 	Mesh* newmesh = fmemory::fnew<Mesh>();
-	newmesh->m_vertexArray.clear();
-	newmesh->m_indexArray.clear();
 	////////////////
 
+	boost::container::vector<Vertex> verts;
+	boost::container::vector<uint32_t> inds;
+	boost::container::vector<uint32_t> indOffsets;
 
 	// Process rootnode
-	ProcessNode(scene->mRootNode, scene, newmesh);
-	//FL_ENGINE_INFO("Vertices :{0}", newmesh->m_vertexArray.size());
-	//FL_ENGINE_INFO("Indices :{0}", newmesh->m_indexArray.size());
+	ProcessNode(scene->mRootNode, scene, verts, inds, indOffsets);
+
+	newmesh->m_vertexCount = verts.size();
+	newmesh->m_vertexArray = new Vertex[newmesh->m_vertexCount];//fmemory::fnew_arr<Vertex>(newmesh->m_vertexCount);
+	std::copy(verts.begin(), verts.end(), newmesh->m_vertexArray);
+
+	newmesh->m_indexCount = inds.size();
+	newmesh->m_indexArray = new u32[newmesh->m_indexCount];//fmemory::fnew_arr<u32>(newmesh->m_indexCount);
+	std::copy(inds.begin(), inds.end(), newmesh->m_indexArray);
+
+	newmesh->m_indexOffsetCount = indOffsets.size();
+	newmesh->m_indexOffsets = new u32[newmesh->m_indexOffsetCount];//fmemory::fnew_arr<u32>(newmesh->m_indexOffsetCount);
+	std::copy(indOffsets.begin(), indOffsets.end(), newmesh->m_indexOffsets);
+
 	newmesh->Setup();
-	
 	return newmesh;
 }
 
@@ -182,7 +195,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	//TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
 
-	if (doc.HasMember("Vshader") && doc.HasMember("Vshader")) 
+	if (doc.HasMember("Vshader") && doc.HasMember("Fshader"))
 	{
 		std::string Vshader = doc["Vshader"].GetString();
 		std::string Fshader = doc["Fshader"].GetString();
@@ -218,19 +231,18 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 *@param[in] An aiScene* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh)
+void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets)
 {
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ProcessMesh(mesh, newmesh);
-		//m_meshes.push_back(ProcessMesh(mesh, scene, newmesh));
+		ProcessMesh(mesh, verts, inds, indOffsets);
 	}
 	//Process children nodes.
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene, newmesh);
+		ProcessNode(node->mChildren[i], scene, verts, inds, indOffsets);
 	}
 }
 
@@ -240,18 +252,11 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newmesh
 *@param[in] An aiNode* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
+void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets)
 {
 	// Data to load
 	size_t indexOffset = 0;
-	std::vector<Vertex, fmemory::STLAllocator<Vertex>> vertices;
-	vertices.reserve(mesh->mNumVertices);
-	std::vector<u32, fmemory::STLAllocator<u32>> indices;
-	indices.reserve(mesh->mNumVertices*3);
-	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
-	//std::vector<u32, fmemory::STLAllocator<unsigned int>> indices;
-	//std::vector<Texture, fmemory::STLAllocator<Texture>> textures;
-	
+
 	bool uvs = false;
 	bool normals = false;
 	bool tanBitan = false;
@@ -304,12 +309,10 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 			vertex.Bitangent = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
 
-		vertices.push_back(vertex);
+		verts.push_back(vertex);
 	}
 
-	newmesh->m_vertexArray.insert(newmesh->m_vertexArray.end(), vertices.begin(), vertices.end());
-
-	newmesh->m_indexOffsets.push_back(newmesh->m_indexArray.size());
+	indOffsets.push_back(inds.size());
 
 	// now wak through each of the mesh's faces
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -317,12 +320,19 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newmesh)
 		aiFace face = mesh->mFaces[i];
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
-			indices.push_back(face.mIndices[j]);
+			inds.push_back(face.mIndices[j]);
 	}
+}
 
-	for (unsigned int i = 0; i < indices.size(); i++)
+void AssetManager::Clean()
+{
+	for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
 	{
-		newmesh->m_indexArray.push_back(indices[i]);
+		fmemory::fdelete<Mesh>(it->second);
 	}
 
+	for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+	{
+		fmemory::fdelete<Material>(it->second);
+	}
 }
