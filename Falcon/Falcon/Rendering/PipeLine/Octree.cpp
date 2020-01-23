@@ -233,13 +233,13 @@ namespace Rendering
 		//Assign entity to the node
 		node->m_entities.push_back(entity);
 
-		std::cout << "Node Asssigned : ";
+		//std::cout << "Node Asssigned : ";
 		const IDVector* IDarr = &transform->GetOTID();
 		for (unsigned int i = 0; i < transform->GetOTID().size(); i++)
 		{
-			std::cout << (*IDarr)[i];
+			//std::cout << (*IDarr)[i];
 		}
-		std::cout << "\n";
+		//std::cout << "\n";
 	}
 
 	/**

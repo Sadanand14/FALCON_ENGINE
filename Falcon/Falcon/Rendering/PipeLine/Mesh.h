@@ -37,7 +37,7 @@ public:
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void Bind() override;
-	glm::vec3* GetVertexPositionsArray();
+	void GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&);
 
 	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
 	inline bool GetTransparent() { return m_transparent; }

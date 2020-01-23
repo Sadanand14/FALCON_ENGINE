@@ -90,22 +90,22 @@ void Mesh::Bind()
 	m_VBO2->Unbind();
 }
 
-//glm::vec3* Mesh::GetVertexPositionsArray()
-//{
-//	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
-//	vertPosArray.resize(m_vertexArray.size());
-//
-//	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
-//	{
-//#ifdef FL_PLATFORM_WINDOWS
-//		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
-//#else
-//		memcpy(&vertPosArray[itr],  &m_vertexArray[itr], sizeof(glm::vec3));
-//#endif
-//	}
-//
-//	return &vertPosArray[0];
-//}
+void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray)
+{
+	//std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
+	vertPosArray.resize(m_vertexCount);
+
+	for (u32 itr = 0; itr < m_vertexCount; ++itr)
+	{
+#ifdef FL_PLATFORM_WINDOWS
+		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
+#else
+		memcpy(&vertPosArray[itr], &m_vertexArray[itr], sizeof(glm::vec3));
+#endif
+	}
+
+	//return &vertPosArray[0];
+}
 
 /**
 * Mesh class Destructor.
