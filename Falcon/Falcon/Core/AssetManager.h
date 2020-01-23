@@ -33,7 +33,7 @@
 #include <Memory/fmemory.h>
 
 class Mesh;
-class Vertex;
+struct Vertex;
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
