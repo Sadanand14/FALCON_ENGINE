@@ -19,6 +19,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 	void BufferData(const void* data, size_t size, u32 drawType);
+	void BufferSubData(const void* data, uint32_t offset, size_t size);
 };
 
 #endif // !1

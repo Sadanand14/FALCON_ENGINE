@@ -39,7 +39,10 @@ Mesh* AssetManager::GetMesh( const std::string& path)
 	//std::string const& temp = path;
 	std::string meshPath = doc["path"].GetString();
 	Mesh* mesh = LoadModel(meshPath);
-	
+
+	bool transparent = doc["transparent"].GetBool();
+	mesh->SetTransparent(transparent);
+
 	mesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
 

@@ -3,10 +3,10 @@
 
 /**
 * Main Constructor for the Vertex Buffer
-* Generates a buffer to store the provided vertex data 
+* Generates a buffer to store the provided vertex data
 *
 *param[in] A Void pointer pointing to the data.
-*param[in] A u32 type integer indicating size of data. 
+*param[in] A u32 type integer indicating size of data.
 *param[in] A u32 type integer indicating drawtype.
 */
 VertexBuffer::VertexBuffer(const void* databuffer, size_t size, u32 drawType)
@@ -44,5 +44,12 @@ void VertexBuffer::BufferData(const void* data, size_t size, u32 drawType)
 {
 	Bind();
 	glBufferData(GL_ARRAY_BUFFER, size, data, drawType); // adds data to the bound buffer
+	Unbind();
+}
+
+void VertexBuffer::BufferSubData(const void* data, uint32_t offset, size_t size)
+{
+	Bind();
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data); // adds data to the bound buffer
 	Unbind();
 }

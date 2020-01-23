@@ -66,11 +66,11 @@ public:
 	//for octree Calculations
 	void popOTID() { if (octreeID.size() > 0) octreeID.pop_back(); }
 
-	short int topOTID() { 
+	short int topOTID() {
 		if (octreeID.size() > 0) return octreeID[octreeID.size() - 1];
 		else return -1;
 	}
-	
+
 	inline const IDVector& GetOTID() const { return octreeID; }
 	inline void ClearOTID() { octreeID.clear(); }
 	inline void pushOTID(unsigned short int value) { octreeID.push_back(value); }
@@ -87,6 +87,8 @@ public:
 	inline const glm::quat& GetRotation() const { return m_rotation; }
 	inline const glm::vec3& GetScale() const { return m_scale; }
 	inline const glm::mat4& GetModel() const { return m_model; }
+
+	inline const glm::vec3 GetRelativePosition() const { return glm::vec3(m_parentMatrix * glm::vec4(m_position, 1.0)); }
 
 	void CheckFlag()
 	{

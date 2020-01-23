@@ -1,8 +1,6 @@
 #include "SceneGraph.h"
-
 namespace Scene
 {
-
 	/**
 	* One of the constructors for a Node of the SceneGraph. Creates an Empty Node.
 	*/
@@ -251,7 +249,8 @@ namespace Scene
 		if (jsonFile.is_open()) {
 			size = jsonFile.tellg();
 			jsonFile.seekg(std::ios::beg);
-			json = fmemory::fnew_arr<char>(size + 1);
+			//json = fmemory::fnew_arr<char>(size + 1);
+			json = new char[size + 1];
 			jsonFile.read(json, size);
 			json[size] = 0;
 			jsonFile.close();
@@ -260,7 +259,8 @@ namespace Scene
 		//Start json doc
 		rapidjson::Document doc;
 		doc.Parse(json);
-		fmemory::fdelete<char>(json);
+		//fmemory::fdelete<char>(json);
+		delete[] json;
 
 		//Check if JSON file is not valid
 		if (!doc.IsObject())
