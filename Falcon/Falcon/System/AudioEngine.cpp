@@ -79,7 +79,7 @@ void CAudioEngine::UnLoadSound(const std::string& strSoundName)
 	sgpImplementation->mSounds.erase(tFoundIt);
 }
 
-int CAudioEngine::PlaySounds(const string& strSoundName, const Vector3& vPosition, float fVolumedB)
+int CAudioEngine::PlaySounds(const string& strSoundName, glm::vec3 vPosition, float fVolumedB)
 {
 	int nChannelId = sgpImplementation->mnNextChannelId++;
 	auto tFoundIt = sgpImplementation->mSounds.find(strSoundName);
@@ -109,7 +109,7 @@ int CAudioEngine::PlaySounds(const string& strSoundName, const Vector3& vPositio
 	return nChannelId;
 }
 
-void CAudioEngine::SetChannel3dPosition(int nChannelId, const Vector3& vPosition)
+void CAudioEngine::SetChannel3dPosition(int nChannelId, glm::vec3 vPosition)
 {
 	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
 	if (tFoundIt == sgpImplementation->mChannels.end())
@@ -213,7 +213,7 @@ bool CAudioEngine::IsEventPlaying(const string& strEventName) const
 	CAudioEngine::ErrorCheck(pParameter->setValue(fValue));
 }*/
 
-FMOD_VECTOR CAudioEngine::VectorToFmod(const Vector3& vPosition) {
+FMOD_VECTOR CAudioEngine::VectorToFmod(glm::vec3 vPosition) {
 	FMOD_VECTOR fVec;
 	fVec.x = vPosition.x;
 	fVec.y = vPosition.y;
@@ -238,7 +238,7 @@ int CAudioEngine::ErrorCheck(FMOD_RESULT result)
 		FL_ENGINE_ERROR(result);
 		return 1;
 	}
-	// cout << "FMOD all good" << endl;
+	FL_ENGINE_INFO("FMOD all okay!");
 	return 0;
 }
 

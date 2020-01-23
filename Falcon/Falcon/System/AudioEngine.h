@@ -11,15 +11,17 @@
 #include <iostream>
 #include <cmath>
 #include "Log.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 using namespace std;
-//Vector3 struct to place sound in 3D space.
+/*//Vector3 struct to place sound in 3D space.
 struct Vector3 {
 	float x;
 	float y;
 	float z;
-};
+};*/
 
 //Implementation struct to make calls to the FMOD API. 
 //Contains code to initialize and shut down FMOD Engine and hold instances of both Studio and Low-level system objects for FMOD.
@@ -34,7 +36,7 @@ struct Implementation {
 	FMOD::Studio::System* mpStudioSystem;
 	FMOD::System* mpSystem;
 
-	int mnNextChannelId;
+	int mnNextChannelId = 0;
 
 	typedef map<string, FMOD::Sound*> SoundMap;
 	typedef map<int, FMOD::Channel*> ChannelMap;
@@ -59,15 +61,15 @@ public:
 	void LoadEvent(const std::string& strEventName);
 	void LoadSound(const string& strSoundName, bool b3d = true, bool bLooping = false, bool bStream = false);
 	void UnLoadSound(const string& strSoundName);
-	int PlaySounds(const string& strSoundName, const Vector3& vPos = Vector3{ 0, 0, 0 }, float fVolumedB = 0.0f);
+	int PlaySounds(const string& strSoundName, glm::vec3 vPos = glm::vec3(0.0f, 0.0f, 0.0f), float fVolumedB = 0.0f);
 	void PlayEvent(const string& strEventName);
 	void StopEvent(const string& strEventName, bool bImmediate = false);
-	void SetChannel3dPosition(int nChannelId, const Vector3& vPosition);
+	void SetChannel3dPosition(int nChannelId, glm::vec3 vPosition);
 	void SetChannelVolume(int nChannelId, float fVolumedB);
 	bool IsEventPlaying(const string& strEventName) const;
 	float dbToVolume(float dB);
 	float VolumeTodB(float volume);
-	FMOD_VECTOR VectorToFmod(const Vector3& vPosition);
+	FMOD_VECTOR VectorToFmod(glm::vec3 vPosition);
 
 	/*ToDo
 	ReOrganize:
