@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <boost/container/set.hpp>
+#include <boost/container/flat_map.hpp>
 
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
@@ -20,6 +21,7 @@
 #include "RenderPass.h"
 #include "MeshRenderPass.h"
 #include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
 
 void PrintReception();
 
@@ -45,7 +47,6 @@ public:
 
 	static void ShutDown();
 
-	//static void ShutDown() 
 	virtual void SubscribeToEvents();
 
 	virtual void ProcessEvents();
@@ -56,12 +57,10 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
-*Class Definition for the Rendering System Responsible for Rendering each frame.
-*/
+ * Class Definition for the Rendering System Responsible for Rendering each frame.
+ */
 class Renderer
 {
-	//Shader* shader;
-	Shader* particleShader;
 	RenderEventSystem* m_RES;
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
@@ -70,14 +69,11 @@ public:
 	Renderer();
 	~Renderer();
 
-
-	//inline void SetEntities(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities) { m_entities = entities; }
-	//inline void SetProjection(glm::mat4 projection) { m_projection = projection; }
 	void Init();
 	void CreateDrawStates();
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw();
+	void Draw(Camera &cam);
 };
 
 #endif // !RENDERER_H

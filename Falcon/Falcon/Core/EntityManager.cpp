@@ -1,9 +1,5 @@
 #include "EntityManager.h"
 
-
-
-
-
 /**
 
  * Loads a scene
@@ -11,7 +7,6 @@
  * @param sceneFilePath - The path to the scene file
 
  */
-
 
 
 Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale)
@@ -241,10 +236,6 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	return newEntity;
 
 }
-
-
-
-
 
 /**
 

@@ -7,7 +7,6 @@
 
 #include "Renderable.h"
 
-
 /**
 * Mesh Class to store Mesh Data for Renderables.
 */
@@ -19,6 +18,7 @@ private:
 	VertexBuffer* m_VBO2;
 	IndexBuffer* m_IBO;
 	boost::container::vector<glm::mat4, fmemory::STLAllocator<glm::mat4>> m_worldMats;
+	bool m_transparent = false;
 
 public:
 	//Mesh Data
@@ -37,7 +37,10 @@ public:
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void Bind() override;
-	//glm::vec3* GetVertexPositionsArray();
+	glm::vec3* GetVertexPositionsArray();
+
+	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
+	inline bool GetTransparent() { return m_transparent; }
 };
 
 #endif //!MESH_H

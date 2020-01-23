@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "Physics/Physics.h"
-#include <EntityManager.h>
-#include <ThreadPool.h>
+
 namespace gameLoop
 {
 	//Camera
@@ -33,6 +32,7 @@ namespace gameLoop
 
 	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 	{
+
 	}
 
 	bool Game::Initialize()
@@ -55,10 +55,11 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		m_octree->Update();
 
-		////Booting up physics
+		//Booting up physics
 		physics::InitPhysX();
 
 
+		//Camera
 		glfwSetCursorPosCallback(m_window1->GetWindow(), mouse_callback);
 		glfwSetScrollCallback(m_window1->GetWindow(), scroll_callback);
 
@@ -100,7 +101,7 @@ namespace gameLoop
 			m_particleSystem->Update(dt, m_octree->GetViewables());
 			////renderer Update
 			m_renderer->Update(camera, dt, m_octree->GetViewables());
-			m_renderer->Draw();
+			m_renderer->Draw(camera);
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
