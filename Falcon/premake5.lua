@@ -45,6 +45,9 @@ IncludeDirs["physxMesh"]="Falcon/vendor/include/Physx/physx/source/geomutils/src
 IncludeDirs["physxHf"]  ="Falcon/vendor/include/Physx/physx/source/geomutils/src/hf ";
 IncludeDirs["physxPcm"] ="Falcon/vendor/include/Physx/physx/source/geomutils/src/pcm ";
 IncludeDirs["physxCcd"] ="Falcon/vendor/include/Physx/physx/source/geomutils/src/ccd";
+IncludeDirs["fmodcore"] ="Falcon/vendor/FMODStudioAPI/api/core/inc/";
+IncludeDirs["fmodbank"] ="Falcon/vendor/FMODStudioAPI/api/fsbank/inc/";
+IncludeDirs["fmodstudio"] ="Falcon/vendor/FMODStudioAPI/api/studio/inc/";
 
 
 
@@ -53,6 +56,9 @@ LinkDebugDirs["assimp"] = "Falcon/vendor/libs/assimp/Debug"
 LinkDebugDirs["boost"]  = "Falcon/vendor/libs/boost"
 LinkDebugDirs["GLFW"]   = "Falcon/vendor/libs/GLFW/Debug"
 LinkDebugDirs["physx"]  = "Falcon/vendor/libs/physx/Debug"
+LinkDebugDirs["fmodcore"]  = "Falcon/vendor/FMODStudioAPI/api/core/lib/x64/"
+LinkDebugDirs["fmodbank"]  = "Falcon/vendor/FMODStudioAPI/api/fsbank/lib/x64/"
+LinkDebugDirs["fmodstudio"]  = "Falcon/vendor/FMODStudioAPI/api/studio/lib/x64"
 
 LinkReleaseDirs = {}
 LinkReleaseDirs["assimp"] = "Falcon/vendor/libs/assimp/Release"
@@ -130,6 +136,9 @@ project "Falcon"
 		"%{IncludeDirs.physxHf}",
 		"%{IncludeDirs.physxPcm}",
 		"%{IncludeDirs.physxCcd}",
+		"%{IncludeDirs.fmodcore}",
+		"%{IncludeDirs.fmodbank}",
+		"%{IncludeDirs.fmodstudio}"
 	}
 
 
@@ -234,6 +243,7 @@ project "Falcon"
 			"PhysXCooking_static_64",
 			"PhysXCommon_static_64",
 			"PhysXFoundation_static_64",
+
 			--"PhysXTask_static_64"--
 		}
 
@@ -255,10 +265,19 @@ project "Falcon"
 			"%{LinkDebugDirs.boost}",
 			"%{LinkDebugDirs.assimp}",
 			"%{LinkDebugDirs.physx}",
+			"%{LinkDebugDirs.fmodcore}",
+			"%{LinkDebugDirs.fmodbank}",
+			"%{LinkDebugDirs.fmodstudio}",
 			"/usr/local/lib",
 			"/usr/lib"
 		}
 
+		links
+		{
+			"fmodL",
+			"fsbankL",
+			"fmodstudioL"
+		}
 
 
 	filter {"system:linux","configurations:Release"}
@@ -270,17 +289,25 @@ project "Falcon"
 
 		optimize "On"
 
-
 		libdirs
 		{
 			"%{LinkReleaseDirs.GLFW}",
 			"%{LinkReleaseDirs.boost}",
 			"%{LinkReleaseDirs.assimp}",
 			"%{LinkReleaseDirs.physx}",
+			"%{LinkDebugDirs.fmodcore}",
+			"%{LinkDebugDirs.fmodbank}",
+			"%{LinkDebugDirs.fmodstudio}",
 			"/usr/local/lib",
 			"/usr/lib"
 		}
 
+		links
+		{
+			"fmod",
+			"fsbank",
+			"fmodstudio"
+		}
 
 	--Setting up prebuild commands--
 
