@@ -40,6 +40,8 @@
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="System\AudioEngine.cpp" />
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
+    <ClCompile Include="Physics\PXUtils.cpp" />
+    <ClCompile Include="Physics\RayCast.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -106,6 +108,8 @@
     <ClInclude Include="System\AudioEngine.h" />
     <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
+    <ClInclude Include="Physics\PXUtils.h" />
+    <ClInclude Include="Physics\RayCast.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
