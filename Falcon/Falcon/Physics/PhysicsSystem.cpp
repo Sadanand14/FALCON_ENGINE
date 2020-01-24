@@ -11,15 +11,15 @@
 
 void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity, const size_t& entity_count)
 {
-	glm::vec3 pre_sim_pos, lerp_pos,  post_sim_pos;
-	glm::quat pre_sim_rot,lerp_rot, post_sim_rot;
+	glm::vec3 pre_sim_pos, lerp_pos, post_sim_pos;
+	glm::quat pre_sim_rot, lerp_rot, post_sim_rot;
 	const physx::PxRigidActor* actor;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entitySet = entity;
 	for (size_t i = 0; i < entity_count; ++i)
 	{
 		//Update logic
 		PhysicsComponent* pc = entitySet->at(i)->GetComponent<PhysicsComponent>();
-		if(pc)
+		if (pc)
 		{
 			actor = pc->GetActor();
 			PXMathUtils::PxVec3toVec3(actor->getGlobalPose().p, post_sim_pos);

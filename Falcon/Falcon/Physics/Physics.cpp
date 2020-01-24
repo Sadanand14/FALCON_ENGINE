@@ -2,6 +2,7 @@
 #include "Physics.h"
 #include "PXMathUtils.h"
 #include "PhysicsSystem.h"
+#include "PXUtils.h"
 
 #define PVD_HOST "127.0.0.1"
 
@@ -15,7 +16,7 @@ namespace physics
 		/* PhysX default variables*/
 
 		static physx::PxDefaultAllocator		gAllocator;
-		static physx::PxDefaultErrorCallback	gErrorCallback;
+		static FLPxErrorCallback	            gErrorCallback;
 
 		static physx::PxFoundation* gFoundation = NULL;
 		static physx::PxPhysics* gPhysics = NULL;
@@ -295,6 +296,7 @@ namespace physics
 	/**
 	* Creates sphere collider
 	* @param radius of the sphere
+	* @return PxShape * for collider shape
 	*/
 	physx::PxShape* GetSphereCollider(const float& radius)
 	{
@@ -306,6 +308,7 @@ namespace physics
 	* Creates capsule collider
 	* @param radius of the top and bottom sphere
 	* @param halfHeight of the capsule.
+	* @return PxShape * for collider shape
 	*/
 	physx::PxShape* GetCapsuleCollider(const float& radius, const float& halfHeight)
 	{
@@ -318,7 +321,10 @@ namespace physics
 	
 	/**
 	* Creates Mesh collider
-	* Not complete yet.
+	* @param vertexData vertices of the mesh
+	* @param stride the length for each vertex
+	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
+	* @return PxShape * for collider shape
 	*/
 
 	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount,bool directInsert /*= false*/)
@@ -337,13 +343,10 @@ namespace physics
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
 		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);
 		return shape;
-		
-		/*for (int i = 0; i < vertCount; ++i)
-		{
-			FL_ENGINE_INFO("X:{0}, Y:{1}, Z:{2} ", vertexData[i].x, vertexData[i].y, vertexData[i].z);
-		}
-
-		return nullptr;*/
 	}
+
+
+
+
 
 }
