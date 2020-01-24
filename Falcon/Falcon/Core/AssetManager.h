@@ -33,7 +33,7 @@
 #include <Memory/fmemory.h>
 
 class Mesh;
-class Vertex;
+struct Vertex;
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
@@ -52,7 +52,7 @@ private:
 	// The required info is returned as a Texture struct.
 
 public:
-	static Material* GetMaterial(const std::string & path);
+	static Material* GetMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);

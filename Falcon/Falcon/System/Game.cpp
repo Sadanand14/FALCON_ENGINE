@@ -24,6 +24,9 @@ namespace gameLoop
 		AssetManager::Clean();
 		fmemory::MeoryManagerShutDown();
 		physics::ShutdownPhysX();
+
+		Sound.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
+		Sound.Shutdown();
 		ThreadPool::ShutDown();
 	}
 
@@ -65,6 +68,10 @@ namespace gameLoop
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 
+		//Initialize the Audio Engine
+		Sound.Init();
+		Sound.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
+		Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
 
 		return true;
 	}
@@ -121,7 +128,7 @@ namespace gameLoop
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			camera.ProcessKeyboard(LEFT, deltaTime);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(RIGHT, deltaTime);
+			camera.ProcessKeyboard(RIGHT, deltaTime);		
 	}
 
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos)
