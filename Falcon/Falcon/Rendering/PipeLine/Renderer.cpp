@@ -120,8 +120,11 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				}
 				else
 				{
-					//glm::vec3* temp = renderComp->m_mesh->GetVertexPositionsArray();
-					physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+					renderComp->m_mesh->GetVertexPositionsArray(temp);
+					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					
+					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;
 				}

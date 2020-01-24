@@ -8,7 +8,7 @@
 #include "Core/Components/TransformComponent.h"
 #include "System/Log.h"
 #include "glm/vec3.hpp"
-//#include "Rendering/BufferDefinitions/VertexLayout.h"
+#include "Rendering/BufferDefinitions/VertexLayout.h"
 
 class Entity;
 
