@@ -76,9 +76,9 @@ def ReadSceneFile(filepath):
 				obj_pos[name] = prefab_data['position']
 				obj_rot[name] = prefab_data['rotation']
 				obj_scale[name] = prefab_data['scale']
-				print '\n'
+				print ('\n')
 				print name, obj_pos[name],obj_rot[name],obj_scale[name]
-				print '\n'
+				print ('\n')
 				pass
 
 	#print obj_scale
