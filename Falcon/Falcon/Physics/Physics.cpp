@@ -1,8 +1,11 @@
 
+#include "Physx/physx/include/vehicle/PxVehicleUtil.h"
+
 #include "Physics.h"
 #include "PXMathUtils.h"
 #include "PhysicsSystem.h"
 #include "PXUtils.h"
+#include "Vehicle.h"
 
 #define PVD_HOST "127.0.0.1"
 
@@ -15,19 +18,37 @@ namespace physics
 	namespace {
 		/* PhysX default variables*/
 
-		static physx::PxDefaultAllocator		gAllocator;
-		static FLPxErrorCallback	            gErrorCallback;
+		static physx::PxDefaultAllocator		     gAllocator;
+		static FLPxErrorCallback	                 gErrorCallback;
+												     
+		static physx::PxFoundation*                  gFoundation = NULL;
+		static physx::PxPhysics*                     gPhysics = NULL;
+		static physx::PxCooking*                     gCooking = NULL;
+												     
+		static physx::PxDefaultCpuDispatcher*        gDispatcher = NULL;
+		static physx::PxScene*                       gScene = NULL;
+												     
+		static physx::PxMaterial*                    gMaterial = NULL;
+												     
+		static physx::PxPvd*                         gPvd = NULL;
+												     
+		/*Setting up variables specific to the vehicle SDK (May be this data can be moved to the vehicle namespace)*/ 
+		//static physx::VehicleSceneQueryData*         gVehicleSceneQueryData = NULL;
+		static physx::PxBatchQuery*                  gBatchQuery = NULL;
+															      
+		static physx::PxRigidStatic*				 gGroundPlane = NULL;
+		static physx::PxVehicleDrive4W*				 gVehicle4W = NULL;
+		static physx::PxVehicleDrivableSurfaceToTireFrictionPairs*       gFrictionPairs = NULL;
+															      
+		static bool					                              gIsVehicleInAir = true;
 
-		static physx::PxFoundation* gFoundation = NULL;
-		static physx::PxPhysics* gPhysics = NULL;
-		static physx::PxCooking* gCooking = NULL;
-		physx::PxDefaultCpuDispatcher* gDispatcher = NULL;
-		physx::PxScene* gScene = NULL;
-
-		physx::PxMaterial* gMaterial = NULL;
-
-		physx::PxPvd* gPvd = NULL;
-
+		/**
+		*
+		* Function creates a Random convex mesh for collider shape which is used for the mesh collider.
+		* @param int number of vertecies
+		* @param pointer to vertex array
+		* @param int stride
+		*/
 		template<physx::PxConvexMeshCookingType::Enum convexMeshCookingType, bool directInsertion, int gaussMapLimit>
 		physx::PxConvexMesh* createRandomConvex(int numVerts, const physx::PxVec3* verts, int stride)
 		{
@@ -98,6 +119,11 @@ namespace physics
 
 	}
 
+
+	inline physx::PxPhysics* GetPhysics() { return gPhysics; }
+	inline physx::PxScene* GetPhysicsScene() { return gScene;	}
+
+
 	/*
 	* Initiates the physX system.
 	* @return true is success. false on failure with error log.
@@ -131,6 +157,10 @@ namespace physics
 		gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, physx::PxCookingParams(physx::PxTolerancesScale()));
 		CreatePhysicsScene();
 
+		/*Will connect to NVIDIA PVD only in debug mode*/
+
+#ifdef BUILD_DEBUG_MODE
+		
 		physx::PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 		if (pvdClient)
 		{
@@ -138,6 +168,12 @@ namespace physics
 			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
+#endif
+
+		if (!vehicle::InitVehicleSDK())
+		{
+			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
+		};
 
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
