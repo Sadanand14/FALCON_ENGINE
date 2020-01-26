@@ -223,7 +223,10 @@ namespace physics
 	bool ShutdownPhysX()
 	{
 		try {
+
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
+
+			vehicle::ReleaseVehcileSDK();
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
@@ -379,6 +382,11 @@ namespace physics
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
 		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);
 		return shape;
+	}
+
+	void ReleaseCollider(physx::PxRigidActor* ref)
+	{
+		PX_RELEASE(ref);
 	}
 
 

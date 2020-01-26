@@ -119,6 +119,19 @@ namespace physics
 		}
 		bool ReleaseVehcileSDK()
 		{
+			try
+			{
+				//PX_RELEASE(gGroundPlane);
+				//PX_RELEASE(gBatchQuery);
+				//physx::gVehicleSceneQueryData->free(gAllocator);
+				//PX_RELEASE(gFrictionPairs);
+				physx::PxCloseVehicleSDK();
+			}
+			catch (std::exception & e)
+			{
+				FL_ENGINE_ERROR("ERROR: Failed to release the vehicle sdk. {0}", e.what());
+				return false;
+			}
 			return false;
 		}
 	}

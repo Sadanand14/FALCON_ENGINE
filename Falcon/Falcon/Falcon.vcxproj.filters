@@ -43,6 +43,7 @@
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
     <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
     <ClInclude Include="Physics\vehicle\Vehicle.h" />
+    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

@@ -175,6 +175,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\TypeToInt.h" />
+    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -232,6 +233,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Physics\PXMathUtils.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

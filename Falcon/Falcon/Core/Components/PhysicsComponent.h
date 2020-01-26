@@ -112,9 +112,13 @@ public:
 		}
 		return actor != nullptr;
 	}
-	~PhysicsComponent() {}
 
 	inline const physx::PxRigidActor* GetActor() { return actor; }
+
+	~PhysicsComponent()
+	{
+		physics::ReleaseCollider(actor);
+	}
 };
 
 

@@ -49,6 +49,7 @@ namespace physics
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);
 	physx::PxRigidDynamic* CreateDynamicRigidActor(const Transform* transform, physx::PxShape* collider);
+	void ReleaseCollider(physx::PxRigidActor* ref);
 
 	physx::PxShape* GetBoxCollider(const float& halfX, const float& halfY, const float& halfZ);
 	physx::PxShape* GetSphereCollider(const float& radius);
