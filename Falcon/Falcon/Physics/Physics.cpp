@@ -5,7 +5,7 @@
 #include "PXMathUtils.h"
 #include "PhysicsSystem.h"
 #include "PXUtils.h"
-#include "Vehicle.h"
+#include "vehicle/Vehicle.h"
 
 #define PVD_HOST "127.0.0.1"
 

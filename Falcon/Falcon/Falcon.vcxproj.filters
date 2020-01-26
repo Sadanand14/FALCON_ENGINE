@@ -42,7 +42,7 @@
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
-    <ClCompile Include="Physics\Vehicle.cpp" />
+    <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -111,7 +111,7 @@
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
-    <ClInclude Include="Physics\Vehicle.h" />
+    <ClInclude Include="Physics\vehicle\Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
