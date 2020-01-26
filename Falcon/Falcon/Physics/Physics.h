@@ -43,8 +43,8 @@ namespace physics
 	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,const size_t& count);
 	bool ShutdownPhysX();
 
-	inline physx::PxPhysics* GetPhysics();
-	inline physx::PxScene* GetPhysicsScene();
+	physx::PxPhysics* GetPhysics();
+	physx::PxScene* GetPhysicsScene();
 
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);

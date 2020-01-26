@@ -13,6 +13,7 @@ namespace physics
 		{
 			FL_ENGINE_ERROR("ERROR: Failed to allocate the memory at {0}, in {1}.", line, filename);
 			FL_ENGINE_ERROR("ERROR: {0}", e.what());
+			return nullptr;
 		}
 	}
 

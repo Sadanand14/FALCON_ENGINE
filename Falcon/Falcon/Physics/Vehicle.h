@@ -1,8 +1,8 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
-#include "physics.h"
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
+#include "physics.h"
 namespace physics
 {
 

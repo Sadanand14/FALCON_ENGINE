@@ -67,7 +67,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW\$(Configuration);$(ProjectDir)vendor\libs\assimp\$(Configuration);$(ProjectDir)vendor\libs\boost;$(ProjectDir)vendor\libs\physx\$(Configuration);$(ProjectDir)vendor\FMODStudioAPI\api\core\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\studio\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXExtensions_static_64.lib;PhysXTask_static_64.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXExtensions_static_64.lib;PhysXTask_static_64.lib;PhysXVehicle_static_64.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\";

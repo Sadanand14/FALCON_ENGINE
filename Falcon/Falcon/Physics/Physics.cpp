@@ -120,8 +120,8 @@ namespace physics
 	}
 
 
-	inline physx::PxPhysics* GetPhysics() { return gPhysics; }
-	inline physx::PxScene* GetPhysicsScene() { return gScene;	}
+	physx::PxPhysics* GetPhysics() { return gPhysics; }
+	physx::PxScene* GetPhysicsScene() { return gScene;	}
 
 
 	/*
