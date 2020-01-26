@@ -11,7 +11,8 @@ namespace physics
 		bool InitVehicleSDK();
 		bool ReleaseVehcileSDK();
 
-
+		//Creating friction pairs for simulation calculations.
+		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial);
 		//May be a class to give an API for vehicle creation
 	}
 

@@ -87,6 +87,30 @@ namespace physics
 				eDRIVE_MODE_NONE
 			};
 
+			//Drivable surface types. Later on can be updated via json or if less count can be done manually.
+			enum SurfaceTypes 
+			{
+				SURFACE_TYPE_TARMAC,
+				MAX_NUM_SURFACE_TYPES
+			};
+
+			//Tire types.
+			enum
+			{
+				TIRE_TYPE_NORMAL = 0,
+				TIRE_TYPE_WORN,
+				MAX_NUM_TIRE_TYPES
+			};
+
+			//Tire model friction for each combination of drivable surface type and tire type.
+			static float gTireFrictionMultipliers[MAX_NUM_SURFACE_TYPES][MAX_NUM_TIRE_TYPES] =
+			{
+				//NORMAL,	WORN
+				{1.00f,		0.1f}//TARMAC
+			};
+
+			physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
+
 		}
 
 		bool InitVehicleSDK()
@@ -132,7 +156,31 @@ namespace physics
 				FL_ENGINE_ERROR("ERROR: Failed to release the vehicle sdk. {0}", e.what());
 				return false;
 			}
-			return false;
+			
+		}
+
+
+		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial)
+		{
+			physx::PxVehicleDrivableSurfaceType surfaceTypes[1];
+			surfaceTypes[0].mType = SURFACE_TYPE_TARMAC;
+
+			const physx::PxMaterial* surfaceMaterials[1];
+			surfaceMaterials[0] = defaultMaterial;
+
+			physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs =
+				physx::PxVehicleDrivableSurfaceToTireFrictionPairs::allocate(MAX_NUM_TIRE_TYPES, MAX_NUM_SURFACE_TYPES);
+
+			surfaceTirePairs->setup(MAX_NUM_TIRE_TYPES, MAX_NUM_SURFACE_TYPES, surfaceMaterials, surfaceTypes);
+
+			for (size_t surfaceItr = 0; surfaceItr < MAX_NUM_SURFACE_TYPES; surfaceItr++)
+			{
+				for (size_t tyreItr = 0; tyreItr < MAX_NUM_TIRE_TYPES; tyreItr++)
+				{
+					surfaceTirePairs->setTypePairFriction(surfaceItr, tyreItr, gTireFrictionMultipliers[surfaceItr][tyreItr]);
+				}
+			}
+			return surfaceTirePairs;
 		}
 	}
 }
