@@ -54,6 +54,7 @@ private:
 public:
 	static Material* GetMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
+	static Mesh* LoadTerrain(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);

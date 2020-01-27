@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 #include "PipeLine/Mesh.h"
 #include <Log.h>
+#include <filesystem>
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
@@ -10,7 +11,7 @@ boost::unordered_map<std::string, Material*> AssetManager::m_materials;
  * Loads a mesh into the scene
  * @param meshPath - The path to the mesh json file
  */
-Mesh* AssetManager::GetMesh( const std::string& path)
+Mesh* AssetManager::GetMesh(const std::string& path)
 {
 	//return if mesh is already loaded
 	auto iterator = m_meshes.find(path);
@@ -50,12 +51,108 @@ Mesh* AssetManager::GetMesh( const std::string& path)
 	return mesh;
 }
 
+Mesh* AssetManager::LoadTerrain(const std::string& path)
+{
+	//Get file data
+	char* json = nullptr;
+	int32_t size;
+	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
+	if (jsonFile.is_open()) {
+		size = jsonFile.tellg();
+		jsonFile.seekg(std::ios::beg);
+		json = fmemory::fnew_arr<char>(size + 1);
+		jsonFile.read(json, size);
+		json[size] = 0;
+		jsonFile.close();
+	}
+
+	//Start json doc
+	rapidjson::Document doc;
+	doc.Parse(json);
+	fmemory::fdelete<char>(json);
+
+
+	if (doc.HasMember("heightMap"))
+	{
+		const char* rawPath = doc["heightMap"].GetString();
+		//Defining variables for use
+		int error, count;
+		unsigned int resolution = 1024;
+		++resolution;
+		unsigned int numVerts = resolution * resolution;
+		unsigned int numIndicies = (resolution - 1) * (resolution - 1) * 6;
+
+		//creating arrays to store data
+		std::vector<u32, fmemory::STLAllocator<u32>> heightArray;
+		heightArray.resize(numVerts);
+		//u32* heightArray = new u32[numVerts];
+		std::vector<Vertex, fmemory::STLAllocator<Vertex>> terrainVertices;
+		terrainVertices.resize(numVerts);
+		std::vector<u32, fmemory::STLAllocator<u32>> terrainIndices;
+		terrainIndices.resize(numIndicies);
+
+
+		FILE* file;
+		error = fopen_s(&file, rawPath, "rb");
+		if (error != 0) FL_ENGINE_ERROR("Couldn't pen provided .raw file!");
+		count = fread(heightArray.data(), sizeof(unsigned short), numVerts, file);
+
+		std::cout << "height array values" << heightArray[10] << std::endl;
+
+		error = fclose(file);
+		if (error != 0) FL_ENGINE_ERROR("Error closing the file!");
+
+		for (unsigned int i = 0; i < resolution; ++i)
+		{
+			for (unsigned int j = 0; j < resolution; ++i)
+			{
+				Vertex V = Vertex();
+				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 90000000, j);
+				V.TexCoords = glm::vec2(i / 10.0f, j / 10.0f);
+				V.Normal = glm::vec3(0, 1, 0);
+				terrainVertices[i * resolution + j] = V;
+			}
+		}
+
+		int Index = 0;
+		for (unsigned int i = 0; i < resolution - 1; ++i)
+		{
+			for(unsigned int j = 0; j < resolution-1;++j)
+			{
+				terrainIndices[Index++] = i * resolution + j;
+				terrainIndices[Index++] = i * resolution + j + 1;
+				terrainIndices[Index++] = (i + 1) * resolution + j;
+				terrainIndices[Index++] = i * resolution + j + 1;
+				terrainIndices[Index++] = (i + 1) * resolution + j + 1;
+				terrainIndices[Index++] = (i + 1) * resolution + j;
+			}
+		}
+
+		Mesh* newmesh = fmemory::fnew<Mesh>();
+		newmesh->m_vertexCount = terrainVertices.size();
+		newmesh->m_vertexArray = new Vertex[terrainVertices.size()];//fmemory::fnew_arr<Vertex>(newmesh->m_vertexCount);
+		std::copy(terrainVertices.begin(), terrainVertices.end(), newmesh->m_vertexArray);
+
+		newmesh->m_indexCount = terrainIndices.size();
+		newmesh->m_indexArray = new u32[terrainIndices.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexCount);
+		std::copy(terrainIndices.begin(), terrainIndices.end(), newmesh->m_indexArray);
+
+		//TODO->Get Material
+
+		newmesh->Setup();
+
+		return newmesh;
+	}
+
+
+	return nullptr;
+}
 
 /**
  * Loads a material into the scene
  * @param matPath - The path to the material json file
  */
-Material* AssetManager::GetMaterial(const std::string & path)
+Material* AssetManager::GetMaterial(const std::string& path)
 {
 	//return if material is already loaded
 	auto mat = m_materials.find(path);
@@ -66,6 +163,7 @@ Material* AssetManager::GetMaterial(const std::string & path)
 	Material* material = LoadMaterial(path);
 	m_materials[path] = material;
 	return material;
+
 }
 
 /**
@@ -86,9 +184,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 		return nullptr;
 	}
 
-	//Experimental
 	Mesh* newmesh = fmemory::fnew<Mesh>();
-	////////////////
 
 	boost::container::vector<Vertex> verts;
 	boost::container::vector<uint32_t> inds;
@@ -231,7 +327,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 *@param[in] An aiScene* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets)
+void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex>& verts, boost::container::vector<uint32_t>& inds, boost::container::vector<uint32_t>& indOffsets)
 {
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -252,7 +348,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::contai
 *@param[in] An aiNode* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets)
+void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex>& verts, boost::container::vector<uint32_t>& inds, boost::container::vector<uint32_t>& indOffsets)
 {
 	// Data to load
 	size_t indexOffset = 0;
@@ -261,11 +357,11 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &v
 	bool normals = false;
 	bool tanBitan = false;
 
-	if(mesh->HasTextureCoords(0))
+	if (mesh->HasTextureCoords(0))
 		uvs = true;
-	if(mesh->HasNormals())
+	if (mesh->HasNormals())
 		normals = true;
-	if(mesh->HasTangentsAndBitangents())
+	if (mesh->HasTangentsAndBitangents())
 		tanBitan = true;
 
 
@@ -286,7 +382,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &v
 		else
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 
-		if(normals)
+		if (normals)
 		{
 			// Normals
 			vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
@@ -295,7 +391,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &v
 			vertex.Normal = glm::vec3(0.0f, 0.0f, 0.0f);
 
 
-		if(tanBitan) {
+		if (tanBitan) {
 			// Tangent
 			vertex.Tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 
@@ -326,12 +422,12 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &v
 
 void AssetManager::Clean()
 {
-	for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
+	for (auto it = m_meshes.begin(); it != m_meshes.end(); it++)
 	{
 		fmemory::fdelete<Mesh>(it->second);
 	}
 
-	for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+	for (auto it = m_materials.begin(); it != m_materials.end(); it++)
 	{
 		fmemory::fdelete<Material>(it->second);
 	}

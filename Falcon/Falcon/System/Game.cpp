@@ -71,7 +71,7 @@ namespace gameLoop
 		//Initialize the Audio Engine
 		Sound.Init();
 		Sound.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
+		//Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
 
 		return true;
 	}
