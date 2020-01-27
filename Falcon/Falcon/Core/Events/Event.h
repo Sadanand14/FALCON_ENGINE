@@ -16,7 +16,8 @@ enum EventsCategory {
 	KeyEventCategory		 = BIT(1),
 	MouseEventCategory		 = BIT(2),
 	RenderEventCategory		 = BIT(3),
-	ParticleEventCategory	 = BIT(3)
+	ParticleEventCategory	 = BIT(4),
+	DataToRendererCategory	 = BIT(5)
 };
 
 

@@ -110,6 +110,7 @@
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
+    <ClInclude Include="Core\Events\PassToRendered.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

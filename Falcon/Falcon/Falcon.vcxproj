@@ -126,6 +126,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
     <ClInclude Include="Core\Events\ParticleEvent.h" />
+    <ClInclude Include="Core\Events\PassToRendered.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Physics\PhysicsSystem.h" />

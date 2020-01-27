@@ -269,11 +269,12 @@ namespace Scene
 			return;
 		}
 
-		if (doc.HasMember("terrain")) 
+		/*if (doc.HasMember("terrain")) 
 		{
 			rapidjson::Value& terrain = doc["terrain"];
 			Mesh* terrainMesh = AssetManager::LoadTerrain(terrain.GetString());
-		}
+			std::cout << "Terrain Loaded";
+		}*/
 
 		//Check if JSON file has an entities array
 		if (doc.HasMember("entities"))

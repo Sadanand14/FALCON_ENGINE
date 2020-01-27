@@ -91,6 +91,8 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		std::vector<u32, fmemory::STLAllocator<u32>> terrainIndices;
 		terrainIndices.resize(numIndicies);
 
+		std::vector<u32, fmemory::STLAllocator<u32>> terrainOffsets;
+		terrainOffsets.push_back(0);
 
 		FILE* file;
 		error = fopen_s(&file, rawPath, "rb");
@@ -104,9 +106,10 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 
 		for (unsigned int i = 0; i < resolution; ++i)
 		{
-			for (unsigned int j = 0; j < resolution; ++i)
+			for (unsigned int j = 0; j < resolution; ++j)
 			{
 				Vertex V = Vertex();
+				//std::cout << i << "," << j << "\n";
 				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 90000000, j);
 				V.TexCoords = glm::vec2(i / 10.0f, j / 10.0f);
 				V.Normal = glm::vec3(0, 1, 0);
@@ -117,7 +120,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		int Index = 0;
 		for (unsigned int i = 0; i < resolution - 1; ++i)
 		{
-			for(unsigned int j = 0; j < resolution-1;++j)
+			for (unsigned int j = 0; j < resolution - 1; ++j)
 			{
 				terrainIndices[Index++] = i * resolution + j;
 				terrainIndices[Index++] = i * resolution + j + 1;
@@ -137,10 +140,18 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		newmesh->m_indexArray = new u32[terrainIndices.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexCount);
 		std::copy(terrainIndices.begin(), terrainIndices.end(), newmesh->m_indexArray);
 
-		//TODO->Get Material
+		newmesh->m_indexOffsetCount = terrainOffsets.size();
+		newmesh->m_indexOffsets = new u32[terrainOffsets.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexOffsetCount);
+		std::copy(terrainOffsets.begin(), terrainOffsets.end(), newmesh->m_indexOffsets);
+
+		if (doc.HasMember("material")) newmesh->SetMaterial(GetMaterial(doc["material"].GetString()));
+
+		if (doc.HasMember("transparent")) newmesh->SetTransparent(doc["transparent"].GetBool());
+			
+		if (doc.HasMember("instances")) newmesh->PreallocMatrixAmount(doc["instances"].GetInt());
 
 		newmesh->Setup();
-
+		m_meshes[path] = newmesh;
 		return newmesh;
 	}
 
@@ -299,21 +310,35 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 		mat->SetShader(shader);
 	}
 
-	std::string albedoPath = doc["albedo"].GetString();
-	std::string roughPath = doc["roughness"].GetString();
-	std::string normalPath = doc["normal"].GetString();
-	std::string metallicPath = doc["metallic"].GetString();
-	std::string aoPath = doc["ao"].GetString();
-	mat->m_albedoTex.textureID = LoadTexture(albedoPath);
-	//mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString());
-	//mat->m_normalTex.textureID = LoadTexture(doc["normal"].GetString());
-	//mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString());
-	//mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString());
-	mat->SetTexturePath(albedoPath, 0);
-	mat->SetTexturePath(roughPath, 1);
-	mat->SetTexturePath(normalPath, 2);
-	mat->SetTexturePath(metallicPath, 3);
-	mat->SetTexturePath(aoPath, 4);
+	if (doc.HasMember("albedo"))
+	{
+		mat->m_albedoTex.textureID = LoadTexture(doc["albedo"].GetString());
+		//mat->m_albedoTex.type = m_lastTextureType;
+	}
+
+	if (doc.HasMember("roughness"))
+	{
+		mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString());
+		//mat->m_roughnessTex.type = m_lastTextureType;
+	}
+
+	if (doc.HasMember("normal"))
+	{
+		mat->m_normalTex.textureID = LoadTexture(doc["normal"].GetString());
+		//mat->m_normalTex.type = m_lastTextureType;
+	}
+
+	if (doc.HasMember("metallic"))
+	{
+		mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString());
+		//mat->m_metallicTex.type = m_lastTextureType;
+	}
+
+	if (doc.HasMember("ao"))
+	{
+		mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString());
+		//mat->m_aoTex.type = m_lastTextureType;
+	}
 
 	return mat;
 }
