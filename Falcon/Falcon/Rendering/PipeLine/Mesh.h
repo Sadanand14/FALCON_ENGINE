@@ -22,10 +22,8 @@ private:
 
 public:
 	//Mesh Data
-	u32* m_indexArray = nullptr;
-	u32* m_indexOffsets = nullptr;
-	u32 m_indexCount;
-	u32 m_indexOffsetCount;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
 
 	Mesh();
 	virtual ~Mesh();
