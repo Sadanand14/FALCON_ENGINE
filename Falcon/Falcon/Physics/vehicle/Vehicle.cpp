@@ -5,7 +5,7 @@ namespace physics
 
 	namespace vehicle
 	{
-		namespace
+		namespace vehicleconstants
 		{
 			physx::PxF32 gSteerVsForwardSpeedData[2 * 8] =
 			{

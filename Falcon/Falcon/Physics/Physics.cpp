@@ -122,7 +122,7 @@ namespace physics
 
 	physx::PxPhysics* GetPhysics() { return gPhysics; }
 	physx::PxScene* GetPhysicsScene() { return gScene;	}
-
+	physx::PxCooking GetCooking() { return gCooking; }
 
 	/*
 	* Initiates the physX system.
