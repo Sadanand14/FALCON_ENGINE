@@ -122,8 +122,8 @@ namespace physics
 
 	physx::PxPhysics* GetPhysics() { return gPhysics; }
 	physx::PxScene* GetPhysicsScene() { return gScene;	}
-	physx::PxCooking GetCooking() { return gCooking; }
-
+	physx::PxCooking* GetCooking() { return gCooking; }
+	physx::PxDefaultAllocator GetAllocator() { return gAllocator; };
 	/*
 	* Initiates the physX system.
 	* @return true is success. false on failure with error log.

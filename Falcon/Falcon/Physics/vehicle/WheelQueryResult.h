@@ -20,44 +20,44 @@ namespace physics
 			}
 
 			//Allocate wheel results for up to maxNumVehicles with up to maxNumWheelsPerVehicle.
-			static WheelQueryResults* allocate(const PxU32 maxNumVehicles, const PxU32 maxNumWheelsPerVehicle, PxAllocatorCallback& allocator)
+			static WheelQueryResults* allocate(const uint32_t maxNumVehicles, const uint32_t maxNumWheelsPerVehicle, physx::PxAllocatorCallback& allocator)
 			{
-				const PxU32 byteSize = sizeof(WheelQueryResults) + sizeof(PxVehicleWheelQueryResult) * maxNumVehicles + sizeof(PxWheelQueryResult) * maxNumWheelsPerVehicle * maxNumVehicles;
+				const uint32_t byteSize = sizeof(WheelQueryResults) + sizeof(physx::PxVehicleWheelQueryResult) * maxNumVehicles + sizeof(physx::PxWheelQueryResult) * maxNumWheelsPerVehicle * maxNumVehicles;
 
-				PxU8* buffer = static_cast<PxU8*>(allocator.allocate(byteSize, NULL, NULL, 0));
+				physx::PxU8* buffer = static_cast<physx::PxU8*>(allocator.allocate(byteSize, NULL, NULL, 0));
 
 				WheelQueryResults* vwqr = reinterpret_cast<WheelQueryResults*>(buffer);
 				buffer += sizeof(WheelQueryResults);
 
-				vwqr->mWheelQueryResults = reinterpret_cast<PxVehicleWheelQueryResult*>(buffer);
-				buffer += sizeof(PxVehicleWheelQueryResult) * maxNumVehicles;
+				vwqr->mWheelQueryResults = reinterpret_cast<physx::PxVehicleWheelQueryResult*>(buffer);
+				buffer += sizeof(physx::PxVehicleWheelQueryResult) * maxNumVehicles;
 
-				for (PxU32 i = 0; i < maxNumVehicles; i++)
+				for (uint32_t i = 0; i < maxNumVehicles; i++)
 				{
-					new(buffer) PxWheelQueryResult();
-					vwqr->mWheelQueryResults[i].wheelQueryResults = reinterpret_cast<PxWheelQueryResult*>(buffer);
+					new(buffer) physx::PxWheelQueryResult();
+					vwqr->mWheelQueryResults[i].wheelQueryResults = reinterpret_cast<physx::PxWheelQueryResult*>(buffer);
 					vwqr->mWheelQueryResults[i].nbWheelQueryResults = maxNumWheelsPerVehicle;
-					buffer += sizeof(PxWheelQueryResult) * maxNumWheelsPerVehicle;
+					buffer += sizeof(physx::PxWheelQueryResult) * maxNumWheelsPerVehicle;
 				}
 
 				return vwqr;
 			}
 
 			//Free allocated buffer for scene queries of suspension raycasts.
-			void free(PxAllocatorCallback& allocator)
+			void free(physx::PxAllocatorCallback& allocator)
 			{
 				allocator.deallocate(this);
 			}
 
 			//Return the PxVehicleWheelQueryResult for a vehicle specified by an index.
-			PxVehicleWheelQueryResult* getWheelQueryResults(const PxU32 id)
+			physx::PxVehicleWheelQueryResult* getWheelQueryResults(const uint32_t id)
 			{
 				return (mWheelQueryResults + id);
 			}
 
 		private:
 
-			PxVehicleWheelQueryResult* mWheelQueryResults;
+			physx::PxVehicleWheelQueryResult* mWheelQueryResults;
 		};
 	}
 }

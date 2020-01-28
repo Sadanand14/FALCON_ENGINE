@@ -94,7 +94,7 @@ namespace physics
 			physx::PxVehicleDrive4W* m_car;
 			void CreateVehicleDescriptionObject();
 
-			physx::PxVehicleDrive4W* createVehicle4W (const VehicleDesc& vehDesc, physx::PxPhysics* physics, physx::PxCooking* cooking);
+			physx::PxVehicleDrive4W* createVehicle4W();
 
 			physx::PxRigidDynamic* createVehicleActor 
 				(const physx::PxVehicleChassisData& chassisData,
@@ -102,9 +102,12 @@ namespace physics
 					physx::PxMaterial** chassisMaterials, physx::PxConvexMesh** chassisConvexMeshes, const float numChassisMeshes, const physx::PxFilterData& chassisSimFilterData,
 					physx::PxPhysics& physics);
 
+			
 			void ConfigureCarData(physx::PxVehicleWheels* vehicle, ActorUserData* actorUserData, ShapeUserData* shapeUserDatas);
 		public:
 			Car();
+
+			//void SetStartingTransform();
 		};
 
 	}
