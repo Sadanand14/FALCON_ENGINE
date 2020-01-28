@@ -280,9 +280,16 @@ namespace Scene
 			std::cout << "Terrain Loaded";
 		}
 
-		if (skyMesh != nullptr || terrainMesh != nullptr) 
+		
+		//check for Skybox
+		if (doc.HasMember("sky")) 
 		{
+			rapidjson::Value& sky = doc["sky"];
+			skyMesh = AssetManager::GetMesh(sky.GetString());
+		}
 
+		if (skyMesh != nullptr || terrainMesh != nullptr)
+		{
 			EventManager::PushEvent(boost::make_shared<PassToRenderer>(skyMesh, terrainMesh), DataToRendererCategory);
 		}
 

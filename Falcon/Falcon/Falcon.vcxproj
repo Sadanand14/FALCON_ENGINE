@@ -128,6 +128,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Core\Events\ParticleEvent.h" />
     <ClInclude Include="Core\Events\PassToRenderer.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
+    <ClInclude Include="Core\Events\PassingMeshEvent.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
     <ClInclude Include="Physics\PhysicsSystem.h" />
     <ClInclude Include="Physics\PXUtils.h" />
@@ -148,12 +149,14 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
+    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="Rendering\ParticleSystem.h" />
+    <ClInclude Include="Rendering\stb_dds.h" />
     <ClInclude Include="System\AudioEngine.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
@@ -185,6 +188,10 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <None Include="Rendering\Shader\Post.vert" />
     <None Include="Rendering\Shader\Sky.frag" />
     <None Include="Rendering\Shader\Sky.vert" />
+    <None Include="Rendering\Shader\Skybox.frag" />
+    <None Include="Rendering\Shader\Skybox.vert" />
+    <None Include="Rendering\Shader\Transparent.frag" />
+    <None Include="Rendering\Shader\Transparent.vert" />
     <None Include="Rendering\Shader\VertexShader.vert" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
@@ -212,8 +219,9 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
+    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
-    <ClCompile Include="Rendering\stb_image_implementation.cpp" />
+    <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="Rendering\ParticleSystem.cpp" />

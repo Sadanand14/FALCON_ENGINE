@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Core\AssetManager.cpp" />
-    <ClCompile Include="Rendering\stb_image_implementation.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="System\Game.cpp" />
@@ -42,6 +41,8 @@
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
+    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
+    <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -108,9 +109,11 @@
     <ClInclude Include="System\AudioEngine.h" />
     <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
+    <ClInclude Include="Core\Events\PassingMeshEvent.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
-    <ClInclude Include="Core\Events\PassToRenderer.h" />
+    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
+    <ClInclude Include="Rendering\stb_dds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
@@ -123,6 +126,10 @@
     <None Include="Rendering\Shader\Post.vert" />
     <None Include="Rendering\Shader\Sky.frag" />
     <None Include="Rendering\Shader\Sky.vert" />
+    <None Include="Rendering\Shader\Skybox.vert" />
+    <None Include="Rendering\Shader\Skybox.frag" />
     <None Include="packages.config" />
+    <None Include="Rendering\Shader\Transparent.frag" />
+    <None Include="Rendering\Shader\Transparent.vert" />
   </ItemGroup>
 </Project>

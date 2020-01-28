@@ -3,13 +3,15 @@
 
 #include <string>
 
+enum class TextureType { cubeMap, texture2D };
+
 /**
 *Texture Data Structure
 */
 struct Texture {
 	unsigned int textureID = 0;
-	std::string type;
-	std::string path;
-
+	//std::string type;
+	//std::string path;
+	TextureType type;
 };
 #endif // TEXTURE_H

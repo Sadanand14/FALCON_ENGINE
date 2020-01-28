@@ -3,7 +3,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <stb_image.h>
+//#include <Rendering/stb_image.h>
+#include <Rendering/stb_dds.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -41,6 +42,7 @@ struct Vertex;
 class AssetManager
 {
 private:
+	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
 	static boost::unordered_map<std::string, Material*> m_materials;
 

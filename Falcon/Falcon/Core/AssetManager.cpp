@@ -3,6 +3,8 @@
 #include <Log.h>
 #include <filesystem>
 
+TextureType AssetManager::m_lastTextureType;
+
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
 
@@ -77,7 +79,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		const char* rawPath = doc["heightMap"].GetString();
 		//Defining variables for use
 		int error, count;
-		unsigned int resolution = 1024;
+		unsigned int resolution = 512;
 		++resolution;
 		unsigned int numVerts = resolution * resolution;
 		unsigned int numIndicies = (resolution - 1) * (resolution - 1) * 6;
@@ -110,7 +112,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 			{
 				Vertex V = Vertex();
 				//std::cout << i << "," << j << "\n";
-				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 900000000, j);
+				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 450000000, j);
 				V.TexCoords = glm::vec2(i / 10.0f, j / 10.0f);
 				V.Normal = glm::vec3(0, 1, 0);
 				terrainVertices[i * resolution + j] = V;
@@ -236,7 +238,35 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
+	std::string temp = path.substr(path.size() - 3, 3);
+	if (temp== "dds")
+	{
+		m_lastTextureType = TextureType::cubeMap;
+		unsigned char* data = stbi_dds_load(filename.c_str(), &width, &height, &nrComponents, 0);
+		if (data)
+		{
+			glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);  
+
+			stbi_image_free(data);
+		}
+		else {
+			FL_ENGINE_ERROR("ERROR: Texture failed to load at {0} ", path);
+			stbi_image_free(data);
+		}
+		return textureID;
+	}
+
+
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	m_lastTextureType = TextureType::texture2D;
 	if (data)
 	{
 		GLenum format = 0;
@@ -300,7 +330,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	doc.Parse(json);
 	fmemory::fdelete<char>(json);
 
-	//TODO: Change this to actually load a material using json and remove tmp things
+	////TODO: Change this to actually load a material using json and remove tmp things
 	Material* mat = fmemory::fnew<Material>();
 
 	if (doc.HasMember("Vshader") && doc.HasMember("Fshader"))
@@ -314,31 +344,31 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 	if (doc.HasMember("albedo"))
 	{
 		mat->m_albedoTex.textureID = LoadTexture(doc["albedo"].GetString());
-		//mat->m_albedoTex.type = m_lastTextureType;
+		mat->m_albedoTex.type = m_lastTextureType;
 	}
 
 	if (doc.HasMember("roughness"))
 	{
 		mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString());
-		//mat->m_roughnessTex.type = m_lastTextureType;
+		mat->m_roughnessTex.type = m_lastTextureType;
 	}
 
 	if (doc.HasMember("normal"))
 	{
 		mat->m_normalTex.textureID = LoadTexture(doc["normal"].GetString());
-		//mat->m_normalTex.type = m_lastTextureType;
+		mat->m_normalTex.type = m_lastTextureType;
 	}
 
 	if (doc.HasMember("metallic"))
 	{
 		mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString());
-		//mat->m_metallicTex.type = m_lastTextureType;
+		mat->m_metallicTex.type = m_lastTextureType;
 	}
 
 	if (doc.HasMember("ao"))
 	{
 		mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString());
-		//mat->m_aoTex.type = m_lastTextureType;
+		mat->m_aoTex.type = m_lastTextureType;
 	}
 
 	return mat;

@@ -24,7 +24,6 @@
 #include "TransparentRenderPass.h"
 #include <PipeLine/Mesh.h>
 
-void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -32,7 +31,10 @@ void PrintReception();
 class RenderEventSystem : public EventSystem
 {
 private:
+	friend class Renderer;
 	static RenderEventSystem* m_instance;
+	Mesh* m_Skymesh;
+	Mesh* m_TerrainMesh;
 	RenderEventSystem();
 	Mesh* m_terrainMesh, * m_skyMesh;
 
@@ -79,6 +81,8 @@ public:
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);
+	//inline void SetSkyMesh(Mesh* mesh) { m_skymesh = mesh; }
+	//inline void SetTerrainMesh(Mesh* mesh) { m_terrainMesh= mesh; }
 };
 
 #endif // !RENDERER_H
