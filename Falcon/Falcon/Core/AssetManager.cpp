@@ -110,7 +110,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 			{
 				Vertex V = Vertex();
 				//std::cout << i << "," << j << "\n";
-				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 90000000, j);
+				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 900000000, j);
 				V.TexCoords = glm::vec2(i / 10.0f, j / 10.0f);
 				V.Normal = glm::vec3(0, 1, 0);
 				terrainVertices[i * resolution + j] = V;
@@ -144,7 +144,8 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		newmesh->m_indexOffsets = new u32[terrainOffsets.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexOffsetCount);
 		std::copy(terrainOffsets.begin(), terrainOffsets.end(), newmesh->m_indexOffsets);
 
-		if (doc.HasMember("material")) newmesh->SetMaterial(GetMaterial(doc["material"].GetString()));
+		if (doc.HasMember("material"))
+			newmesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 
 		if (doc.HasMember("transparent")) newmesh->SetTransparent(doc["transparent"].GetBool());
 			

@@ -22,6 +22,7 @@
 #include "MeshRenderPass.h"
 #include "ParticleRenderPass.h"
 #include "TransparentRenderPass.h"
+#include <PipeLine/Mesh.h>
 
 void PrintReception();
 
@@ -33,6 +34,7 @@ class RenderEventSystem : public EventSystem
 private:
 	static RenderEventSystem* m_instance;
 	RenderEventSystem();
+	Mesh* m_terrainMesh, * m_skyMesh;
 
 public:
 	static RenderEventSystem* GetInstance()
@@ -44,7 +46,8 @@ public:
 		}
 		return m_instance;
 	}
-
+	inline Mesh* GetSkyMesh()const { return m_skyMesh; }
+	inline Mesh* GetTerrainMesh() const { return m_terrainMesh; }
 	static void ShutDown();
 
 	virtual void SubscribeToEvents();
@@ -65,9 +68,11 @@ class Renderer
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 public:
 	Renderer();
 	~Renderer();
+
 
 	void Init();
 	void CreateDrawStates();

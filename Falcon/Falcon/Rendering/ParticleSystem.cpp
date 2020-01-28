@@ -9,7 +9,7 @@ ParticleEventSystem* ParticleEventSystem::m_instance = nullptr;
 ParticleEventSystem::ParticleEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
-	subcribedList.push_back(ParticleEventCategory);
+	subscribedList.push_back(ParticleEventCategory);
 	SubscribeToEvents();
 }
 
@@ -32,7 +32,7 @@ void ParticleEventSystem::ProcessEvents()
  */
 void ParticleEventSystem::SubscribeToEvents()
 {
-	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
 		EventManager::SubscribeToEvent(this, ParticleEventCategory);
 	}

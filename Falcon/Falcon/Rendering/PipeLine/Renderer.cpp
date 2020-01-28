@@ -1,5 +1,7 @@
 #include "Renderer.h"
 #include <Memory/fmemory.h>
+#include <Events/PassToRenderer.h>
+#include <Events/EventManager.h>
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -10,7 +12,8 @@ RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
-	subcribedList.push_back(RenderEventCategory);
+	subscribedList.push_back(RenderEventCategory);
+	subscribedList.push_back(DataToRendererCategory);
 	SubscribeToEvents();
 }
 
@@ -30,9 +33,17 @@ void RenderEventSystem::ProcessEvents()
 	//count++;
 	while (!eventQueue.empty())
 	{
+		boost::shared_ptr<Event> temp = eventQueue.front();
 		eventQueue.pop_front();
-		std::function<void()>f = std::bind(&RenderEventSystem::PrintReception, this);
-		m_threadPool->submit<>(f);
+
+		//for Data Transfer Events
+		if (temp->CheckCategory(DataToRendererCategory))
+		{
+			FL_ENGINE_ERROR("RECIEVED THE MESH DATA!!");
+			boost::shared_ptr<PassToRenderer> dataEvent = boost::static_pointer_cast<PassToRenderer>(temp);
+			m_skyMesh = dataEvent->GetSkyMesh();
+			m_terrainMesh = dataEvent->GetTerrainMesh();
+		}
 	}
 }
 
@@ -41,9 +52,9 @@ void RenderEventSystem::ProcessEvents()
 */
 void RenderEventSystem::SubscribeToEvents()
 {
-	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
-		EventManager::SubscribeToEvent(this, RenderEventCategory);
+		EventManager::SubscribeToEvent(this, subscribedList[i]);
 	}
 }
 
@@ -82,6 +93,7 @@ Renderer::~Renderer()
 void Renderer::Init()
 {
 	m_RES = RenderEventSystem::GetInstance();
+	m_RES->ProcessEvents();
 }
 
 /**
@@ -89,6 +101,7 @@ void Renderer::Init()
 */
 void Renderer::CreateDrawStates()
 {
+	m_RES->ProcessEvents();
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -99,6 +112,8 @@ void Renderer::CreateDrawStates()
 */
 void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
+	m_skyMesh = m_RES->GetSkyMesh();
+	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
 	for (u32 i = 0; i < entities->size(); i++)
 	{
@@ -158,6 +173,13 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;
+
+	//for terrain
+	Shader* temp = m_terrainMesh->GetMaterial()->m_shader;
+	temp->UseShader();
+	temp->SetMat4("projection", m_projection);
+	temp->SetMat4("view", cam.GetViewMatrix());
+
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
 		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
@@ -178,7 +200,7 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 		}
 	}
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
+	//m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 /**
@@ -190,7 +212,10 @@ void Renderer::Draw(Camera &cam)
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 	boost::container::flat_map<float, int> distanceEntityMap;
+	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
+	m_renderPasses[0]->QueueRenderable(m_terrainMesh);
 	for (u32 i = 0; i < m_entities->size(); i++)
 	{
 		Transform* trans = m_entities->at(i)->GetTransform();

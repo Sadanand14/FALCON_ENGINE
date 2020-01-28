@@ -1,4 +1,6 @@
 #include "SceneGraph.h"
+#include <Events/PassToRenderer.h> 
+#include <Events/EventManager.h>
 namespace Scene
 {
 	/**
@@ -269,12 +271,20 @@ namespace Scene
 			return;
 		}
 
-		/*if (doc.HasMember("terrain")) 
+		Mesh *terrainMesh = nullptr, *skyMesh = nullptr;
+
+		if (doc.HasMember("terrain")) 
 		{
-			rapidjson::Value& terrain = doc["terrain"];
-			Mesh* terrainMesh = AssetManager::LoadTerrain(terrain.GetString());
+			terrainMesh = AssetManager::LoadTerrain(doc["terrain"].GetString());
+			
 			std::cout << "Terrain Loaded";
-		}*/
+		}
+
+		if (skyMesh != nullptr || terrainMesh != nullptr) 
+		{
+
+			EventManager::PushEvent(boost::make_shared<PassToRenderer>(skyMesh, terrainMesh), DataToRendererCategory);
+		}
 
 		//Check if JSON file has an entities array
 		if (doc.HasMember("entities"))
