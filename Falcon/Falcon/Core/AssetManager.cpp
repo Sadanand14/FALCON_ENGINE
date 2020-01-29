@@ -115,6 +115,8 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 				V.Position = glm::vec3(i, (float)heightArray[i * resolution + j] / 450000000, j);
 				V.TexCoords = glm::vec2(i / 10.0f, j / 10.0f);
 				V.Normal = glm::vec3(0, 1, 0);
+				V.Tangent = glm::vec3(0, 0, 0);
+				V.Bitangent = glm::vec3(0, 0, 0);
 				terrainVertices[i * resolution + j] = V;
 			}
 		}

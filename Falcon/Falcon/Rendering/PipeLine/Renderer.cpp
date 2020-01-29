@@ -223,7 +223,7 @@ void Renderer::Draw(Camera &cam)
 
 	if (m_skyMesh != nullptr) 
 	{
-		m_skyMesh->AddWorldMatrix(cam.GetViewMatrix());
+		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
 		m_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
 

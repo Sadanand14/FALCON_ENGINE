@@ -15,6 +15,7 @@ SkyRenderPass::SkyRenderPass(u32 priority) : RenderPass(priority)
 void SkyRenderPass::Render() 
 {
 	RenderPass::Render();
+	glDepthFunc(GL_LEQUAL);
 
 	for (auto it = m_renderQueue.begin(); it != m_renderQueue.end(); it++)
 	{
