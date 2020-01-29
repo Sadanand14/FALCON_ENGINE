@@ -3,25 +3,27 @@
 
 #include <cstdlib>
 
-#include "Shader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <boost/container/set.hpp>
 #include <boost/container/flat_map.hpp>
-
-#include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
-#include <EntityInterface.h>
-#include <AssetManager.h>
 
-#include <Camera.h>
 #include <stb_image.h>
 
 #include <ThreadPool.h>
-#include "RenderPass.h"
-#include "MeshRenderPass.h"
-#include "ParticleRenderPass.h"
-#include "TransparentRenderPass.h"
+
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
+
+class RenderPass;
+class Camera;
+class Entity;
+class RenderEvent;
+class EventSystem;
 
 void PrintReception();
 
@@ -65,6 +67,7 @@ class Renderer
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+
 public:
 	Renderer();
 	~Renderer();

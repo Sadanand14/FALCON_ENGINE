@@ -1,4 +1,5 @@
 #include "MeshRenderPass.h"
+#include "Mesh.h"
 
 MeshRenderPass::MeshRenderPass(uint32_t priority) : RenderPass(priority)
 {

@@ -1,5 +1,20 @@
 #include "Renderer.h"
-#include <Memory/fmemory.h>
+
+//Included files
+//Camera
+#include <Camera.h>
+
+//Render passes
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
+
+//Events
+#include <Events/RenderEvent.h>
+
+//Entities
+#include <EntityInterface.h>
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -123,7 +138,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
 					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-					
+
 					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;

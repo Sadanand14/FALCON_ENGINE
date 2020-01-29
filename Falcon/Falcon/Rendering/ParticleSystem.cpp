@@ -1,5 +1,8 @@
 #include "ParticleSystem.h"
 #include <Memory/fmemory.h>
+#include <Events/ParticleEvent.h>
+#include <EntityInterface.h>
+#include <Components/ParticleEmitterComponent.h>
 
 ParticleEventSystem* ParticleEventSystem::m_instance = nullptr;
 

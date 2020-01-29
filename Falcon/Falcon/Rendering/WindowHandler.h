@@ -1,6 +1,12 @@
 #ifndef WINDOW_HANDLER_H
 #define WINDOW_HANDLER_H
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
+
 #include <framework.h>
 
 
@@ -19,8 +25,9 @@ class WindowClass
 	const char* m_title;
 
 	GLFWwindow* m_gameWindow;
-	
+
 	ThreadPool* m_threadPool;
+	nk_context* ctx;
 
 public:
 	WindowClass(const char*, int, int);
@@ -37,7 +44,7 @@ public:
 
 };
 
-void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height); 
+void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
 
 #endif // !WINDOW_HANDLER_H
 

@@ -4,6 +4,11 @@
 #include "Memory/fmemory.h"
 #include <string>
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
 
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
@@ -58,6 +63,9 @@ void WindowClass::Init()
 
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
+	ctx = nk_glfw3_init(m_gameWindow, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)
