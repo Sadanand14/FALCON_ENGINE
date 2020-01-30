@@ -17,10 +17,6 @@ out VS_OUT
 
 void main()
 {
-	mat4 newView = view;
-	newView[3][0] = 0;
-	newView[3][1] = 0;
-	newView[3][2] = 0;
 	mat4 vp = projection * mat4(mat3(view));
 	gl_Position = (vp*vec4(i_Pos, 1.0f)).xyww ;
 
