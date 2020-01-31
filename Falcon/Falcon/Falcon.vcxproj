@@ -186,6 +186,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <None Include="Rendering\Shader\Particle.vert" />
     <None Include="Rendering\Shader\Post.frag" />
     <None Include="Rendering\Shader\Post.vert" />
+    <None Include="Rendering\Shader\PS_CubeMapShader.frag" />
     <None Include="Rendering\Shader\Sky.frag" />
     <None Include="Rendering\Shader\Sky.vert" />
     <None Include="Rendering\Shader\Skybox.frag" />
@@ -193,6 +194,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <None Include="Rendering\Shader\Transparent.frag" />
     <None Include="Rendering\Shader\Transparent.vert" />
     <None Include="Rendering\Shader\VertexShader.vert" />
+    <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
   </ItemGroup>

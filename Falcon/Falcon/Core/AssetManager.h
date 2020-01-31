@@ -45,15 +45,17 @@ private:
 	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
 	static boost::unordered_map<std::string, Material*> m_materials;
-
+	
 	// Process nodes
 	static void ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
 	static void ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex> &verts, boost::container::vector<uint32_t> &inds, boost::container::vector<uint32_t> &indOffsets);
-
+	static GLuint HDRtoCubemap(GLuint hdrTex);
+	static GLuint texture_loadDDS(const char* path);
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
 
 public:
+	
 	static Material* GetMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
 	static Mesh* LoadTerrain(const std::string& path);

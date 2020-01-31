@@ -114,6 +114,7 @@
     <ClInclude Include="Physics\RayCast.h" />
     <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
+    <ClInclude Include="Core\Events\PassToRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
@@ -131,5 +132,7 @@
     <None Include="packages.config" />
     <None Include="Rendering\Shader\Transparent.frag" />
     <None Include="Rendering\Shader\Transparent.vert" />
+    <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
+    <None Include="Rendering\Shader\PS_CubeMapShader.frag" />
   </ItemGroup>
 </Project>
