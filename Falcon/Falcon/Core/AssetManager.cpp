@@ -275,6 +275,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 			FL_ENGINE_ERROR("ERROR: HDR Texture failed to load at {0} ", path);
 			stbi_image_free(data);
 		}
+		return texture_loadDDS(path.c_str());
 	}
 
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
