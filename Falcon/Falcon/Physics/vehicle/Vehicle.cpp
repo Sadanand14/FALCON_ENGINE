@@ -9,7 +9,7 @@ namespace physics
 	{
 		namespace 
 		{
-			physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
+			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
 			VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
 			physx::PxBatchQuery* gBatchQuery = NULL;
 			physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
@@ -42,7 +42,7 @@ namespace physics
 				gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, GetPhysicsScene());
 
 				//Create the friction table for each combination of tire and surface type.
-				gFrictionPairs = createFrictionPairs(gTarmacMaterial /*Kind of default material*/);
+				gFrictionPairs = createFrictionPairs(GetDefaultMaterial() /*Kind of default material*/);
 
 				FL_ENGINE_INFO("INFO: Vehcile SDK initiated successfully.");
 				return true;

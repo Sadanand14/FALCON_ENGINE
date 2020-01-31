@@ -47,6 +47,8 @@ namespace physics
 	physx::PxScene* GetPhysicsScene();
 	physx::PxCooking* GetCooking();
 	physx::PxDefaultAllocator GetAllocator();
+	physx::PxMaterial* GetDefaultMaterial();
+
 
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);

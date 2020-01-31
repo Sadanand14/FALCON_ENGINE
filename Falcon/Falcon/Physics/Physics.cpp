@@ -124,6 +124,8 @@ namespace physics
 	physx::PxScene* GetPhysicsScene() { return gScene;	}
 	physx::PxCooking* GetCooking() { return gCooking; }
 	physx::PxDefaultAllocator GetAllocator() { return gAllocator; };
+	physx::PxMaterial* GetDefaultMaterial() { return gMaterial; }
+
 	/*
 	* Initiates the physX system.
 	* @return true is success. false on failure with error log.
@@ -170,10 +172,10 @@ namespace physics
 		}
 #endif
 
-		if (!vehicle::InitVehicleSDK())
+		/*if (!vehicle::InitVehicleSDK())
 		{
 			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
-		};
+		};*/
 
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
@@ -226,7 +228,7 @@ namespace physics
 
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
 
-			vehicle::ReleaseVehcileSDK();
+			/*vehicle::ReleaseVehcileSDK();*/
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
@@ -377,7 +379,7 @@ namespace physics
 			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
 		}
 		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
-		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, true, 16>(vertCount,&pxvertarry[0],stride);
+		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 16>(vertCount,&pxvertarry[0],stride);
 		
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
 		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);

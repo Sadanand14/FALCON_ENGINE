@@ -112,11 +112,19 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 
 			if (renderComp)
 			{
-				if (i != 1)
+				if (i == 0)
 				{
-					physComp->SetBoxCollider(5, 5, 5);
+					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+					renderComp->m_mesh->GetVertexPositionsArray(temp);
+					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					
+					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
-
+				}
+				else if (i == entities->size()-1)
+				{
+					physComp->SetBoxCollider(5, 1, 5);
+					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 				}
 				else
 				{
@@ -125,7 +133,10 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					
 					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+					if(i%2)
+						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+					else
+						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 					//delete temp;
 				}
 			}
@@ -137,7 +148,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 			}
 		}
 	}
-
+	 
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(2));
@@ -178,7 +189,7 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 		}
 	}
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
+	//m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 /**

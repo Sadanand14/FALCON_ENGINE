@@ -5,7 +5,7 @@ namespace physics
 	namespace vehicle
 	{
 
-		namespace 
+		namespace car_data
 		{
 			/**
 			* Some default values for the car creation. Not for final game.
@@ -32,7 +32,7 @@ namespace physics
 
 			//Temp Material
 
-			physx::PxMaterial* CAR_MATERIAL = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
+			//physx::PxMaterial* CAR_MATERIAL = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
 
 
 
@@ -214,19 +214,19 @@ namespace physics
 		void Car::CreateVehicleDescriptionObject()
 		{
 			//Currently using a default. May be data can be read in via json.
-			m_carDesc.chassisMass = CHASSIS_MASS;
-			m_carDesc.chassisDims = CHASSIS_DIMS;
-			m_carDesc.chassisMOI = CHASSIS_MOI;
-			m_carDesc.chassisCMOffset = CHASSIS_CM_OFFSET;
-			m_carDesc.chassisMaterial = CAR_MATERIAL;
+			m_carDesc.chassisMass = car_data::CHASSIS_MASS;
+			m_carDesc.chassisDims = car_data::CHASSIS_DIMS;
+			m_carDesc.chassisMOI = car_data::CHASSIS_MOI;
+			m_carDesc.chassisCMOffset = car_data::CHASSIS_CM_OFFSET;
+			m_carDesc.chassisMaterial = GetDefaultMaterial();
 			m_carDesc.chassisSimFilterData = physx::PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
 		
-			m_carDesc.wheelMass = WHEEL_MASS;
-			m_carDesc.wheelRadius = WHEEL_RADIUS;
-			m_carDesc.wheelWidth = WHEEL_WIDTH;
-			m_carDesc.wheelMOI = WHEEL_MOI;
-			m_carDesc.numWheels = NUMBER_OF_WHEELS;
-			m_carDesc.wheelMaterial = CAR_MATERIAL;
+			m_carDesc.wheelMass = car_data::WHEEL_MASS;
+			m_carDesc.wheelRadius = car_data::WHEEL_RADIUS;
+			m_carDesc.wheelWidth = car_data::WHEEL_WIDTH;
+			m_carDesc.wheelMOI = car_data::WHEEL_MOI;
+			m_carDesc.numWheels = car_data::NUMBER_OF_WHEELS;
+			m_carDesc.wheelMaterial = GetDefaultMaterial();
 			m_carDesc.chassisSimFilterData = physx::PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 		}
 
@@ -253,10 +253,10 @@ namespace physics
 					physx::PxVec3 wheelCenterActorOffsets[PX_MAX_NB_WHEELS];
 					const float frontZ = chassisDims.z * 0.3f;
 					const float rearZ = -chassisDims.z * 0.3f;
-					ComputeWheelCenterActorOffsets4W(frontZ, rearZ, chassisDims, wheelWidth, wheelRadius, numWheels, wheelCenterActorOffsets);
+					car_data::ComputeWheelCenterActorOffsets4W(frontZ, rearZ, chassisDims, wheelWidth, wheelRadius, numWheels, wheelCenterActorOffsets);
 
 					//Set up the simulation data for all wheels.
-					SetupWheelsSimulationData
+					car_data::SetupWheelsSimulationData
 					(m_carDesc.wheelMass, m_carDesc.wheelMOI, wheelRadius, wheelWidth,
 						numWheels, wheelCenterActorOffsets,
 						m_carDesc.chassisCMOffset, m_carDesc.chassisMass,

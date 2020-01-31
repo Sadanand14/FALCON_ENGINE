@@ -45,7 +45,7 @@ namespace gameLoop
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
-		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
+		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene_2.json");
 		m_particleSystem = fmemory::fnew<ParticleSystem>();
 		m_scene->UpdateScene();
 
@@ -71,7 +71,7 @@ namespace gameLoop
 		//Initialize the Audio Engine
 		Sound.Init();
 		Sound.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
+		//Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
 
 		return true;
 	}
