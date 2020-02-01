@@ -115,7 +115,7 @@ namespace physics
 			//convex->release();
 		}
 
-
+		physx::PxMeshScale scaleDown(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
 
 	}
 
@@ -208,9 +208,9 @@ namespace physics
 	*/
 
 	void CreatePhysicsScene()
-	{
+	{ 
 		physx::PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-		sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+		sceneDesc.gravity = physx::PxVec3(0.0f, -2.0f, 0.0f);
 		gDispatcher = physx::PxDefaultCpuDispatcherCreate(1);
 		sceneDesc.cpuDispatcher = gDispatcher;
 		sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
@@ -382,7 +382,7 @@ namespace physics
 		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 16>(vertCount,&pxvertarry[0],stride);
 		
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
-		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);
+		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
 		return shape;
 	}
 

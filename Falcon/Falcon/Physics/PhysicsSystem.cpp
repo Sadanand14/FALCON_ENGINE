@@ -32,7 +32,7 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 
 			entitySet->at(i)->GetTransform()->SetPosition(lerp_pos);
 			entitySet->at(i)->GetTransform()->SetRotation(lerp_rot);
-			FL_ENGINE_ERROR("DEBUG AT ME");
 		}
 	}
+	FL_ENGINE_ERROR("DEBUG AT ME");
 }

@@ -112,14 +112,14 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 
 			if (renderComp)
 			{
-				if (i == 0)
+				if (i == 0 && false)
 				{
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					
-					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+					//physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 				}
 				else if (i == entities->size()-1)
 				{
@@ -130,13 +130,13 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				{
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					
-					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+					//physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					if(i%2)
 						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					else
-						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;
 				}
 			}
