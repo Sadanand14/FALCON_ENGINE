@@ -204,25 +204,8 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	Mesh* newmesh = fmemory::fnew<Mesh>();
 
-	boost::container::vector<Vertex> verts;
-	boost::container::vector<uint32_t> inds;
-	boost::container::vector<uint32_t> indOffsets;
-
 	// Process rootnode
-	ProcessNode(scene->mRootNode, scene, verts, inds, indOffsets);
-
-	newmesh->m_vertexCount = verts.size();
-	newmesh->m_vertexArray = new Vertex[newmesh->m_vertexCount];//fmemory::fnew_arr<Vertex>(newmesh->m_vertexCount);
-	std::copy(verts.begin(), verts.end(), newmesh->m_vertexArray);
-
-	newmesh->m_indexCount = inds.size();
-	newmesh->m_indexArray = new u32[newmesh->m_indexCount];//fmemory::fnew_arr<u32>(newmesh->m_indexCount);
-	std::copy(inds.begin(), inds.end(), newmesh->m_indexArray);
-
-	newmesh->m_indexOffsetCount = indOffsets.size();
-	newmesh->m_indexOffsets = new u32[newmesh->m_indexOffsetCount];//fmemory::fnew_arr<u32>(newmesh->m_indexOffsetCount);
-	std::copy(indOffsets.begin(), indOffsets.end(), newmesh->m_indexOffsets);
-
+	ProcessNode(scene->mRootNode, scene, newmesh);
 	newmesh->Setup();
 	return newmesh;
 }
@@ -399,18 +382,18 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 *@param[in] An aiScene* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::container::vector<Vertex>& verts, boost::container::vector<uint32_t>& inds, boost::container::vector<uint32_t>& indOffsets)
+void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh)
 {
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ProcessMesh(mesh, verts, inds, indOffsets);
+		ProcessMesh(mesh, newMesh);
 	}
 	//Process children nodes.
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene, verts, inds, indOffsets);
+		ProcessNode(node->mChildren[i], scene, newMesh);
 	}
 }
 
@@ -420,7 +403,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, boost::contai
 *@param[in] An aiNode* type pointer(defined in assimp Library)
 *@param[in] A new Mesh pointer to store all the mesh data into.
 */
-void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex>& verts, boost::container::vector<uint32_t>& inds, boost::container::vector<uint32_t>& indOffsets)
+void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 {
 	// Data to load
 	size_t indexOffset = 0;
@@ -477,10 +460,10 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex>& v
 			vertex.Bitangent = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
 
-		verts.push_back(vertex);
+		newMesh->m_vertexArray.push_back(vertex);
 	}
 
-	indOffsets.push_back(inds.size());
+	newMesh->m_indexOffsets.push_back(newMesh->m_indexArray.size());
 
 	// now wak through each of the mesh's faces
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -488,7 +471,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex>& v
 		aiFace face = mesh->mFaces[i];
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
-			inds.push_back(face.mIndices[j]);
+			newMesh->m_indexArray.push_back(face.mIndices[j]);
 	}
 }
 

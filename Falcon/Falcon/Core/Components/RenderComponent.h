@@ -24,11 +24,11 @@ struct RenderComponent : public BasicComponent
 	~RenderComponent() {}
 	void CalculateBounds()
 	{
-		Vertex* vertexArr = m_mesh->m_vertexArray;
+		Vertex* vertexArr = m_mesh->m_vertexArray.data();
 
 		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX;
 		float maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
-		for (unsigned int i = 0; i < m_mesh->m_vertexCount; i++)
+		for (unsigned int i = 0; i < m_mesh->m_vertexArray.size(); i++)
 		{
 			glm::vec3 pos = vertexArr[i].Position;
 			if (minX > pos.x) minX = pos.x;

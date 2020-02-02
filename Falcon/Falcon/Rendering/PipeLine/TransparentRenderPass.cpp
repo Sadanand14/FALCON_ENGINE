@@ -24,13 +24,13 @@ void TransparentRenderPass::Render()
 		shad->UseShader();
 		m->Bind();
 
-		for(u32 j = 0; j < m->m_indexOffsetCount; j++)
+		for(u32 j = 0; j < m->m_indexOffsets.size(); j++)
 		{
 			i32 count;
-			if (j < m->m_indexOffsetCount - 1)
+			if (j < m->m_indexOffsets.size() - 1)
 				count = m->m_indexOffsets[j + 1] - m->m_indexOffsets[j];
 			else
-				count = m->m_indexCount - m->m_indexOffsets[j];
+				count = m->m_indexArray.size() - m->m_indexOffsets[j];
 			glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, m_counts[counter], m->m_indexOffsets[j], m_offsets[counter]);
 		}
 		counter++;
@@ -55,7 +55,7 @@ void TransparentRenderPass::QueueRenderable(Renderable* renderable)
 	renderables.push_back(renderable);
 }
 
-TransparentRenderPass::~TransparentRenderPass() 
+TransparentRenderPass::~TransparentRenderPass()
 {
-	
+
 }
