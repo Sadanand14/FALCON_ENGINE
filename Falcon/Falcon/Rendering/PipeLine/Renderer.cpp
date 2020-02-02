@@ -15,8 +15,8 @@ RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
-	subscribedList.push_back(RenderEventCategory);
-	subscribedList.push_back(DataToRendererCategory);
+	subscribedList.push_back(EVENT_RENDER);
+	subscribedList.push_back(EVENT_DATA_TO_RENDERER);
 	SubscribeToEvents();
 }
 
@@ -40,7 +40,7 @@ void RenderEventSystem::ProcessEvents()
 		eventQueue.pop_front();
 
 		//for Data Transfer Events
-		if (temp->CheckCategory(DataToRendererCategory))
+		if (temp->CheckCategory(EVENT_DATA_TO_RENDERER))
 		{
 			FL_ENGINE_ERROR("RECIEVED THE MESH DATA!!");
 			boost::shared_ptr<PassToRenderer> dataEvent = boost::static_pointer_cast<PassToRenderer>(temp);

@@ -9,7 +9,7 @@
 */
 struct RenderEvent : public Event
 {
-	RenderEvent(): Event(RenderEventCategory) 
+	RenderEvent(): Event(EVENT_RENDER) 
 	{
 		//FL_ENGINE_INFO("RenderEvent Started");
 	};

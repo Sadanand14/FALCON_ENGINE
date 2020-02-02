@@ -16,7 +16,7 @@ CameraEventSystem::CameraEventSystem()
 
 void CameraEventSystem::SubscribeToEvents()
 {
-	EventManager::SubscribeToEvent(this, KeyEventCategory);
+	EventManager::SubscribeToEvent(this, EVENT_KEY_INPUT);
 }
 
 void CameraEventSystem::ProcessEvents()

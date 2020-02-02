@@ -290,7 +290,7 @@ namespace Scene
 
 		if (skyMesh != nullptr || terrainMesh != nullptr)
 		{
-			EventManager::PushEvent(boost::make_shared<PassToRenderer>(skyMesh, terrainMesh), DataToRendererCategory);
+			EventManager::PushEvent(boost::make_shared<PassToRenderer>(skyMesh, terrainMesh), EVENT_DATA_TO_RENDERER);
 		}
 
 		//Check if JSON file has an entities array

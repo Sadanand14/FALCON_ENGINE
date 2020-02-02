@@ -50,7 +50,7 @@ private:
 	
 	// Process nodes
 	static GLuint HDRtoCubemap(GLuint hdrTex);
-	static GLuint texture_loadDDS(const char* path);
+	//static GLuint texture_loadDDS(const char* path);
 	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh);
 	static void ProcessMesh(aiMesh* mesh, Mesh* newMesh);
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.

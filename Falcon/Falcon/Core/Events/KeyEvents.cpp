@@ -2,7 +2,7 @@
 
 /////////KeyEvent
 
-KeyEvent::KeyEvent(unsigned int keycode, keyType type): m_keyCode(keycode), m_type(type), Event(KeyEventCategory)
+KeyEvent::KeyEvent(unsigned int keycode, keyType type): m_keyCode(keycode), m_type(type), Event(EVENT_KEY_INPUT)
 {}
 
 KeyEvent::~KeyEvent() 
