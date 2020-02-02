@@ -90,12 +90,12 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		std::vector<u32, fmemory::STLAllocator<u32>> heightArray;
 		heightArray.resize(numVerts);
 		//u32* heightArray = new u32[numVerts];
-		std::vector<Vertex, fmemory::STLAllocator<Vertex>> terrainVertices;
+		boost::container::vector<Vertex, fmemory::STLAllocator<Vertex>> terrainVertices;
 		terrainVertices.resize(numVerts);
-		std::vector<u32, fmemory::STLAllocator<u32>> terrainIndices;
+		boost::container::vector<u32, fmemory::STLAllocator<u32>> terrainIndices;
 		terrainIndices.resize(numIndicies);
 
-		std::vector<u32, fmemory::STLAllocator<u32>> terrainOffsets;
+		boost::container::vector<u32, fmemory::STLAllocator<u32>> terrainOffsets;
 		terrainOffsets.push_back(0);
 
 		FILE* file;
@@ -138,17 +138,14 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		}
 
 		Mesh* newmesh = fmemory::fnew<Mesh>();
-		newmesh->m_vertexCount = terrainVertices.size();
-		newmesh->m_vertexArray = new Vertex[terrainVertices.size()];//fmemory::fnew_arr<Vertex>(newmesh->m_vertexCount);
-		std::copy(terrainVertices.begin(), terrainVertices.end(), newmesh->m_vertexArray);
+		newmesh->m_vertexArray=terrainVertices;
+		//std::copy(terrainVertices.begin(), terrainVertices.end(), newmesh->m_vertexArray);
 
-		newmesh->m_indexCount = terrainIndices.size();
-		newmesh->m_indexArray = new u32[terrainIndices.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexCount);
-		std::copy(terrainIndices.begin(), terrainIndices.end(), newmesh->m_indexArray);
+		newmesh->m_indexArray=terrainIndices;
+		//std::copy(terrainIndices.begin(), terrainIndices.end(), newmesh->m_indexArray);
 
-		newmesh->m_indexOffsetCount = terrainOffsets.size();
-		newmesh->m_indexOffsets = new u32[terrainOffsets.size()];//fmemory::fnew_arr<u32>(newmesh->m_indexOffsetCount);
-		std::copy(terrainOffsets.begin(), terrainOffsets.end(), newmesh->m_indexOffsets);
+		newmesh->m_indexOffsets = terrainOffsets;
+		//std::copy(terrainOffsets.begin(), terrainOffsets.end(), newmesh->m_indexOffsets);
 
 		if (doc.HasMember("material"))
 			newmesh->SetMaterial(GetMaterial(doc["material"].GetString()));
@@ -538,7 +535,7 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//TODO DRAW A 1x1 CUBE
-			glDrawElements(GL_TRIANGLES, m_cubeMesh->m_indexCount, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, m_cubeMesh->m_indexArray.size(), GL_UNSIGNED_INT, 0);
 			//renderCube(); // renders a 1x1 cube
 		//}
 	}

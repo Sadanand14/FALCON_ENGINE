@@ -24,13 +24,13 @@ void SkyRenderPass::Render()
 		shad->UseShader();
 		m->Bind();
 
-		for (u32 i = 0; i < m->m_indexOffsetCount; i++)
+		for (u32 i = 0; i < m->m_indexOffsets.size(); i++)
 		{
 			i32 count;
-			if (i < m->m_indexOffsetCount - 1)
+			if (i < m->m_indexOffsets.size() - 1)
 				count = m->m_indexOffsets[i + 1] - m->m_indexOffsets[i];
 			else
-				count = m->m_indexCount - m->m_indexOffsets[i];
+				count = m->m_indexArray.size() - m->m_indexOffsets[i];
 			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, m->GetWorldMatrixAmount(), m->m_indexOffsets[i]);
 		}
 		m->ClearWorldMatrices();
