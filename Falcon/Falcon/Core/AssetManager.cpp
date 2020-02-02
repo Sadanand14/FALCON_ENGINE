@@ -5,7 +5,6 @@
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
 
-
 /**
  * Loads a mesh into the scene
  * @param meshPath - The path to the mesh json file

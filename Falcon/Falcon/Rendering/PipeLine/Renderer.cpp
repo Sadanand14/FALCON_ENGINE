@@ -9,12 +9,16 @@
 #include "MeshRenderPass.h"
 #include "ParticleRenderPass.h"
 #include "TransparentRenderPass.h"
+#include "CanvasRenderPass.h"
 
 //Events
 #include <Events/RenderEvent.h>
 
 //Entities
 #include <EntityInterface.h>
+
+//TODO: REMOVE
+#include "Canvas.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -88,6 +92,8 @@ Renderer::~Renderer()
 		fmemory::fdelete(pass);
 	}
 
+	fmemory::fdelete(can);
+
 	RenderEventSystem::ShutDown();
 }
 
@@ -107,6 +113,9 @@ void Renderer::CreateDrawStates()
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+
+	can = fmemory::fnew<Canvas>();
+	can->Setup();
 }
 
 /**
@@ -156,6 +165,9 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(2));
+	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(3));
+
+	m_renderPasses[3]->QueueRenderable(can);
 }
 
 /**

@@ -1,12 +1,6 @@
 #ifndef WINDOW_HANDLER_H
 #define WINDOW_HANDLER_H
 
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
-
 #include <framework.h>
 
 
@@ -27,7 +21,6 @@ class WindowClass
 	GLFWwindow* m_gameWindow;
 
 	ThreadPool* m_threadPool;
-	nk_context* ctx;
 
 public:
 	WindowClass(const char*, int, int);

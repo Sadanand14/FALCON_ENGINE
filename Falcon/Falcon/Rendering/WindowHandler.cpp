@@ -4,12 +4,6 @@
 #include "Memory/fmemory.h"
 #include <string>
 
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
-
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
 {

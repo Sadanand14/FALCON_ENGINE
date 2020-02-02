@@ -14,10 +14,8 @@
 
 class Renderable
 {
-private:
-	Material* m_material = nullptr;
-
 protected:
+	Material* m_material = nullptr;
 	VertexArray* m_VAO = nullptr;
 
 public:
