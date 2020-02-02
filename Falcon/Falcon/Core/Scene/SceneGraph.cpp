@@ -277,7 +277,7 @@ namespace Scene
 		{
 			terrainMesh = AssetManager::LoadTerrain(doc["terrain"].GetString());
 			
-			std::cout << "Terrain Loaded";
+			//std::cout << "Terrain Loaded";
 		}
 
 		

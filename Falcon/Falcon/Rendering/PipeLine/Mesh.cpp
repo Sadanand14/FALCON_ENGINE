@@ -7,9 +7,6 @@
 #include <string.h>
 #endif
 
-
-
-
 /**
 * Basic Mesh Constructor
 */
@@ -35,8 +32,8 @@ void Mesh::Setup()
 	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
 	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
 	m_VBO1->Unbind();
-
 	m_VBO2->Bind();
+
 	for (u32 i = 0; i < 4; i++)
 	{
 		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);

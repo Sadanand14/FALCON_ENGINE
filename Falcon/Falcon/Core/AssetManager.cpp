@@ -5,6 +5,8 @@
 #include <algorithm>
 
 TextureType AssetManager::m_lastTextureType;
+Mesh* AssetManager::m_cubeMesh = nullptr;
+Shader* AssetManager::m_cubeShader = nullptr;
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
@@ -101,7 +103,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		if (error != 0) FL_ENGINE_ERROR("Couldn't pen provided .raw file!");
 		count = fread(heightArray.data(), sizeof(unsigned short), numVerts, file);
 
-		std::cout << "height array values" << heightArray[10] << std::endl;
+		//std::cout << "height array values" << heightArray[10] << std::endl;
 
 		error = fclose(file);
 		if (error != 0) FL_ENGINE_ERROR("Error closing the file!");
@@ -152,7 +154,7 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 			newmesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 
 		if (doc.HasMember("transparent")) newmesh->SetTransparent(doc["transparent"].GetBool());
-			
+
 		if (doc.HasMember("instances")) newmesh->PreallocMatrixAmount(doc["instances"].GetInt());
 
 		newmesh->Setup();
@@ -241,7 +243,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 
 	int width, height, nrComponents;
 	std::string temp = path.substr(path.size() - 3, 3);
-	if (temp== "dds")
+	if (temp == "dds")
 	{
 		m_lastTextureType = TextureType::cubeMap;
 		unsigned char* data = stbi_dds_load(filename.c_str(), &width, &height, &nrComponents, 0);
@@ -250,11 +252,12 @@ u32 AssetManager::LoadTexture(std::string const& path)
 			return texture_loadDDS(path.c_str());
 		}
 	}
-	
-	if (temp == "hdr") 
+
+	if (temp == "hdr")
 	{
 		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrComponents;
+		m_lastTextureType = TextureType::cubeMap;
 		float* data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
 		unsigned int hdrTexture;
 		if (data)
@@ -275,7 +278,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 			FL_ENGINE_ERROR("ERROR: HDR Texture failed to load at {0} ", path);
 			stbi_image_free(data);
 		}
-		return texture_loadDDS(path.c_str());
+		return HDRtoCubemap(hdrTexture);
 	}
 
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
@@ -489,7 +492,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, boost::container::vector<Vertex>& v
 	}
 }
 
-GLuint AssetManager::HDRtoCubemap(GLuint hdrTex) 
+GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 {
 	unsigned int captureFBO, captureRBO;
 	glGenFramebuffers(1, &captureFBO);
@@ -515,7 +518,7 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+	glm::mat4 captureProjection = (glm::mat4)glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
 	   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
@@ -526,36 +529,45 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
-	static Shader shader = Shader("Rendering/Shader/VS_CubeMapShader.vert", "Rendering/Shader/PS_CubeMapShader.vert");
-	static Mesh* temp = LoadModel("../Assets/Models/Skybox/cube.obj");
-	static VertexBuffer* vertArr = temp->GetVertexBuffer();
-	
+	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("Rendering/Shader/VS_CubeMapShader.vert", "Rendering/Shader/PS_CubeMapShader.frag");
+	m_cubeShader->UseShader();
 
-	// convert HDR equirectangular environment map to cubemap equivalent
-	shader.UseShader();
-	shader.SetInt("equirectangularMap", 0);
-	shader.SetMat4("projection", captureProjection);
+
+	if (m_cubeMesh == nullptr)m_cubeMesh = LoadModel("../Assets/Models/Skybox/cube.obj");
+
+	m_cubeMesh->Bind();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, hdrTex);
 
-	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
+	// convert HDR equirectangular environment map to cubemap equivalent
+	m_cubeShader->SetInt("equirectangularMap", 0);
+	m_cubeShader->SetMat4("projection", captureProjection);
+
+	glViewport(0, 0,512, 512); // don't forget to configure the viewport to the capture dimensions.
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
-		shader.SetMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		/*if (i == 0)
+		{*/
+			m_cubeShader->SetMat4("view", captureViews[i]);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//TODO DRAW A 1x1 CUBE 
-		//renderCube(); // renders a 1x1 cube
+			//TODO DRAW A 1x1 CUBE
+			glDrawElements(GL_TRIANGLES, m_cubeMesh->m_indexCount, GL_UNSIGNED_INT, 0);
+			//renderCube(); // renders a 1x1 cube
+		//}
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, 1280, 720);
 	return envCubemap;
 }
 
 void AssetManager::Clean()
 {
+	if (m_cubeMesh != nullptr) fmemory::fdelete<>(m_cubeMesh);
+	if (m_cubeShader != nullptr) fmemory::fdelete<>(m_cubeShader);
 	for (auto it = m_meshes.begin(); it != m_meshes.end(); it++)
 	{
 		fmemory::fdelete<Mesh>(it->second);
@@ -588,7 +600,7 @@ GLuint AssetManager::texture_loadDDS(const char* path) {
 	// open the DDS file for binary reading and get file size
 	FILE* f;
 
-	if (fopen_s(&f,path, "rb") == 0)
+	if (fopen_s(&f, path, "rb") == 0)
 		return 0;
 	fseek(f, 0, SEEK_END);
 	long file_size = ftell(f);
@@ -600,14 +612,14 @@ GLuint AssetManager::texture_loadDDS(const char* path) {
 	fread(header, 1, 128, f);
 
 	// compare the `DDS ` signature
-	if (memcmp(header, "DDS ", 4) != 0) 
+	if (memcmp(header, "DDS ", 4) != 0)
 	{
 		free(buffer);
 		free(header);
 		fclose(f);
 		return tid;
 	}
-	
+
 
 	// extract height, width, and amount of mipmaps - yes it is stored height then width
 	height = (header[12]) | (header[13] << 8) | (header[14] << 16) | (header[15] << 24);
@@ -635,10 +647,10 @@ GLuint AssetManager::texture_loadDDS(const char* path) {
 			// as it adds sizeof(struct DDS_HEADER_DXT10) between pixels
 			// so, buffer = malloc((file_size - 128) - sizeof(struct DDS_HEADER_DXT10));
 		default:free(buffer);
-				free(header);
-				fclose(f);
-				return tid;
-			
+			free(header);
+			fclose(f);
+			return tid;
+
 		}
 	}
 	else // BC4U/BC4S/ATI2/BC55/R8G8_B8G8/G8R8_G8B8/UYVY-packed/YUY2-packed unsupported
@@ -663,7 +675,7 @@ GLuint AssetManager::texture_loadDDS(const char* path) {
 
 	// prepare new incomplete texture
 	glGenTextures(1, &tid);
-	if (tid == 0) 
+	if (tid == 0)
 	{
 		free(buffer);
 		free(header);
@@ -698,7 +710,7 @@ GLuint AssetManager::texture_loadDDS(const char* path) {
 		size = ((w + 3) / 4) * ((h + 3) / 4) * blockSize;
 		glCompressedTexImage2D(GL_TEXTURE_2D, i, format, w, h, 0, size, buffer + offset);
 		offset += size;
-		w =std::max((unsigned int)1, (unsigned int)w/2) ;
+		w = std::max((unsigned int)1, (unsigned int)w / 2);
 		h = std::max((unsigned int)1, (unsigned int)h / 2);
 	}
 	// discard any odd mipmaps, ensure a complete texture

@@ -42,6 +42,8 @@ struct Vertex;
 class AssetManager
 {
 private:
+	static Shader* m_cubeShader;
+	static Mesh* m_cubeMesh;
 	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
 	static boost::unordered_map<std::string, Material*> m_materials;

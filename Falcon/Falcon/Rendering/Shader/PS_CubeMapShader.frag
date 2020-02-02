@@ -1,7 +1,7 @@
 #version 450 core
 
 out vec4 Color;
-in vec3 i_localPos;
+in vec3 localPos;
 
 uniform sampler2D equirectangularMap;
 
@@ -16,7 +16,7 @@ vec2 SampleSphericalMap(vec3 v)
 
 void main()
 {		
-    vec2 uv = SampleSphericalMap(normalize(i_localPos)); // make sure to normalize localPos
+    vec2 uv = SampleSphericalMap(normalize(localPos)); // make sure to normalize localPos
     vec3 color = texture(equirectangularMap, uv).rgb;
     
     Color = vec4(color, 1.0);
