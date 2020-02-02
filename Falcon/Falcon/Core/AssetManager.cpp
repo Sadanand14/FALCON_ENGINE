@@ -55,6 +55,11 @@ Mesh* AssetManager::GetMesh(const std::string& path)
 	return mesh;
 }
 
+
+/**
+* AssetManager function that creates a terrain based on the heightmap data provided in the .raw file.
+@param[in] Path to the .raw file.
+*/
 Mesh* AssetManager::LoadTerrain(const std::string& path)
 {
 	//Get file data
@@ -242,7 +247,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	{
 		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrComponents;
-		m_lastTextureType = TextureType::cubeMap;
+		m_lastTextureType = TextureType::CUBEMAP;
 		float* data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
 		unsigned int hdrTexture;
 		if (data)
@@ -267,7 +272,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	}
 
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	m_lastTextureType = TextureType::texture2D;
+	m_lastTextureType = TextureType::TEXTURE2D;
 	if (data)
 	{
 		GLenum format = 0;
@@ -308,7 +313,8 @@ u32 AssetManager::LoadTexture(std::string const& path)
 }
 
 /**
-*
+* AssetManager Function Responsible for loading Material data from the provided json file path.
+@param[in] A path to the json file defining the type of data to be held by that Material instance.
 */
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
@@ -477,6 +483,10 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 	}
 }
 
+/**
+* Private AssetManager function to convert loaded HDR textures into cubemap textures.
+@param[in] The handle to the HDR texture that needs to be converted (GLuint).
+*/
 GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 {
 	unsigned int captureFBO, captureRBO;
@@ -549,6 +559,9 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	return envCubemap;
 }
 
+/**
+* Assetmanager member function responsible for cleaning up all resources held by the AssetManager
+*/
 void AssetManager::Clean()
 {
 	if (m_cubeMesh != nullptr) fmemory::fdelete<>(m_cubeMesh);

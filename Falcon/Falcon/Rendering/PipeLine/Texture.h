@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class TextureType { cubeMap, texture2D };
+enum class TextureType { CUBEMAP, TEXTURE2D };
 
 /**
 *Texture Data Structure

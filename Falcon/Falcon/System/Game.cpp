@@ -12,6 +12,10 @@ namespace gameLoop
 	bool firstMouse = true;
 	void ProcessInput(GLFWwindow* window, float deltaTime);
 
+	/**
+	* Game class Destructor
+	*/
+
 	Game::~Game()
 	{
 		if (m_scene != nullptr)fmemory::fdelete(m_scene);
@@ -25,16 +29,22 @@ namespace gameLoop
 		fmemory::MeoryManagerShutDown();
 		physics::ShutdownPhysX();
 
-		Sound.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
-		Sound.Shutdown();
+		m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
+		m_audio.Shutdown();
 		ThreadPool::ShutDown();
 	}
 
+	/**
+	* Game Class Constructor
+	*/
 	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
 	{
 
 	}
 
+	/**
+	* Game class initializer responsible for initializing all subsystems.
+	*/
 	bool Game::Initialize()
 	{
 		Log::Init();
@@ -69,13 +79,16 @@ namespace gameLoop
 		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 
 		//Initialize the Audio Engine
-		Sound.Init();
-		Sound.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		Sound.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
+		m_audio.Init();
+		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
+		m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
 
 		return true;
 	}
 
+	/**
+	* Game class Update function responsible for running the main game loop
+	*/
 	void Game::Update()
 	{
 		while (!m_window1->WindowCloseStatus())
@@ -118,6 +131,7 @@ namespace gameLoop
 			glfwPollEvents();
 		}
 	}
+
 
 	void ProcessInput(GLFWwindow* window, float deltaTime)
 	{

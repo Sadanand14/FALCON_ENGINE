@@ -3,6 +3,9 @@
 #include <Types.h>
 #include "RenderPass.h"
 
+/**
+* RenderPass for setting up rendering parameters for skybox.
+*/
 class SkyRenderPass : public RenderPass 
 {
 public : 

@@ -2,6 +2,9 @@
 #include <iostream>
 
 
+/**
+* Main Entry point to the game.
+*/
 int main()
 {
 #if defined(_WIN32)&&(defined(DEBUG) | defined(_DEBUG))

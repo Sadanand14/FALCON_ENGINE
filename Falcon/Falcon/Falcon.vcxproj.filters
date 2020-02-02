@@ -37,12 +37,12 @@
     <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderable.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
-    <ClCompile Include="System\AudioEngine.cpp" />
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
     <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
+    <ClCompile Include="Audio\AudioEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -106,7 +106,6 @@
     <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Renderable.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
-    <ClInclude Include="System\AudioEngine.h" />
     <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Core\Events\PassingMeshEvent.h" />
@@ -115,6 +114,7 @@
     <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
     <ClInclude Include="Core\Events\PassToRenderer.h" />
+    <ClInclude Include="Audio\AudioEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

@@ -19,13 +19,14 @@ void Material::BindTo(int32_t location, Texture tex, const char* locName)
 {
 	glActiveTexture(GL_TEXTURE0 + location);
 
-	if (tex.type == TextureType::cubeMap)
+	if (tex.type == TextureType::CUBEMAP)
 		glBindTexture(GL_TEXTURE_CUBE_MAP, tex.textureID);
-	else if(tex.type == TextureType::texture2D)
+	else if(tex.type == TextureType::TEXTURE2D)
 		glBindTexture(GL_TEXTURE_2D, tex.textureID);
 
 	m_shader->SetInt(locName, location);
 }
+
 
 Material::~Material()
 {

@@ -43,7 +43,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Audio;$(ProjectDir)Physics;$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Debug;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Debug;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
@@ -157,7 +157,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="Rendering\ParticleSystem.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
-    <ClInclude Include="System\AudioEngine.h" />
+    <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
@@ -228,7 +228,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="Rendering\ParticleSystem.cpp" />
     <ClCompile Include="System\Application.cpp" />
-    <ClCompile Include="System\AudioEngine.cpp" />
+    <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />

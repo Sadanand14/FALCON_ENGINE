@@ -12,11 +12,14 @@
 #include <Scene/SceneGraph.h>
 #include <PipeLine/Octree.h>
 #include "ParticleSystem.h"
-#include "AudioEngine.h"
+#include <Audio/AudioEngine.h>
 
 
 namespace gameLoop
 {
+	/**
+	* Main Game Class Responsible for owning and running all subsystems
+	*/
 	class Game {
 
 		Timer* m_timer;
@@ -30,7 +33,7 @@ namespace gameLoop
 	public:
 		bool m_gameCrashed, m_windowClosed;
 		//Audio Engine
-		CAudioEngine Sound;
+		CAudioEngine m_audio;
 
 		Game();
 		~Game();
