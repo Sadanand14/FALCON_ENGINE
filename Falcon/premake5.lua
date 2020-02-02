@@ -109,6 +109,7 @@ project "Falcon"
 		"%{prj.name}/System",
 		"%{prj.name}/Rendering",
 		"%{prj.name}/Rendering/PipeLine",
+        "%{prj.name}/Audio",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",
