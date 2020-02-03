@@ -3,6 +3,7 @@
 #include <cassert>
 namespace Rendering
 {
+	unsigned int OctreeNode::nodeCount = 0;
 
 	/**
 	* Octree Node Constructor function
@@ -94,6 +95,7 @@ namespace Rendering
 			m_childNodes[6]->SetParent(this);
 
 			m_childNodes[7]->SetParent(this);
+			nodeCount += 8;
 		}
 	}
 

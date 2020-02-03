@@ -63,6 +63,7 @@ namespace physics
 				gVehicleSceneQueryData->free(allocator);
 				PX_RELEASE(gFrictionPairs);
 				physx::PxCloseVehicleSDK();
+				return true;
 			}
 			catch (std::exception & e)
 			{

@@ -37,10 +37,10 @@ public:
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void Bind() override;
-	void GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&);
+	void GetVertexPositionsArray (std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&) const;
 
 	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
-	inline bool GetTransparent() { return m_transparent; }
+	inline bool GetTransparent() const{ return m_transparent; }
 };
 
 #endif //!MESH_H

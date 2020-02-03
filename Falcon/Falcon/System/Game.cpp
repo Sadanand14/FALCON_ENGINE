@@ -111,6 +111,9 @@ namespace gameLoop
 			//Swap Buffers
 			glfwSwapBuffers(m_window1->GetWindow());
 
+			unsigned int i = Rendering::OctreeNode::GetCount();
+			FL_ENGINE_WARN("NODE COUNT :: {0}", i);
+
 			//Poll I/O events
 			glfwPollEvents();
 		}

@@ -59,7 +59,7 @@ namespace physics
 	physx::PxShape* GetSphereCollider(const float& radius);
 	physx::PxShape* GetCapsuleCollider(const float& radius,const float& halfHeight);
 	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert = false);
-
+	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert = false);
 }
 
 #endif

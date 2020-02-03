@@ -116,7 +116,7 @@ namespace physics
 		}
 
 		physx::PxMeshScale scaleDown(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
-
+		physx::PxRigidStatic* gGround;
 	}
 
 
@@ -146,6 +146,7 @@ namespace physics
 		gPvd = PxCreatePvd(*gFoundation);
 		physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 
+		
 		if (!gPvd->connect(*transport, physx::PxPvdInstrumentationFlag::ePROFILE))
 		{
 			FL_ENGINE_ERROR("ERROR:Failed to connect to pvd");
@@ -179,7 +180,7 @@ namespace physics
 
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-		//CreatePlane();
+		CreatePlane();
 		return true;
 	}
 
@@ -233,6 +234,7 @@ namespace physics
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
 			PX_RELEASE(gCooking);
+
 			if (gPvd)
 			{
 				physx::PxPvdTransport* transport = gPvd->getTransport();
@@ -379,11 +381,26 @@ namespace physics
 			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
 		}
 		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
-		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 16>(vertCount,&pxvertarry[0],stride);
+		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 32>(vertCount,&pxvertarry[0],stride);
 		
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
 		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
 		return shape;
+	}
+
+	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert)
+	{
+		physx::PxConvexMesh* convexMesh = nullptr;
+		std::vector<physx::PxVec3> pxvertarry;
+		pxvertarry.resize(vertCount);
+
+		for (int i = 0; i < vertCount; ++i)
+		{
+			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
+		}
+		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
+		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 32>(vertCount, &pxvertarry[0], stride);
+		return convexMesh;
 	}
 
 	void ReleaseCollider(physx::PxRigidActor* ref)

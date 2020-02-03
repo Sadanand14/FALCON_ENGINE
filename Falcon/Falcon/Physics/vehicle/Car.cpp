@@ -1,5 +1,7 @@
 #include "Car.h"
-
+#include "Core/Components/TransformComponent.h"
+#include "Rendering/PipeLine/Mesh.h"
+#include "../PXMathUtils.h"
 namespace physics
 {
 	namespace vehicle
@@ -28,7 +30,7 @@ namespace physics
 			const float WHEEL_WIDTH = 0.4f;
 			const float WHEEL_MOI = 0.5f * WHEEL_MASS * WHEEL_RADIUS * WHEEL_RADIUS;
 			const float NUMBER_OF_WHEELS = 4;
-
+			const physx::PxMeshScale SCALE_DOWN(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
 
 			//Temp Material
 
@@ -205,10 +207,13 @@ namespace physics
 
 
 
-		Car::Car():
-			m_car(nullptr)
+		Car::Car(Mesh* chassiMesh, Transform chassisTransform, Mesh* wheelMesh, Transform* wheelTransforms):
+			m_car(nullptr),
+			m_chassisMesh(chassiMesh),
+			m_wheelMesh(wheelMesh)
 		{
-
+			CreateVehicleDescriptionObject();
+			CreateVehicle4W(chassisTransform, wheelTransforms);
 		}
 
 		void Car::CreateVehicleDescriptionObject()
@@ -231,7 +236,7 @@ namespace physics
 		}
 
 
-		physx::PxVehicleDrive4W* Car::createVehicle4W()
+		void Car::CreateVehicle4W(Transform chassisTransform, Transform* wheelTransforms)
 		{
 			try
 			{
@@ -244,7 +249,7 @@ namespace physics
 				const physx::PxFilterData& wheelSimFilterData = m_carDesc.wheelSimFilterData;
 
 				//GetCarMesh and create collider for that. 
-
+				CreateVehicleActor(GetDefaultMaterial(), wheelTransforms, GetDefaultMaterial(), chassisTransform);
 
 				//Set up the sim data for the wheels.
 				physx::PxVehicleWheelsSimData* wheelsSimData = physx::PxVehicleWheelsSimData::allocate(numWheels);
@@ -307,18 +312,95 @@ namespace physics
 				m_car = physx::PxVehicleDrive4W::allocate(numWheels);
 				m_car->setup(GetPhysics(), nullptr/*veh4WActor need to create*/, *wheelsSimData, driveSimData, numWheels - 4);
 
+				//Configure the userdata
+				ConfigureCarData(m_car, m_carDesc.actorUserData, m_carDesc.shapeUserDatas);
 
+				//Free the sim data because we don't need that any more.
+				wheelsSimData->free();
+				
 			}
 			catch (std::exception & e)
 			{
 				FL_ENGINE_ERROR("ERROR: Failed to create PxVehicle4W. {0}", e.what());
-				return nullptr;
+				return;
 			}
 			
 		}
-		physx::PxRigidDynamic* Car::createVehicleActor(const physx::PxVehicleChassisData& chassisData, physx::PxMaterial** wheelMaterials, physx::PxConvexMesh** wheelConvexMeshes, const float numWheels, const physx::PxFilterData& wheelSimFilterData, physx::PxMaterial** chassisMaterials, physx::PxConvexMesh** chassisConvexMeshes, const float numChassisMeshes, const physx::PxFilterData& chassisSimFilterData, physx::PxPhysics& physics)
+
+
+
+		physx::PxRigidDynamic* Car::CreateVehicleActor(physx::PxMaterial* wheelMaterials, Transform* wheelTransforms,
+													   physx::PxMaterial* chassisMaterials, Transform& chassisTransform,
+													   const float numChassisMeshes/*=1*/)
 		{
-			return nullptr;
+
+			try {
+				physx::PxPhysics* physics = GetPhysics();
+
+				//We need a rigid body actor for the vehicle.
+				//Don't forget to add the actor to the scene after setting up the associated vehicle.
+
+				physx::PxRigidDynamic* vehActor = physics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
+
+				//Wheel and chassis query filter data.
+				//Optional: cars don't drive on other cars.
+				physx::PxFilterData wheelQryFilterData;
+				setupNonDrivableSurface(wheelQryFilterData);
+
+				physx::PxFilterData chassisQryFilterData;
+				setupNonDrivableSurface(chassisQryFilterData);
+
+				//GetMeshcollider shapes for the wheels and the chassis
+				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> wheeltemp;
+				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> chassistemp;
+				m_wheelMesh->GetVertexPositionsArray(wheeltemp);
+				physx::PxConvexMesh* wheelConvexMesh = GetConvexMesh(&wheeltemp[0], wheeltemp.size(), sizeof(glm::vec3));
+				m_chassisMesh->GetVertexPositionsArray(chassistemp);
+				physx::PxConvexMesh* chassisConvexMesh = GetConvexMesh(&chassistemp[0], chassistemp.size(), sizeof(glm::vec3));
+
+				physx::PxVec3 *localpos;
+				physx::PxQuat *localrot;
+				//Add all the wheel shapes to the actor.
+				for (uint8_t i = 0; i < m_carDesc.numWheels; i++)
+				{
+					physx::PxConvexMeshGeometry geom(wheelConvexMesh, car_data::SCALE_DOWN);
+					physx::PxShape* wheelShape = physx::PxRigidActorExt::createExclusiveShape(*vehActor, geom, *wheelMaterials);
+					wheelShape->setQueryFilterData(wheelQryFilterData);
+					wheelShape->setSimulationFilterData(m_carDesc.wheelSimFilterData);
+					/*
+						Wheel transforms are needed here.
+					*/
+					localpos = PXMathUtils::Vec3ToPxVec3(wheelTransforms[i].GetPosition());
+					localrot = PXMathUtils::QuatToPxQuat(wheelTransforms[i].GetRotation());
+					wheelShape->setLocalPose(physx::PxTransform(*localpos,*localrot));
+				}
+
+				//Add the chassis shapes to the actor.
+				for (uint8_t i = 0; i < numChassisMeshes; i++)
+				{
+					physx::PxShape* chassisShape = physx::PxRigidActorExt::createExclusiveShape(*vehActor, physx::PxConvexMeshGeometry(chassisConvexMesh, car_data::SCALE_DOWN), *chassisMaterials);
+					chassisShape->setQueryFilterData(chassisQryFilterData);
+					chassisShape->setSimulationFilterData(m_carDesc.chassisSimFilterData);
+					/*
+						Chassis Transforms are needed here
+					*/
+					localpos = PXMathUtils::Vec3ToPxVec3(chassisTransform.GetPosition());
+					localrot = PXMathUtils::QuatToPxQuat(chassisTransform.GetRotation());
+					chassisShape->setLocalPose(physx::PxTransform(*localpos, *localrot));
+				}
+
+				vehActor->setMass(m_carDesc.chassisMass);
+				vehActor->setMassSpaceInertiaTensor(m_carDesc.chassisMOI);
+				vehActor->setCMassLocalPose(physx::PxTransform(m_carDesc.chassisCMOffset, physx::PxQuat(physx::PxIdentity)));
+
+				return vehActor;
+			}
+
+			catch (std::exception & e)
+			{
+				FL_ENGINE_ERROR("ERROR:Failed to create Car actor. {0}", e.what());
+				return nullptr;
+			}
 		}
 		
 		

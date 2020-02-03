@@ -4,8 +4,10 @@
 #include "Vehicle.h"
 #include "VehicleFilterShader.h"
 #include "VehicleSceneQuery.h"
-
 #define WHEEL_COUNT 4
+
+class Mesh;
+struct Transform;
 
 namespace physics
 {
@@ -92,20 +94,21 @@ namespace physics
 		private:
 			VehicleDesc m_carDesc;
 			physx::PxVehicleDrive4W* m_car;
+
+			Mesh* m_chassisMesh;
+			Mesh* m_wheelMesh;
+
+
 			void CreateVehicleDescriptionObject();
 
-			physx::PxVehicleDrive4W* createVehicle4W();
+			void CreateVehicle4W(Transform chassisTransform, Transform* wheelTransforms);
 
-			physx::PxRigidDynamic* createVehicleActor 
-				(const physx::PxVehicleChassisData& chassisData,
-					physx::PxMaterial** wheelMaterials, physx::PxConvexMesh** wheelConvexMeshes, const float numWheels, const physx::PxFilterData& wheelSimFilterData,
-					physx::PxMaterial** chassisMaterials, physx::PxConvexMesh** chassisConvexMeshes, const float numChassisMeshes, const physx::PxFilterData& chassisSimFilterData,
-					physx::PxPhysics& physics);
-
-			
+			physx::PxRigidDynamic* CreateVehicleActor( physx::PxMaterial* wheelMaterials, Transform* wheelTransforms,
+													   physx::PxMaterial* chassisMaterials, Transform& chassisTransform,
+													   const float numChassisMeshes = 1);
 			void ConfigureCarData(physx::PxVehicleWheels* vehicle, ActorUserData* actorUserData, ShapeUserData* shapeUserDatas);
 		public:
-			Car();
+			Car(Mesh* chassiMesh, Transform chassisTransform,Mesh* wheelMesh, Transform* wheelTransforms);
 
 			//void SetStartingTransform();
 		};
