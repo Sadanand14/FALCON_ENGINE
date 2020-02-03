@@ -181,7 +181,7 @@ namespace physics
 
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-		CreatePlane();
+		//CreatePlane();
 		return true;
 	}
 
@@ -235,7 +235,7 @@ namespace physics
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
 
 			vehicle::ReleaseVehcileSDK();
-			PX_RELEASE(gGround);
+			//PX_RELEASE(gGround);
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);

@@ -15,6 +15,28 @@ namespace physics
 			VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
 			physx::PxBatchQuery* gBatchQuery = NULL;
 			physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
+			physx::PxRigidStatic* gGroundPlane = NULL;
+
+
+			physx::PxRigidStatic* createDrivablePlane(const physx::PxFilterData& simFilterData, physx::PxMaterial* material, physx::PxPhysics* physics)
+			{
+				//Add a plane to the scene.
+				physx::PxRigidStatic* groundPlane = PxCreatePlane(*physics, physx::PxPlane(0, 1, 0, 0), *material);
+
+				//Get the plane shape so we can set query and simulation filter data.
+				physx::PxShape* shapes[1];
+				groundPlane->getShapes(shapes, 1);
+
+				//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+				physx::PxFilterData qryFilterData;
+				setupDrivableSurface(qryFilterData);
+				shapes[0]->setQueryFilterData(qryFilterData);
+
+				//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+				shapes[0]->setSimulationFilterData(simFilterData);
+
+				return groundPlane;
+			}
 		}
 
 		bool InitVehicleSDK()
@@ -46,6 +68,10 @@ namespace physics
 				//Create the friction table for each combination of tire and surface type.
 				gFrictionPairs = createFrictionPairs(GetDefaultMaterial() /*Kind of default material*/);
 
+				physx::PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+				gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetDefaultMaterial(), GetPhysics());
+				GetPhysicsScene()->addActor(*gGroundPlane);
+
 				FL_ENGINE_INFO("INFO: Vehcile SDK initiated successfully.");
 				return true;
 			}
@@ -59,7 +85,7 @@ namespace physics
 		{
 			try
 			{
-				//PX_RELEASE(gGroundPlane);
+				PX_RELEASE(gGroundPlane);
 				PX_RELEASE(gBatchQuery);
 				physx::PxDefaultAllocator allocator = GetAllocator();
 				gVehicleSceneQueryData->free(allocator);
@@ -82,8 +108,8 @@ namespace physics
 		{
 			//Car data fetch
 			std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>vehicles;
-			vehicles.resize(gAllCars.size);
-			for (uint8_t itr = 0; itr < gAllCars.size; ++itr)
+			vehicles.resize(gAllCars.size());
+			for (uint8_t itr = 0; itr < gAllCars.size(); ++itr)
 			{
 				vehicles.emplace_back(gAllCars[itr]->GetDriveComponent());
 			}
@@ -91,25 +117,25 @@ namespace physics
 			//Raycasts
 			physx::PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 			const uint32_t raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-			PxVehicleSuspensionRaycasts(gBatchQuery, gAllCars.size, &vehicles[0], raycastResultsSize, raycastResults);
+			PxVehicleSuspensionRaycasts(gBatchQuery, gAllCars.size(), &vehicles[0], raycastResultsSize, raycastResults);
 
 
 			//vehicle update
-			physx::PxWheelQueryResult wheelQueryResults[vehicles.size][4];
+			physx::PxWheelQueryResult wheelQueryResults[1][4];
 			physx::PxVec3 grav = GetPhysicsScene()->getGravity();
 			std::vector<physx::PxVehicleWheelQueryResult, fmemory::STLAllocator<physx::PxVehicleWheelQueryResult>>vehicleQueryResults;
-			vehicleQueryResults.resize(vehicles.size);
-			for (uint8_t itr = 0; itr < vehicles.size; ++itr)
+			vehicleQueryResults.resize(vehicles.size());
+			for (uint8_t itr = 0; itr < vehicles.size(); ++itr)
 			{
 				//PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
-				physx::PxVehicleWheelQueryResult temp{ wheelQueryResults ,vehicles[itr]->mWheelsSimData.getNbWheels() };
+				physx::PxVehicleWheelQueryResult temp{ wheelQueryResults[itr] ,vehicles[itr]->mWheelsSimData.getNbWheels() };
 				vehicleQueryResults.emplace_back(temp);
 			}
 
-			physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gAllCars.size, &vehicles[0], &vehicleQueryResults[0]);
+			physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gAllCars.size(), &vehicles[0], &vehicleQueryResults[0]);
 
 			//Needed for movement handling
-			for (uint8_t itr = 0; itr < vehicles.size; ++itr)
+			for (uint8_t itr = 0; itr < vehicles.size(); ++itr)
 			{
 				gAllCars[itr]->SetIsInAir(vehicles[itr]->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(vehicleQueryResults[itr]));
 			}

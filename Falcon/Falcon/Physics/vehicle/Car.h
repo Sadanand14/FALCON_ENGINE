@@ -115,8 +115,8 @@ namespace physics
 
 			~Car()
 			{
-				m_car->getRigidDynamicActor->release();
-				m_car->free();
+				PX_RELEASE(m_car);
+				//m_car->free();
 
 			}
 			

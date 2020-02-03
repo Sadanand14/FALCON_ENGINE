@@ -4,18 +4,18 @@
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
 #include "../physics.h"
 #include "Memory/fnew.h"
+#include "Car.h"
 namespace physics
 {
 
 	namespace vehicle
 	{
-		class Car;
 
 		/**
 		* Global vec to maintain all cars.
 		*/
 
-		static std::vector<Car*, fmemory::STLAllocator<Car*>>gAllCars;
+		std::vector<vehicle::Car*, fmemory::STLAllocator<Car*>>gAllCars;
 
 
 		namespace
