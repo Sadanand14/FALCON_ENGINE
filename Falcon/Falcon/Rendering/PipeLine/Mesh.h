@@ -37,6 +37,8 @@ public:
 	void Bind() override;
 	void GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&);
 
+	inline VertexBuffer* GetVB() { return m_VBO1; }
+	inline VertexBuffer* GetVertexBuffer() { return m_VBO1; }
 	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
 	inline bool GetTransparent() { return m_transparent; }
 };

@@ -178,7 +178,8 @@ void Shader::SetMat3(const std::string& name, const glm::mat3& mat) const
 
 void Shader::SetMat4(const std::string& name, const glm::mat4& mat) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(m_programID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	int temp = glGetUniformLocation(m_programID, name.c_str());
+	glUniformMatrix4fv(temp, 1, GL_FALSE, &mat[0][0]);
 }
 
 GLint Shader::GetUniform(const GLchar* name)

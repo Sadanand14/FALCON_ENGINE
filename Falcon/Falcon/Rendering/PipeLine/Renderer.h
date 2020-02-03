@@ -22,8 +22,8 @@
 #include "MeshRenderPass.h"
 #include "ParticleRenderPass.h"
 #include "TransparentRenderPass.h"
+#include <PipeLine/Mesh.h>
 
-void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -31,8 +31,12 @@ void PrintReception();
 class RenderEventSystem : public EventSystem
 {
 private:
+	friend class Renderer;
 	static RenderEventSystem* m_instance;
+	Mesh* m_Skymesh;
+	Mesh* m_TerrainMesh;
 	RenderEventSystem();
+	Mesh* m_terrainMesh, * m_skyMesh;
 
 public:
 	static RenderEventSystem* GetInstance()
@@ -44,7 +48,8 @@ public:
 		}
 		return m_instance;
 	}
-
+	inline Mesh* GetSkyMesh()const { return m_skyMesh; }
+	inline Mesh* GetTerrainMesh() const { return m_terrainMesh; }
 	static void ShutDown();
 
 	virtual void SubscribeToEvents();
@@ -65,15 +70,19 @@ class Renderer
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 public:
 	Renderer();
 	~Renderer();
+
 
 	void Init();
 	void CreateDrawStates();
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);
+	//inline void SetSkyMesh(Mesh* mesh) { m_skymesh = mesh; }
+	//inline void SetTerrainMesh(Mesh* mesh) { m_terrainMesh= mesh; }
 };
 
 #endif // !RENDERER_H

@@ -14,7 +14,7 @@ class EventSystem
 {
 protected:
 	boost::circular_buffer<boost::shared_ptr<Event>> eventQueue;
-	boost::container::vector<EventsCategory> subcribedList;
+	boost::container::vector<EventsCategory> subscribedList;
 	ThreadPool* m_threadPool;
 public:
 	

@@ -12,11 +12,12 @@
 */
 enum EventsCategory {
 	none					 = 0,
-	WindowsEventCategory	 = BIT(0),
-	KeyEventCategory		 = BIT(1),
-	MouseEventCategory		 = BIT(2),
-	RenderEventCategory		 = BIT(3),
-	ParticleEventCategory	 = BIT(3)
+	EVENT_WINDOWS			 = BIT(0),
+	EVENT_KEY_INPUT			 = BIT(1),
+	EVENT_MOUSE_INPUT		 = BIT(2),
+	EVENT_RENDER			 = BIT(3),
+	EVENT_PARTICLE			 = BIT(4),
+	EVENT_DATA_TO_RENDERER	 = BIT(5)
 };
 
 

@@ -3,7 +3,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <stb_image.h>
+//#include <Rendering/stb_image.h>
+#include <Rendering/stb_dds.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -41,19 +42,25 @@ struct Vertex;
 class AssetManager
 {
 private:
+	static Shader* m_cubeShader;
+	static Mesh* m_cubeMesh;
+	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
 	static boost::unordered_map<std::string, Material*> m_materials;
-
+	
 	// Process nodes
+	static GLuint HDRtoCubemap(GLuint hdrTex);
+	//static GLuint texture_loadDDS(const char* path);
 	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh);
 	static void ProcessMesh(aiMesh* mesh, Mesh* newMesh);
-
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
 
 public:
+	
 	static Material* GetMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
+	static Mesh* LoadTerrain(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
