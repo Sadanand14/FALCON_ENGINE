@@ -117,6 +117,7 @@ namespace physics
 
 		physx::PxMeshScale scaleDown(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
 		physx::PxRigidStatic* gGround;
+
 	}
 
 
@@ -173,10 +174,10 @@ namespace physics
 		}
 #endif
 
-		/*if (!vehicle::InitVehicleSDK())
+		if (!vehicle::InitVehicleSDK())
 		{
 			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
-		};*/
+		};
 
 
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
@@ -196,6 +197,10 @@ namespace physics
 		boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,
 		const size_t& count)
 	{
+
+		//Update vehicles
+		vehicle::StepVehicleSDK(1.0f / 60.0f);
+
 		gScene->simulate(1.0f / 60.0f);
 		gScene->fetchResults(true);
 
@@ -229,7 +234,8 @@ namespace physics
 
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
 
-			/*vehicle::ReleaseVehcileSDK();*/
+			vehicle::ReleaseVehcileSDK();
+			PX_RELEASE(gGround);
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
@@ -258,9 +264,9 @@ namespace physics
 	*/
 	physx::PxRigidStatic* CreatePlane()
 	{
-		physx::PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, physx::PxPlane(0, 1, 0, 0), *gMaterial);
-		gScene->addActor(*groundPlane);
-		return groundPlane;
+		gGround = PxCreatePlane(*gPhysics, physx::PxPlane(0, 1, 0, 0), *gMaterial);
+		gScene->addActor(*gGround);
+		return gGround;
 	}
 
 

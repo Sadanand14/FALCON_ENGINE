@@ -209,11 +209,14 @@ namespace physics
 
 		Car::Car(Mesh* chassiMesh, Transform chassisTransform, Mesh* wheelMesh, Transform* wheelTransforms):
 			m_car(nullptr),
+			m_isVehicleInAir(false),
 			m_chassisMesh(chassiMesh),
 			m_wheelMesh(wheelMesh)
 		{
 			CreateVehicleDescriptionObject();
 			CreateVehicle4W(chassisTransform, wheelTransforms);
+			//Register car to the global car data
+			gAllCars.emplace_back(this);
 		}
 
 		void Car::CreateVehicleDescriptionObject()

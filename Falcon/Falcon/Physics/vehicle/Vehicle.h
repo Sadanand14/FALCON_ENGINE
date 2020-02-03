@@ -3,11 +3,19 @@
 
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
 #include "../physics.h"
+#include "Memory/fnew.h"
 namespace physics
 {
 
 	namespace vehicle
 	{
+		class Car;
+
+		/**
+		* Global vec to maintain all cars.
+		*/
+
+		static std::vector<Car*, fmemory::STLAllocator<Car*>>gAllCars;
 
 
 		namespace
@@ -127,6 +135,14 @@ namespace physics
 		* Releases resources allocated by the vehicle sdk.
 		*/
 		bool ReleaseVehcileSDK();
+
+
+
+		/**
+		* Vehicle Update
+		*/
+
+		void StepVehicleSDK(float dt);
 
 		//Creating friction pairs for simulation calculations.
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial);

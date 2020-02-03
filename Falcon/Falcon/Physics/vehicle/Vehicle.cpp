@@ -1,7 +1,9 @@
+#include "Physx/physx/include/vehicle/PxVehicleUtil.h"
 #include "Vehicle.h"
 #include "VehicleSceneQuery.h"
 #include "VehicleFilterShader.h"
 #include "WheelQueryResult.h"
+#include "Car.h"
 namespace physics
 {
 
@@ -72,6 +74,51 @@ namespace physics
 			}
 			
 		}
+
+
+
+
+		void StepVehicleSDK(float dt)
+		{
+			//Car data fetch
+			std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>vehicles;
+			vehicles.resize(gAllCars.size);
+			for (uint8_t itr = 0; itr < gAllCars.size; ++itr)
+			{
+				vehicles.emplace_back(gAllCars[itr]->GetDriveComponent());
+			}
+
+			//Raycasts
+			physx::PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+			const uint32_t raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+			PxVehicleSuspensionRaycasts(gBatchQuery, gAllCars.size, &vehicles[0], raycastResultsSize, raycastResults);
+
+
+			//vehicle update
+			physx::PxWheelQueryResult wheelQueryResults[vehicles.size][4];
+			physx::PxVec3 grav = GetPhysicsScene()->getGravity();
+			std::vector<physx::PxVehicleWheelQueryResult, fmemory::STLAllocator<physx::PxVehicleWheelQueryResult>>vehicleQueryResults;
+			vehicleQueryResults.resize(vehicles.size);
+			for (uint8_t itr = 0; itr < vehicles.size; ++itr)
+			{
+				//PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+				physx::PxVehicleWheelQueryResult temp{ wheelQueryResults ,vehicles[itr]->mWheelsSimData.getNbWheels() };
+				vehicleQueryResults.emplace_back(temp);
+			}
+
+			physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gAllCars.size, &vehicles[0], &vehicleQueryResults[0]);
+
+			//Needed for movement handling
+			for (uint8_t itr = 0; itr < vehicles.size; ++itr)
+			{
+				gAllCars[itr]->SetIsInAir(vehicles[itr]->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(vehicleQueryResults[itr]));
+			}
+		
+			//Scene update
+		}
+
+
+
 
 
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial)

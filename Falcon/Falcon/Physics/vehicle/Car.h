@@ -14,6 +14,7 @@ namespace physics
 	namespace vehicle
 	{
 		
+		
 
 		struct ActorUserData
 		{
@@ -94,7 +95,7 @@ namespace physics
 		private:
 			VehicleDesc m_carDesc;
 			physx::PxVehicleDrive4W* m_car;
-
+			bool m_isVehicleInAir;
 			Mesh* m_chassisMesh;
 			Mesh* m_wheelMesh;
 
@@ -110,7 +111,18 @@ namespace physics
 		public:
 			Car(Mesh* chassiMesh, Transform chassisTransform,Mesh* wheelMesh, Transform* wheelTransforms);
 
-			//void SetStartingTransform();
+			//void Update(float dt);
+
+			~Car()
+			{
+				m_car->getRigidDynamicActor->release();
+				m_car->free();
+
+			}
+			
+
+			inline physx::PxVehicleDrive4W* GetDriveComponent() const { return m_car; }
+			inline void SetIsInAir(bool val) { m_isVehicleInAir = val; }
 		};
 
 	}
