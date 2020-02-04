@@ -100,7 +100,10 @@ project "Falcon"
 		"%{prj.name}/Physics/**.cpp",
 		"%{prj.name}/Physics/**.c",
 		"%{prj.name}/Shader/**.vert",
-		"%{prj.name}/Shader/**.frag"
+		"%{prj.name}/Shader/**.frag",
+	        "%{prj.name}/Audio/**.h",
+		"%{prj.name}/Audio/**.hpp",
+		"%{prj.name}/Audio/**.cpp",
 	}
 
 	includedirs
@@ -110,6 +113,8 @@ project "Falcon"
 		"%{prj.name}/System",
 		"%{prj.name}/Rendering",
 		"%{prj.name}/Rendering/PipeLine",
+        	"%{prj.name}/Audio",
+        	"%{prj.name}/Physics",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",

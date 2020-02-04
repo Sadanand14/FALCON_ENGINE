@@ -1,8 +1,9 @@
+#include <string>
 #include "WindowHandler.h"
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 #include "Memory/fmemory.h"
-#include <string>
+#include "WindowData.h"
 
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
@@ -12,6 +13,7 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 
+	WindowData::windowSize = glm::vec2(m_width, m_height);
 }
 
 WindowClass::~WindowClass()
@@ -63,5 +65,7 @@ void WindowClass::Init()
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
+
+	WindowData::windowSize = glm::vec2(width, height);
 }
 

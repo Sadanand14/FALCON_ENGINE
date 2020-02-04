@@ -2,6 +2,7 @@
 #define CANVASRENDERPASS_H
 
 #include "RenderPass.h"
+#include "AssetManager.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
@@ -15,7 +16,8 @@ class CanvasRenderPass : public RenderPass
 {
 	private:
 		nk_context m_ctx;
-		glm::mat4 proj;
+		glm::mat4 m_proj;
+		Font* defaultFont;
 
 	public:
 		CanvasRenderPass(uint32_t priority);
