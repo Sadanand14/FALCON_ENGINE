@@ -103,12 +103,13 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	fmemory::fdelete(can);
+	fmemory::fdelete(l);
+
 	for(auto pass : m_renderPasses)
 	{
 		fmemory::fdelete(pass);
 	}
-
-	fmemory::fdelete(can);
 
 	RenderEventSystem::ShutDown();
 }
@@ -189,11 +190,11 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
 	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
-	l = fmemory::fnew<Label>();
-	l->SetColor(nk_rgba(255, 0, 0, 255));
+	l = fmemory::fnew<Label>("Test Text");
+	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
+	l->SetColor(nk_rgb(0, 0, 0));
 	l->SetWrap(true);
-	l->SetPosition(glm::uvec2(30, 30));
-	l->SetSize(glm::uvec2(30, 30));
+	l->SetBounds(nk_rect(30, 30, 200, 60));
 	l->SetText(std::string("This is a test"));
 	static_cast<Canvas*>(can)->AddCanvasItem(l);
 	m_renderPasses[4]->QueueRenderable(can);

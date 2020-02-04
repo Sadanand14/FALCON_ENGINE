@@ -60,33 +60,17 @@ void CanvasRenderPass::Render()
 
 		//Set some vars
 		nk_style_set_font(&m_ctx, defaultFont->GetFontHandle());
-		m_ctx.style.window.spacing = nk_vec2(0, 0);
-		m_ctx.style.window.padding = nk_vec2(0, 0);
-		nk_color bgColor = nk_rgba(250, 250, 250, 0);
+		m_ctx.style.window.spacing = nk_vec2(5, 5);
+		m_ctx.style.window.padding = nk_vec2(20, 20);
+		nk_color bgColor = nk_rgb(255, 255, 255);
+		m_ctx.style.window.background = nk_rgb(255, 255, 255);
 		m_ctx.style.window.fixed_background = nk_style_item_color(bgColor);
 
-		//Begin drawing
-		int flags = 0 & ~NK_WINDOW_DYNAMIC;
-		nk_window_set_bounds(&m_ctx, "Window", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y));
-		nk_begin(&m_ctx, "Window", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR | flags);
+		//nk_rgb(234, 235, 238);
 
-		struct nk_rect total_space;
-		total_space = nk_window_get_content_region(&m_ctx);
-		nk_layout_row_dynamic(&m_ctx, total_space.h, 1);
-		nk_widget(&total_space, &m_ctx);
-
-		//Draw the nuklear things
-		//nk_fill_rect(nk_window_get_canvas(&m_ctx), nk_rect(20, 20, 200, 200), 5, nk_rgb(188, 174, 118));
-		//nk_draw_text(nk_window_get_canvas(&m_ctx), nk_rect(30, 30, 150, 20), "Text to draw", 12, defaultFont->GetFontHandle(), nk_rgb(188, 174, 118), nk_rgb(0, 0, 0));
-		//nk_fill_rect(nk_window_get_canvas(&m_ctx), nk_rect(250, 20, 100, 100), 0, nk_rgb(0, 0, 255));
-		//nk_fill_circle(nk_window_get_canvas(&m_ctx), nk_rect(20, 250, 100, 100), nk_rgb(255, 0, 0));
-		//nk_fill_triangle(nk_window_get_canvas(&m_ctx), 250, 250, 350, 250, 300, 350, nk_rgb(0, 255, 0));
-		//nk_fill_arc(canvas.painter, 300, 180, 50, 0, 3.141592654f * 3.0f / 4.0f, nk_rgb(255, 255, 0));
-
-
+		//Call Draw commands
 		can->CallDrawCommands(&m_ctx);
 		//End drawing
-		nk_end(&m_ctx);
 		m_ctx.style.window.spacing = can->GetPanelPadding();
 		m_ctx.style.window.padding = can->GetItemSpacing();
 		m_ctx.style.window.fixed_background = can->GetWindowBackground();

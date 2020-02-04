@@ -22,7 +22,7 @@ class CanvasRenderPass : public RenderPass
 	public:
 		CanvasRenderPass(uint32_t priority);
 		void Render() override;
-		~CanvasRenderPass();
+		virtual ~CanvasRenderPass();
 };
 
 #endif
