@@ -1,10 +1,10 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
+#include "PxPhysicsAPI.h"
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
-#include "../physics.h"
+#include "../Physics.h"
 #include "Memory/fnew.h"
-
 namespace physics
 {
 
@@ -120,9 +120,10 @@ namespace physics
 
 		/**
 		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
+		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
-		extern std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>gVehicles;
-		extern std::vector<bool, fmemory::STLAllocator<bool>>gIsVehicleInAir;
+		extern std::vector<physx::PxVehicleWheels*/*fmemory::STLAllocator<physx::PxVehicleWheels*>*/>gVehicles;
+		extern std::vector<bool>gIsVehicleInAir;
 
 		/**
 		* Initiates the vehicle sdk for the physics.

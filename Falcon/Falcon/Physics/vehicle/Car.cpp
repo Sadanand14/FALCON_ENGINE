@@ -252,8 +252,8 @@ namespace physics
 				const physx::PxFilterData& wheelSimFilterData = m_carDesc.wheelSimFilterData;
 
 				//GetCarMesh and create collider for that. 
-				CreateVehicleActor(GetDefaultMaterial(), wheelTransforms, GetDefaultMaterial(), chassisTransform);
-
+				physx::PxRigidDynamic* vehActor = CreateVehicleActor(GetDefaultMaterial(), wheelTransforms, GetDefaultMaterial(), chassisTransform);
+				GetPhysicsScene()->addActor(*vehActor);
 				//Set up the sim data for the wheels.
 				physx::PxVehicleWheelsSimData* wheelsSimData = physx::PxVehicleWheelsSimData::allocate(numWheels);
 				{
@@ -313,7 +313,7 @@ namespace physics
 				}
 				//Create a vehicle from the wheels and drive sim data.
 				m_car = physx::PxVehicleDrive4W::allocate(numWheels);
-				m_car->setup(GetPhysics(), nullptr/*veh4WActor need to create*/, *wheelsSimData, driveSimData, numWheels - 4);
+				m_car->setup(GetPhysics(), vehActor/*veh4WActor need to create*/, *wheelsSimData, driveSimData, numWheels - 4);
 
 				//Configure the userdata
 				ConfigureCarData(m_car, m_carDesc.actorUserData, m_carDesc.shapeUserDatas);
@@ -375,7 +375,7 @@ namespace physics
 					*/
 					localpos = PXMathUtils::Vec3ToPxVec3(wheelTransforms[i].GetPosition());
 					localrot = PXMathUtils::QuatToPxQuat(wheelTransforms[i].GetRotation());
-					wheelShape->setLocalPose(physx::PxTransform(*localpos,*localrot));
+					wheelShape->setLocalPose(physx::PxTransform(*localpos, *localrot)); 
 				}
 
 				//Add the chassis shapes to the actor.

@@ -14,6 +14,7 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 	glm::vec3 pre_sim_pos, lerp_pos, post_sim_pos;
 	glm::quat pre_sim_rot, lerp_rot, post_sim_rot;
 	const physx::PxRigidActor* actor;
+	const physx::PxShape* collider;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entitySet = entity;
 	for (size_t i = 0; i < entity_count; ++i)
 	{
@@ -22,8 +23,20 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 		if (pc)
 		{
 			actor = pc->GetActor();
-			PXMathUtils::PxVec3toVec3(actor->getGlobalPose().p, post_sim_pos);
-			PXMathUtils::PxQuattoQuat(actor->getGlobalPose().q, post_sim_rot);
+			collider = pc->GetCollider();
+			/*if (actor == nullptr) 
+			{
+				PXMathUtils::PxVec3toVec3(actor->getGlobalPose().p, post_sim_pos);
+				PXMathUtils::PxQuattoQuat(actor->getGlobalPose().q, post_sim_rot);
+				
+			}*/
+			//else //Means shape is not exclusive to this actor
+			{
+				PXMathUtils::PxVec3toVec3(physx::PxShapeExt::getGlobalPose(*collider, *actor).p, post_sim_pos);
+				PXMathUtils::PxQuattoQuat(physx::PxShapeExt::getGlobalPose(*collider, *actor).q, post_sim_rot);
+			}
+
+
 			pre_sim_pos = entitySet->at(i)->GetTransform()->GetPosition();
 			pre_sim_rot = entitySet->at(i)->GetTransform()->GetRotation();
 			FL_ENGINE_INFO("New POS= {0},{1},{2}", post_sim_pos.x, post_sim_pos.y, post_sim_pos.z);

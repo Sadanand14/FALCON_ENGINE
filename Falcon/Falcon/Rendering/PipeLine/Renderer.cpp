@@ -100,6 +100,7 @@ void Renderer::CreateDrawStates()
 void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
 	m_projection = projection;
+	Rigidbody* vehActor = physics::CreateDynamicRigidActor();
 	for (u32 i = 0; i < entities->size(); i++)
 	{
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
@@ -109,7 +110,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 		{
 			entities->at(i)->AddComponent<PhysicsComponent>();
 			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
-
+			//Testing for car
 			if (renderComp)
 			{
 				if (i == 0 && false)
@@ -130,14 +131,18 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 				{
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					//physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
+					/*physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
 					
 					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					if(i%2)
 						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					else
 						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-					//delete temp;
+					//delete temp;*/
+
+					
+					physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+
 				}
 			}
 

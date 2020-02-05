@@ -6,7 +6,7 @@
 #include "PhysicsSystem.h"
 #include "PXUtils.h"
 #include "vehicle/Vehicle.h"
-
+#include "vehicle/Car.h"
 #define PVD_HOST "127.0.0.1"
 
 namespace physics
@@ -67,7 +67,7 @@ namespace physics
 
 			// We provide points only, therefore the PxConvexFlag::eCOMPUTE_CONVEX flag must be specified
 			desc.points.data = verts;
-			desc.points.count = 64;
+			desc.points.count = numVerts;
 			desc.points.stride = sizeof(physx::PxVec3);;
 			//desc.quantizedCount = numVerts ;
 			desc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
@@ -148,7 +148,7 @@ namespace physics
 		physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 
 		
-		if (!gPvd->connect(*transport, physx::PxPvdInstrumentationFlag::ePROFILE))
+		if (!gPvd->connect(*transport,  physx::PxPvdInstrumentationFlag::eDEBUG | physx::PxPvdInstrumentationFlag::eMEMORY))
 		{
 			FL_ENGINE_ERROR("ERROR:Failed to connect to pvd");
 		}
@@ -174,14 +174,15 @@ namespace physics
 		}
 #endif
 
-		if (!vehicle::InitVehicleSDK())
+		//Creating default material for the generic use
+		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	/*	if (!vehicle::InitVehicleSDK())
 		{
 			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
-		};
+		};*/
 
 
-		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-		//CreatePlane();
+		CreatePlane();
 		return true;
 	}
 
@@ -199,7 +200,7 @@ namespace physics
 	{
 
 		//Update vehicles
-		vehicle::StepVehicleSDK(1.0f / 60.0f);
+		//vehicle::StepVehicleSDK(1.0f / 60.0f);
 
 		gScene->simulate(1.0f / 60.0f);
 		gScene->fetchResults(true);
@@ -330,6 +331,14 @@ namespace physics
 	}
 
 
+
+	physx::PxRigidBody* CreateDynamicRigidActor() 
+	{ 
+		physx::PxRigidBody* actor = gPhysics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
+		gScene->addActor(*actor);
+		return actor;
+	}
+
 	/**
 	* Creates box collider.
 	* @param float indicating halfX
@@ -368,32 +377,16 @@ namespace physics
 
 
 	
+	
+
+
 	/**
-	* Creates Mesh collider
+	* Createsconvext mesh for the collider
 	* @param vertexData vertices of the mesh
 	* @param stride the length for each vertex
 	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
-	* @return PxShape * for collider shape
+	* @return PxConvexMesh for the 
 	*/
-
-	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount,bool directInsert /*= false*/)
-	{
-		physx::PxConvexMesh* convexMesh = nullptr;
-		std::vector<physx::PxVec3> pxvertarry;
-		pxvertarry.resize(vertCount);
-		
-		for (int i =0;i<vertCount; ++i)
-		{
-			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
-		}
-		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
-		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 32>(vertCount,&pxvertarry[0],stride);
-		
-		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
-		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
-		return shape;
-	}
-
 	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert)
 	{
 		physx::PxConvexMesh* convexMesh = nullptr;
@@ -407,6 +400,55 @@ namespace physics
 		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
 		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 32>(vertCount, &pxvertarry[0], stride);
 		return convexMesh;
+	}
+
+	/**
+	* Creates Mesh collider
+	* @param vertexData vertices of the mesh
+	* @param stride the length for each vertex
+	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
+	* @return PxShape * for collider shape
+	*/
+
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert /*= false*/)
+	{
+		physx::PxConvexMesh* convexMesh = GetConvexMesh(vertexData, stride, vertCount, directInsert);
+
+		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
+		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
+		return shape;
+	}
+
+	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform, const glm::vec3* vertexData, const int& count, const int& stride)
+	{
+
+		try
+		{
+			physx::PxConvexMesh* convexMesh = GetConvexMesh(&vertexData[0], stride, count);
+			physx::PxConvexMeshGeometry geom(convexMesh, scaleDown);
+			physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geom, *gMaterial);
+			shape->setLocalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(transform->GetPosition()), *PXMathUtils::QuatToPxQuat(transform->GetRotation())));
+			return shape;
+		}
+		
+		catch(std::exception& e)
+		{
+			FL_ENGINE_ERROR("ERROR:Failed to create exclusive shape {0}", e.what());
+			return nullptr;
+		}
+	}
+
+
+	void CreateCar(const Mesh* chassiMesh, const Transform chassisTransform, const Mesh* wheelMesh, const Transform* wheelTransforms)
+	{
+		try
+		{
+			//vehicle::Car* test = fmemory::fnew<vehicle::Car>(chassiMesh, chassisTransform, wheelMesh, wheelTransforms);
+		}
+		catch (std::exception & e)
+		{
+			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
+		}
 	}
 
 	void ReleaseCollider(physx::PxRigidActor* ref)

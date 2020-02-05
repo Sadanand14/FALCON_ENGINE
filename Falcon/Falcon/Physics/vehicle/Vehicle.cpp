@@ -10,8 +10,8 @@ namespace physics
 	namespace vehicle
 	{
 
-		std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>gVehicles;
-		std::vector<bool, fmemory::STLAllocator<bool>>gIsVehicleInAir;
+		std::vector<physx::PxVehicleWheels*>gVehicles;
+		std::vector<bool>gIsVehicleInAir;
 		namespace 
 		{
 			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
