@@ -13,8 +13,10 @@ namespace physics
 {
 	namespace vehicle
 	{
-		
-		
+
+
+
+
 
 		struct ActorUserData
 		{
@@ -125,6 +127,8 @@ namespace physics
 			inline void SetIsInAir(bool val) { m_isVehicleInAir = val; }
 		};
 
+		
+		
 	}
 }
 

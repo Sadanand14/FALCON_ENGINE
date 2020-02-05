@@ -4,19 +4,14 @@
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
 #include "../physics.h"
 #include "Memory/fnew.h"
-#include "Car.h"
+
 namespace physics
 {
 
 	namespace vehicle
 	{
 
-		/**
-		* Global vec to maintain all cars.
-		*/
-
-		std::vector<vehicle::Car*, fmemory::STLAllocator<Car*>>gAllCars;
-
+		
 
 		namespace
 		{
@@ -123,8 +118,11 @@ namespace physics
 			};
 		}
 
-
-
+		/**
+		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
+		*/
+		extern std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>gVehicles;
+		extern std::vector<bool, fmemory::STLAllocator<bool>>gIsVehicleInAir;
 
 		/**
 		* Initiates the vehicle sdk for the physics.
@@ -146,7 +144,6 @@ namespace physics
 
 		//Creating friction pairs for simulation calculations.
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial);
-		
 
 
 	}

@@ -205,7 +205,7 @@ namespace physics
 
 		}
 
-
+		
 
 		Car::Car(Mesh* chassiMesh, Transform chassisTransform, Mesh* wheelMesh, Transform* wheelTransforms):
 			m_car(nullptr),
@@ -216,7 +216,7 @@ namespace physics
 			CreateVehicleDescriptionObject();
 			CreateVehicle4W(chassisTransform, wheelTransforms);
 			//Register car to the global car data
-			gAllCars.emplace_back(this);
+			gVehicles.emplace_back(m_car);
 		}
 
 		void Car::CreateVehicleDescriptionObject()
