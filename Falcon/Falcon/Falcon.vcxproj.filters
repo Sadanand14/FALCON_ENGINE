@@ -43,6 +43,12 @@
     <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
+    <ClCompile Include="Rendering\WindowData.cpp" />
+    <ClCompile Include="Rendering\Font.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -115,6 +121,12 @@
     <ClInclude Include="Rendering\stb_dds.h" />
     <ClInclude Include="Core\Events\PassToRenderer.h" />
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
+    <ClInclude Include="Rendering\PipeLine\Canvas.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
+    <ClInclude Include="Rendering\WindowData.h" />
+    <ClInclude Include="Rendering\Font.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
@@ -134,5 +146,7 @@
     <None Include="Rendering\Shader\Transparent.vert" />
     <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
     <None Include="Rendering\Shader\PS_CubeMapShader.frag" />
+    <None Include="Rendering\Shader\UI.vert" />
+    <None Include="Rendering\Shader\UI.frag" />
   </ItemGroup>
 </Project>
