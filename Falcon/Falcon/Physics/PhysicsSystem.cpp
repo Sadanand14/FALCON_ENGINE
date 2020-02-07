@@ -22,15 +22,16 @@ void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::
 		PhysicsComponent* pc = entitySet->at(i)->GetComponent<PhysicsComponent>();
 		if (pc)
 		{
-			actor = pc->GetActor();
 			collider = pc->GetCollider();
-			/*if (actor == nullptr) 
+			actor = collider->getActor();
+			if (actor == nullptr) 
 			{
+				actor = pc->GetActor();
 				PXMathUtils::PxVec3toVec3(actor->getGlobalPose().p, post_sim_pos);
 				PXMathUtils::PxQuattoQuat(actor->getGlobalPose().q, post_sim_rot);
 				
-			}*/
-			//else //Means shape is not exclusive to this actor
+			}
+			else //Means shape is not exclusive to this actor
 			{
 				PXMathUtils::PxVec3toVec3(physx::PxShapeExt::getGlobalPose(*collider, *actor).p, post_sim_pos);
 				PXMathUtils::PxQuattoQuat(physx::PxShapeExt::getGlobalPose(*collider, *actor).q, post_sim_rot);

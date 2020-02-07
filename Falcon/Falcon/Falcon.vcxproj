@@ -131,7 +131,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Physics\PhysicsSystem.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
-    <ClInclude Include="Physics\vehicle\Car.h" />
+    <ClInclude Include="Physics\vehicle\CarAPI.h" />
     <ClInclude Include="Physics\vehicle\Vehicle.h" />
     <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
     <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
@@ -203,7 +203,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
-    <ClCompile Include="Physics\vehicle\Car.cpp" />
+    <ClCompile Include="Physics\vehicle\CarAPI.cpp" />
     <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
     <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />

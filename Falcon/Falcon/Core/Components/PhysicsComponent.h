@@ -152,8 +152,8 @@ public:
 
 	~PhysicsComponent()
 	{
-		physics::ReleaseCollider(m_actor);
-		physics::ReleaseResource(m_collider);
+		//physics::ReleaseCollider(m_actor);
+		//physics::ReleaseResource(m_collider);
 	}
 
 };

@@ -3,16 +3,14 @@
 #include "VehicleSceneQuery.h"
 #include "VehicleFilterShader.h"
 #include "WheelQueryResult.h"
-#include "Car.h"
+#include "CarAPI.h"
 namespace physics
 {
 
 	namespace vehicle
 	{
-
-		std::vector<physx::PxVehicleWheels*>gVehicles;
-		std::vector<bool>gIsVehicleInAir;
-		namespace 
+		std::vector<Car*>gCars;
+		namespace
 		{
 			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
 			VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
@@ -57,7 +55,7 @@ namespace physics
 					3. Create a surface to drive on? Unknown: how terrain will work ?
 					4. Create Vehicle - Done by car API
 
-					Additional support needed for: 
+					Additional support needed for:
 					1. Vehicle Batched querries
 					2. Vehicle creation
 					3. Tires and materials API
@@ -101,7 +99,7 @@ namespace physics
 				FL_ENGINE_ERROR("ERROR: Failed to release the vehicle sdk. {0}", e.what());
 				return false;
 			}
-			
+
 		}
 
 
@@ -109,17 +107,17 @@ namespace physics
 
 		void StepVehicleSDK(float dt)
 		{
-			
-			/*gVehicles.resize(gAllCars.size());
-			for (uint8_t itr = 0; itr < gAllCars.size(); ++itr)
+			std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>gVehicles;
+			gVehicles.resize(gCars.size());
+			for (uint8_t itr = 0; itr < gCars.size(); ++itr)
 			{
-				gVehicles.emplace_back(gAllCars[itr]->GetDriveComponent());
-			}*/
+				gVehicles.emplace_back(gCars[itr]->GetDriveComponent());
+			}
 
 			//Raycasts
 			physx::PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 			const uint32_t raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-			PxVehicleSuspensionRaycasts(gBatchQuery, gVehicles.size(), &gVehicles[0], raycastResultsSize, raycastResults);
+			PxVehicleSuspensionRaycasts(gBatchQuery, gCars.size(), &gVehicles[0], raycastResultsSize, raycastResults);
 
 
 			//vehicle update
@@ -137,11 +135,11 @@ namespace physics
 			physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gVehicles.size(), &gVehicles[0], &vehicleQueryResults[0]);
 
 			//Needed for movement handling
-			for (uint8_t itr = 0; itr < gVehicles.size(); ++itr)
+			for (uint8_t itr = 0; itr < gCars.size(); ++itr)
 			{
-				gIsVehicleInAir[itr]= gVehicles[itr]->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(vehicleQueryResults[itr]);
+				gCars[itr]->m_isInAir = gCars[itr]->m_car->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(vehicleQueryResults[itr]);
 			}
-		
+
 			//Scene update
 		}
 
@@ -170,6 +168,21 @@ namespace physics
 				}
 			}
 			return surfaceTirePairs;
+		}
+
+
+
+		/**
+		* Car structure constructor
+		*/
+		Car::Car(physx::PxRigidDynamic* vehActor)
+			: m_car(nullptr),
+			  m_isInAir(false)
+		{
+			CreateVehicleDescriptionObject(this);
+			CreateVehicle4W(this, vehActor);
+			//Register car to the global car data
+			gCars.emplace_back(this);
 		}
 	}
 }

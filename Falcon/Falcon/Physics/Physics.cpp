@@ -6,7 +6,7 @@
 #include "PhysicsSystem.h"
 #include "PXUtils.h"
 #include "vehicle/Vehicle.h"
-#include "vehicle/Car.h"
+#include "vehicle/CarAPI.h"
 #define PVD_HOST "127.0.0.1"
 
 namespace physics
@@ -176,10 +176,10 @@ namespace physics
 
 		//Creating default material for the generic use
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	/*	if (!vehicle::InitVehicleSDK())
+		if (!vehicle::InitVehicleSDK())
 		{
 			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
-		};*/
+		};
 
 
 		CreatePlane();
@@ -236,7 +236,7 @@ namespace physics
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
 
 			vehicle::ReleaseVehcileSDK();
-			//PX_RELEASE(gGround);
+			PX_RELEASE(gGround);
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
@@ -312,13 +312,8 @@ namespace physics
 		physx::PxTransform localTm(*localpos, *localrot);
 
 		physx::PxRigidDynamic* body = physx::PxCreateDynamic(*gPhysics, localTm, *collider, 10.0f);
-		//physx::PxCreateDynamic(*gPhysics, localTm, physx::PxSphereGeometry(5), *gMaterial, 10.0f);
-
-		//PxCreateDynamic(*gPhysics, localTm, physx::PxSphereGeometry(5), *gMaterial, 10.0f);
 		if (body)
 		{
-			/*body->setMass(1.0f);
-			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);*/
 			gScene->addActor(*body);
 			return body;
 		}
@@ -330,7 +325,9 @@ namespace physics
 
 	}
 
-
+	/**
+	* Creates an empty rigid dynamic body which can be used to define multiple colliders.
+	*/
 
 	physx::PxRigidBody* CreateDynamicRigidActor() 
 	{ 

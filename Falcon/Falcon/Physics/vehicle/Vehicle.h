@@ -5,13 +5,13 @@
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
 #include "../Physics.h"
 #include "Memory/fnew.h"
+
 namespace physics
 {
 
 	namespace vehicle
 	{
 
-		
 
 		namespace
 		{
@@ -118,13 +118,9 @@ namespace physics
 			};
 		}
 
-		/**
-		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
-		* As custom allocators are not initialized before these allocations, I am using default allocators.
-		*/
-		extern std::vector<physx::PxVehicleWheels*/*fmemory::STLAllocator<physx::PxVehicleWheels*>*/>gVehicles;
-		extern std::vector<bool>gIsVehicleInAir;
+	
 
+		
 		/**
 		* Initiates the vehicle sdk for the physics.
 		**/
@@ -147,6 +143,100 @@ namespace physics
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial);
 
 
+
+
+		/**
+		* Car data structures for holding car data.
+		*/
+
+		struct ActorUserData
+		{
+			ActorUserData()
+				: vehicle(NULL),
+				actor(NULL)
+			{
+			}
+
+			const physx::PxVehicleWheels* vehicle;
+			const physx::PxActor* actor;
+		};
+
+		struct ShapeUserData
+		{
+			ShapeUserData()
+				: isWheel(false),
+				wheelId(0xffffffff)
+			{
+			}
+
+			bool isWheel;
+			uint32_t wheelId;
+		};
+
+
+		struct VehicleDesc
+		{
+			float chassisMass;
+			physx::PxVec3 chassisDims;
+			physx::PxVec3 chassisMOI;
+			physx::PxVec3 chassisCMOffset;
+			physx::PxMaterial* chassisMaterial;
+			physx::PxFilterData chassisSimFilterData;  //word0 = collide type, word1 = collide against types, word2 = physx::PxPairFlags
+
+			float wheelMass;
+			float wheelWidth;
+			float wheelRadius;
+			float wheelMOI;
+			physx::PxMaterial* wheelMaterial;
+			float numWheels;
+			physx::PxFilterData wheelSimFilterData;	//word0 = collide type, word1 = collide against types, word2 = physx::PxPairFlags
+
+			ActorUserData* actorUserData;
+			ShapeUserData* shapeUserDatas;
+
+
+			VehicleDesc()
+				: chassisMass(0.0f),
+				chassisDims(physx::PxVec3(0.0f, 0.0f, 0.0f)),
+				chassisMOI(physx::PxVec3(0.0f, 0.0f, 0.0f)),
+				chassisCMOffset(physx::PxVec3(0.0f, 0.0f, 0.0f)),
+				chassisMaterial(NULL),
+				wheelMass(0.0f),
+				wheelWidth(0.0f),
+				wheelRadius(0.0f),
+				wheelMOI(0.0f),
+				wheelMaterial(NULL),
+				actorUserData(NULL),
+				shapeUserDatas(NULL)
+			{
+			}
+		};
+
+
+		struct Car
+		{
+
+			VehicleDesc m_carDesc;
+			physx::PxVehicleDrive4W* m_car;
+			bool m_isInAir;
+			Car(physx::PxRigidDynamic* vehActor);
+			
+			physx::PxVehicleDrive4W* GetDriveComponent() { return m_car; }
+
+			~Car()
+			{
+				PX_RELEASE(m_car);
+				//m_car->free();
+
+			}
+		};
+		
+		/**
+		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
+		* As custom allocators are not initialized before these allocations, I am using default allocators.
+		*/
+
+		extern std::vector<Car*>gCars;
 	}
 
 

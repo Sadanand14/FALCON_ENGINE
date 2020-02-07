@@ -45,7 +45,7 @@
     <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
     <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
     <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp" />
-    <ClCompile Include="Physics\vehicle\Car.cpp" />
+    <ClCompile Include="Physics\vehicle\CarAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -118,7 +118,7 @@
     <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
     <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
     <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
-    <ClInclude Include="Physics\vehicle\Car.h" />
+    <ClInclude Include="Physics\vehicle\CarAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
