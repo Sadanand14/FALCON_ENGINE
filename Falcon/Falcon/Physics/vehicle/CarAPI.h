@@ -26,6 +26,19 @@ namespace physics
 		void CreateVehicle4W(Car* car,physx::PxRigidDynamic* vehActor);
 		void SetupVehicleActorData(Car* car,physx::PxRigidDynamic* vehActor);
 		void ConfigureCarData(physx::PxVehicleWheels* vehicle, ActorUserData* actorUserData, ShapeUserData* shapeUserDatas);
+		void IncrementDrivingMode(Car* car, const float timestep);
+
+		/**
+		* Methods to pass on inuts to phyX.
+		*/
+		void startAccelerateForwardsMode(Car* car);
+		void startAccelerateReverseMode(Car* car);
+		void startBrakeMode(Car* car);
+		void startTurnHardLeftMode(Car* car);
+		void startTurnHardRightMode(Car* car);
+		void startHandbrakeTurnLeftMode(Car* car);
+		void startHandbrakeTurnRightMode(Car* car);
+		void releaseAllControls(Car* car);
 	}
 }
 

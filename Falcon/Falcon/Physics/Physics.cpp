@@ -200,7 +200,7 @@ namespace physics
 	{
 
 		//Update vehicles
-		//vehicle::StepVehicleSDK(1.0f / 60.0f);
+		vehicle::StepVehicleSDK(1.0f / 60.0f);
 
 		gScene->simulate(1.0f / 60.0f);
 		gScene->fetchResults(true);
@@ -329,9 +329,9 @@ namespace physics
 	* Creates an empty rigid dynamic body which can be used to define multiple colliders.
 	*/
 
-	physx::PxRigidBody* CreateDynamicRigidActor() 
+	physx::PxRigidDynamic* CreateDynamicRigidActor() 
 	{ 
-		physx::PxRigidBody* actor = gPhysics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
+		physx::PxRigidDynamic* actor = gPhysics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
 		gScene->addActor(*actor);
 		return actor;
 	}
@@ -436,11 +436,11 @@ namespace physics
 	}
 
 
-	void CreateCar(const Mesh* chassiMesh, const Transform chassisTransform, const Mesh* wheelMesh, const Transform* wheelTransforms)
+	void CreateCar(physx::PxRigidDynamic* vehActor)
 	{
 		try
 		{
-			//vehicle::Car* test = fmemory::fnew<vehicle::Car>(chassiMesh, chassisTransform, wheelMesh, wheelTransforms);
+			vehicle::CreateCar(vehActor);
 		}
 		catch (std::exception & e)
 		{

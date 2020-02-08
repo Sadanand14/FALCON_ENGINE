@@ -205,8 +205,70 @@ namespace physics
 
 		}
 
-		
+		/**
+		* Nvidia'a Sample code to itereate through multiple driving routines. Being used here for testing.
+		* Will be removed once we have inputs coming in via Falcon's APIs.
+		*
+		*/
+		void IncrementDrivingMode(Car* car,const float timestep)
+		{
+			gVehicleModeTimer += timestep;
+			if (gVehicleModeTimer > gVehicleModeLifetime)
+			{
+				//If the mode just completed was eDRIVE_MODE_ACCEL_REVERSE then switch back to forward gears.
+				if (eDRIVE_MODE_ACCEL_REVERSE == gDriveModeOrder[gVehicleOrderProgress])
+				{
+					car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
+				}
 
+				//Increment to next driving mode.
+				gVehicleModeTimer = 0.0f;
+				gVehicleOrderProgress++;
+				releaseAllControls(car);
+
+				//If we are at the end of the list of driving modes then start again.
+				if (eDRIVE_MODE_NONE == gDriveModeOrder[gVehicleOrderProgress])
+				{
+					gVehicleOrderProgress = 0;
+					gVehicleOrderComplete = true;
+				}
+
+				//Start driving in the selected mode.
+				DriveMode eDriveMode = gDriveModeOrder[gVehicleOrderProgress];
+				switch (eDriveMode)
+				{
+				case eDRIVE_MODE_ACCEL_FORWARDS:
+					startAccelerateForwardsMode(car);
+					break;
+				case eDRIVE_MODE_ACCEL_REVERSE:
+					startAccelerateReverseMode(car);
+					break;
+				case eDRIVE_MODE_HARD_TURN_LEFT:
+					startTurnHardLeftMode(car);
+					break;
+				case eDRIVE_MODE_HANDBRAKE_TURN_LEFT:
+					startHandbrakeTurnLeftMode(car);
+					break;
+				case eDRIVE_MODE_HARD_TURN_RIGHT:
+					startTurnHardRightMode(car);
+					break;
+				case eDRIVE_MODE_HANDBRAKE_TURN_RIGHT:
+					startHandbrakeTurnRightMode(car);
+					break;
+				case eDRIVE_MODE_BRAKE:
+					startBrakeMode(car);
+					break;
+				case eDRIVE_MODE_NONE:
+					break;
+				};
+
+				//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
+				if (eDRIVE_MODE_ACCEL_REVERSE == gDriveModeOrder[gVehicleOrderProgress])
+				{
+					car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
+				}
+			}
+		}
 
 
 		void CreateVehicleDescriptionObject(Car* car)
@@ -305,6 +367,15 @@ namespace physics
 				car->m_car = physx::PxVehicleDrive4W::allocate(numWheels);
 				car->m_car->setup(GetPhysics(), vehActor/*veh4WActor need to create*/, *wheelsSimData, driveSimData, numWheels - 4);
 
+
+				//Set the vehicle to rest in first gear.
+				//Set the vehicle to use auto-gears.
+				car->m_car->setToRestState();
+				car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
+				car->m_car->mDriveDynData.setUseAutoGears(true);
+
+				startBrakeMode(car);
+
 				//Configure the userdata
 				ConfigureCarData(car->m_car, car->m_carDesc.actorUserData, car->m_carDesc.shapeUserDatas);
 
@@ -340,7 +411,6 @@ namespace physics
 				vehActor->setMass(car->m_carDesc.chassisMass);
 				vehActor->setMassSpaceInertiaTensor(car->m_carDesc.chassisMOI);
 				vehActor->setCMassLocalPose(physx::PxTransform(car->m_carDesc.chassisCMOffset, physx::PxQuat(physx::PxIdentity)));
-
 				return;
 			}
 
@@ -375,6 +445,121 @@ namespace physics
 				}
 			}
 
+		}
+
+
+		void startAccelerateForwardsMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalAccel(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogAccel(1.0f);
+			}
+		}
+
+		void startAccelerateReverseMode(Car* car)
+		{
+			car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
+
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalAccel(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogAccel(1.0f);
+			}
+		}
+
+		void startBrakeMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalBrake(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogBrake(1.0f);
+			}
+		}
+
+		void startTurnHardLeftMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalAccel(true);
+				car->m_vehicleInputData.setDigitalSteerLeft(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogAccel(true);
+				car->m_vehicleInputData.setAnalogSteer(-1.0f);
+			}
+		}
+
+		void startTurnHardRightMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalAccel(true);
+				car->m_vehicleInputData.setDigitalSteerRight(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogAccel(1.0f);
+				car->m_vehicleInputData.setAnalogSteer(1.0f);
+			}
+		}
+
+		void startHandbrakeTurnLeftMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalSteerLeft(true);
+				car->m_vehicleInputData.setDigitalHandbrake(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogSteer(-1.0f);
+				car->m_vehicleInputData.setAnalogHandbrake(1.0f);
+			}
+		}
+
+		void startHandbrakeTurnRightMode(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalSteerRight(true);
+				car->m_vehicleInputData.setDigitalHandbrake(true);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogSteer(1.0f);
+				car->m_vehicleInputData.setAnalogHandbrake(1.0f);
+			}
+		}
+
+
+		void releaseAllControls(Car* car)
+		{
+			if (gMimicKeyInputs)
+			{
+				car->m_vehicleInputData.setDigitalAccel(false);
+				car->m_vehicleInputData.setDigitalSteerLeft(false);
+				car->m_vehicleInputData.setDigitalSteerRight(false);
+				car->m_vehicleInputData.setDigitalBrake(false);
+				car->m_vehicleInputData.setDigitalHandbrake(false);
+			}
+			else
+			{
+				car->m_vehicleInputData.setAnalogAccel(0.0f);
+				car->m_vehicleInputData.setAnalogSteer(0.0f);
+				car->m_vehicleInputData.setAnalogBrake(0.0f);
+				car->m_vehicleInputData.setAnalogHandbrake(0.0f);
+			}
 		}
 	}
 }

@@ -100,7 +100,7 @@ void Renderer::CreateDrawStates()
 void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
 	m_projection = projection;
-	Rigidbody* vehActor = physics::CreateDynamicRigidActor();
+	RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
 	for (u32 i = 0; i < entities->size(); i++)
 	{
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
@@ -153,7 +153,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 			}
 		}
 	}
-	 
+	physics::CreateCar(vehActor);
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(2));

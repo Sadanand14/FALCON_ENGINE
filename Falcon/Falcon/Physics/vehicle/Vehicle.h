@@ -64,7 +64,7 @@ namespace physics
 				}
 			};
 
-			physx::PxVehicleDrive4WRawInputData gVehicleInputData;
+			
 
 			enum DriveMode
 			{
@@ -116,10 +116,14 @@ namespace physics
 				//NORMAL,	WORN
 				{1.00f,		0.1f}//TARMAC
 			};
+
+			float gVehicleModeTimer;
+			float gVehicleModeLifetime;
+			int gVehicleOrderProgress;
+			bool gVehicleOrderComplete;
 		}
 
 	
-
 		
 		/**
 		* Initiates the vehicle sdk for the physics.
@@ -131,7 +135,11 @@ namespace physics
 		*/
 		bool ReleaseVehcileSDK();
 
-
+		/**
+		* Car creation/Deletion API
+		*/
+		void CreateCar(physx::PxRigidDynamic* vehActor);
+		void ReleaseCarMemory();
 
 		/**
 		* Vehicle Update
@@ -219,13 +227,13 @@ namespace physics
 			VehicleDesc m_carDesc;
 			physx::PxVehicleDrive4W* m_car;
 			bool m_isInAir;
+			physx::PxVehicleDrive4WRawInputData m_vehicleInputData;
+
 			Car(physx::PxRigidDynamic* vehActor);
-			
-			physx::PxVehicleDrive4W* GetDriveComponent() { return m_car; }
 
 			~Car()
 			{
-				PX_RELEASE(m_car);
+				//PX_RELEASE(m_car);
 				//m_car->free();
 
 			}
@@ -237,6 +245,8 @@ namespace physics
 		*/
 
 		extern std::vector<Car*>gCars;
+		extern bool gMimicKeyInputs;
+
 	}
 
 

@@ -4,7 +4,7 @@
 namespace gameLoop
 {
 	//Camera
-	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
+	Camera camera(glm::vec3(0.0f, 10.0f, 10.0f));
 
 	//Camera Setup
 	float lastX = 0.0f;

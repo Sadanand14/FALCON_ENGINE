@@ -6,9 +6,11 @@
 #include "TransformComponent.h"
 #include "glm/vec3.hpp"
 
-typedef physx::PxRigidActor Rigidbody;
-typedef physx::PxShape      Collider;
-typedef physx::PxConvexMesh ConvexMesh;
+typedef physx::PxRigidActor   Rigidbody;
+typedef physx::PxRigidDynamic RigidbodyDynamic;
+typedef physx::PxRigidStatic  RigidbodyStatic;
+typedef physx::PxShape        Collider;
+typedef physx::PxConvexMesh   ConvexMesh;
 /**
 *Structure Definition for holding data needed for calculating physics events on the entity.
 */

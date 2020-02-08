@@ -53,7 +53,7 @@ namespace physics
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);
 	physx::PxRigidDynamic* CreateDynamicRigidActor(const Transform* transform, physx::PxShape* collider);
-	physx::PxRigidBody* CreateDynamicRigidActor() ;
+	physx::PxRigidDynamic* CreateDynamicRigidActor() ;
 	void ReleaseCollider(physx::PxRigidActor* ref);
 
 	template<typename T>
@@ -78,7 +78,8 @@ namespace physics
 	* API to Vehicle SDK
 	*/
 
-	void CreateCar(const Mesh* chassiMesh, const Transform chassisTransform, const Mesh* wheelMesh, const Transform* wheelTransforms);
+	void CreateCar(physx::PxRigidDynamic* vehActor);
+
 	//void HandleCarMovement();
 }
 
