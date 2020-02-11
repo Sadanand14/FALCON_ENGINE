@@ -23,24 +23,6 @@ void Canvas::Setup()
 	m_material = fmemory::fnew<Material>();
 	m_material->m_shader = fmemory::fnew<Shader>("Rendering/Shader/UI.vert", "Rendering/Shader/UI.frag");
 
-	//int w;
-	//int h;
- //
-	////Create texture atlas
-	//nk_font_atlas_init_default(&m_atlas);
-	//nk_font_atlas_begin(&m_atlas);
-	//m_font = nk_font_atlas_add_default(&m_atlas, 13, 0);
-	//m_image = nk_font_atlas_bake(&m_atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
- //
-	////Make opengl texture
-	//glGenTextures(1, &m_fontTex.textureID);
-	//glBindTexture(GL_TEXTURE_2D, m_fontTex.textureID);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
- //
-	//nk_font_atlas_end(&m_atlas, nk_handle_id((int)m_fontTex.textureID), &m_null);
-
 	//Init command buffer
 	nk_buffer_init_default(&m_cmds);
 
@@ -72,4 +54,5 @@ void Canvas::CallDrawCommands(nk_context* ctx)
 Canvas::~Canvas()
 {
 	nk_buffer_free(&m_cmds);
+	fmemory::fdelete(m_material);
 }

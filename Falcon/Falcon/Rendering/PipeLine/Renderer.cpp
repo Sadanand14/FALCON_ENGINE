@@ -108,7 +108,13 @@ Renderer::~Renderer()
 
 	for(auto pass : m_renderPasses)
 	{
-		fmemory::fdelete(pass);
+		CanvasRenderPass* crp = nullptr;
+		crp = dynamic_cast<CanvasRenderPass*>(pass);
+
+		if(crp)
+			fmemory::fdelete(crp);
+		else
+			fmemory::fdelete(pass);
 	}
 
 	RenderEventSystem::ShutDown();
