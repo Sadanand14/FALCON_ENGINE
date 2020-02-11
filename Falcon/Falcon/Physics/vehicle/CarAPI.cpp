@@ -310,7 +310,7 @@ namespace physics
 				physx::PxVehicleWheelsSimData* wheelsSimData = physx::PxVehicleWheelsSimData::allocate(numWheels);
 				{
 					//Compute the wheel center offsets from the origin.
-					physx::PxVec3 wheelCenterActorOffsets[PX_MAX_NB_WHEELS];
+					physx::PxVec3 wheelCenterActorOffsets[4];
 					const float frontZ = chassisDims.z * 0.3f;
 					const float rearZ = -chassisDims.z * 0.3f;
 					car_data::ComputeWheelCenterActorOffsets4W(frontZ, rearZ, chassisDims, wheelWidth, wheelRadius, numWheels, wheelCenterActorOffsets);
@@ -335,8 +335,8 @@ namespace physics
 
 					//Engine
 					physx::PxVehicleEngineData engine;
-					engine.mPeakTorque = 500.0f;
-					engine.mMaxOmega = 600.0f;//approx 6000 rpm
+					engine.mPeakTorque = 10000.0f;//50000.0f;
+					engine.mMaxOmega = 20000.0f;//60000.0f;//approx 6000 rpm
 					driveSimData.setEngineData(engine);
 
 					//Gears
@@ -365,7 +365,7 @@ namespace physics
 				}
 				//Create a vehicle from the wheels and drive sim data.
 				car->m_car = physx::PxVehicleDrive4W::allocate(numWheels);
-				car->m_car->setup(GetPhysics(), vehActor/*veh4WActor need to create*/, *wheelsSimData, driveSimData, numWheels - 4);
+				car->m_car->setup(GetPhysics(), vehActor/*veh4WActor need to create*/, *wheelsSimData, driveSimData, 0);// numWheels - 4);
 
 
 				//Set the vehicle to rest in first gear.

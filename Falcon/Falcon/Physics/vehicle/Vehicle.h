@@ -138,7 +138,7 @@ namespace physics
 		/**
 		* Car creation/Deletion API
 		*/
-		void CreateCar(physx::PxRigidDynamic* vehActor);
+		void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 		void ReleaseCarMemory();
 
 		/**
@@ -229,13 +229,12 @@ namespace physics
 			bool m_isInAir;
 			physx::PxVehicleDrive4WRawInputData m_vehicleInputData;
 
-			Car(physx::PxRigidDynamic* vehActor);
+			Car(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 
 			~Car()
 			{
 				//PX_RELEASE(m_car);
 				//m_car->free();
-
 			}
 		};
 		

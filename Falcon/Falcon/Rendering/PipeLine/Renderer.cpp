@@ -101,6 +101,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 {
 	m_projection = projection;
 	RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 	for (u32 i = 0; i < entities->size(); i++)
 	{
 		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
@@ -118,31 +119,14 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
 					//physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-					
-					//physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-				}
-				else if (i == entities->size()-1 && false)
-				{
-					//physComp->SetBoxCollider(100, 1, 100);
+
+					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 				}
 				else
 				{
-					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					/*physComp->SetSphereCollider(0.5);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-					
-					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					if(i%2)
-						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-					else
-						physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-					//delete temp;*/
-
-					
 					physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
-
 				}
 			}
 
@@ -153,7 +137,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 			}
 		}
 	}
-	physics::CreateCar(vehActor);
+	physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(2));

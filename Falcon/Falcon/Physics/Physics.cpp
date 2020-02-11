@@ -182,7 +182,7 @@ namespace physics
 		};
 
 
-		CreatePlane();
+		//CreatePlane();
 		return true;
 	}
 
@@ -217,7 +217,7 @@ namespace physics
 	void CreatePhysicsScene()
 	{ 
 		physx::PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-		sceneDesc.gravity = physx::PxVec3(0.0f, -2.0f, 0.0f);
+		sceneDesc.gravity = physx::PxVec3(0.0f, -9.0f, 0.0f);
 		gDispatcher = physx::PxDefaultCpuDispatcherCreate(1);
 		sceneDesc.cpuDispatcher = gDispatcher;
 		sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
@@ -236,7 +236,7 @@ namespace physics
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
 
 			vehicle::ReleaseVehcileSDK();
-			PX_RELEASE(gGround);
+			if(gGround) PX_RELEASE(gGround);
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
@@ -279,7 +279,6 @@ namespace physics
 	*/
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider)
 	{
-		//physx::PxShape* shape = gPhysics->createShape(physx::PxBoxGeometry(2.0f, 2.0f, 2.0f), *gMaterial);
 		physx::PxVec3* localpos = PXMathUtils::Vec3ToPxVec3(transform->GetPosition());
 		physx::PxQuat* localrot = PXMathUtils::QuatToPxQuat(transform->GetRotation());
 		physx::PxTransform localTm(*localpos, *localrot);
@@ -436,11 +435,11 @@ namespace physics
 	}
 
 
-	void CreateCar(physx::PxRigidDynamic* vehActor)
+	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform)
 	{
 		try
 		{
-			vehicle::CreateCar(vehActor);
+			vehicle::CreateCar(vehActor,startTransform);
 		}
 		catch (std::exception & e)
 		{

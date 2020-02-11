@@ -78,7 +78,7 @@ namespace physics
 	* API to Vehicle SDK
 	*/
 
-	void CreateCar(physx::PxRigidDynamic* vehActor);
+	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 
 	//void HandleCarMovement();
 }
