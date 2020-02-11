@@ -1,8 +1,17 @@
 #include "AssetManager.h"
 #include "PipeLine/Mesh.h"
+#include "Font.h"
 #include <Log.h>
 #include <filesystem>
 #include <algorithm>
+
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
 
 TextureType AssetManager::m_lastTextureType;
 Mesh* AssetManager::m_cubeMesh = nullptr;
@@ -10,6 +19,19 @@ Shader* AssetManager::m_cubeShader = nullptr;
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
+boost::unordered_map<std::string, Font*> AssetManager::m_fonts;
+
+void AssetManager::CreateDefaultFont()
+{
+	nk_font_atlas atlas;
+	nk_font_atlas_init_default(&atlas);
+	nk_font_atlas_begin(&atlas);
+
+	nk_font* font = nk_font_atlas_add_default(&atlas, 13, 0);
+
+	Font* f = fmemory::fnew<Font>(atlas, font);
+	m_fonts["default"] = f;
+}
 
 /**
  * Loads a mesh into the scene
@@ -559,6 +581,36 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	return envCubemap;
 }
 
+Font* AssetManager::GetFont(std::string const &path)
+{
+	//Return the font if it is already loaded
+	auto fnt = m_fonts.find(path);
+	if (fnt != m_fonts.end())
+		return fnt->second;
+
+	//Load material if it doesn't exist
+	Font* font = LoadFont(path);
+	m_fonts[path] = font;
+	return font;
+}
+
+Font* AssetManager::LoadFont(const std::string& path)
+{
+	struct nk_font_config cfg = nk_font_config(0);
+	cfg.oversample_h = 3;
+	cfg.oversample_v = 2;
+
+	nk_font_atlas atlas;
+	nk_font* font;
+
+	nk_font_atlas_init_default(&atlas);
+	nk_font_atlas_begin(&atlas);
+	font = nk_font_atlas_add_from_file(&atlas, path.c_str(), 14.0f, &cfg);
+
+	Font* fnt = fmemory::fnew<Font>(atlas, font);
+	return fnt;
+}
+
 /**
 * Assetmanager member function responsible for cleaning up all resources held by the AssetManager
 */
@@ -574,6 +626,11 @@ void AssetManager::Clean()
 	for (auto it = m_materials.begin(); it != m_materials.end(); it++)
 	{
 		fmemory::fdelete<Material>(it->second);
+	}
+
+	for (auto it = m_fonts.begin(); it != m_fonts.end(); it++)
+	{
+		fmemory::fdelete<Font>(it->second);
 	}
 }
 

@@ -145,7 +145,7 @@ namespace gameLoop
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			camera.ProcessKeyboard(LEFT, deltaTime);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(RIGHT, deltaTime);		
+			camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos)

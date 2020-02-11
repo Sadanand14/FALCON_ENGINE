@@ -28,3 +28,8 @@ void RenderPass::Render()
 	glBlendEquation(m_blendEquation);
 	glBlendFunc(m_srcBlendFunc, m_dstBlendFunc);
 }
+
+RenderPass::~RenderPass()
+{
+
+}

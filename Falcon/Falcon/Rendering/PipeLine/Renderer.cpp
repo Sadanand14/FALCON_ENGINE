@@ -1,10 +1,31 @@
 #include "Renderer.h"
+
+#include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
+
+//Included files
+//Camera
+#include <Camera.h>
+
+//Render passes
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
+#include "CanvasRenderPass.h"
+#include "SkyRenderPass.h"
+
+//Events
 #include <Events/PassToRenderer.h>
 #include <Events/EventManager.h>
 #include <Events/PassingMeshEvent.h>
-#include <boost/shared_ptr.hpp>
-#include "SkyRenderPass.h"
+
+//Entities
+#include <EntityInterface.h>
+
+//TODO: REMOVE
+#include "Canvas.h"
+#include "CanvasItems/Label.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -51,8 +72,8 @@ void RenderEventSystem::ProcessEvents()
 }
 
 /**
-* Function to Subscribe to all the event types listed in the local subscribe list.
-*/
+ * Function to Subscribe to all the event types listed in the local subscribe list.
+ */
 void RenderEventSystem::SubscribeToEvents()
 {
 	for (unsigned int i = 0; i < subscribedList.size(); i++)
@@ -82,9 +103,18 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	fmemory::fdelete(can);
+	fmemory::fdelete(l);
+
 	for(auto pass : m_renderPasses)
 	{
-		fmemory::fdelete(pass);
+		CanvasRenderPass* crp = nullptr;
+		crp = dynamic_cast<CanvasRenderPass*>(pass);
+
+		if(crp)
+			fmemory::fdelete(crp);
+		else
+			fmemory::fdelete(pass);
 	}
 
 	RenderEventSystem::ShutDown();
@@ -108,9 +138,11 @@ void Renderer::CreateDrawStates()
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
-	m_RES->ProcessEvents();
-}
+	//m_RES->ProcessEvents();
 
+	can = fmemory::fnew<Canvas>();
+	can->Setup();
+}
 
 /**
 *Function to Set the relevant data in the draw states.
@@ -143,7 +175,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
 					renderComp->m_mesh->GetVertexPositionsArray(temp);
 					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-					
+
 					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 					//delete temp;
@@ -162,6 +194,16 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
+	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
+
+	l = fmemory::fnew<Label>("Test Text");
+	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
+	l->SetColor(nk_rgb(0, 0, 0));
+	l->SetWrap(true);
+	l->SetBounds(nk_rect(30, 30, 200, 60));
+	l->SetText(std::string("This is a test"));
+	static_cast<Canvas*>(can)->AddCanvasItem(l);
+	m_renderPasses[4]->QueueRenderable(can);
 }
 
 /**
@@ -173,8 +215,10 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
  *@param[in] A float indicating delta time for the current frame.
  */
 
+float temp = 0.0f;
 void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
+	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;
 
@@ -222,15 +266,16 @@ void Renderer::Draw(Camera &cam)
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (m_skyMesh != nullptr) 
+	if (m_skyMesh != nullptr)
 	{
 		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
 		m_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
 
-	boost::container::flat_map<float, int> distanceEntityMap;
+
 	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
 	m_renderPasses[0]->QueueRenderable(m_terrainMesh);
+	boost::container::flat_map<float, int> distanceEntityMap;
 	for (u32 i = 0; i < m_entities->size(); i++)
 	{
 		Transform* trans = m_entities->at(i)->GetTransform();

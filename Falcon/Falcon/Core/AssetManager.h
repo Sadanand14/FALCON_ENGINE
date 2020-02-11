@@ -33,8 +33,18 @@
 
 #include <Memory/fmemory.h>
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
+
 class Mesh;
 struct Vertex;
+class Font;
+
 /**
 * A class for defining procedures of extraction of asset data from external files and storing them in the engine.
 * Most Methods are primarily static and this class stores no data.
@@ -47,7 +57,8 @@ private:
 	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
 	static boost::unordered_map<std::string, Material*> m_materials;
-	
+	static boost::unordered_map<std::string, Font*> m_fonts;
+
 	// Process nodes
 	static GLuint HDRtoCubemap(GLuint hdrTex);
 	//static GLuint texture_loadDDS(const char* path);
@@ -57,13 +68,15 @@ private:
 	// The required info is returned as a Texture struct.
 
 public:
-	
+	static void CreateDefaultFont();
 	static Material* GetMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
+	static Font* GetFont(const std::string& path);
 	static Mesh* LoadTerrain(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
 	static u32 LoadTexture(std::string const& path);
 	static Material* LoadMaterial(std::string const& path);
+	static Font* LoadFont(std::string const &path);
 	static void Clean();
 };
 

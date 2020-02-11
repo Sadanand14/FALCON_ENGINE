@@ -48,6 +48,7 @@ IncludeDirs["physxCcd"] ="Falcon/vendor/include/Physx/physx/source/geomutils/src
 IncludeDirs["fmodcore"] ="Falcon/vendor/FMODStudioAPI/api/core/inc/";
 IncludeDirs["fmodbank"] ="Falcon/vendor/FMODStudioAPI/api/fsbank/inc/";
 IncludeDirs["fmodstudio"] ="Falcon/vendor/FMODStudioAPI/api/studio/inc/";
+IncludeDirs["nuklear"] ="Falcon/vendor/include/nuklear";
 
 
 
@@ -143,7 +144,8 @@ project "Falcon"
 		"%{IncludeDirs.physxCcd}",
 		"%{IncludeDirs.fmodcore}",
 		"%{IncludeDirs.fmodbank}",
-		"%{IncludeDirs.fmodstudio}"
+		"%{IncludeDirs.fmodstudio}",
+		"%{IncludeDirs.nuklear}"
 	}
 
 

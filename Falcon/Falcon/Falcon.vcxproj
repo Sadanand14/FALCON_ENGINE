@@ -60,7 +60,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)vendor\include\nuklear;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -85,7 +85,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)vendor\include\nuklear;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -137,7 +137,12 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
+    <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
+    <ClInclude Include="Rendering\PipeLine\Canvas.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
     <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h" />
@@ -153,6 +158,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
     <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
+    <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="Rendering\ParticleSystem.h" />
@@ -193,6 +199,8 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <None Include="Rendering\Shader\Skybox.vert" />
     <None Include="Rendering\Shader\Transparent.frag" />
     <None Include="Rendering\Shader\Transparent.vert" />
+    <None Include="Rendering\Shader\UI.frag" />
+    <None Include="Rendering\Shader\UI.vert" />
     <None Include="Rendering\Shader\VertexShader.vert" />
     <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
     <None Include="Shader\FragmentShader.frag" />
@@ -211,6 +219,11 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
     <ClCompile Include="Rendering\PipeLine\MeshRenderPass.cpp" />
@@ -224,6 +237,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
+    <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="Rendering\ParticleSystem.cpp" />

@@ -5,6 +5,7 @@ TransparentRenderPass::TransparentRenderPass(uint32_t priority) : RenderPass(pri
 	AddEnabledProperty(GL_DEPTH_TEST);
 	AddEnabledProperty(GL_BLEND);
 	AddEnabledProperty(GL_CULL_FACE);
+	AddDisabledProperty(GL_SCISSOR_TEST);
 
 	SetCullFace(GL_BACK);
 	SetBlendEquation(GL_FUNC_ADD);

@@ -6,6 +6,7 @@ ParticleRenderPass::ParticleRenderPass(uint32_t priority) : RenderPass(priority)
 	AddEnabledProperty(GL_CULL_FACE);
 	AddEnabledProperty(GL_SAMPLE_ALPHA_TO_COVERAGE);
 	AddEnabledProperty(GL_BLEND);
+	AddDisabledProperty(GL_SCISSOR_TEST);
 
 	SetCullFace(GL_BACK);
 	SetBlendEquation(GL_FUNC_ADD);

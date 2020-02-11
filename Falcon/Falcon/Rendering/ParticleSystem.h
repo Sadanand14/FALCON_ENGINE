@@ -3,15 +3,12 @@
 
 #include <cstdlib>
 
-#include <PipeLine/Shader.h>
-
-#include <Events/ParticleEvent.h>
 #include <Events/EventManager.h>
-#include <EntityInterface.h>
-
-#include <Components/ParticleEmitterComponent.h>
-
 #include <ThreadPool.h>
+
+class ParticleEvent;
+class Entity;
+class ParticleEmitterComponent;
 
 /**
  * Class Definition for a Render Event System which will respond to all Render Type Events.

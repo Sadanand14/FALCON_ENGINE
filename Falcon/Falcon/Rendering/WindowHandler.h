@@ -19,7 +19,7 @@ class WindowClass
 	const char* m_title;
 
 	GLFWwindow* m_gameWindow;
-	
+
 	ThreadPool* m_threadPool;
 
 public:
@@ -37,7 +37,7 @@ public:
 
 };
 
-void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height); 
+void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height);
 
 #endif // !WINDOW_HANDLER_H
 

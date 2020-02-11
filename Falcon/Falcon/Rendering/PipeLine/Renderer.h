@@ -18,12 +18,19 @@
 #include <stb_image.h>
 
 #include <ThreadPool.h>
-#include "RenderPass.h"
-#include "MeshRenderPass.h"
-#include "ParticleRenderPass.h"
-#include "TransparentRenderPass.h"
-#include <PipeLine/Mesh.h>
 
+class RenderPass;
+class Camera;
+class Entity;
+class RenderEvent;
+class EventSystem;
+class Renderable;
+class Mesh;
+
+//TODO: REMOVE THIS
+class Label;
+
+void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -71,18 +78,19 @@ class Renderer
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
+
+	//TODO: REMOVE
+	Renderable* can;
+	Label* l;
 public:
 	Renderer();
 	~Renderer();
-
 
 	void Init();
 	void CreateDrawStates();
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);
-	//inline void SetSkyMesh(Mesh* mesh) { m_skymesh = mesh; }
-	//inline void SetTerrainMesh(Mesh* mesh) { m_terrainMesh= mesh; }
 };
 
 #endif // !RENDERER_H

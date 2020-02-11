@@ -1,10 +1,12 @@
 #include "MeshRenderPass.h"
+#include "Mesh.h"
 
 MeshRenderPass::MeshRenderPass(uint32_t priority) : RenderPass(priority)
 {
 	AddEnabledProperty(GL_DEPTH_TEST);
 	AddEnabledProperty(GL_CULL_FACE);
 	AddDisabledProperty(GL_BLEND);
+	AddDisabledProperty(GL_SCISSOR_TEST);
 
 	SetCullFace(GL_BACK);
 	SetDepthMask(true);
