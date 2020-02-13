@@ -156,7 +156,7 @@ project "Falcon"
 
 	---SETTING UP THINGS FOR windows--
 	filter "system:windows"
-		
+
 		--staticruntime "On"
 		systemversion "latest"
 
@@ -166,7 +166,7 @@ project "Falcon"
 		}
 
 		links
-		{   
+		{
 			"glfw3.lib",
 			"opengl32.lib",
 			"assimp-vc140-mt.lib",
@@ -363,7 +363,7 @@ project "FALCON_GAME"
 	language "C++"
     cppdialect "C++17"
 	-- staticruntime "on"
-	
+
 	targetdir ("build/" .. outputdir .. "/bin/")
 	objdir    ("build/" .. outputdir .. "/intermediates/")
 
@@ -430,7 +430,7 @@ project "FALCON_GAME"
 
 	---SETTING UP THINGS FOR windows--
 	filter "system:windows"
-		
+
 		--staticruntime "On"
 		systemversion "latest"
 
@@ -440,7 +440,7 @@ project "FALCON_GAME"
 		}
 
 		links
-		{   
+		{
 			"Falcon",
 			"glfw3.lib",
 			"opengl32.lib",
@@ -497,13 +497,13 @@ project "FALCON_GAME"
 			filter "system:linux"
 			pic "On"
 			 systemversion "latest"
-			runpathdirs { "%{cfg.targetdir}" }
-	
+			 runpathdirs { "%{cfg.targetdir}", "%{cfg.targetdir}/x64" }
+
 			defines
 			{
 				"FL_PLATFORM_UNIX"
 			}
-	
+
 			links
 			{
 				"Falcon",
@@ -518,7 +518,7 @@ project "FALCON_GAME"
 				"dl",
 				"pthread",
 				"assimp",
-	
+
 				--Linux order for physxlibs https://github.com/NVIDIAGameWorks/PhysX/issues/92 --
 				"PhysX_static_64",
 				"PhysXPvdSDK_static_64",
@@ -526,12 +526,12 @@ project "FALCON_GAME"
 				"PhysXCooking_static_64",
 				"PhysXCommon_static_64",
 				"PhysXFoundation_static_64",
-	
+
 				--"PhysXTask_static_64"--
 			}
-	
-	
-	
+
+
+
 		filter {"system:linux","configurations:Debug"}
 			defines
 			{
@@ -539,9 +539,9 @@ project "FALCON_GAME"
 				"_DEBUG"
 			}
 			symbols "On"
-	
+
 			printf("%s",LinkReleaseDirs.assimp)
-	
+
 			libdirs
 			{
 				"%{LinkDebugDirs.GLFW}",
@@ -554,24 +554,24 @@ project "FALCON_GAME"
 				"/usr/local/lib",
 				"/usr/lib"
 			}
-	
+
 			links
 			{
 				"fmodL",
 				"fsbankL",
 				"fmodstudioL"
 			}
-	
-	
+
+
 		filter {"system:linux","configurations:Release"}
 			defines
 			{
 				"BUILD_RELEASE_MODE",
 				"NDEBUG"
 			}
-	
+
 			optimize "On"
-	
+
 			libdirs
 			{
 				"%{LinkReleaseDirs.GLFW}",
@@ -584,13 +584,13 @@ project "FALCON_GAME"
 				"/usr/local/lib",
 				"/usr/lib"
 			}
-	
+
 			links
 			{
 				"fmod",
 				"fsbank",
 				"fmodstudio"
-			}			
+			}
 		--Setting up prebuild commands--
 
 		filter{"configurations:Debug"}
