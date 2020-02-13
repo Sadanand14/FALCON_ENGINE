@@ -546,7 +546,7 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
-	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("Rendering/Shader/VS_CubeMapShader.vert", "Rendering/Shader/PS_CubeMapShader.frag");
+	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/VS_CubeMapShader.vert", "../Falcon/Rendering/Shader/PS_CubeMapShader.frag");
 	m_cubeShader->UseShader();
 
 
