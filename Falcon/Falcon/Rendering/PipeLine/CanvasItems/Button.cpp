@@ -1,4 +1,4 @@
-#include "Label.h"
+#include "Button.h"
 
 #include "Font.h"
 #include "AssetManager.h"
@@ -16,16 +16,15 @@
  *
  * @param name - The name for the nuklear window
  */
-Label::Label(const char* name) : CanvasItem(name), m_wrap(false), m_hAlignment(NK_TEXT_ALIGN_LEFT),
-								 m_vAlignment(NK_TEXT_ALIGN_MIDDLE), m_font(AssetManager::GetFont("default"))
+Button::Button(const char* name) : CanvasItem(name), m_wrap(false),  m_font(AssetManager::GetFont("default"))
 {
 
 }
 
 /**
- * Label destructor
+ * Button destructor
  */
-Label::~Label()
+Button::~Button()
 {
 
 }
@@ -34,11 +33,13 @@ Label::~Label()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Label::Commands(nk_context* ctx)
+void Button::Commands(nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, m_bounds.h, 1);
-	if(m_wrap)
-		nk_label_colored_wrap(ctx, m_text.c_str(), m_color);
-	else
-		nk_label_colored(ctx, m_text.c_str(), m_hAlignment | m_vAlignment, m_color);
+	//if(m_wrap)
+	//	nk_label_colored_wrap(ctx, m_text.c_str(), m_color);
+	//else
+	//	nk_label_colored(ctx, m_text.c_str(), m_hAlignment | m_vAlignment, m_color);
+	if(nk_button_label(ctx, m_text.c_str()))
+		m_callback();
 }

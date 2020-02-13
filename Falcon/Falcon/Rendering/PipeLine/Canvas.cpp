@@ -11,11 +11,17 @@
 #include "Texture.h"
 #include "CanvasItems/CanvasItem.h"
 
+/**
+ * Canvas constructor
+ */
 Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
 {
-	//TODO: AUTO LOAD SHADERS
+
 }
 
+/**
+ * Setups up buffers and shaders for a canvas
+ */
 void Canvas::Setup()
 {
 	Renderable::Setup();
@@ -36,6 +42,9 @@ void Canvas::Setup()
 	m_VBO->Unbind();
 }
 
+/**
+ * Binds a canvas for rendering
+ */
 void Canvas::Bind()
 {
 	Renderable::Bind();
@@ -45,12 +54,18 @@ void Canvas::Bind()
 	m_IBO->Bind();
 }
 
+/**
+ * Calls the nuklear draw commands for all canvas items
+ */
 void Canvas::CallDrawCommands(nk_context* ctx)
 {
 	for(u32 i = 0; i < m_canvasItems.size(); i++)
 		m_canvasItems[i]->Draw(ctx);
 }
 
+/**
+ * Free extra memory used by the canvas
+ */
 Canvas::~Canvas()
 {
 	nk_buffer_free(&m_cmds);

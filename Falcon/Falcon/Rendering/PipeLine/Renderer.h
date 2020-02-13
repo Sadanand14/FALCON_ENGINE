@@ -29,6 +29,7 @@ class Mesh;
 
 //TODO: REMOVE THIS
 class Label;
+class Button;
 
 void PrintReception();
 
@@ -66,6 +67,7 @@ public:
 	void PrintReception();
 };
 
+class GLFWwindow;
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
@@ -78,16 +80,18 @@ class Renderer
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
+	GLFWwindow* m_win = nullptr;
 
 	//TODO: REMOVE
 	Renderable* can;
 	Label* l;
+	Button* b;
 public:
 	Renderer();
 	~Renderer();
 
 	void Init();
-	void CreateDrawStates();
+	void CreateDrawStates(GLFWwindow* win);
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);

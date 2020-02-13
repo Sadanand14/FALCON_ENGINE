@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+#include "glfw/glfw3.h"
 #include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
 
@@ -26,6 +27,7 @@
 //TODO: REMOVE
 #include "Canvas.h"
 #include "CanvasItems/Label.h"
+#include "CanvasItems/Button.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -132,9 +134,10 @@ void Renderer::Init()
 /**
 *Function to Create Buffers or Programs to be used in the next Draw cycle
 */
-void Renderer::CreateDrawStates()
+void Renderer::CreateDrawStates(GLFWwindow* win)
 {
 	m_RES->ProcessEvents();
+	m_win = win;
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -142,6 +145,32 @@ void Renderer::CreateDrawStates()
 
 	can = fmemory::fnew<Canvas>();
 	can->Setup();
+
+	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
+	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
+	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
+	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
+	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
+
+	l = fmemory::fnew<Label>("Test Text");
+	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
+	l->SetColor(nk_rgb(0, 0, 0));
+	l->SetWrap(true);
+	l->SetBounds(nk_rect(30, 30, 200, 60));
+	l->SetText(std::string("This is a test"));
+	static_cast<Canvas*>(can)->AddCanvasItem(l);
+
+	b = fmemory::fnew<Button>("Button");
+	b->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
+	b->SetColor(nk_rgb(0, 0, 0));
+	b->SetBounds(nk_rect(200, 200, 100, 50));
+	b->SetText(std::string("Button"));
+	b->SetCallback( []() {
+		printf("Button Pressed!");
+	});
+	static_cast<Canvas*>(can)->AddCanvasItem(b);
+
+	m_renderPasses[4]->QueueRenderable(can);
 }
 
 /**
@@ -189,21 +218,6 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 			}
 		}
 	}
-
-	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
-	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
-	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
-	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
-	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
-
-	l = fmemory::fnew<Label>("Test Text");
-	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
-	l->SetColor(nk_rgb(0, 0, 0));
-	l->SetWrap(true);
-	l->SetBounds(nk_rect(30, 30, 200, 60));
-	l->SetText(std::string("This is a test"));
-	static_cast<Canvas*>(can)->AddCanvasItem(l);
-	m_renderPasses[4]->QueueRenderable(can);
 }
 
 /**
@@ -218,6 +232,8 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 float temp = 0.0f;
 void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
+	static_cast<CanvasRenderPass*>(m_renderPasses[4])->PushInput(m_win);
+
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;

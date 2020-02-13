@@ -16,6 +16,9 @@
 #include "System/Types.h"
 #include "Style.h"
 
+/**
+ * Base class for anything drawn on a canvas
+ */
 class CanvasItem
 {
 	protected:

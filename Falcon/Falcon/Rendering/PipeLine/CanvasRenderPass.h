@@ -12,6 +12,8 @@
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #include <nuklear.h>
 
+class GLFWwindow;
+
 class CanvasRenderPass : public RenderPass
 {
 	private:
@@ -22,6 +24,7 @@ class CanvasRenderPass : public RenderPass
 	public:
 		CanvasRenderPass(uint32_t priority);
 		void Render() override;
+		void PushInput(GLFWwindow* win);
 		virtual ~CanvasRenderPass();
 };
 

@@ -22,6 +22,9 @@ struct UIVertex
 	u08 color;
 };
 
+/**
+ * Canvas for rendering a 2D UI
+ */
 class Canvas : public Renderable
 {
 	private:

@@ -74,7 +74,7 @@ namespace gameLoop
 		glfwSetScrollCallback(m_window1->GetWindow(), scroll_callback);
 
 		//Create Draw States in Renderer
-		m_renderer->CreateDrawStates();
+		m_renderer->CreateDrawStates(m_window1->GetWindow());
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 

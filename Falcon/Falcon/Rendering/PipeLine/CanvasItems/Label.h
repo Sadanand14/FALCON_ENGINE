@@ -16,6 +16,9 @@
 
 class Font;
 
+/**
+ * A basic label
+ */
 class Label : public CanvasItem
 {
 	protected:
