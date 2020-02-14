@@ -52,7 +52,10 @@ namespace gameLoop
 		fmemory::MemoryManagerInit();
 
 		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
+
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
+		m_inputClass->Init(m_window1->GetWindow());
+
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
@@ -93,6 +96,9 @@ namespace gameLoop
 	{
 		while (!m_window1->WindowCloseStatus())
 		{
+			//Poll I/O events
+			glfwPollEvents();
+
 			float dt, rate;
 			std::string framerate;
 
@@ -124,11 +130,12 @@ namespace gameLoop
 			//Swap Buffers
 			glfwSwapBuffers(m_window1->GetWindow());
 
+			m_inputClass->GetKey(GLFW_KEY_A);
+			m_inputClass->GetKeyPress(GLFW_KEY_A);
+			m_inputClass->GetKeyRelease(GLFW_KEY_A);
 		/*	static unsigned int temp = Rendering::OctreeNode::GetCount();
 			FL_ENGINE_WARN("NodeCount: {0}",temp);*/
-
-			//Poll I/O events
-			glfwPollEvents();
+			m_inputClass->Update();
 		}
 	}
 
