@@ -45,7 +45,7 @@ namespace gameLoop
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
-		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene_2.json");
+		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_particleSystem = fmemory::fnew<ParticleSystem>();
 		m_scene->UpdateScene();
 

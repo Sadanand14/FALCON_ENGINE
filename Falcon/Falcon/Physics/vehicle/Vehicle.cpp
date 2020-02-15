@@ -138,7 +138,7 @@ namespace physics
 				}
 
 				//Raycasts
-				if (gVehicles[0] != nullptr)
+				//if (gVehicles[0] != nullptr)
 				{
 					physx::PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 					const uint32_t raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
@@ -169,7 +169,7 @@ namespace physics
 					FL_ENGINE_WARN("INPUTS DONE");
 				}
 
-				if (gVehicles[0] != nullptr)
+				//if (gVehicles[0] != nullptr)
 				{
 					physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gVehicles.size(), &gVehicles[0], &vehicleQueryResults[0]);
 					FL_ENGINE_WARN("UPDATES DONE");

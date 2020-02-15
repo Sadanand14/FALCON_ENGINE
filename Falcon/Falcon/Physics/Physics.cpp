@@ -32,15 +32,8 @@ namespace physics
 												     
 		static physx::PxPvd*                         gPvd = NULL;
 												     
-		/*Setting up variables specific to the vehicle SDK (May be this data can be moved to the vehicle namespace)*/ 
-		//static physx::VehicleSceneQueryData*         gVehicleSceneQueryData = NULL;
-		static physx::PxBatchQuery*                  gBatchQuery = NULL;
-															      
-		static physx::PxRigidStatic*				 gGroundPlane = NULL;
-		static physx::PxVehicleDrive4W*				 gVehicle4W = NULL;
-		static physx::PxVehicleDrivableSurfaceToTireFrictionPairs*       gFrictionPairs = NULL;
-															      
-		static bool					                              gIsVehicleInAir = true;
+	
+		static bool					                 gIsVehicleInScene = false;
 
 		/**
 		*
@@ -200,7 +193,8 @@ namespace physics
 	{
 
 		//Update vehicles
-		vehicle::StepVehicleSDK(1.0f / 60.0f);
+		if(gIsVehicleInScene)
+			vehicle::StepVehicleSDK(1.0f / 60.0f);
 
 		gScene->simulate(1.0f / 60.0f);
 		gScene->fetchResults(true);
@@ -440,6 +434,7 @@ namespace physics
 		try
 		{
 			vehicle::CreateCar(vehActor,startTransform);
+			gIsVehicleInScene = true;
 		}
 		catch (std::exception & e)
 		{
