@@ -95,8 +95,8 @@ void Mesh::Bind()
 void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray) const
 {
 
-	vertPosArray.resize(m_vertexCount);
-	for (u32 itr = 0; itr < m_vertexCount; ++itr)
+	vertPosArray.resize(m_vertexArray.size());
+	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
 	{
 #ifdef FL_PLATFORM_WINDOWS
 		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
