@@ -7,9 +7,6 @@
 #include <string.h>
 #endif
 
-
-
-
 /**
 * Basic Mesh Constructor
 */
@@ -24,9 +21,9 @@ Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 void Mesh::Setup()
 {
 	Renderable::Setup();
-	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray, m_vertexCount * sizeof(Vertex), GL_STATIC_DRAW);
+	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
 	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
-	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray, m_indexCount);
+	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
 
 	m_VBO1->Bind();
 	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0, 0);
@@ -35,8 +32,8 @@ void Mesh::Setup()
 	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
 	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
 	m_VBO1->Unbind();
-
 	m_VBO2->Bind();
+
 	for (u32 i = 0; i < 4; i++)
 	{
 		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
@@ -119,11 +116,4 @@ Mesh::~Mesh()
 	fmemory::fdelete<VertexBuffer>(m_VBO2);
 	fmemory::fdelete<VertexBuffer>(m_VBO1);
 	fmemory::fdelete<IndexBuffer>(m_IBO);
-
-	//delete [] m_vertexArray;//fmemory::fdelete<Vertex>(m_vertexArray);
-	//m_vertexArray = nullptr;
-	delete [] m_indexArray;//fmemory::fdelete<u32>(m_indexArray);
-	//m_indexArray = nullptr;
-	delete [] m_indexOffsets;//fmemory::fdelete<u32>(m_indexOffsets);
-	m_indexOffsets = nullptr;
 }

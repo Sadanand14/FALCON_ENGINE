@@ -18,10 +18,17 @@
 #include <stb_image.h>
 
 #include <ThreadPool.h>
-#include "RenderPass.h"
-#include "MeshRenderPass.h"
-#include "ParticleRenderPass.h"
-#include "TransparentRenderPass.h"
+
+class RenderPass;
+class Camera;
+class Entity;
+class RenderEvent;
+class EventSystem;
+class Renderable;
+class Mesh;
+
+//TODO: REMOVE THIS
+class Label;
 
 void PrintReception();
 
@@ -31,8 +38,12 @@ void PrintReception();
 class RenderEventSystem : public EventSystem
 {
 private:
+	friend class Renderer;
 	static RenderEventSystem* m_instance;
+	Mesh* m_Skymesh;
+	Mesh* m_TerrainMesh;
 	RenderEventSystem();
+	Mesh* m_terrainMesh, * m_skyMesh;
 
 public:
 	static RenderEventSystem* GetInstance()
@@ -44,7 +55,8 @@ public:
 		}
 		return m_instance;
 	}
-
+	inline Mesh* GetSkyMesh()const { return m_skyMesh; }
+	inline Mesh* GetTerrainMesh() const { return m_terrainMesh; }
 	static void ShutDown();
 
 	virtual void SubscribeToEvents();
@@ -65,6 +77,11 @@ class Renderer
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
+
+	//TODO: REMOVE
+	Renderable* can;
+	Label* l;
 public:
 	Renderer();
 	~Renderer();

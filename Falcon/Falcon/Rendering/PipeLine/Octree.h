@@ -23,10 +23,12 @@ namespace Rendering
 	class OctreeNode
 	{
 		friend class Octree;
+		
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
 		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR);
 		static unsigned int nodeCount;
 
+		static unsigned int m_nodeCount;
 		Scene::entityVector m_entities;
 		glm::vec3 m_centre;
 		float m_radius;
@@ -43,7 +45,7 @@ namespace Rendering
 		inline const OctreeNode* GetParent() const { return m_parent; }
 
 	public:
-		inline static unsigned int GetCount() { return nodeCount; }
+		static inline unsigned int GetCount() {return m_nodeCount; }
 		OctreeNode(glm::vec3 nearTopLeft, glm::vec3 farBottomRight);
 		~OctreeNode();
 	};

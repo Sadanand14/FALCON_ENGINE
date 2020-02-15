@@ -2,7 +2,6 @@
 #define MESHRENDERPASS_H
 
 #include "RenderPass.h"
-#include "Mesh.h"
 
 class MeshRenderPass : public RenderPass
 {

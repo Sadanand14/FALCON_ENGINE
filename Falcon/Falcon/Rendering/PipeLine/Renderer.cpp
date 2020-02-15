@@ -1,5 +1,31 @@
 #include "Renderer.h"
+
+#include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
+
+//Included files
+//Camera
+#include <Camera.h>
+
+//Render passes
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
+#include "CanvasRenderPass.h"
+#include "SkyRenderPass.h"
+
+//Events
+#include <Events/PassToRenderer.h>
+#include <Events/EventManager.h>
+#include <Events/PassingMeshEvent.h>
+
+//Entities
+#include <EntityInterface.h>
+
+//TODO: REMOVE
+#include "Canvas.h"
+#include "CanvasItems/Label.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -10,7 +36,8 @@ RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
-	subcribedList.push_back(RenderEventCategory);
+	subscribedList.push_back(EVENT_RENDER);
+	subscribedList.push_back(EVENT_DATA_TO_RENDERER);
 	SubscribeToEvents();
 }
 
@@ -30,20 +57,28 @@ void RenderEventSystem::ProcessEvents()
 	//count++;
 	while (!eventQueue.empty())
 	{
+		boost::shared_ptr<Event> temp = eventQueue.front();
 		eventQueue.pop_front();
-		std::function<void()>f = std::bind(&RenderEventSystem::PrintReception, this);
-		m_threadPool->submit<>(f);
+
+		//for Data Transfer Events
+		if (temp->CheckCategory(EVENT_DATA_TO_RENDERER))
+		{
+			FL_ENGINE_ERROR("RECIEVED THE MESH DATA!!");
+			boost::shared_ptr<PassToRenderer> dataEvent = boost::static_pointer_cast<PassToRenderer>(temp);
+			m_skyMesh = dataEvent->GetSkyMesh();
+			m_terrainMesh = dataEvent->GetTerrainMesh();
+		}
 	}
 }
 
 /**
-* Function to Subscribe to all the event types listed in the local subscribe list.
-*/
+ * Function to Subscribe to all the event types listed in the local subscribe list.
+ */
 void RenderEventSystem::SubscribeToEvents()
 {
-	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
-		EventManager::SubscribeToEvent(this, RenderEventCategory);
+		EventManager::SubscribeToEvent(this, subscribedList[i]);
 	}
 }
 
@@ -68,9 +103,18 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	fmemory::fdelete(can);
+	fmemory::fdelete(l);
+
 	for(auto pass : m_renderPasses)
 	{
-		fmemory::fdelete(pass);
+		CanvasRenderPass* crp = nullptr;
+		crp = dynamic_cast<CanvasRenderPass*>(pass);
+
+		if(crp)
+			fmemory::fdelete(crp);
+		else
+			fmemory::fdelete(pass);
 	}
 
 	RenderEventSystem::ShutDown();
@@ -82,6 +126,7 @@ Renderer::~Renderer()
 void Renderer::Init()
 {
 	m_RES = RenderEventSystem::GetInstance();
+	m_RES->ProcessEvents();
 }
 
 /**
@@ -89,9 +134,14 @@ void Renderer::Init()
 */
 void Renderer::CreateDrawStates()
 {
+	m_RES->ProcessEvents();
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+	//m_RES->ProcessEvents();
+
+	can = fmemory::fnew<Canvas>();
+	can->Setup();
 }
 
 
@@ -225,6 +275,20 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;
+
+	//for skybox
+	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
+	skyShader->UseShader();
+	skyShader->SetMat4("projection", m_projection);
+	skyShader->SetMat4("view", cam.GetViewMatrix());
+
+	//for terrain
+	Shader* temp = m_terrainMesh->GetMaterial()->m_shader;
+	temp->UseShader();
+	temp->SetMat4("projection", m_projection);
+	temp->SetMat4("view", cam.GetViewMatrix());
+
+
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
 		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
@@ -245,7 +309,6 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 		}
 	}
 	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	//m_entities->at(1)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 /**
@@ -257,6 +320,15 @@ void Renderer::Draw(Camera &cam)
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	if (m_skyMesh != nullptr)
+	{
+		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
+		m_renderPasses[2]->QueueRenderable(m_skyMesh);
+	}
+
+
+	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
+	m_renderPasses[0]->QueueRenderable(m_terrainMesh);
 	boost::container::flat_map<float, int> distanceEntityMap;
 	for (u32 i = 0; i < m_entities->size(); i++)
 	{
@@ -306,8 +378,8 @@ void Renderer::Draw(Camera &cam)
 		{
 			if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
 			{
-				m_renderPasses[2]->QueueRenderable(rc->m_mesh);
-				static_cast<TransparentRenderPass*>(m_renderPasses[2])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+				m_renderPasses[3]->QueueRenderable(rc->m_mesh);
+				static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
 				count = 0;
 			}
 
@@ -317,8 +389,8 @@ void Renderer::Draw(Camera &cam)
 
 		else
 		{
-			m_renderPasses[2]->QueueRenderable(rc->m_mesh);
-			static_cast<TransparentRenderPass*>(m_renderPasses[2])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+			m_renderPasses[3]->QueueRenderable(rc->m_mesh);
+			static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
 			count = 0;
 		}
 	}

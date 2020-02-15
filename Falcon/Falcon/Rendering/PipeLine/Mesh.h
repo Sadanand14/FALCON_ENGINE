@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderable.h"
-
 /**
 * Mesh Class to store Mesh Data for Renderables.
 */
@@ -22,10 +21,8 @@ private:
 
 public:
 	//Mesh Data
-	u32* m_indexArray = nullptr;
-	u32* m_indexOffsets = nullptr;
-	u32 m_indexCount;
-	u32 m_indexOffsetCount;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
+	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
 
 	Mesh();
 	virtual ~Mesh();
@@ -39,6 +36,8 @@ public:
 	void Bind() override;
 	void GetVertexPositionsArray (std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&) const;
 
+	inline VertexBuffer* GetVB() { return m_VBO1; }
+	inline VertexBuffer* GetVertexBuffer() { return m_VBO1; }
 	inline void SetTransparent(bool transparent) { m_transparent = transparent; }
 	inline bool GetTransparent() const{ return m_transparent; }
 };

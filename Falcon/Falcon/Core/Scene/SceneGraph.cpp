@@ -1,4 +1,6 @@
 #include "SceneGraph.h"
+#include <Events/PassToRenderer.h> 
+#include <Events/EventManager.h>
 namespace Scene
 {
 	/**
@@ -267,6 +269,28 @@ namespace Scene
 		{
 			FL_ENGINE_ERROR("ERROR::{0} is not a valid JSON file", sceneFilePath);
 			return;
+		}
+
+		Mesh *terrainMesh = nullptr, *skyMesh = nullptr;
+
+		if (doc.HasMember("terrain")) 
+		{
+			terrainMesh = AssetManager::LoadTerrain(doc["terrain"].GetString());
+			
+			//std::cout << "Terrain Loaded";
+		}
+
+		
+		//check for Skybox
+		if (doc.HasMember("sky")) 
+		{
+			rapidjson::Value& sky = doc["sky"];
+			skyMesh = AssetManager::GetMesh(sky.GetString());
+		}
+
+		if (skyMesh != nullptr || terrainMesh != nullptr)
+		{
+			EventManager::PushEvent(boost::make_shared<PassToRenderer>(skyMesh, terrainMesh), EVENT_DATA_TO_RENDERER);
 		}
 
 		//Check if JSON file has an entities array

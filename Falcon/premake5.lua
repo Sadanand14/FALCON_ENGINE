@@ -48,6 +48,7 @@ IncludeDirs["physxCcd"] ="Falcon/vendor/include/Physx/physx/source/geomutils/src
 IncludeDirs["fmodcore"] ="Falcon/vendor/FMODStudioAPI/api/core/inc/";
 IncludeDirs["fmodbank"] ="Falcon/vendor/FMODStudioAPI/api/fsbank/inc/";
 IncludeDirs["fmodstudio"] ="Falcon/vendor/FMODStudioAPI/api/studio/inc/";
+IncludeDirs["nuklear"] ="Falcon/vendor/include/nuklear";
 
 
 
@@ -99,7 +100,10 @@ project "Falcon"
 		"%{prj.name}/Physics/**.cpp",
 		"%{prj.name}/Physics/**.c",
 		"%{prj.name}/Shader/**.vert",
-		"%{prj.name}/Shader/**.frag"
+		"%{prj.name}/Shader/**.frag",
+	        "%{prj.name}/Audio/**.h",
+		"%{prj.name}/Audio/**.hpp",
+		"%{prj.name}/Audio/**.cpp",
 	}
 
 	includedirs
@@ -109,6 +113,8 @@ project "Falcon"
 		"%{prj.name}/System",
 		"%{prj.name}/Rendering",
 		"%{prj.name}/Rendering/PipeLine",
+        	"%{prj.name}/Audio",
+        	"%{prj.name}/Physics",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",
@@ -138,7 +144,8 @@ project "Falcon"
 		"%{IncludeDirs.physxCcd}",
 		"%{IncludeDirs.fmodcore}",
 		"%{IncludeDirs.fmodbank}",
-		"%{IncludeDirs.fmodstudio}"
+		"%{IncludeDirs.fmodstudio}",
+		"%{IncludeDirs.nuklear}"
 	}
 
 

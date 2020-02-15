@@ -9,7 +9,7 @@
 */
 struct ParticleEvent : public Event
 {
-	ParticleEvent(): Event(ParticleEventCategory)
+	ParticleEvent(): Event(EVENT_PARTICLE)
 	{
 		//FL_ENGINE_INFO("RenderEvent Started");
 	};
