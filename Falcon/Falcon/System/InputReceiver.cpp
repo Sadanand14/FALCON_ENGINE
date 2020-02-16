@@ -6,7 +6,7 @@
 boost::array<bool, MAX_KEYS> InputReceiver::m_prevStates = {false};
 boost::array<bool, MAX_KEYS> InputReceiver::m_keyStates = {false};
 boost::array<bool, MAX_MOUSE_KEYS> InputReceiver::m_mouseStates = { false };
-double InputReceiver::mouse_x = 0, InputReceiver::mouse_y = 0;
+double InputReceiver::m_mouseX = 0, InputReceiver::m_mouseY= 0, InputReceiver::m_scrollX = 0 , InputReceiver::m_scrollY = 0;
 
 
 /**
@@ -36,14 +36,10 @@ InputReceiver::~InputReceiver()
 */
 void InputReceiver::Init(GLFWwindow* window)
 {
-	/*for (unsigned int i = 0; i < MAX_KEYS; ++i) 
-	{
-		m_keyStates[i] = false;
-		m_prevStates[i] = false;
-	}*/
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_callback);
 	glfwSetCursorPosCallback(window, cursor_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 }
 
 
@@ -53,6 +49,8 @@ void InputReceiver::Update()
 	{
 		m_prevStates[i] = m_keyStates[i];
 	}
+	m_scrollX = 0;
+	m_scrollY = 0;
 }
 
 bool InputReceiver::GetKey(int key) 
@@ -73,7 +71,6 @@ bool InputReceiver::GetKeyPress(int key)
 		return true; 
 	}
 		
-
 	return false;
 }
 
@@ -100,11 +97,6 @@ bool InputReceiver::GetKeyRelease(int key)
 void InputReceiver::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	m_keyStates[key] = (action != GLFW_RELEASE);
-
-	//FL_ENGINE_INFO(whatever is being printed in the next line)
-	//std::cout << "A key int: " << GLFW_KEY_A << "\n key pressed state for A(" << key<<") is: "<< m_keyStates[key] <<std::endl; 
-
-	//FL_ENGINE_INFO("INFO: {0}, Key pressed state for A({1}) is: {2}", GLFW_KEY_A,key, m_keyStates[key]);
 }
 
 /**
@@ -129,7 +121,13 @@ void InputReceiver::mouse_callback(GLFWwindow* window, int button, int action, i
 */
 void InputReceiver::cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	mouse_x = xpos;
-	mouse_y = ypos;
+	m_mouseX = xpos;
+	m_mouseY = ypos;
 }
 
+
+void InputReceiver::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	m_scrollX = xoffset;
+	m_scrollY = yoffset;
+}

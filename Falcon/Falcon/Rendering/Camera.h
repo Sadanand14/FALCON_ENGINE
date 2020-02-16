@@ -8,19 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
-struct CameraEventSystem : public EventSystem
-{
-private:
-	std::vector<unsigned int> keyCodeVector;
-
-	void ProcessKeyEvent(keyType, unsigned int);
-	bool CheckForKey(unsigned int code);
-
-	CameraEventSystem();
-
-	virtual void SubscribeToEvents() override;
-	virtual void ProcessEvents() override;
-};
 
 enum Camera_Movement{ FORWARD, BACKWARD, LEFT, RIGHT};
 
