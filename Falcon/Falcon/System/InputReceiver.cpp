@@ -49,15 +49,14 @@ void InputReceiver::Update()
 	{
 		m_prevStates[i] = m_keyStates[i];
 	}
-	m_scrollX = 0;
-	m_scrollY = 0;
+	//m_scrollX = 0;
+	//m_scrollY = 0;
 }
 
 bool InputReceiver::GetKey(int key) 
 {
 	if (m_prevStates[key] == m_keyStates[key] && m_prevStates[key]) 
 	{
-		FL_ENGINE_INFO("key : {0}", true);
 		return true;
 	} 
 	return false;
@@ -67,7 +66,6 @@ bool InputReceiver::GetKeyPress(int key)
 {
 	if (m_keyStates[key] && !m_prevStates[key]) 
 	{
-		FL_ENGINE_INFO("keypress : {0}", true);
 		return true; 
 	}
 		
@@ -78,7 +76,6 @@ bool InputReceiver::GetKeyRelease(int key)
 {
 	if (!m_keyStates[key] && m_prevStates[key]) 
 	{
-		FL_ENGINE_INFO("keyRelease : {0}", true);
 		return true;
 	}
 	return false;

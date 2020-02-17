@@ -10,7 +10,6 @@ namespace gameLoop
 	float lastX = 0.0f;
 	float lastY = 0.0f;
 	bool firstMouse = true;
-	void ProcessInput(GLFWwindow* window, float deltaTime);
 
 	/**
 	* Game class Destructor
@@ -79,7 +78,7 @@ namespace gameLoop
 		//Initialize the Audio Engine
 		m_audio.Init();
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
+		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
 
 		return true;
 	}
@@ -121,6 +120,8 @@ namespace gameLoop
 
 			//Swap Buffers
 			glfwSwapBuffers(m_window->GetWindow());
+			camera.SetMousePos(m_input->GetCursor());
+			camera.SetMouseScroll(m_input->GetScroll());
 
 			//camera movement setup
 			ProcessInputs(dt);
@@ -140,21 +141,21 @@ namespace gameLoop
 		if (m_input->GetKey(GLFW_KEY_S))camera.ProcessKeyboard(BACKWARD, dt);
 	}
 
-	void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-	{
-		if (firstMouse)
-		{
-			lastX = (float)xpos;
-			lastY = (float)ypos;
-			firstMouse = false;
-		}
+	//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+	//{
+	//	if (firstMouse)
+	//	{
+	//		lastX = (float)xpos;
+	//		lastY = (float)ypos;
+	//		firstMouse = false;
+	//	}
 
-		float xoffset = (float)xpos - lastX;
-		float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
+	//	float xoffset = (float)xpos - lastX;
+	//	float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
 
-		lastX = (float)xpos;
-		lastY = (float)ypos;
+	//	lastX = (float)xpos;
+	//	lastY = (float)ypos;
 
-		camera.ProcessMouseMovement(xoffset, yoffset);
-	}
+	//	camera.ProcessMouseMovement(xoffset, yoffset);
+	//}
 }
