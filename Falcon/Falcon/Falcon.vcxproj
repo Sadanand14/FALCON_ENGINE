@@ -160,7 +160,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
     <ClInclude Include="Rendering\stb_image.h" />
-    <ClInclude Include="System\Game.h" />
+    <ClInclude Include="System\Engine.h" />
     <ClInclude Include="System\InputReceiver.h" />
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="System\Memory\Allocator.hpp" />
@@ -216,7 +216,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
-    <ClCompile Include="System\Game.cpp" />
+    <ClCompile Include="System\Engine.cpp" />
     <ClCompile Include="System\InputReceiver.cpp" />
     <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\Memory\Allocator.cpp" />

@@ -1,4 +1,4 @@
-#include <Game.h>
+#include <Engine.h>
 #include <iostream>
 
 
@@ -15,7 +15,7 @@ int main()
 #endif
 
 	std::cout << "system is currently running thread : " << boost::this_thread::get_id() << "\n";
-	gameLoop::Game* game = new gameLoop::Game();
+	gameLoop::Engine* game = new gameLoop::Engine();
 
 	game->Initialize();
 	game->Update();

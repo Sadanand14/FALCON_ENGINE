@@ -1,15 +1,29 @@
-#include "Game.h"
+#include "Engine.h"
 #include "Physics/Physics.h"
 
 namespace gameLoop
 {
+	struct LoopProperties 
+	{
+		bool m_enableRendering, m_enablePhysics, m_enableInput, m_enableAnimation, m_enableAudio, m_enableAI;
+
+		LoopProperties() :m_enableRendering(true), m_enablePhysics(true), m_enableInput(true), 
+			m_enableAnimation(true), m_enableAudio(true), m_enableAI(true) {}
+
+		inline void SetRendering(bool value) { m_enableRendering = value; }
+		inline void SetPhysics(bool value) { m_enablePhysics = value; }
+		inline void SetInput(bool value) { m_enableInput = value; }
+		inline void SetAnimation(bool value) { m_enableAnimation= value; }
+		inline void SetAudio(bool value) { m_enableAudio = value; }
+		inline void SetAI(bool value) { m_enableAI = value; }
+	};
 	//Camera
 	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 	/**
 	* Game class Destructor
 	*/
-	Game::~Game()
+	Engine::~Engine()
 	{
 		if (m_scene != nullptr)fmemory::fdelete(m_scene);
 		if (m_octree != nullptr)fmemory::fdelete(m_octree);
@@ -30,7 +44,7 @@ namespace gameLoop
 	/**
 	* Game Class Constructor
 	*/
-	Game::Game() : m_gameCrashed(false), m_windowClosed(false)
+	Engine::Engine() : m_gameCrashed(false), m_windowClosed(false)
 	{
 
 	}
@@ -38,7 +52,7 @@ namespace gameLoop
 	/**
 	* Game class initializer responsible for initializing all subsystems.
 	*/
-	bool Game::Initialize()
+	bool Engine::Initialize()
 	{
 		Log::Init();
 
@@ -50,6 +64,8 @@ namespace gameLoop
 		m_input->Init(m_window->GetWindow());
 
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
+		m_renderer->Init(m_window->GetWindow());
+
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_particleSystem = fmemory::fnew<ParticleSystem>();
@@ -80,7 +96,7 @@ namespace gameLoop
 	/**
 	* Game class Update function responsible for running the main game loop
 	*/
-	void Game::Update()
+	void Engine::Update()
 	{
 		while (!m_window->WindowCloseStatus())
 		{
@@ -112,8 +128,7 @@ namespace gameLoop
 
 			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
-			//Swap Buffers
-			glfwSwapBuffers(m_window->GetWindow());
+			
 			camera.SetMousePos(m_input->GetCursor());
 			camera.SetMouseScroll(m_input->GetScroll());
 
@@ -126,7 +141,7 @@ namespace gameLoop
 		}
 	}
 
-	void Game::ProcessInputs(float dt)
+	void Engine::ProcessInputs(float dt)
 	{
 		if (m_input->GetKeyPress(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(m_window->GetWindow(), true);
 		if (m_input->GetKey(GLFW_KEY_W))camera.ProcessKeyboard(FORWARD, dt);

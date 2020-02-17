@@ -1,7 +1,7 @@
 #ifndef VERTEXLAYOUT_H
 #define VERTEXLAYOUT_H
 
-#include <glm/glm.hpp>
+#include <Types.h>
 
 /**
 * Vertex Data Structure

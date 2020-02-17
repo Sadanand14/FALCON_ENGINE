@@ -1,5 +1,5 @@
-#ifndef game_h
-#define game_h
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include "InputReceiver.h"
 #include "Log.h"
@@ -20,7 +20,7 @@ namespace gameLoop
 	/**
 	* Main Game Class Responsible for owning and running all subsystems
 	*/
-	class Game {
+	class Engine {
 
 		Timer* m_timer;
 		Renderer* m_renderer;
@@ -35,8 +35,12 @@ namespace gameLoop
 		//Audio Engine
 		CAudioEngine m_audio;
 
-		Game();
-		~Game();
+		inline bool GetKey(int key) { return m_input->GetKey(key);  }
+		inline bool GetKeyPress(int key) { return m_input->GetKeyPress(key);  }
+		inline bool GetKeyRelease(int key) { return m_input->GetKeyRelease(key);  }
+
+		Engine();
+		~Engine();
 		void ProcessInputs(float dt);
 		bool Initialize();
 		void Update();

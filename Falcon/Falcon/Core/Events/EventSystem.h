@@ -1,9 +1,7 @@
 #ifndef EVENT_SYSTEM_H_
 #define EVENT_SYSTEM_H_
 
-#include <boost/circular_buffer.hpp>
-#include <boost/container/vector.hpp>
-#include <boost/shared_ptr.hpp>
+#include <Types.h>
 #include "Event.h"
 #include <ThreadPool.h>
 

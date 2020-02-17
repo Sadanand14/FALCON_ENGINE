@@ -1,8 +1,7 @@
 #ifndef Asset_Manager_H
 #define Asset_Manager_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <Types.h>
 //#include <Rendering/stb_image.h>
 #include <Rendering/stb_dds.h>
 #include <assimp/Importer.hpp>
@@ -17,8 +16,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <boost/container/vector.hpp>
-#include <boost/unordered_map.hpp>
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>

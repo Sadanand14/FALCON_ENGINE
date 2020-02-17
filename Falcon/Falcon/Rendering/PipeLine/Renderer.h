@@ -74,6 +74,7 @@ public:
 class Renderer
 {
 	RenderEventSystem* m_RES;
+	GLFWwindow* m_window;
 	glm::mat4 m_projection;
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
@@ -86,7 +87,7 @@ public:
 	Renderer();
 	~Renderer();
 
-	void Init();
+	void Init(GLFWwindow* window);
 	void CreateDrawStates();
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);

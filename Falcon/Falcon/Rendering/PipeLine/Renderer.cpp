@@ -95,7 +95,6 @@ void RenderEventSystem::PrintReception()
 */
 Renderer::Renderer()
 {
-	Init();
 }
 
 /**
@@ -123,8 +122,9 @@ Renderer::~Renderer()
 /**
 *Initialization function for Renderer
 */
-void Renderer::Init()
+void Renderer::Init(GLFWwindow* window)
 {
+	m_window = window;
 	m_RES = RenderEventSystem::GetInstance();
 	m_RES->ProcessEvents();
 }
@@ -345,4 +345,7 @@ void Renderer::Draw(Camera &cam)
 	{
 		m_renderPasses[i]->Render();
 	}
+
+	//Swap Buffers
+	glfwSwapBuffers(m_window);
 }

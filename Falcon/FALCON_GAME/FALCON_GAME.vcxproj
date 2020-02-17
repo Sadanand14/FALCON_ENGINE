@@ -110,6 +110,8 @@ IF EXIST "..\Falcon\vendor\FMODStudioAPI\api\studio\lib\x64"\ (xcopy /Q /E /Y /I
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ExternalLibraries.win.h" />
+    <ClInclude Include="headers\Game.h" />
+    <ClInclude Include="headers\GameState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

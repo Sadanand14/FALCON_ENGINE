@@ -1,8 +1,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
-#include "glm/glm.hpp"
-#include <boost/container/vector.hpp>
+#include <System/Types.h>
 #include <EntityInterface.h>
 #include <Memory/fmemory.h>
 //#include <boost/iterator.hpp>
