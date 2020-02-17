@@ -24,8 +24,8 @@ namespace gameLoop
 
 		Timer* m_timer;
 		Renderer* m_renderer;
-		WindowClass* m_window1;
-		InputReceiver* m_inputClass;
+		WindowClass* m_window;
+		InputReceiver* m_input;
 		Scene::SceneGraph* m_scene;
 		Rendering::Octree* m_octree;
 		ParticleSystem* m_particleSystem = nullptr;
@@ -37,14 +37,10 @@ namespace gameLoop
 
 		Game();
 		~Game();
-
+		void ProcessInputs(float dt);
 		bool Initialize();
 		void Update();
 	};
 
-	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
-
-#endif
 }
+#endif

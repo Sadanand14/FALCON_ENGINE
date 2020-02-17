@@ -1,53 +1,9 @@
 #include "Camera.h"
 #include <GLFW/glfw3.h>
-CameraEventSystem::CameraEventSystem()
-{
-	keyCodeVector.push_back(GLFW_KEY_W);
-	keyCodeVector.push_back(GLFW_KEY_A);
-	keyCodeVector.push_back(GLFW_KEY_S);
-	keyCodeVector.push_back(GLFW_KEY_D);
-	keyCodeVector.push_back(GLFW_KEY_LEFT_SHIFT);
-	keyCodeVector.push_back(GLFW_KEY_LEFT_CONTROL);
-	keyCodeVector.push_back(GLFW_KEY_UP);
-	keyCodeVector.push_back(GLFW_KEY_DOWN);
-	keyCodeVector.push_back(GLFW_KEY_LEFT);
-	keyCodeVector.push_back(GLFW_KEY_RIGHT);
-}
-
-void CameraEventSystem::SubscribeToEvents()
-{
-	EventManager::SubscribeToEvent(this, EVENT_KEY_INPUT);
-}
-
-void CameraEventSystem::ProcessEvents()
-{
-}
-
-bool CameraEventSystem::CheckForKey(unsigned int code)
-{
-	bool keyExists = false;
-	for (unsigned int i = 0; i < keyCodeVector.size(); i++)
-	{
-		if (code == keyCodeVector[i])
-			keyExists = true;
-	}
-	return keyExists;
-}
-
-void CameraEventSystem::ProcessKeyEvent(keyType type, unsigned int code)
-{
-	if (CheckForKey(code))
-	{
-			//call ProcessKeyBoard of camera Class;
-		if (code == GLFW_KEY_W) {}
-		else if (code == GLFW_KEY_S){}
-		else if (code == GLFW_KEY_D){}
-		else if (code == GLFW_KEY_A){}
-	}
-}
 
 /////////////////////////////////////////
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : m_Forward(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM)
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : m_Forward(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM),
+																			m_lastX(0), m_lastY(0)
 {
 	m_Position = position;
 	m_WorldUp = up;
@@ -63,6 +19,18 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	m_Yaw = yaw;
 	m_Pitch = pitch;
 	UpdateCameraVectors();
+}
+
+void Camera::SetMousePos(glm::vec2 value) 
+{
+	ProcessMouseMovement(value.x -m_lastX , m_lastY-value.y);
+	m_lastX = value.x;
+	m_lastY = value.y;
+}
+
+void Camera::SetMouseScroll(glm::vec2 value) 
+{
+	ProcessMouseScroll(value.y);
 }
 
 glm::mat4 Camera::GetViewMatrix() const
@@ -105,12 +73,12 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constr
 }
 
 void Camera::ProcessMouseScroll(float yoffset)
-{
+	{if(yoffset==0) return;
 	if (m_Zoom >= 1.0f && m_Zoom <= 45.0f)
 		m_Zoom -= yoffset;
-	if (m_Zoom <= 1.0f)
+	else if (m_Zoom <= 1.0f)
 		m_Zoom = 1.0f;
-	if (m_Zoom >= 45.0f)
+	else if (m_Zoom >= 45.0f)
 		m_Zoom = 45.0f;
 }
 
