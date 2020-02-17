@@ -6,15 +6,9 @@ namespace gameLoop
 	//Camera
 	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
-	//Camera Setup
-	float lastX = 0.0f;
-	float lastY = 0.0f;
-	bool firstMouse = true;
-
 	/**
 	* Game class Destructor
 	*/
-
 	Game::~Game()
 	{
 		if (m_scene != nullptr)fmemory::fdelete(m_scene);
@@ -140,22 +134,4 @@ namespace gameLoop
 		if (m_input->GetKey(GLFW_KEY_D))camera.ProcessKeyboard(RIGHT, dt);
 		if (m_input->GetKey(GLFW_KEY_S))camera.ProcessKeyboard(BACKWARD, dt);
 	}
-
-	//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-	//{
-	//	if (firstMouse)
-	//	{
-	//		lastX = (float)xpos;
-	//		lastY = (float)ypos;
-	//		firstMouse = false;
-	//	}
-
-	//	float xoffset = (float)xpos - lastX;
-	//	float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
-
-	//	lastX = (float)xpos;
-	//	lastY = (float)ypos;
-
-	//	camera.ProcessMouseMovement(xoffset, yoffset);
-	//}
 }
