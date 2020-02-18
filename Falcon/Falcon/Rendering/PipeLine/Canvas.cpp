@@ -38,7 +38,7 @@ void Canvas::Setup()
 	m_VBO->Bind();
 	m_VAO->AddVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(UIVertex), 0, 0);
 	m_VAO->AddVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(UIVertex), offsetof(UIVertex, uv), 0);
-	m_VAO->AddVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(UIVertex), offsetof(UIVertex, color), 0);
+	m_VAO->AddVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(UIVertex), offsetof(UIVertex, color), 0);
 	m_VBO->Unbind();
 }
 

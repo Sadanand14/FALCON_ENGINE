@@ -24,6 +24,7 @@ class Label : public CanvasItem
 	protected:
 		bool m_wrap;
 		std::string m_text;
+		nk_color m_textColor;
 		nk_flags m_hAlignment;
 		nk_flags m_vAlignment;
 		Font* m_font;
@@ -36,6 +37,7 @@ class Label : public CanvasItem
 		inline void SetText(std::string txt) { m_text = txt; }
 		inline void SetAlignment(nk_flags alignment) { m_hAlignment = alignment; }
 		inline void SetVerticalAlignment(nk_flags alignment) { m_vAlignment = alignment; }
+		inline void SetTextColor(nk_color color) { m_textColor = color; }
 };
 
 #endif

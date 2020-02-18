@@ -28,6 +28,8 @@
 #include "Canvas.h"
 #include "CanvasItems/Label.h"
 #include "CanvasItems/Button.h"
+#include "CanvasItems/Image.h"
+#include "CanvasItems/Panel.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -107,6 +109,9 @@ Renderer::~Renderer()
 {
 	fmemory::fdelete(can);
 	fmemory::fdelete(l);
+	fmemory::fdelete(b);
+	fmemory::fdelete(i);
+	fmemory::fdelete(p);
 
 	for(auto pass : m_renderPasses)
 	{
@@ -153,22 +158,41 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
 	l = fmemory::fnew<Label>("Test Text");
-	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
-	l->SetColor(nk_rgb(0, 0, 0));
+	//l->SetFlags(NK_WINDOW_NO_SCROLLBAR);
+	l->SetColor(nk_rgb(255, 255, 255));
+	l->SetTextColor(nk_rgb(0, 0, 0));
 	l->SetWrap(true);
 	l->SetBounds(nk_rect(30, 30, 200, 60));
 	l->SetText(std::string("This is a test"));
-	static_cast<Canvas*>(can)->AddCanvasItem(l);
+	//static_cast<Canvas*>(can)->AddCanvasItem(l);
 
 	b = fmemory::fnew<Button>("Button");
-	b->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
-	b->SetColor(nk_rgb(0, 0, 0));
-	b->SetBounds(nk_rect(200, 200, 100, 50));
+	//b->SetFlags(NK_WINDOW_NO_SCROLLBAR);
+	b->SetColor(nk_rgb(255, 255, 255));
+	b->SetNormalTextColor(nk_rgb(255, 0, 0));
+	//b->SetNormalButtonColor(nk_rgb(180, 180, 180));
+	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
+	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
+	b->SetBounds(nk_rect(20, 20, 200, 100));
 	b->SetText(std::string("Button"));
 	b->SetCallback( []() {
-		printf("Button Pressed!");
+		printf("Button Pressed!\n");
 	});
-	static_cast<Canvas*>(can)->AddCanvasItem(b);
+	//static_cast<Canvas*>(can)->AddCanvasItem(b);
+
+	t.textureID = AssetManager::LoadTexture("../Assets/Textures/car.png");
+	i = fmemory::fnew<Image>("Image");
+	//i->SetFlags(NK_WINDOW_NO_SCROLLBAR);
+	i->SetBounds(nk_rect(200, 200, 300, 200));
+	i->SetImage(t);
+	//i->AddChild(b);
+	//i->AddChild(l);
+	static_cast<Canvas*>(can)->AddCanvasItem(i);
+
+	p = fmemory::fnew<Panel>("Panel");
+	p->SetBounds(nk_rect(200, 200, 600, 600));
+	p->SetColor(nk_rgb(0, 0, 0));
+	p->AddChild(b);
 
 	m_renderPasses[4]->QueueRenderable(can);
 }
@@ -287,7 +311,6 @@ void Renderer::Draw(Camera &cam)
 		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
 		m_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
-
 
 	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
 	m_renderPasses[0]->QueueRenderable(m_terrainMesh);

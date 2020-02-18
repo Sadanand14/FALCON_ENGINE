@@ -30,6 +30,8 @@ class Mesh;
 //TODO: REMOVE THIS
 class Label;
 class Button;
+class Image;
+class Panel;
 
 void PrintReception();
 
@@ -86,6 +88,9 @@ class Renderer
 	Renderable* can;
 	Label* l;
 	Button* b;
+	Image* i;
+	Panel* p;
+	Texture t;
 public:
 	Renderer();
 	~Renderer();

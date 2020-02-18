@@ -19,7 +19,7 @@ struct UIVertex
 {
 	glm::vec2 position;
 	glm::vec2 uv;
-	u08 color;
+	u08 color[4];
 };
 
 /**

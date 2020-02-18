@@ -293,6 +293,8 @@ u32 AssetManager::LoadTexture(std::string const& path)
 		return HDRtoCubemap(hdrTexture);
 	}
 
+	stbi_set_flip_vertically_on_load(false);
+
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	m_lastTextureType = TextureType::TEXTURE2D;
 	if (data)

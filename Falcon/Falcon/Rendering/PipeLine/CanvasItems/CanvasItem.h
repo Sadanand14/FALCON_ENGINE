@@ -2,6 +2,7 @@
 #define CANVASITEM_H
 
 #include <string>
+#include <vector>
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
@@ -26,10 +27,12 @@ class CanvasItem
 		nk_color m_color;
 		i32 m_flags;
 		std::string m_name;
+		std::vector<CanvasItem*> m_children;
 
 	public:
 		CanvasItem(const char* name);
 		virtual ~CanvasItem();
+		void AddChild(CanvasItem* child);
 		void Begin(nk_context* ctx);
 		void End(nk_context* ctx);
 		virtual void Draw(nk_context* ctx);
