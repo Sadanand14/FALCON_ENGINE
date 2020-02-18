@@ -1,6 +1,5 @@
-#include <Engine.h>
+#include <Game/Game.h>
 #include <iostream>
-
 
 /**
 * Main Entry point to the game.
@@ -15,10 +14,10 @@ int main()
 #endif
 
 	std::cout << "system is currently running thread : " << boost::this_thread::get_id() << "\n";
-	gameLoop::Engine* game = new gameLoop::Engine();
+	gameLoop::Game* game = new gameLoop::Game();
 
-	game->Initialize();
-	game->Update();
+	game->Init();
+	game->Run();
 
 	delete game;
 	return 0;

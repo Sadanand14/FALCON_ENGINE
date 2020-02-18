@@ -37,6 +37,7 @@ namespace gameLoop
 	*/
 	class Engine {
 
+		LoopProperties m_properties;
 		Timer* m_timer;
 		Renderer* m_renderer;
 		WindowClass* m_window;
@@ -45,11 +46,13 @@ namespace gameLoop
 		Rendering::Octree* m_octree;
 		ParticleSystem* m_particleSystem = nullptr;
 		//Scene* m_scene;
+
 	public:
 		bool m_gameCrashed, m_windowClosed;
 		//Audio Engine
 		CAudioEngine m_audio;
 
+		inline
 		inline bool GetKey(int key) { return m_input->GetKey(key);  }
 		inline bool GetKeyPress(int key) { return m_input->GetKeyPress(key);  }
 		inline bool GetKeyRelease(int key) { return m_input->GetKeyRelease(key);  }

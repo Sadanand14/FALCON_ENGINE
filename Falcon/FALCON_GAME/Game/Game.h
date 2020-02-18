@@ -10,15 +10,23 @@ namespace gameLoop
 	class Game
 	{
 	private:
-		boost::container::vector<GameState> m_states;
-		Engine* m_engine;
+		boost::container::map<std::string, GameState*> m_states;
+		Engine* m_engine = nullptr;
+		bool m_quitGame, m_changeState;
+		GameState* m_currentState;
 
 	public:
 
+		inline void AddState(GameState* state) 
+		{ 
+			if(m_states.find(state->m_title)==m_states.end())
+			m_states[state->m_title] = state; 
+		}
 		bool Init();
+		bool RunState(std::string stateName);
 		Game();
 
-		void Update();
+		void Run();
 		~Game();
 	};
 

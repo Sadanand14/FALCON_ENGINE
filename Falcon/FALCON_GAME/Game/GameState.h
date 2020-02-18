@@ -10,8 +10,10 @@ namespace gameLoop
 	protected:
 		LoopProperties m_properties;
 	public:		
-		virtual void Update(){}
-		virtual ~GameState() {};
+		std::string m_title;
+		virtual void Start() = 0;
+		virtual void Update() = 0;
+		virtual ~GameState() = 0;
 	};
 
 
@@ -21,7 +23,8 @@ namespace gameLoop
 		IngameState() 
 		{};
 
-		virtual Update() override {}
+		virtual void Start() override {}
+		virtual void Update() override {}
 		virtual ~IngameState() {}
 	};
 }
