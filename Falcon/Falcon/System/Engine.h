@@ -17,6 +17,21 @@
 
 namespace gameLoop
 {
+	struct LoopProperties
+	{
+		bool m_enableRendering, m_enablePhysics, m_enableInput, m_enableAnimation, m_enableAudio, m_enableAI;
+
+		LoopProperties() :m_enableRendering(true), m_enablePhysics(true), m_enableInput(true),
+			m_enableAnimation(true), m_enableAudio(true), m_enableAI(true) {}
+
+		inline void SetRendering(bool value) { m_enableRendering = value; }
+		inline void SetPhysics(bool value) { m_enablePhysics = value; }
+		inline void SetInput(bool value) { m_enableInput = value; }
+		inline void SetAnimation(bool value) { m_enableAnimation = value; }
+		inline void SetAudio(bool value) { m_enableAudio = value; }
+		inline void SetAI(bool value) { m_enableAI = value; }
+	};
+
 	/**
 	* Main Game Class Responsible for owning and running all subsystems
 	*/

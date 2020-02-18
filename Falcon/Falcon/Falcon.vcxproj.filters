@@ -201,6 +201,9 @@
     <ClInclude Include="Rendering\stb_image.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="System\Engine.h">
+      <Filter>System</Filter>
+    </ClInclude>
     <ClInclude Include="System\InputReceiver.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -247,9 +250,6 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="System\targetver.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Engine.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
@@ -365,6 +365,9 @@
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="System\Engine.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
     <ClCompile Include="System\InputReceiver.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -390,9 +393,6 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="System\glad.c">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Engine.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>

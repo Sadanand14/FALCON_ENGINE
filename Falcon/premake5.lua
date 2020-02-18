@@ -375,11 +375,17 @@ project "FALCON_GAME"
 		"%{prj.name}/**.hpp",
 		"%{prj.name}/**.cpp",
 		"%{prj.name}/**.c",
+        "%{prj.name}/Game/**.h",
+		"%{prj.name}/Game/**.hpp",
+		"%{prj.name}/Game/**.cpp",
+		"%{prj.name}/Game/**.c",
+
 	}
 
 	includedirs
 	{
 		"%{prj.name}",
+        "%{prj.name}/Game",
 		"%{sln.location}/Falcon",
 		"%{sln.location}/Falcon/Core",
         "%{sln.location}/Falcon/Core/Events",
