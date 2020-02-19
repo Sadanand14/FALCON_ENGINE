@@ -9,7 +9,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
-
+#include <glm/vec3.hpp>
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
@@ -18,6 +18,7 @@
 #include <Memory/fmemory.h>
 #include "EntityInterface.h"
 #include <Log.h>
+#include "Types.h"
 
 class EntityManager
 {
@@ -34,4 +35,4 @@ public:
 	static void CloseScene();
 };
 
-#endif
+#endif //ENTITY_MANAGER_H

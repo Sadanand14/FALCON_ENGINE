@@ -227,7 +227,74 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 
 
+		/**
+		* Adds physics component
+ 		*/
+		if (doc.HasMember("physicsComponent"))
+
+		{
+
+			newEntity->AddComponent<PhysicsComponent>();
+			PhysicsComponent* physxComp = newEntity->GetComponent<PhysicsComponent>();
+
+
+			int type;
+			int rigidbodyType;
+			
+			const rapidjson::Value& colliderType = doc["physicsComponent"]["type"];
+			type = colliderType.GetInt();
+			
+			const rapidjson::Value& rgType = doc["physicsComponent"]["rigidbody"];
+			rigidbodyType = rgType.GetInt();
+
+			switch (type)
+			{
+			case 0:
+				{
+					const rapidjson::Value& radius = doc["physicsComponent"]["radius"];
+					physxComp->SetSphereCollider(radius.GetDouble());
+					break;
+				}
+			case 1:
+				{
+					const rapidjson::Value& sides = doc["physicsComponent"]["half_sides"];
+					physxComp->SetBoxCollider(sides[0].GetDouble(), sides[1].GetDouble(), sides[2].GetDouble());
+					break;
+				}
+			case 2:
+				{
+					const rapidjson::Value& radius = doc["physicsComponent"]["radius"];
+					const rapidjson::Value& halfHeight = doc["physicsComponent"]["half_height"];
+					physxComp->SetCapsuleCollider(radius.GetDouble(), halfHeight.GetDouble());
+					break;
+				}
+			case 3:
+				{	
+					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+					newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
+					physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+					break;
+				}
+			}
+
+
+			switch (rigidbodyType)
+			{
+			case 0:
+				physxComp->SetPhysicsBodyType(newEntity->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+				break;
+			case 1:
+				physxComp->SetPhysicsBodyType(newEntity->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+				break;
+			}
+
+		}
+
+
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE
+
+
+
 
 	}
 

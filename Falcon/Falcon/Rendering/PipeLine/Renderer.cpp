@@ -156,41 +156,41 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	m_projection = projection;
 	//RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
 	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
-	for (u32 i = 0; i < entities->size(); i++)
-	{
-		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
-		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
-		if (renderComp || particleComp)
-		{
-			entities->at(i)->AddComponent<PhysicsComponent>();
-			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
+	//for (u32 i = 0; i < entities->size(); i++)
+	//{
+	//	RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+	//	ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+	//	if (renderComp || particleComp)
+	//	{
+	//		entities->at(i)->AddComponent<PhysicsComponent>();
+	//		PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-			if (renderComp)
-			{
-				
-				if (i != 1)
-				{
-					physComp->SetBoxCollider(5, 5, 5);
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//		if (renderComp)
+	//		{
+	//			
+	//			if (i != 1)
+	//			{
+	//				physComp->SetBoxCollider(5, 5, 5);
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 
-				}
-				else
-				{
-					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-				}
-				//renderComp->m_mesh->GetVertexPositionsArray(temp);
-				//physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
-			}
+	//			}
+	//			else
+	//			{
+	//				renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//				physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+	//			}
+	//			//renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//			//physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+	//		}
 
-			if (particleComp)
-			{
-				physComp->SetBoxCollider(5, 5, 5);
-				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
-			}
-		}
-	}
+	//		if (particleComp)
+	//		{
+	//			physComp->SetBoxCollider(5, 5, 5);
+	//			physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//		}
+	//	}
+	//}
 	//physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));

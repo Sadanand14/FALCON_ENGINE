@@ -54,6 +54,10 @@ namespace gameLoop
 		m_window1 = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
 		m_inputClass = fmemory::fnew<InputReceiver>(m_window1);
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
+
+		//Booting up physics
+		physics::InitPhysX();
+
 		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_particleSystem = fmemory::fnew<ParticleSystem>();
@@ -65,8 +69,7 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		m_octree->Update();
 
-		//Booting up physics
-		physics::InitPhysX();
+		
 
 
 		//Camera
@@ -80,8 +83,8 @@ namespace gameLoop
 
 		//Initialize the Audio Engine
 		m_audio.Init();
-		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
+		//m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
+		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", {0,0,0}, -0.6f);
 
 		return true;
 	}
