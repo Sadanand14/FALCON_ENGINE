@@ -43,6 +43,8 @@ namespace gameLoop
 	{
 		Log::Init();
 
+		m_currentState = STATE::MENU;
+
 		fmemory::MemoryManagerInit();
 
 		m_window = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
@@ -80,52 +82,55 @@ namespace gameLoop
 		return true;
 	}
 
-	/**
-	* Game class Update function responsible for running the main game loop
-	*/
-	void Engine::Update()
+	void Engine::MenuUpdate() 
 	{
-		while (!m_window->WindowCloseStatus())
-		{
-			//Poll I/O events
-			glfwPollEvents();
 
-			float dt, rate;
-			std::string framerate;
+	}
 
-			//testing RenderEvents
-			//for (unsigned int i = 0; i < 10; i++)
-			//	EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
+	void Engine::IngameUpdate() 
+	{
 
-			m_timer->update();
-			dt = m_timer->GetDeltaTime();
-			rate = 1 / dt;
-			framerate = std::to_string(rate);
-			glfwSetWindowTitle(m_window->GetWindow(), framerate.c_str());
 
-			//Update SceneGraph
-			m_scene->UpdateScene();
+		float dt, rate;
+		std::string framerate;
 
-			m_octree->Update();
+		//testing RenderEvents
+		//for (unsigned int i = 0; i < 10; i++)
+		//	EventManager::PushEvent(boost::make_shared<RenderEvent>(), RenderEventCategory);
 
-			m_particleSystem->Update(dt, m_octree->GetViewables());
-			////renderer Update
-			m_renderer->Update(camera, dt, m_octree->GetViewables());
-			m_renderer->Draw(camera);
+		m_timer->update();
+		dt = m_timer->GetDeltaTime();
+		rate = 1 / dt;
+		framerate = std::to_string(rate);
+		glfwSetWindowTitle(m_window->GetWindow(), framerate.c_str());
 
-			physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
+		//Update SceneGraph
+		m_scene->UpdateScene();
 
-			
-			camera.SetMousePos(m_input->GetCursor());
-			camera.SetMouseScroll(m_input->GetScroll());
+		m_octree->Update();
 
-			//camera movement setup
-			ProcessInputs(dt);
+		m_particleSystem->Update(dt, m_octree->GetViewables());
+		////renderer Update
+		m_renderer->Update(camera, dt, m_octree->GetViewables());
+		m_renderer->Draw(camera);
 
-			/*	static unsigned int temp = Rendering::OctreeNode::GetCount();
-				FL_ENGINE_WARN("NodeCount: {0}",temp);*/
-			m_input->Update();
-		}
+		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
+
+
+		camera.SetMousePos(m_input->GetCursor());
+		camera.SetMouseScroll(m_input->GetScroll());
+
+		//camera movement setup
+		ProcessInputs(dt);
+
+		/*	static unsigned int temp = Rendering::OctreeNode::GetCount();
+			FL_ENGINE_WARN("NodeCount: {0}",temp);*/
+		m_input->Update();
+	}
+
+	void Engine::PauseUpdate() 
+	{
+	
 	}
 
 	void Engine::ProcessInputs(float dt)

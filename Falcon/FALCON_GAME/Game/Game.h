@@ -3,27 +3,27 @@
 
 #include <System/Engine.h>
 #include <System/Types.h>
-#include "GameState.h"
 
 namespace gameLoop
 {
 	class Game
 	{
 	private:
-		boost::container::map<std::string, GameState*> m_states;
+		STATE m_currentState;
 		Engine* m_engine = nullptr;
-		bool m_quitGame, m_changeState;
-		GameState* m_currentState;
+		bool m_quitGame, m_changeState, m_initMenu, m_initGame, m_initPause;
+
+		void Game_Init();
+		void Menu_Init();
+		void PauseMenu_Init();
+
+		void Game_Update();
+		void Menu_Update();
+		void PauseMenu_Update();
 
 	public:
 
-		inline void AddState(GameState* state) 
-		{ 
-			if(m_states.find(state->m_title)==m_states.end())
-			m_states[state->m_title] = state; 
-		}
 		bool Init();
-		bool RunState(std::string stateName);
 		Game();
 
 		void Run();

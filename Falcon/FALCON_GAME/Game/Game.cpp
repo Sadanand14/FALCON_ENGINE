@@ -2,11 +2,11 @@
 
 namespace gameLoop 
 {
-	Game::Game() :m_quitGame(false),m_changeState(false), m_currentState(nullptr) {}
+	Game::Game() :m_quitGame(false),m_changeState(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::INGAME) {}
 
 	Game::~Game() 
 	{
-		fmemory::fdelete(m_engine);
+		delete m_engine;
 	}
 
 	bool Game::Init() 
@@ -17,25 +17,85 @@ namespace gameLoop
 		return true;
 	}
 
-	bool Game::RunState(std::string stateName)
-	{
-		m_changeState = true;
-		if (m_states.find(stateName) == m_states.end()) return false;
-
-		m_currentState = m_states[stateName];
-		return true;
-	}
-
 	void Game::Run() 
 	{
-		while (!m_quitGame)
+		WindowClass* window= m_engine->GetWindow();
+		while (!window->WindowCloseStatus())
 		{
-			//m_currentState->Start();
-
-			while(!m_changeState)
+			if (m_currentState == STATE::MENU)
 			{
-				m_engine->Update();
+				if (m_initMenu) 
+				{
+					Menu_Init();
+					m_initMenu = false;
+				}
+
+				//Poll I/O events
+				glfwPollEvents();
+
+				Menu_Update();
+
+				m_engine->MenuUpdate();
+			}
+			else if (m_currentState == STATE::INGAME)
+			{	
+				if (m_initGame) 
+				{
+					Game_Init();
+				}
+
+				//Poll I/O events
+				glfwPollEvents();
+
+				Game_Update();
+
+				m_engine->IngameUpdate();
+			}
+			else if (m_currentState == STATE::PAUSEMENU)
+			{
+				if (m_initPause) 
+				{
+					PauseMenu_Init();
+				}
+				//Poll I/O events
+				glfwPollEvents();
+
+				PauseMenu_Update();
+
+				m_engine->PauseUpdate();
 			}
 		}
 	}
+
+	void Game::Game_Init() 
+	{
+	
+	}
+
+	void Game::Menu_Init() 
+	{
+	
+	}
+
+	void Game::PauseMenu_Init() 
+	{
+		
+	}
+
+	void Game::Game_Update() 
+	{
+	
+	}
+
+	void Game::Menu_Update() 
+	{
+	
+	}
+
+	void Game::PauseMenu_Update() 
+	{
+		
+	}
+
+	
 }
