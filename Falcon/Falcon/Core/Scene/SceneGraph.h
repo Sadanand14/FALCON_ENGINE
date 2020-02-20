@@ -1,8 +1,7 @@
 #ifndef SCENE_GRAPH_H
 #define SCENE_GRAPH_H
 
-#include <boost/container/vector.hpp>
-#include <boost/container/map.hpp>
+#include "Types.h"
 #include "EntityManager.h"
 
 namespace Scene

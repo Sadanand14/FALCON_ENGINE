@@ -7,7 +7,9 @@ namespace physics
 	namespace vehicle
 	{
 
-
+		/**
+		* Defines the different collision flags for defining colliding surfaces.
+		*/
 		enum COLLUSUION_FLAGS
 		{
 			COLLISION_FLAG_GROUND = 1 << 0,

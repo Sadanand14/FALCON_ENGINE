@@ -396,6 +396,7 @@ namespace physics
 	* Creates Mesh collider
 	* @param vertexData vertices of the mesh
 	* @param stride the length for each vertex
+	* @param count of the vertecies
 	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
 	* @return PxShape * for collider shape
 	*/
@@ -408,6 +409,17 @@ namespace physics
 		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
 		return shape;
 	}
+
+
+	/**
+	* Creates an exclusive shape for the collider. Can be used to create a rigidbody with multiple colliders.
+	* @param pointer to rigidactor
+	* @param pointer to the transform of entity
+	* @param vertexData vertices of the mesh
+	* @param stride the length for each vertex
+	* @param count of the vertecies 
+	* @return PxShape * for collider shape which is associated to the actor provided
+	*/
 
 	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform, const glm::vec3* vertexData, const int& count, const int& stride)
 	{
@@ -429,6 +441,12 @@ namespace physics
 	}
 
 
+	/**
+	* Creates a vehicle using vehicle api. Which will be used for simulations later on.
+	* @param RigidDynamic* to the vehicle actor. 
+	* @param starting transform for the vehicle.
+	*/
+
 	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform)
 	{
 		try
@@ -441,6 +459,12 @@ namespace physics
 			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
 		}
 	}
+
+
+	/*
+	* Release collider associated with certain entity.
+	* @param Rigidactor* to the reource that needs to be released.
+	*/
 
 	void ReleaseCollider(physx::PxRigidActor* ref)
 	{

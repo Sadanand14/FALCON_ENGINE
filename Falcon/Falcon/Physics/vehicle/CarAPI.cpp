@@ -210,7 +210,7 @@ namespace physics
 		* Will be removed once we have inputs coming in via Falcon's APIs.
 		*
 		*/
-		void IncrementDrivingMode(Car* car,const float timestep)
+		void IncrementDrivingMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData,const float timestep)
 		{
 			gVehicleModeTimer += timestep;
 			if (gVehicleModeTimer > gVehicleModeLifetime)
@@ -224,7 +224,7 @@ namespace physics
 				//Increment to next driving mode.
 				gVehicleModeTimer = 0.0f;
 				gVehicleOrderProgress++;
-				releaseAllControls(car);
+				releaseAllControls(car, vehicleInputData);
 
 				//If we are at the end of the list of driving modes then start again.
 				if (eDRIVE_MODE_NONE == gDriveModeOrder[gVehicleOrderProgress])
@@ -238,25 +238,25 @@ namespace physics
 				switch (eDriveMode)
 				{
 				case eDRIVE_MODE_ACCEL_FORWARDS:
-					startAccelerateForwardsMode(car);
+					startAccelerateForwardsMode(car, vehicleInputData);
 					break;
 				case eDRIVE_MODE_ACCEL_REVERSE:
-					startAccelerateReverseMode(car);
+					startAccelerateReverseMode(car, vehicleInputData);
 					break;
 				case eDRIVE_MODE_HARD_TURN_LEFT:
-					startTurnHardLeftMode(car);
+					startTurnHardLeftMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HANDBRAKE_TURN_LEFT:
-					startHandbrakeTurnLeftMode(car);
+					startHandbrakeTurnLeftMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HARD_TURN_RIGHT:
-					startTurnHardRightMode(car);
+					startTurnHardRightMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HANDBRAKE_TURN_RIGHT:
-					startHandbrakeTurnRightMode(car);
+					startHandbrakeTurnRightMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_BRAKE:
-					startBrakeMode(car);
+					startBrakeMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_NONE:
 					break;
@@ -270,7 +270,11 @@ namespace physics
 			}
 		}
 
-
+		/**
+		* This method can be used to setup the vehicle description.
+		* @param poniter to the car which is being setup
+		* TODO: Read data from json.
+		*/
 		void CreateVehicleDescriptionObject(Car* car)
 		{
 			//Currently using a default. May be data can be read in via json.
@@ -290,6 +294,13 @@ namespace physics
 			car->m_carDesc.chassisSimFilterData = physx::PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 		}
 
+
+
+		/**
+		* Creates vehicle4w* for a car which is used by physx to apply simulations on.
+		* @param poniter to the car which is being setup
+		* @param pointer to car's dynamic actor
+		*/
 
 		void CreateVehicle4W(Car* car,physx::PxRigidDynamic* vehActor)
 		{
@@ -374,7 +385,7 @@ namespace physics
 				car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
 				car->m_car->mDriveDynData.setUseAutoGears(true);
 
-				startBrakeMode(car);
+				//startBrakeMode(car, vehicleInputData);
 
 				//Configure the userdata
 				ConfigureCarData(car->m_car, car->m_carDesc.actorUserData, car->m_carDesc.shapeUserDatas);
@@ -392,7 +403,11 @@ namespace physics
 		}
 
 
-
+		/**
+		* Sets up simulation data for wheels and chassis.
+		* @param poniter to the car which is being setup
+		* @param pointer to car's dynamic actor
+		*/
 		void SetupVehicleActorData(Car* car, physx::PxRigidDynamic* vehActor)
 		{
 
@@ -422,7 +437,12 @@ namespace physics
 		}
 		
 		
-		
+		/**
+		* Defines the car for the vehicle sdk.
+		* @param  PxVehicleWheels* to vehicle
+		* @param  ActorUserData* being used for simulation
+		* @param  ShapeUserData* being used for collision
+		*/
 		void ConfigureCarData(physx::PxVehicleWheels* vehicle, ActorUserData* actorUserData, ShapeUserData* shapeUserDatas)
 		{
 
@@ -447,118 +467,158 @@ namespace physics
 
 		}
 
+		/**
+		* Drives the car forward.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
 
-		void startAccelerateForwardsMode(Car* car)
+		void startAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalAccel(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogAccel(1.0f);
+				vehicleInputData.setAnalogAccel(1.0f);
 			}
 		}
 
-		void startAccelerateReverseMode(Car* car)
+		/**
+		* Drives the car backwards.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
 
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalAccel(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogAccel(1.0f);
+				vehicleInputData.setAnalogAccel(1.0f);
 			}
 		}
 
-		void startBrakeMode(Car* car)
+		/**
+		* Applies breaks to the car.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalBrake(true);
+				vehicleInputData.setDigitalBrake(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogBrake(1.0f);
+				vehicleInputData.setAnalogBrake(1.0f);
 			}
 		}
 
-		void startTurnHardLeftMode(Car* car)
+		/**
+		* Makes car take a hard left turn
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalAccel(true);
-				car->m_vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalSteerLeft(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogAccel(true);
-				car->m_vehicleInputData.setAnalogSteer(-1.0f);
+				vehicleInputData.setAnalogAccel(true);
+				vehicleInputData.setAnalogSteer(-1.0f);
 			}
 		}
 
-		void startTurnHardRightMode(Car* car)
+		/**
+		* Makes car take a hard right turn.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalAccel(true);
-				car->m_vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalSteerRight(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogAccel(1.0f);
-				car->m_vehicleInputData.setAnalogSteer(1.0f);
+				vehicleInputData.setAnalogAccel(1.0f);
+				vehicleInputData.setAnalogSteer(1.0f);
 			}
 		}
 
-		void startHandbrakeTurnLeftMode(Car* car)
+		/**
+		* Makes car take a left turn with handbreak enabled
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalSteerLeft(true);
-				car->m_vehicleInputData.setDigitalHandbrake(true);
+				vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogSteer(-1.0f);
-				car->m_vehicleInputData.setAnalogHandbrake(1.0f);
+				vehicleInputData.setAnalogSteer(-1.0f);
+				vehicleInputData.setAnalogHandbrake(1.0f);
 			}
 		}
 
-		void startHandbrakeTurnRightMode(Car* car)
+		/**
+		* Makes car take a right turn with handbreak enabled.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void startHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalSteerRight(true);
-				car->m_vehicleInputData.setDigitalHandbrake(true);
+				vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogSteer(1.0f);
-				car->m_vehicleInputData.setAnalogHandbrake(1.0f);
+				vehicleInputData.setAnalogSteer(1.0f);
+				vehicleInputData.setAnalogHandbrake(1.0f);
 			}
 		}
 
 
-		void releaseAllControls(Car* car)
+		/**
+		* Releases all inouts from the car.
+		* @param pointer to the car.
+		* @param PxVehicleDrive4WRawInputData associated with the car.
+		*/
+		void releaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
-				car->m_vehicleInputData.setDigitalAccel(false);
-				car->m_vehicleInputData.setDigitalSteerLeft(false);
-				car->m_vehicleInputData.setDigitalSteerRight(false);
-				car->m_vehicleInputData.setDigitalBrake(false);
-				car->m_vehicleInputData.setDigitalHandbrake(false);
+				vehicleInputData.setDigitalAccel(false);
+				vehicleInputData.setDigitalSteerLeft(false);
+				vehicleInputData.setDigitalSteerRight(false);
+				vehicleInputData.setDigitalBrake(false);
+				vehicleInputData.setDigitalHandbrake(false);
 			}
 			else
 			{
-				car->m_vehicleInputData.setAnalogAccel(0.0f);
-				car->m_vehicleInputData.setAnalogSteer(0.0f);
-				car->m_vehicleInputData.setAnalogBrake(0.0f);
-				car->m_vehicleInputData.setAnalogHandbrake(0.0f);
+				vehicleInputData.setAnalogAccel(0.0f);
+				vehicleInputData.setAnalogSteer(0.0f);
+				vehicleInputData.setAnalogBrake(0.0f);
+				vehicleInputData.setAnalogHandbrake(0.0f);
 			}
 		}
 	}

@@ -136,6 +136,7 @@
     <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\Font.h" />
+    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />

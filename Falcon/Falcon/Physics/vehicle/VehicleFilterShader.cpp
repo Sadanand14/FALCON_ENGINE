@@ -4,6 +4,11 @@ namespace physics
 {
 	namespace vehicle
 	{
+
+		/**
+		* Creates a vehicle filter shader which enables physx to decide what stuff car should
+		* interact with.
+		*/
 		physx::PxFilterFlags VehicleFilterShader
 		(physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0,
 			physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,

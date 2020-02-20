@@ -16,9 +16,16 @@ namespace physics
 		void deallocate(void* ptr) override;
 	};
 
+
+	/**
+	* Custome error handler for physx logging. 
+	*/
 	class FLPxErrorCallback : public physx::PxErrorCallback
 	{
 	public:
+		/**
+		* Error handler method used by error callbacks in physx to log.
+		*/
 		void reportError(physx::PxErrorCode::Enum code, const char* message, const char* file, int line) override;
 	};
 }

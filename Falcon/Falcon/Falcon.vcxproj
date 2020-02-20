@@ -136,6 +136,7 @@ xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutD
     <ClInclude Include="Physics\vehicle\CarAPI.h" />
     <ClInclude Include="Physics\vehicle\Vehicle.h" />
     <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
+    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
     <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
     <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />

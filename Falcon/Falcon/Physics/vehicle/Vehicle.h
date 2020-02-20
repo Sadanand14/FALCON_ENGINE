@@ -1,10 +1,11 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
-#include "PxPhysicsAPI.h"
+#include "Types.h"
 #include "Physx/physx/include/vehicle/PxVehicleSDK.h"
 #include "../Physics.h"
 #include "Memory/fnew.h"
+#include "VehicleInputHandler.h"
 
 namespace physics
 {
@@ -12,6 +13,10 @@ namespace physics
 	namespace vehicle
 	{
 
+
+		/*
+		* A nameless namespace to create private global variables.
+		*/
 
 		namespace
 		{
@@ -181,7 +186,10 @@ namespace physics
 			uint32_t wheelId;
 		};
 
-
+		/**
+		* A data structure to hold the vehicle physics properties. Which will be used by
+		* physx to simulate behavior.
+		*/
 		struct VehicleDesc
 		{
 			float chassisMass;
@@ -221,21 +229,21 @@ namespace physics
 		};
 
 
+
+		/**
+		* Car data structure is used to create a vehicle on which we will apply physx simulations.
+		*/
 		struct Car
 		{
 
 			VehicleDesc m_carDesc;
 			physx::PxVehicleDrive4W* m_car;
 			bool m_isInAir;
-			physx::PxVehicleDrive4WRawInputData m_vehicleInputData;
+			//FLVehicleDrive4WRawInputData m_vehicleInputData;
 
 			Car(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 
-			~Car()
-			{
-				//PX_RELEASE(m_car);
-				//m_car->free();
-			}
+			~Car() = default;
 		};
 		
 		/**
@@ -243,7 +251,8 @@ namespace physics
 		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
 
-		extern std::vector<Car*>gCars;
+		extern boost::container::vector<Car*>gCars;
+		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern bool gMimicKeyInputs;
 
 	}

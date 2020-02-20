@@ -14,7 +14,8 @@ namespace physics
 		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
 		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
-		std::vector<Car*>gCars;
+		boost::container::vector<Car*>gCars;
+		physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		bool gMimicKeyInputs = true;
 		namespace
 		{
@@ -25,7 +26,13 @@ namespace physics
 			physx::PxRigidStatic* gGroundPlane = NULL;
 			
 
-
+			/**
+			* Helper method to create a drivable plane.
+			* @param simulation filter data
+			* @param material for plane
+			* @param physics instance in the scene
+			* @return Rigidstatic* to the plane
+			*/
 			physx::PxRigidStatic* createDrivablePlane(const physx::PxFilterData& simFilterData, physx::PxMaterial* material, physx::PxPhysics* physics)
 			{
 				//Add a plane to the scene.
@@ -52,6 +59,13 @@ namespace physics
 
 		}
 
+
+
+
+		/**
+		* Initializes the physx vehicle sdk.
+		* @return true if success,false otherwise.
+		*/
 		bool InitVehicleSDK()
 		{
 			try
@@ -100,17 +114,23 @@ namespace physics
 				return false;
 			}
 		}
+
+
+		/**
+		* Releases resources being held physx vehicle sdk.
+		* @return true if success,false otherwise.
+		*/
 		bool ReleaseVehcileSDK()
 		{
 			try
 			{
-				ReleaseCarMemory();
 				PX_RELEASE(gGroundPlane);
 				PX_RELEASE(gBatchQuery);
 				physx::PxDefaultAllocator allocator = GetAllocator();
 				gVehicleSceneQueryData->free(allocator);
 				PX_RELEASE(gFrictionPairs);
 				physx::PxCloseVehicleSDK();
+				ReleaseCarMemory();
 				return true;
 			}
 			catch (std::exception & e)
@@ -122,7 +142,10 @@ namespace physics
 		}
 
 
-
+		/**
+		* Handles simulation setup for the vehicles in the scene.
+		* @param time delta
+		*/
 
 		void StepVehicleSDK(float dt)
 		{
@@ -134,7 +157,7 @@ namespace physics
 				gVehicles.resize(gCars.size());
 				for (uint8_t itr = 0; itr < gCars.size() && gCars[itr] != nullptr; ++itr)
 				{
-					IncrementDrivingMode(gCars[itr],dt);
+					IncrementDrivingMode(gCars[itr], gVehicleInputData[itr], dt);
 					gVehicles[itr] = gCars[itr]->m_car;
 				}
 
@@ -161,11 +184,11 @@ namespace physics
 					//Update the control inputs for the vehicle.
 					if (gMimicKeyInputs)
 					{
-						PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData, gSteerVsForwardSpeedTable, gCars[itr]->m_vehicleInputData, dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
+						PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData[0], dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
 					}
 					else
 					{
-						PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gCars[itr]->m_vehicleInputData, dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
+						PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData[0], dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
 					}
 					FL_ENGINE_WARN("INPUTS DONE");
 				}
@@ -193,7 +216,11 @@ namespace physics
 
 
 
-
+		/**
+		* Creates the firction pairs for the tyre materials and terrain surfaces. Will be used by the simulation.
+		* @param material pointer for default material
+		* @return pointer to data structure holding Surface to tire friction pairs.
+		*/
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial)
 		{
 			physx::PxVehicleDrivableSurfaceType surfaceTypes[1];
@@ -221,6 +248,8 @@ namespace physics
 
 		/**
 		* Car structure constructor
+		* @param Rigiddynamic* to the actor
+		* @param starting transform for the car
 		*/
 		Car::Car(physx::PxRigidDynamic* vehActor,Transform& startTransform)
 			: m_car(nullptr),
@@ -235,23 +264,26 @@ namespace physics
 
 		/**
 		* Car Creation API
+		* @param Rigiddynamic* to the actor
+		* @param starting transform for the car
 		*/
 		void CreateCar(physx::PxRigidDynamic* vehActor,Transform& transform)
 		{
 			Car* car = fmemory::fnew<Car>(vehActor, transform);
 			//Register car to the global car data
 			gCars.push_back(car);
+
 		}
 
 		/**
-		* Car Creation API
+		* Releases the memory being used by the car objects.
 		*/
 		void ReleaseCarMemory()
 		{
 			for (Car* car : gCars)
 			{
 				if(car!=nullptr)
-					fmemory::fdelete(car);
+					fmemory::fdelete<Car>(car);
 			}
 		}
 

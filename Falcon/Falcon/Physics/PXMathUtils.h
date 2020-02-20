@@ -18,7 +18,7 @@ public:
 	* @param ref to source glm::vec3
 	* @param ref to destincation phvec3
 	*/
-	static void           Vec3ToPxVec3(const glm::vec3& vec_s, physx::PxVec3 &vec_d);
+	static void Vec3ToPxVec3(const glm::vec3& vec_s, physx::PxVec3 &vec_d);
 
 	/**
 	* Converts glm vec3 to px vec3.

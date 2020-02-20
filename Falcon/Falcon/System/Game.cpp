@@ -26,8 +26,8 @@ namespace gameLoop
 		fmemory::fdelete(m_inputClass);
 		fmemory::fdelete(m_window1);
 		AssetManager::Clean();
-		fmemory::MeoryManagerShutDown();
 		physics::ShutdownPhysX();
+		fmemory::MeoryManagerShutDown();
 
 		m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
 		m_audio.Shutdown();

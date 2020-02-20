@@ -10,9 +10,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/vec3.hpp>
-#include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
+
 
 #include <AssetManager.h>
 #include <Memory/fmemory.h>
