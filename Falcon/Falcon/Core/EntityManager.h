@@ -29,7 +29,7 @@ private:
 	//static void LoadMaterial(const std::string& matPath);
 public:
 	//void LoadEntity(const char* EntityPathFile);
-	static Entity* CreateEntity(const char*  objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale);
+	static Entity* CreateEntity(const char*  objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale, RigidbodyDynamic* actor);
 	
 	static void SaveScene(const char* sceneFilePath);
 	static void CloseScene();

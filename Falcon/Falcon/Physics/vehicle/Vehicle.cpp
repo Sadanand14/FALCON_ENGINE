@@ -88,6 +88,7 @@ namespace physics
 				//gCars.resize(1);
 
 				gVehicleModeTimer = 0.0f;
+				gVehicleModeLifetime = 5.0f;
 				gVehicleOrderProgress = 0;
 
 				FL_ENGINE_INFO("INFO: Vehcile SDK initiated successfully.");
@@ -223,7 +224,7 @@ namespace physics
 		*/
 		Car::Car(physx::PxRigidDynamic* vehActor,Transform& startTransform)
 			: m_car(nullptr),
-			  m_isInAir(false)
+			  m_isInAir(true)
 		{
 			CreateVehicleDescriptionObject(this);
 			CreateVehicle4W(this, vehActor);

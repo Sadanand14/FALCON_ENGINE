@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 
+
 /**
 
  * Loads a scene
@@ -9,7 +10,7 @@
  */
 
 
-Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale)
+Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale, RigidbodyDynamic* actor)
 
 {
 
@@ -239,13 +240,16 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 
 			int type;
-			int rigidbodyType;
-			
+			int rigidbodyType = -1;
+
 			const rapidjson::Value& colliderType = doc["physicsComponent"]["type"];
 			type = colliderType.GetInt();
 			
-			const rapidjson::Value& rgType = doc["physicsComponent"]["rigidbody"];
-			rigidbodyType = rgType.GetInt();
+			if (doc["physicsComponent"].HasMember("rigidbody"))
+			{
+				const rapidjson::Value& rgType = doc["physicsComponent"]["rigidbody"];
+				rigidbodyType = rgType.GetInt();
+			}
 
 			switch (type)
 			{
@@ -275,6 +279,13 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 					physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 					break;
 				}
+			case 4:
+				{
+					assert(actor != nullptr);
+					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+					newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
+					physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+				}
 			}
 
 
@@ -286,6 +297,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			case 1:
 				physxComp->SetPhysicsBodyType(newEntity->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 				break;
+
 			}
 
 		}
