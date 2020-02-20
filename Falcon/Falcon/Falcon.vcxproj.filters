@@ -31,6 +31,9 @@
     <Filter Include="Rendering\PipeLine\CanvasItems">
       <UniqueIdentifier>{15C1421A-01E7-0C81-EA2C-924CD6F1314D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\PipeLine\RenderPasses">
+      <UniqueIdentifier>{6666A198-D249-B0D8-DB4C-DE1447AF7629}</UniqueIdentifier>
+    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{6AD049D2-5672-74A8-3F2D-88FC2B6EFBF8}</UniqueIdentifier>
     </Filter>
@@ -141,16 +144,10 @@
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h">
       <Filter>Rendering\PipeLine\CanvasItems</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClInclude>
     <ClInclude Include="Rendering\PipeLine\Material.h">
       <Filter>Rendering\PipeLine</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\Mesh.h">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h">
       <Filter>Rendering\PipeLine</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\Octree.h">
@@ -162,14 +159,29 @@
     <ClInclude Include="Rendering\PipeLine\ParticleData.h">
       <Filter>Rendering\PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\RenderPass.h">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\Renderable.h">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\RenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\Renderable.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\Renderer.h">
       <Filter>Rendering\PipeLine</Filter>
@@ -177,13 +189,7 @@
     <ClInclude Include="Rendering\PipeLine\Shader.h">
       <Filter>Rendering\PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClInclude>
     <ClInclude Include="Rendering\PipeLine\Texture.h">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h">
       <Filter>Rendering\PipeLine</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\Style.h">
@@ -317,16 +323,10 @@
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp">
       <Filter>Rendering\PipeLine\CanvasItems</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\PipeLine\Material.cpp">
       <Filter>Rendering\PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\MeshRenderPass.cpp">
       <Filter>Rendering\PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\Octree.cpp">
@@ -335,25 +335,34 @@
     <ClCompile Include="Rendering\PipeLine\Particle.cpp">
       <Filter>Rendering\PipeLine</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\RenderPass.cpp">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\Renderable.cpp">
-      <Filter>Rendering\PipeLine</Filter>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\RenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\Renderable.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp">
       <Filter>Rendering\PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\Shader.cpp">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp">
-      <Filter>Rendering\PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp">
       <Filter>Rendering\PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\WindowData.cpp">

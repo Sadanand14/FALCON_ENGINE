@@ -215,10 +215,8 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
  *@param[in] A float indicating delta time for the current frame.
  */
 
-float temp = 0.0f;
 void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
-	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
 	m_entities = entities;
 

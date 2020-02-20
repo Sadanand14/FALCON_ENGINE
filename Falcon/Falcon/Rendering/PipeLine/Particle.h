@@ -8,7 +8,7 @@
 
 #include <Memory/fmemory.h>
 #include "Rendering/PipeLine/ParticleData.h"
-#include "Renderable.h"
+#include <RenderPasses/Renderable.h>
 
 /**
  * Particle Class tp store Particle Data for Renderables.

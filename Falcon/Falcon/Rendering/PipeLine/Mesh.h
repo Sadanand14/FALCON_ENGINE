@@ -5,7 +5,7 @@
 #include <string>
 #include <System/Types.h>
 
-#include "Renderable.h"
+#include <RenderPasses/Renderable.h>
 /**
 * Mesh Class to store Mesh Data for Renderables.
 */

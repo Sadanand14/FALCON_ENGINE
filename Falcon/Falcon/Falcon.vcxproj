@@ -57,7 +57,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;BUILD_DEBUG_MODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Core;Core\Events;Core\Components;Core\Scene;System;System\Memory;Rendering;Rendering\PipeLine;Rendering\BufferDefinitions;Rendering\Shader;Audio;Physics;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;vendor\include\Physx\physx\include;vendor\include\Physx\physx\source\physxextensions\src;vendor\include\Physx\pxshared\include;..;vendor\include\Physx\physx\source;vendor\include\Physx\physx\source\foundation;vendor\include\Physx\physx\source\foundation\include;vendor\include\Physx\physx\source\geomutils\include;vendor\include\Physx\physx\source\geomutils\src;vendor\include\Physx\physx\source\geomutils\src\contact;vendor\include\Physx\physx\source\geomutils\src\common;vendor\include\Physx\physx\source\geomutils\src\convex;vendor\include\Physx\physx\source\geomutils\src\distance;vendor\include\Physx\physx\source\geomutils\src\sweep;vendor\include\Physx\physx\source\geomutils\src\gjk;vendor\include\Physx\physx\source\geomutils\src\intersection;vendor\include\Physx\physx\source\geomutils\src\mesh;vendor\include\Physx\physx\source\geomutils\src\hf;vendor\include\Physx\physx\source\geomutils\src\pcm;vendor\include\Physx\physx\source\geomutils\src\ccd;vendor\FMODStudioAPI\api\core\inc;vendor\FMODStudioAPI\api\fsbank\inc;vendor\FMODStudioAPI\api\studio\inc;vendor\include\nuklear;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Core;Core\Events;Core\Components;Core\Scene;System;System\Memory;Rendering;Rendering\PipeLine;Rendering\PipeLine\CanvasItems;Rendering\PipeLine\RenderPasses;Rendering\BufferDefinitions;Rendering\Shader;Audio;Physics;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;vendor\include\Physx\physx\include;vendor\include\Physx\physx\source\physxextensions\src;vendor\include\Physx\pxshared\include;..;vendor\include\Physx\physx\source;vendor\include\Physx\physx\source\foundation;vendor\include\Physx\physx\source\foundation\include;vendor\include\Physx\physx\source\geomutils\include;vendor\include\Physx\physx\source\geomutils\src;vendor\include\Physx\physx\source\geomutils\src\contact;vendor\include\Physx\physx\source\geomutils\src\common;vendor\include\Physx\physx\source\geomutils\src\convex;vendor\include\Physx\physx\source\geomutils\src\distance;vendor\include\Physx\physx\source\geomutils\src\sweep;vendor\include\Physx\physx\source\geomutils\src\gjk;vendor\include\Physx\physx\source\geomutils\src\intersection;vendor\include\Physx\physx\source\geomutils\src\mesh;vendor\include\Physx\physx\source\geomutils\src\hf;vendor\include\Physx\physx\source\geomutils\src\pcm;vendor\include\Physx\physx\source\geomutils\src\ccd;vendor\FMODStudioAPI\api\core\inc;vendor\FMODStudioAPI\api\fsbank\inc;vendor\FMODStudioAPI\api\studio\inc;vendor\include\nuklear;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -83,7 +83,7 @@ IF EXIST "vendor\FMODStudioAPI\api\studio\lib\x64"\ (xcopy /Q /E /Y /I "vendor\F
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;BUILD_RELEASE_MODE;_NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Core;Core\Events;Core\Components;Core\Scene;System;System\Memory;Rendering;Rendering\PipeLine;Rendering\BufferDefinitions;Rendering\Shader;Audio;Physics;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;vendor\include\Physx\physx\include;vendor\include\Physx\physx\source\physxextensions\src;vendor\include\Physx\pxshared\include;..;vendor\include\Physx\physx\source;vendor\include\Physx\physx\source\foundation;vendor\include\Physx\physx\source\foundation\include;vendor\include\Physx\physx\source\geomutils\include;vendor\include\Physx\physx\source\geomutils\src;vendor\include\Physx\physx\source\geomutils\src\contact;vendor\include\Physx\physx\source\geomutils\src\common;vendor\include\Physx\physx\source\geomutils\src\convex;vendor\include\Physx\physx\source\geomutils\src\distance;vendor\include\Physx\physx\source\geomutils\src\sweep;vendor\include\Physx\physx\source\geomutils\src\gjk;vendor\include\Physx\physx\source\geomutils\src\intersection;vendor\include\Physx\physx\source\geomutils\src\mesh;vendor\include\Physx\physx\source\geomutils\src\hf;vendor\include\Physx\physx\source\geomutils\src\pcm;vendor\include\Physx\physx\source\geomutils\src\ccd;vendor\FMODStudioAPI\api\core\inc;vendor\FMODStudioAPI\api\fsbank\inc;vendor\FMODStudioAPI\api\studio\inc;vendor\include\nuklear;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Core;Core\Events;Core\Components;Core\Scene;System;System\Memory;Rendering;Rendering\PipeLine;Rendering\PipeLine\CanvasItems;Rendering\PipeLine\RenderPasses;Rendering\BufferDefinitions;Rendering\Shader;Audio;Physics;vendor\include;vendor\include\glad;vendor\include\glfw;vendor\include\KHR;vendor\include\boost;vendor\include\spdlog;vendor\include\assimp;vendor\include\Physx\physx\include;vendor\include\Physx\physx\source\physxextensions\src;vendor\include\Physx\pxshared\include;..;vendor\include\Physx\physx\source;vendor\include\Physx\physx\source\foundation;vendor\include\Physx\physx\source\foundation\include;vendor\include\Physx\physx\source\geomutils\include;vendor\include\Physx\physx\source\geomutils\src;vendor\include\Physx\physx\source\geomutils\src\contact;vendor\include\Physx\physx\source\geomutils\src\common;vendor\include\Physx\physx\source\geomutils\src\convex;vendor\include\Physx\physx\source\geomutils\src\distance;vendor\include\Physx\physx\source\geomutils\src\sweep;vendor\include\Physx\physx\source\geomutils\src\gjk;vendor\include\Physx\physx\source\geomutils\src\intersection;vendor\include\Physx\physx\source\geomutils\src\mesh;vendor\include\Physx\physx\source\geomutils\src\hf;vendor\include\Physx\physx\source\geomutils\src\pcm;vendor\include\Physx\physx\source\geomutils\src\ccd;vendor\FMODStudioAPI\api\core\inc;vendor\FMODStudioAPI\api\fsbank\inc;vendor\FMODStudioAPI\api\studio\inc;vendor\include\nuklear;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,21 +140,22 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\PipeLine\Canvas.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
-    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
-    <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
     <ClInclude Include="Rendering\PipeLine\Particle.h" />
     <ClInclude Include="Rendering\PipeLine\ParticleData.h" />
-    <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
-    <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
-    <ClInclude Include="Rendering\PipeLine\Renderable.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\RenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\Renderable.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
-    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
-    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\Style.h" />
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
@@ -200,19 +201,20 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
-    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
-    <ClCompile Include="Rendering\PipeLine\MeshRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
     <ClCompile Include="Rendering\PipeLine\Particle.cpp" />
-    <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Renderable.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\RenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\Renderable.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
-    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />

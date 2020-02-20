@@ -1,7 +1,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include "Renderable.h"
+#include <RenderPasses/Renderable.h>
 #include "Style.h"
 
 #define NK_INCLUDE_FIXED_TYPES
