@@ -16,7 +16,7 @@
  *
  * @param name - The name for the nuklear window
  */
-Button::Button(const char* name) : CanvasItem(name), m_wrap(false),  m_font(AssetManager::GetFont("default")),
+Button::Button() : CanvasItem(), m_wrap(false),  m_font(AssetManager::GetFont("default")),
 								   m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
 								   m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
 								   m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0))
@@ -47,8 +47,6 @@ void Button::Commands(nk_context* ctx)
 	ctx->style.button.text_hover = m_textHover;
 	ctx->style.button.text_active = m_textActive;
 
-	nk_layout_row_dynamic(ctx, m_bounds.h, 1);
-	nk_widget(&m_bounds, ctx);
 	if(nk_button_label(ctx, m_text.c_str()))
 		m_callback();
 }

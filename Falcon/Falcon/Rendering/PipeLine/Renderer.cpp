@@ -157,23 +157,24 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
 	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
-	l = fmemory::fnew<Label>("Test Text");
+	l = fmemory::fnew<Label>();
 	//l->SetFlags(NK_WINDOW_NO_SCROLLBAR);
-	l->SetColor(nk_rgb(255, 255, 255));
+	l->SetColor(nk_rgb(244, 245, 248));
 	l->SetTextColor(nk_rgb(0, 0, 0));
 	l->SetWrap(true);
-	l->SetBounds(nk_rect(30, 30, 200, 60));
+	l->SetBounds(nk_rect(0, 0, 0.5, 0.5));
 	l->SetText(std::string("This is a test"));
 	//static_cast<Canvas*>(can)->AddCanvasItem(l);
 
-	b = fmemory::fnew<Button>("Button");
+	b = fmemory::fnew<Button>();
 	//b->SetFlags(NK_WINDOW_NO_SCROLLBAR);
 	b->SetColor(nk_rgb(255, 255, 255));
 	b->SetNormalTextColor(nk_rgb(255, 0, 0));
-	//b->SetNormalButtonColor(nk_rgb(180, 180, 180));
+	b->SetNormalButtonColor(nk_rgb(180, 180, 180));
 	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
 	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
-	b->SetBounds(nk_rect(20, 20, 200, 100));
+	b->SetBounds(nk_rect(0, 0, 0.5, 0.3));
+	//b->SetBounds(nk_rect(0, 0, 1.0, 1.0));
 	b->SetText(std::string("Button"));
 	b->SetCallback( []() {
 		printf("Button Pressed!\n");
@@ -181,18 +182,24 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//static_cast<Canvas*>(can)->AddCanvasItem(b);
 
 	t.textureID = AssetManager::LoadTexture("../Assets/Textures/car.png");
-	i = fmemory::fnew<Image>("Image");
+	i = fmemory::fnew<Image>();
 	//i->SetFlags(NK_WINDOW_NO_SCROLLBAR);
-	i->SetBounds(nk_rect(200, 200, 300, 200));
+	//i->SetBounds(nk_rect(800, 400, 300, 152));
+	i->SetBounds(nk_rect(0.63, 0.56, 0.23, 0.21));
 	i->SetImage(t);
-	//i->AddChild(b);
+	i->AddChild(b);
 	//i->AddChild(l);
 	static_cast<Canvas*>(can)->AddCanvasItem(i);
 
-	p = fmemory::fnew<Panel>("Panel");
-	p->SetBounds(nk_rect(200, 200, 600, 600));
-	p->SetColor(nk_rgb(0, 0, 0));
-	p->AddChild(b);
+	p = fmemory::fnew<Panel>();
+	//p->SetBounds(nk_rect(200, 200, 400, 400));
+	//p->SetBounds(nk_rect(0.16, 0.28, 0.31, 0.56));
+	p->SetBounds(nk_rect(0.0, 0.0, 0.33, 0.33));
+	p->SetColor(nk_rgb(255, 255, 255));
+	//p->AddChild(b);
+	p->AddChild(l);
+	//p->AddChild(i);
+	static_cast<Canvas*>(can)->AddCanvasItem(p);
 
 	m_renderPasses[4]->QueueRenderable(can);
 }

@@ -30,7 +30,7 @@ class Image : public CanvasItem
 		//Font* m_font;
 
 	public:
-		Image(const char* name);
+		Image();
 		virtual ~Image();
 		void Commands(nk_context* ctx) override;
 		inline void SetImage(Texture tex) { m_img = nk_image_id(tex.textureID); }

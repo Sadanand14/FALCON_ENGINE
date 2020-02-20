@@ -22,7 +22,7 @@ class Button : public CanvasItem
 		void (*m_callback)(void);
 
 	public:
-		Button(const char* name);
+		Button();
 		virtual ~Button();
 		void Commands(nk_context* ctx) override;
 		//inline void SetWrap(bool wrap) { m_wrap = wrap; }

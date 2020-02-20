@@ -30,7 +30,7 @@ class Label : public CanvasItem
 		Font* m_font;
 
 	public:
-		Label(const char* name);
+		Label();
 		virtual ~Label();
 		void Commands(nk_context* ctx) override;
 		inline void SetWrap(bool wrap) { m_wrap = wrap; }

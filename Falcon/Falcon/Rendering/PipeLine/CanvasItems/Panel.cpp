@@ -16,7 +16,7 @@
  *
  * @param name - The name for the nuklear window
  */
-Panel::Panel(const char* name) : CanvasItem(name)
+Panel::Panel() : CanvasItem()
 {
 
 }
@@ -35,6 +35,8 @@ Panel::~Panel()
  */
 void Panel::Commands(nk_context* ctx)
 {
-	nk_layout_row_dynamic(ctx, m_bounds.h, 1);
-	nk_widget(&m_bounds, ctx);
+	struct nk_rect bounds = nk_layout_space_bounds(ctx);
+	bounds = nk_rect(bounds.x * m_bounds.x, bounds.y * m_bounds.y, bounds.w * m_bounds.w, bounds.h * m_bounds.h);
+
+	nk_fill_rect(nk_window_get_canvas(ctx), bounds, 5, nk_rgb(50, 50, 50));
 }

@@ -16,7 +16,7 @@
  *
  * @param name - The name for the nuklear window
  */
-Label::Label(const char* name) : CanvasItem(name), m_wrap(false), m_hAlignment(NK_TEXT_ALIGN_LEFT),
+Label::Label() : CanvasItem(), m_wrap(false), m_hAlignment(NK_TEXT_ALIGN_LEFT),
 								 m_vAlignment(NK_TEXT_ALIGN_MIDDLE), m_font(AssetManager::GetFont("default"))
 {
 
@@ -36,8 +36,6 @@ Label::~Label()
  */
 void Label::Commands(nk_context* ctx)
 {
-	nk_layout_row_dynamic(ctx, m_bounds.h, 1);
-	nk_widget(&m_bounds, ctx);
 	if(m_wrap)
 		nk_label_colored_wrap(ctx, m_text.c_str(), m_textColor);
 	else
