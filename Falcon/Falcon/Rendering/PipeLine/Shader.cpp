@@ -5,7 +5,7 @@
 /**
 * Get vertex/fragment code from the file path\
 */
-void Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
+bool Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
 {
 	std::string shaderSrc;
 	std::ifstream shaderFile;
@@ -32,7 +32,9 @@ void Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
 	catch (std::exception e)
 	{
 		FL_ENGINE_ERROR("ERROR::Failed to read shader code.{0}",e.what());
+		return false;
 	}
+	return true;
 }
 
 
@@ -42,7 +44,7 @@ void Shader::LoadShaderCode(const GLchar* filePath, GLenum& type)
 /**
 * Compiles the shader code recieved from load shader function to store an id for the compiled source code.
 */
-void Shader::CompileShaderCode(SimpleShader& shader)
+bool Shader::CompileShaderCode(SimpleShader& shader)
 {
 	
 	shader.m_shaderId = glCreateShader(shader.m_type); //generate the shader buffer
@@ -59,7 +61,10 @@ void Shader::CompileShaderCode(SimpleShader& shader)
 	{
 		glGetShaderInfoLog(shader.m_shaderId, 512, NULL, infoLog);
 		FL_ENGINE_ERROR("Error::Shader compilation failed:\n {0}", infoLog);
+		return false;
 	};
+
+	return true;
 }
 
 
@@ -67,7 +72,7 @@ void Shader::CompileShaderCode(SimpleShader& shader)
 * Links the shaders with current program.
 */
 
-void Shader::LinkShaders()
+bool Shader::LinkShaders()
 {
 	//Link Shaders
 	m_programID = glCreateProgram();
@@ -83,7 +88,9 @@ void Shader::LinkShaders()
 	{
 		glGetProgramInfoLog(m_programID, 512, NULL, infoLog);
 		FL_ENGINE_ERROR("Error::Shader Linking Failed {0}", infoLog);
+		return false;
 	}
+	return true;
 }
 
 
@@ -94,20 +101,27 @@ void Shader::LinkShaders()
 */
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	:m_vertexShader(GL_VERTEX_SHADER),
-	 m_fragmentShader(GL_FRAGMENT_SHADER)
-{	
+	m_fragmentShader(GL_FRAGMENT_SHADER)
+{
 	//Read the shaders 
 	GLenum vertexShader = GL_VERTEX_SHADER;
-	LoadShaderCode(vertexPath, vertexShader);
+	if (!LoadShaderCode(vertexPath, vertexShader))
+		FL_ENGINE_ERROR("Vertex Shader failed to load for path: {0}", vertexPath);
+
 	GLenum fragmentShader = GL_FRAGMENT_SHADER;
-	LoadShaderCode(fragmentPath, fragmentShader);
+	if (!LoadShaderCode(fragmentPath, fragmentShader))
+		FL_ENGINE_ERROR("Fragment Shader failed to load for path: {0}", fragmentPath);
 
 	//Compile the shaders
-	CompileShaderCode(m_vertexShader);
-	CompileShaderCode(m_fragmentShader);
+	if (!CompileShaderCode(m_vertexShader))
+		FL_ENGINE_ERROR("VertexShader failed to compile for path: {0}", vertexPath);
+	
+	if(!CompileShaderCode(m_fragmentShader))
+		FL_ENGINE_ERROR("Fragment Shader failed to compile for path: {0}", fragmentPath);
 
 	//Link Shaders
-	LinkShaders();
+	if (!LinkShaders())
+		FL_ENGINE_ERROR("Linking failed for \n VS : {0} \n FS:{1}", vertexPath, fragmentPath);
 
 	//Delete the Shaders after they're linked to the program
 	glDeleteShader(m_vertexShader.m_shaderId);

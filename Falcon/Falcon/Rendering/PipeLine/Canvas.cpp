@@ -21,7 +21,7 @@ void Canvas::Setup()
 	Renderable::Setup();
 
 	m_material = fmemory::fnew<Material>();
-	m_material->m_shader = fmemory::fnew<Shader>("Rendering/Shader/UI.vert", "Rendering/Shader/UI.frag");
+	m_material->m_shader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/UI.vert", "../Falcon/Rendering/Shader/UI.frag");
 
 	//Init command buffer
 	nk_buffer_init_default(&m_cmds);

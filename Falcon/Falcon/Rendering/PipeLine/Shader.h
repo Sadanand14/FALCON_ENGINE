@@ -32,8 +32,8 @@ class Shader
 {
 
 private:
-	void LoadShaderCode(const GLchar* vertexPath, GLenum& type);
-	void CompileShaderCode(SimpleShader& shader);
+	bool LoadShaderCode(const GLchar* vertexPath, GLenum& type);
+	bool CompileShaderCode(SimpleShader& shader);
 
 public:
 	//Program ID
@@ -44,7 +44,7 @@ public:
 	//Constructor to read and build the shader
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
-	void LinkShaders();
+	bool LinkShaders();
 
 	//Use the shader
 	void UseShader();
