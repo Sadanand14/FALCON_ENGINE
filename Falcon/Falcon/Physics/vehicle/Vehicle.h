@@ -252,7 +252,9 @@ namespace physics
 		*/
 
 		extern boost::container::vector<Car*>gCars;
+		extern boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
+		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
 
 	}

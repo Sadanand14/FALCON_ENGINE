@@ -16,6 +16,8 @@ namespace physics
 		*/
 		boost::container::vector<Car*>gCars;
 		physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
+		boost::container::vector<physx::PxVehicleWheels*>gVehicles;
+		boost::container::vector<physx::PxVehicleWheelQueryResult> gvehicleQueryResults;
 		bool gMimicKeyInputs = true;
 		namespace
 		{
@@ -153,12 +155,10 @@ namespace physics
 			try
 			{
 				//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
-				std::vector<physx::PxVehicleWheels*, fmemory::STLAllocator<physx::PxVehicleWheels*>>gVehicles;
-				gVehicles.resize(gCars.size());
+
 				for (uint8_t itr = 0; itr < gCars.size() && gCars[itr] != nullptr; ++itr)
 				{
 					IncrementDrivingMode(gCars[itr], gVehicleInputData[itr], dt);
-					gVehicles[itr] = gCars[itr]->m_car;
 				}
 
 				//Raycasts
@@ -168,19 +168,19 @@ namespace physics
 					const uint32_t raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 					PxVehicleSuspensionRaycasts(gBatchQuery, gCars.size(), &gVehicles[0], raycastResultsSize, raycastResults);
 
-					FL_ENGINE_WARN("RAYCASTS DONE");
+					//FL_ENGINE_WARN("RAYCASTS DONE");
 				}
 
 				//vehicle update
 				physx::PxWheelQueryResult wheelQueryResults[4];
 				physx::PxVec3 grav = GetPhysicsScene()->getGravity();
-				std::vector<physx::PxVehicleWheelQueryResult, fmemory::STLAllocator<physx::PxVehicleWheelQueryResult>>vehicleQueryResults;
-				vehicleQueryResults.resize(gVehicles.size());
+				if(gvehicleQueryResults.size() < gVehicles.size())
+					gvehicleQueryResults.resize(gVehicles.size());
 				for (unsigned itr = 0; itr < gVehicles.size(); ++itr)
 				{
 					//PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 					physx::PxVehicleWheelQueryResult temp{ wheelQueryResults ,gVehicles[itr]->mWheelsSimData.getNbWheels() };
-					vehicleQueryResults[0]=temp;
+					gvehicleQueryResults[itr]=temp;
 					//Update the control inputs for the vehicle.
 					if (gMimicKeyInputs)
 					{
@@ -190,20 +190,20 @@ namespace physics
 					{
 						PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData[0], dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
 					}
-					FL_ENGINE_WARN("INPUTS DONE");
+					//FL_ENGINE_WARN("INPUTS DONE");
 				}
 
 				//if (gVehicles[0] != nullptr)
 				{
-					physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gVehicles.size(), &gVehicles[0], &vehicleQueryResults[0]);
-					FL_ENGINE_WARN("UPDATES DONE");
+					physx::PxVehicleUpdates(dt, grav, *gFrictionPairs, gVehicles.size(), &gVehicles[0], &gvehicleQueryResults[0]);
+					//FL_ENGINE_WARN("UPDATES DONE");
 				}
 
 
 				//Needed for movement handling
 				for (uint8_t itr = 0; itr < gCars.size(); ++itr)
 				{
-					gCars[itr]->m_isInAir = gCars[itr]->m_car->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(vehicleQueryResults[itr]);
+					gCars[itr]->m_isInAir = gCars[itr]->m_car->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(gvehicleQueryResults[itr]);
 				}
 			}
 			catch (std::exception & e)
@@ -272,6 +272,7 @@ namespace physics
 			Car* car = fmemory::fnew<Car>(vehActor, transform);
 			//Register car to the global car data
 			gCars.push_back(car);
+			gVehicles.push_back(car->m_car);
 
 		}
 
