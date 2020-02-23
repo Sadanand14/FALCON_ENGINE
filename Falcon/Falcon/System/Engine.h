@@ -57,6 +57,7 @@ namespace gameLoop
 		CAudioEngine m_audio;
 
 		inline WindowClass* GetWindow() { return m_window; }
+		inline InputReceiver* GetInput() { return m_input;  }
 		inline bool GetKey(int key) { return m_input->GetKey(key);  }
 		inline bool GetKeyPress(int key) { return m_input->GetKeyPress(key);  }
 		inline bool GetKeyRelease(int key) { return m_input->GetKeyRelease(key);  }

@@ -76,7 +76,7 @@ class Renderer
 	RenderEventSystem* m_RES;
 	GLFWwindow* m_window;
 	glm::mat4 m_projection;
-	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
+	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 
@@ -86,6 +86,16 @@ class Renderer
 public:
 	Renderer();
 	~Renderer();
+
+
+	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Ingame_Draw(Camera& cam);
+
+	void Pause_Draw();
+	void Pause_Update();
+
+	void Menu_Update();
+	void Menu_Draw();
 
 	void Init(GLFWwindow* window);
 	void CreateDrawStates();

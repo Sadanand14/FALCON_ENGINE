@@ -2,7 +2,7 @@
 
 namespace gameLoop 
 {
-	Game::Game() :m_quitGame(false),m_changeState(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::INGAME) {}
+	Game::Game() :m_quitGame(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::MENU) {}
 
 	Game::~Game() 
 	{
@@ -14,6 +14,7 @@ namespace gameLoop
 		m_engine = new gameLoop::Engine();
 		if (!m_engine->Initialize()) return false;
 		
+		m_input = m_engine->GetInput();
 		return true;
 	}
 
@@ -89,7 +90,10 @@ namespace gameLoop
 
 	void Game::Menu_Update() 
 	{
-	
+		if (GetKeyPress(GLFW_KEY_ENTER)) 
+		{
+			m_currentState = STATE::INGAME;
+		}
 	}
 
 	void Game::PauseMenu_Update() 

@@ -84,13 +84,13 @@ namespace gameLoop
 
 	void Engine::MenuUpdate() 
 	{
-
+		m_renderer->Menu_Update();
+		m_renderer->Menu_Draw();
+		m_input->Update();
 	}
 
 	void Engine::IngameUpdate() 
 	{
-
-
 		float dt, rate;
 		std::string framerate;
 
@@ -111,8 +111,8 @@ namespace gameLoop
 
 		m_particleSystem->Update(dt, m_octree->GetViewables());
 		////renderer Update
-		m_renderer->Update(camera, dt, m_octree->GetViewables());
-		m_renderer->Draw(camera);
+		m_renderer->Ingame_Update(camera, dt, m_octree->GetViewables());
+		m_renderer->Ingame_Draw(camera);
 
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
@@ -130,7 +130,7 @@ namespace gameLoop
 
 	void Engine::PauseUpdate() 
 	{
-	
+		m_input->Update();
 	}
 
 	void Engine::ProcessInputs(float dt)

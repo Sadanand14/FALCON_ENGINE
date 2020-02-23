@@ -11,7 +11,13 @@ namespace gameLoop
 	private:
 		STATE m_currentState;
 		Engine* m_engine = nullptr;
-		bool m_quitGame, m_changeState, m_initMenu, m_initGame, m_initPause;
+		bool m_quitGame, m_initMenu, m_initGame, m_initPause;
+		InputReceiver* m_input = nullptr;
+
+		inline bool GetKey(int key) { return m_input->GetKey(key); };
+		inline bool GetKeyRelease(int key) {return m_input->GetKeyRelease(key);}
+		inline bool GetKeyPress(int key) { return m_input->GetKeyPress(key); }
+
 
 		void Game_Init();
 		void Menu_Init();
