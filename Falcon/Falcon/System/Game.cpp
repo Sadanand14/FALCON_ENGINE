@@ -112,7 +112,7 @@ namespace gameLoop
 			//Update SceneGraph
 			m_scene->UpdateScene();
 
-			m_octree->Update();
+			//m_octree->Update();
 
 			m_particleSystem->Update(dt, m_scene->GetEntities());
 			////renderer Update
