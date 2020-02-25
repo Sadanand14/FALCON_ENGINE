@@ -87,11 +87,15 @@ void Mesh::Bind()
 	m_VBO2->Unbind();
 }
 
-void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray)
-{
-	//std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> vertPosArray;
-	vertPosArray.resize(m_vertexArray.size());
 
+/**
+* Returns the vertexArray into the vector passed. 
+* @param glm::vec3 vector bufffer to copy data into.
+*/
+void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray) const
+{
+
+	vertPosArray.resize(m_vertexArray.size());
 	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
 	{
 #ifdef FL_PLATFORM_WINDOWS

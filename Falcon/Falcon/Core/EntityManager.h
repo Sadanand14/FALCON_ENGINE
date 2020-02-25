@@ -9,15 +9,14 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/vec3.hpp>
 
-#include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
 
 #include <AssetManager.h>
 #include <Memory/fmemory.h>
 #include "EntityInterface.h"
 #include <Log.h>
+#include "Types.h"
 
 class EntityManager
 {
@@ -28,10 +27,10 @@ private:
 	//static void LoadMaterial(const std::string& matPath);
 public:
 	//void LoadEntity(const char* EntityPathFile);
-	static Entity* CreateEntity(const char*  objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale);
+	static Entity* CreateEntity(const char*  objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale, RigidbodyDynamic* actor);
 	
 	static void SaveScene(const char* sceneFilePath);
 	static void CloseScene();
 };
 
-#endif
+#endif //ENTITY_MANAGER_H

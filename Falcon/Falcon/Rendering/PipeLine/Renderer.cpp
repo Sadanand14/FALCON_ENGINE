@@ -144,6 +144,8 @@ void Renderer::CreateDrawStates()
 	can->Setup();
 }
 
+
+
 /**
 *Function to Set the relevant data in the draw states.
 */
@@ -152,44 +154,44 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
-	for (u32 i = 0; i < entities->size(); i++)
-	{
-		RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
-		ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+	//RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+	//for (u32 i = 0; i < entities->size(); i++)
+	//{
+	//	RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+	//	ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+	//	if (renderComp || particleComp)
+	//	{
+	//		entities->at(i)->AddComponent<PhysicsComponent>();
+	//		PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-		if (renderComp || particleComp)
-		{
-			entities->at(i)->AddComponent<PhysicsComponent>();
-			PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
+	//		if (renderComp)
+	//		{
+	//			
+	//			if (i != 1)
+	//			{
+	//				physComp->SetBoxCollider(5, 5, 5);
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 
-			if (renderComp)
-			{
-				if (i != 1)
-				{
-					physComp->SetBoxCollider(5, 5, 5);
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//			}
+	//			else
+	//			{
+	//				renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//				physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+	//			}
+	//			//renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//			//physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+	//		}
 
-				}
-				else
-				{
-					std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
-					renderComp->m_mesh->GetVertexPositionsArray(temp);
-					//physComp->SetSphereCollider(2);//SetMeshCollider(temp, renderComp->m_mesh->m_vertexArray.size(), sizeof(glm::vec3));
-
-					physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-					physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-					//delete temp;
-				}
-			}
-
-			if (particleComp)
-			{
-				physComp->SetBoxCollider(5, 5, 5);
-				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
-			}
-		}
-	}
-
+	//		if (particleComp)
+	//		{
+	//			physComp->SetBoxCollider(5, 5, 5);
+	//			physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//		}
+	//	}
+	//}
+	//physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
 	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
 	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
@@ -205,6 +207,11 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	static_cast<Canvas*>(can)->AddCanvasItem(l);
 	m_renderPasses[4]->QueueRenderable(can);
 }
+
+
+
+
+
 
 /**
  * Function that provides consistent updates for the next rendering frame.

@@ -1,8 +1,7 @@
 #ifndef SCENE_GRAPH_H
 #define SCENE_GRAPH_H
 
-#include <boost/container/vector.hpp>
-#include <boost/container/map.hpp>
+#include "Types.h"
 #include "EntityManager.h"
 
 namespace Scene
@@ -79,7 +78,7 @@ namespace Scene
 		entityVector  m_entityList, m_renderables, m_updatedRenderables;
 		SceneNode* m_rootNode;
 
-		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index);
+		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index, bool isReadingCar, unsigned int carIndex, RigidbodyDynamic* actor);
 		void SegregateEntities();
 
 	public:

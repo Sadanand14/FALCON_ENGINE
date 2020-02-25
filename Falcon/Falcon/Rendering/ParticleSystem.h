@@ -8,7 +8,7 @@
 
 class ParticleEvent;
 class Entity;
-class ParticleEmitterComponent;
+struct ParticleEmitterComponent;
 
 /**
  * Class Definition for a Render Event System which will respond to all Render Type Events.

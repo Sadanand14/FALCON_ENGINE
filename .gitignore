@@ -9,6 +9,10 @@ Falcon/Falcon/vendor/*
 #Ignoring build files
 Falcon/build/*
 
+#Ignoring zip & scene yaml
+*.zip
+*yaml
+
 # User-specific files
 *.rsuser
 *.suo

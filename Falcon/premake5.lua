@@ -246,6 +246,7 @@ project "Falcon"
 			--Linux order for physxlibs https://github.com/NVIDIAGameWorks/PhysX/issues/92 --
 			"PhysX_static_64",
 			"PhysXPvdSDK_static_64",
+			"PhysXVehicle_static_64",
 			"PhysXExtensions_static_64",
 			"PhysXCooking_static_64",
 			"PhysXCommon_static_64",

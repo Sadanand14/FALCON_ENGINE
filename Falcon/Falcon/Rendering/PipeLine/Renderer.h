@@ -22,7 +22,7 @@
 class RenderPass;
 class Camera;
 class Entity;
-class RenderEvent;
+struct RenderEvent;
 class EventSystem;
 class Renderable;
 class Mesh;
