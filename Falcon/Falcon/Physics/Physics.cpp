@@ -195,8 +195,8 @@ namespace physics
 		//Update vehicles
 		if(gIsVehicleInScene)
 			vehicle::StepVehicleSDK(1.0f / 60.0f);
-
-		gScene->simulate(1.0f / 60.0f);
+			
+		gScene->simulate( 1.0f / 60.0f);
 		gScene->fetchResults(true);
 
 		//Update physics System;
