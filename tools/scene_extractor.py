@@ -4,8 +4,21 @@ from shutil import copyfile
 import os
 import json
 from Scene_Extractor.guid_mapper import *
+from Scene_Extractor.file_id_generator import *
+from Scene_Extractor.constants import *
 
 
+def scale_for_falcon(unity_scale):
+    scale = {'x': '', 'y': '', 'z': ''}
+    for key in scale.keys():
+        scale[key] = int(unity_scale[key]) * FALCON_SCALE_DOWN
+    return scale
+
+
+
+def parse_components(scene_data,comp_list):
+    print(comp_list)
+    print("\n")
 
 def ReadPrefabs(prefab):
     position = {'x': '', 'y': '', 'z': ''}
@@ -38,7 +51,7 @@ def ReadPrefabs(prefab):
             scale['z'] = d['value']
     return_data['name'] = name
     return_data['position'] = position
-    return_data['scale'] = scale
+    return_data['scale'] = scale_for_falcon(scale)
     return_data['rotation'] = rotation
     return return_data
 
@@ -55,30 +68,34 @@ def ReadSceneFile(filepath):
     with open(filepath, "r") as file_desc:
         data = yaml.load_all(file_desc, Loader=yaml.Loader)
 
-        c = 0
-        for d in data:
-            print(d)
-            input()
-        print(c)
-        return
         readTransform = False
+        c = 0
 
+        '''for d in data:
+            if readTransform is False and list(d.keys())[0] == 'GameObject':
+                if d['GameObject']['m_Name'] == "Main Camera" or d['GameObject']['m_Name'] == "Directional Light":
+                    continue
+                else:
+                    parse_components(data,d['GameObject']['m_Component'])
+
+        return
+        '''
         for d in data:
-            if readTransform is False and d.keys()[0] == 'GameObject':
+            if readTransform is False and list(d.keys())[0] == 'GameObject':
                 if d['GameObject']['m_Name'] == "Main Camera" or d['GameObject']['m_Name'] == "Directional Light":
                     continue
                 name = d['GameObject']['m_Name']
                 readTransform = True
             # print(name , d)
-            elif readTransform is True and d.keys()[0] == 'Transform':
+            elif readTransform is True and list(d.keys())[0] == 'Transform':
                 position = d['Transform']['m_LocalPosition']
                 rotaion = d['Transform']['m_LocalRotation']
                 scale = d['Transform']['m_LocalScale']
                 readTransform = False
                 obj_pos[name] = position
                 obj_rot[name] = rotaion
-                obj_scale[name] = scale
-            elif d.keys()[0] == 'PrefabInstance':
+                obj_scale[name] = scale_for_falcon(scale)
+            elif list(d.keys())[0] == 'PrefabInstance':
                 # do shit for prefab instances
                 prefab_data = ReadPrefabs(d['PrefabInstance']['m_Modification']['m_Modifications'])
                 name = prefab_data['name']
@@ -88,7 +105,6 @@ def ReadSceneFile(filepath):
                 print('\n')
                 print(name, obj_pos[name], obj_rot[name], obj_scale[name])
                 print('\n')
-                pass
 
     # print obj_scale
     # print obj_pos
@@ -117,14 +133,14 @@ def ReadSceneFile(filepath):
     return data
 
 
-def CleanFile(filepath):
+def clean_file(filepath):
     file_desc = open(filepath, "r")
     result = str()
     for lineNumber, line in enumerate(file_desc.readlines()):
         if lineNumber == 1:
             continue
         if line.startswith('--- !u!'):
-            result += '--- ' + line.split(' ')[2] + '\n'
+            result += '\n--- ' + line.split(' ')[2] + '\n'
         else:
             result += line
     file_desc.close()
@@ -138,11 +154,12 @@ def CleanFile(filepath):
 if __name__ == "__main__":
     scene_file = sys.argv[1]
     # creating copy of the file
-    #copyfile(scene_file, "test.yaml")
+    copyfile(scene_file, "test.yaml")
 
-    guid_mapper(sys.argv[2]);
-
-    #CleanFile("test.yaml")
+    guid_mapper(sys.argv[2])
+    # SceneTest(sys.argv[1])
+    clean_file("test.yaml")
+    generate_file_ids("test.yaml")
     data = ReadSceneFile("test.yaml")
 
 # os.remove("test.yaml")\
