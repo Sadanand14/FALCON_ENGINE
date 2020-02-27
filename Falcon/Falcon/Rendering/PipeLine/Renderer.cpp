@@ -1,5 +1,31 @@
 #include "Renderer.h"
+
+#include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
+
+//Included files
+//Camera
+#include <Camera.h>
+
+//Render passes
+#include "RenderPass.h"
+#include "MeshRenderPass.h"
+#include "ParticleRenderPass.h"
+#include "TransparentRenderPass.h"
+#include "CanvasRenderPass.h"
+#include "SkyRenderPass.h"
+
+//Events
+#include <Events/PassToRenderer.h>
+#include <Events/EventManager.h>
+#include <Events/PassingMeshEvent.h>
+
+//Entities
+#include <EntityInterface.h>
+
+//TODO: REMOVE
+#include "Canvas.h"
+#include "CanvasItems/Label.h"
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -10,8 +36,14 @@ RenderEventSystem::RenderEventSystem()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//std::cout << "RenderEventSystem intialized with address" << this << "\n";
-	subcribedList.push_back(RenderEventCategory);
+	subscribedList.push_back(EVENT_RENDER);
+	subscribedList.push_back(EVENT_DATA_TO_RENDERER);
 	SubscribeToEvents();
+}
+
+void RenderEventSystem::ShutDown()
+{
+	delete m_instance;
 }
 
 /**
@@ -25,20 +57,28 @@ void RenderEventSystem::ProcessEvents()
 	//count++;
 	while (!eventQueue.empty())
 	{
+		boost::shared_ptr<Event> temp = eventQueue.front();
 		eventQueue.pop_front();
-		std::function<void()>f = std::bind(&RenderEventSystem::PrintReception, this);
-		m_threadPool->submit<>(f);
+
+		//for Data Transfer Events
+		if (temp->CheckCategory(EVENT_DATA_TO_RENDERER))
+		{
+			FL_ENGINE_ERROR("RECIEVED THE MESH DATA!!");
+			boost::shared_ptr<PassToRenderer> dataEvent = boost::static_pointer_cast<PassToRenderer>(temp);
+			m_skyMesh = dataEvent->GetSkyMesh();
+			m_terrainMesh = dataEvent->GetTerrainMesh();
+		}
 	}
 }
 
 /**
-* Function to Subscribe to all the event types listed in the local subscribe list.
-*/
+ * Function to Subscribe to all the event types listed in the local subscribe list.
+ */
 void RenderEventSystem::SubscribeToEvents()
 {
-	for (unsigned int i = 0; i < subcribedList.size(); i++)
+	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
-		EventManager::SubscribeToEvent(this, RenderEventCategory);
+		EventManager::SubscribeToEvent(this, subscribedList[i]);
 	}
 }
 
@@ -63,6 +103,21 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	fmemory::fdelete(can);
+	fmemory::fdelete(l);
+
+	for(auto pass : m_renderPasses)
+	{
+		CanvasRenderPass* crp = nullptr;
+		crp = dynamic_cast<CanvasRenderPass*>(pass);
+
+		if(crp)
+			fmemory::fdelete(crp);
+		else
+			fmemory::fdelete(pass);
+	}
+
+	RenderEventSystem::ShutDown();
 }
 
 /**
@@ -71,6 +126,7 @@ Renderer::~Renderer()
 void Renderer::Init()
 {
 	m_RES = RenderEventSystem::GetInstance();
+	m_RES->ProcessEvents();
 }
 
 /**
@@ -78,100 +134,222 @@ void Renderer::Init()
 */
 void Renderer::CreateDrawStates()
 {
-	// Configure global opengl state
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	m_RES->ProcessEvents();
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	//m_RES->ProcessEvents();
+
+	can = fmemory::fnew<Canvas>();
+	can->Setup();
 }
+
+
 
 /**
 *Function to Set the relevant data in the draw states.
 */
-void Renderer::SetDrawStates()
+void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
-	//entity = fmemory::fnew_arr<Entity>(500);
+	m_skyMesh = m_RES->GetSkyMesh();
+	m_terrainMesh = m_RES->GetTerrainMesh();
+	m_projection = projection;
+	//RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+	//for (u32 i = 0; i < entities->size(); i++)
+	//{
+	//	RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
+	//	ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
+	//	if (renderComp || particleComp)
+	//	{
+	//		entities->at(i)->AddComponent<PhysicsComponent>();
+	//		PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-	//Mesh* mesh = AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	shader = fmemory::fnew<Shader>("Rendering/Shader/VertexShader.vert", "Rendering/Shader/FragmentShader.frag");
-	//for (u32 i = 0; i < 500; i++) {
-	//	entity[i].AddComponent<RenderComponent>();
-	//	RenderComponent* rd = entity[i].GetComponent<RenderComponent>();
-	//	rd->m_mesh = mesh;//AssetManager::LoadModel("../Assets/Models/cerb/cerberus.fbx");
-	//	//rd->m_mesh = AssetManager::LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-	//	//rd->GetMaterial()->m_shader = shader;
+	//		if (renderComp)
+	//		{
+	//			
+	//			if (i != 1)
+	//			{
+	//				physComp->SetBoxCollider(5, 5, 5);
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
 
-	//	glm::vec3 pos = glm::vec3(float(std::rand() % 100 - 50), float(std::rand() % 100 - 50), float(std::rand() % 100 - 50));
-	//	// Model transformations
-	//	entity[i].GetTransform()->SetPosition(pos);
-	//	entity[i].GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	//			}
+	//			else
+	//			{
+	//				renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//				physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
+	//			}
+	//			//renderComp->m_mesh->GetVertexPositionsArray(temp);
+	//			//physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+	//		}
+
+	//		if (particleComp)
+	//		{
+	//			physComp->SetBoxCollider(5, 5, 5);
+	//			physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//		}
+	//	}
 	//}
-	shader->UseShader();
-	for (unsigned int i = 0; i < m_entity.size(); i++) 
-	{
-		m_entity[i]->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->SetShader(shader);
-	}
+	//physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
+	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
+	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
+	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
+	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
+	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
+
+	l = fmemory::fnew<Label>("Test Text");
+	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
+	l->SetColor(nk_rgb(0, 0, 0));
+	l->SetWrap(true);
+	l->SetBounds(nk_rect(30, 30, 200, 60));
+	l->SetText(std::string("This is a test"));
+	static_cast<Canvas*>(can)->AddCanvasItem(l);
+	m_renderPasses[4]->QueueRenderable(can);
 }
 
+
+
+
+
+
 /**
-* Function that provides consistent updates for the next rendering frame.
-*
-*@param[in] An integer indicating width.
-*@param[in] An integer indicating height.
-*@param[in] A float indicating zoom.
-*@param[in] A 4x4 matrix defined in glm library.
-*@param[in] A float indicating delta time for the current frame.
-*/
+ * Function that provides consistent updates for the next rendering frame.
+ *
+ *@param[in] An integer indicating width.
+ *@param[in] An integer indicating height.
+ *@param[in] A camera to use for rendering
+ *@param[in] A float indicating delta time for the current frame.
+ */
 
 float temp = 0.0f;
-void Renderer::Update(int width, int height, float zoom, glm::mat4 view, float dt)
+void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
 {
 	temp += 1.0f * dt;
 	m_RES->ProcessEvents();
-	glm::mat4 projection = glm::perspective(glm::radians(zoom), (float)width / (float)height, 0.1f, 100.0f);
-	shader->SetMat4("projection", projection);
+	m_entities = entities;
 
-	// camera/view transformations
-	shader->SetMat4("view", view);
+	//for skybox
+	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
+	skyShader->UseShader();
+	skyShader->SetMat4("projection", m_projection);
+	skyShader->SetMat4("view", cam.GetViewMatrix());
 
-	m_entity[0]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
-	m_entity[1]->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,0.0f,1.0f)));
+	//for terrain
+	Shader* temp = m_terrainMesh->GetMaterial()->m_shader;
+	temp->UseShader();
+	temp->SetMat4("projection", m_projection);
+	temp->SetMat4("view", cam.GetViewMatrix());
 
+
+	for (unsigned int i = 0; i < m_entities->size(); ++i)
+	{
+		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
+		{
+			Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
+			shader->UseShader();
+			shader->SetMat4("projection", m_projection);
+			shader->SetMat4("view", cam.GetViewMatrix());
+		}
+
+		if(m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
+		{
+			Shader* shader = m_entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->m_shader;
+			shader->UseShader();
+			shader->SetMat4("projection", m_projection);
+			shader->SetMat4("view", cam.GetViewMatrix());
+			shader->SetVec3("camPos", cam.m_Position);
+		}
+	}
+	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
 }
 
 /**
-* Main Draw Function for the Renderer
-*/
-//TODO-> Have multiple Renderer Passes functionality
-void Renderer::Draw()
+ * Main Draw Function for the Renderer
+ */
+void Renderer::Draw(Camera &cam)
 {
+	glDepthMask(true);
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (u32 i = 0; i < m_entity.size(); i++) {
-		Mesh* m = m_entity[i]->GetComponent<RenderComponent>()->m_mesh;
-
-		m->AddWorldMatrix(m_entity[i]->GetTransform()->GetModel());
-
-		if (queuedMeshes.find(m) == queuedMeshes.end())
-			queuedMeshes.insert(m);
+	if (m_skyMesh != nullptr)
+	{
+		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
+		m_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
 
-	for (auto it = queuedMeshes.begin(); it != queuedMeshes.end(); it++) {
-		(*it)->Bind();
 
-		for (u32 i = 0; i < (*it)->m_indexOffsets.size(); i++)
+	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
+	m_renderPasses[0]->QueueRenderable(m_terrainMesh);
+	boost::container::flat_map<float, int> distanceEntityMap;
+	for (u32 i = 0; i < m_entities->size(); i++)
+	{
+		Transform* trans = m_entities->at(i)->GetTransform();
+
+		RenderComponent* rc = m_entities->at(i)->GetComponent<RenderComponent>();
+		if (rc)
 		{
-			i32 count;
-			if (i < (*it)->m_indexOffsets.size() - 1)
-				count = (*it)->m_indexOffsets[i + 1] - (*it)->m_indexOffsets[i];
+			Mesh* m = rc->m_mesh;
+
+			if(!m->GetTransparent())
+			{
+				m->AddWorldMatrix(trans->GetModel());
+				m_renderPasses[0]->QueueRenderable(m);
+			}
+
 			else
-				count = (*it)->m_indexArray.size() - (*it)->m_indexOffsets[i];
-			glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0, (*it)->GetWorldMatrixAmount(), (*it)->m_indexOffsets[i]);
+			{
+				float dist = glm::distance(trans->GetRelativePosition(), cam.m_Position);
+				distanceEntityMap[dist] = i;
+			}
 		}
-		(*it)->ClearWorldMatrices();
+
+		ParticleEmitterComponent* pec = m_entities->at(i)->GetComponent<ParticleEmitterComponent>();
+		if (pec)
+		{
+			Particle* p = pec->m_particle;
+			p->SetWorldMatrix(trans->GetModel());
+			for (auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
+				p->AddParticleData(*it);
+			m_renderPasses[1]->QueueRenderable(p);
+		}
 	}
 
-	queuedMeshes.clear();
+	uint32_t count = 0;
+	//Transparent meshes
+	for(auto it = distanceEntityMap.rbegin(); it != distanceEntityMap.rend(); it++)
+	{
+		RenderComponent* rc = m_entities->at(it->second)->GetComponent<RenderComponent>();
+		rc->m_mesh->AddWorldMatrix(m_entities->at(it->second)->GetTransform()->GetModel());
+		count++;
+
+		auto next = it;
+		next++;
+
+		if(next != distanceEntityMap.rend())
+		{
+			if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
+			{
+				m_renderPasses[3]->QueueRenderable(rc->m_mesh);
+				static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+				count = 0;
+			}
+
+			else
+				continue;
+		}
+
+		else
+		{
+			m_renderPasses[3]->QueueRenderable(rc->m_mesh);
+			static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+			count = 0;
+		}
+	}
+
+	for (u32 i = 0; i < m_renderPasses.size(); i++)
+	{
+		m_renderPasses[i]->Render();
+	}
 }

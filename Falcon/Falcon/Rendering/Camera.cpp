@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <GLFW/glfw3.h>
-CameraEventSystem::CameraEventSystem() 
+CameraEventSystem::CameraEventSystem()
 {
 	keyCodeVector.push_back(GLFW_KEY_W);
 	keyCodeVector.push_back(GLFW_KEY_A);
@@ -16,17 +16,17 @@ CameraEventSystem::CameraEventSystem()
 
 void CameraEventSystem::SubscribeToEvents()
 {
-	EventManager::SubscribeToEvent(this, KeyEventCategory);
+	EventManager::SubscribeToEvent(this, EVENT_KEY_INPUT);
 }
 
-void CameraEventSystem::ProcessEvents() 
+void CameraEventSystem::ProcessEvents()
 {
 }
 
 bool CameraEventSystem::CheckForKey(unsigned int code)
 {
 	bool keyExists = false;
-	for (unsigned int i = 0; i < keyCodeVector.size(); i++) 
+	for (unsigned int i = 0; i < keyCodeVector.size(); i++)
 	{
 		if (code == keyCodeVector[i])
 			keyExists = true;
@@ -36,10 +36,10 @@ bool CameraEventSystem::CheckForKey(unsigned int code)
 
 void CameraEventSystem::ProcessKeyEvent(keyType type, unsigned int code)
 {
-	if (CheckForKey(code)) 
+	if (CheckForKey(code))
 	{
-		if (code == GLFW_KEY_W) {}
 			//call ProcessKeyBoard of camera Class;
+		if (code == GLFW_KEY_W) {}
 		else if (code == GLFW_KEY_S){}
 		else if (code == GLFW_KEY_D){}
 		else if (code == GLFW_KEY_A){}
@@ -65,7 +65,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	UpdateCameraVectors();
 }
 
-glm::mat4 Camera::GetViewMatrix()
+glm::mat4 Camera::GetViewMatrix() const
 {
 	return glm::lookAt(m_Position, m_Position + m_Forward, m_Up);
 }

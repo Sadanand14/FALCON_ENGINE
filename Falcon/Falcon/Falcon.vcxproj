@@ -43,7 +43,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Audio;$(ProjectDir)Physics;$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assipm;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)vendor\libs\GLFW\Debug;$(ProjectDir)vendor\libs;$(ProjectDir)vendor\libs\assimp\Debug;$(ProjectDir)vendor\libs\boost;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediates\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
@@ -60,17 +60,21 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>&amp;(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\nuklear;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILD_DEBUG_MODE;FL_PLATFORM_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW;$(ProjectDir)vendor\libs\assimp;$(ProjectDir)vendor\libs\boost</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW\$(Configuration);$(ProjectDir)vendor\libs\assimp\$(Configuration);$(ProjectDir)vendor\libs\boost;$(ProjectDir)vendor\libs\physx\$(Configuration);$(ProjectDir)vendor\FMODStudioAPI\api\core\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\studio\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXExtensions_static_64.lib;PhysXTask_static_64.lib;PhysXVehicle_static_64.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\";
+copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\core\lib\X64\*.dll" "$(OutDir)"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\studio\lib\X64\*.dll" "$(OutDir)"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -81,19 +85,27 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>&amp;(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Core;$(ProjectDir)Rendering;$(ProjectDir)System;$(ProjectDir)vendor\include;$(ProjectDir)vendor\include\assimp;$(ProjectDir)vendor\include\boost;$(ProjectDir)vendor\include\glad;$(ProjectDir)vendor\include\GLFW;$(ProjectDir)vendor\include\KHR;$(ProjectDir)vendor\include\spdlog;$(ProjectDir)vendor\include\PhysX\physx\include;$(ProjectDir)vendor\include\PhysX\physx\source\physxextensions\src;$(ProjectDir)vendor\include\PhysX\physx\..\pxshared\include;$(ProjectDir)vendor\include\PhysX\physx\source\foundation\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\include;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\contact;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\common;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\convex;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\distance;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\sweep;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\gjk;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\intersection;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\mesh;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\hf;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\pcm;$(ProjectDir)vendor\include\PhysX\physx\source\geomutils\src\ccd;$(ProjectDir)vendor\FMODStudioAPI\api\core\inc;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\inc;$(ProjectDir)vendor\FMODStudioAPI\api\studio\inc;$(ProjectDir)vendor\include\nuklear</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FL_PLATFORM_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW;$(ProjectDir)vendor\libs\assimp;$(ProjectDir)vendor\libs\boost</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\libs\GLFW\$(Configuration);$(ProjectDir)vendor\libs\assimp\$(Configuration);$(ProjectDir)vendor\libs\boost;$(ProjectDir)vendor\libs\physx\$(Configuration);$(ProjectDir)vendor\FMODStudioAPI\api\core\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\x64;$(ProjectDir)vendor\FMODStudioAPI\api\studio\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXExtensions_static_64.lib;PhysXTask_static_64.lib;PhysXVehicle_static_64.lib;fmod_vc.lib;fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"</Command>
+      <Command>copy /y/d "$(ProjectDir)vendor\libs\assimp\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\";
+copy /y/d "$(ProjectDir)vendor\libs\physx\$(Configuration)\*" "$(SolutionDir)build\bin\$(Configuration)-$(Platform)\$(ProjectName)\"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\core\lib\X64\*.dll" "$(OutDir)"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\studio\lib\X64\*.dll" "$(OutDir)"
+xcopy /y /d "$(ProjectDir)vendor\FMODStudioAPI\api\fsbank\lib\X64\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -103,8 +115,9 @@
     <ClInclude Include="Core\Components\BasicComponent.h" />
     <ClInclude Include="Core\Components\CameraComponent.h" />
     <ClInclude Include="Core\Components\InputComponent.h" />
+    <ClInclude Include="Core\Components\ParticleEmitterComponent.h" />
     <ClInclude Include="Core\Components\PhysicsComponent.h" />
-    <ClInclude Include="Core\Components\RenderCcomponent.h" />
+    <ClInclude Include="Core\Components\RenderComponent.h" />
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Core\EntityManager.h" />
@@ -112,22 +125,50 @@
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
+    <ClInclude Include="Core\Events\ParticleEvent.h" />
+    <ClInclude Include="Core\Events\PassToRenderer.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
+    <ClInclude Include="Core\Events\PassingMeshEvent.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
+    <ClInclude Include="Physics\PhysicsSystem.h" />
+    <ClInclude Include="Physics\PXUtils.h" />
+    <ClInclude Include="Physics\RayCast.h" />
+    <ClInclude Include="Physics\vehicle\CarAPI.h" />
+    <ClInclude Include="Physics\vehicle\Vehicle.h" />
+    <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
+    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
+    <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
     <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
+    <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
+    <ClInclude Include="Rendering\PipeLine\Canvas.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
+    <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
+    <ClInclude Include="Rendering\PipeLine\Particle.h" />
+    <ClInclude Include="Rendering\PipeLine\ParticleData.h" />
+    <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
+    <ClInclude Include="Rendering\PipeLine\Renderable.h" />
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
+    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
+    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
     <ClInclude Include="Rendering\stb_image.h" />
+    <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="Rendering\ParticleSystem.h" />
+    <ClInclude Include="Rendering\stb_dds.h" />
+    <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="System\framework.h" />
     <ClInclude Include="System\Game.h" />
     <ClInclude Include="System\InputReceiver.h" />
@@ -140,17 +181,34 @@
     <ClInclude Include="System\Memory\StackAllocator.h" />
     <ClInclude Include="System\Memory\StackSTLAllocator.h" />
     <ClInclude Include="System\Memory\STLMemoryInterface.h" />
+    <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Physics\PXMathUtils.h" />
     <ClInclude Include="System\targetver.h" />
     <ClInclude Include="System\ThreadPool.h" />
     <ClInclude Include="System\TimeBenchmark.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\TypeToInt.h" />
+    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Rendering\Shader\FragmentShader.frag" />
+    <None Include="Rendering\Shader\Particle.frag" />
+    <None Include="Rendering\Shader\Particle.vert" />
+    <None Include="Rendering\Shader\Post.frag" />
+    <None Include="Rendering\Shader\Post.vert" />
+    <None Include="Rendering\Shader\PS_CubeMapShader.frag" />
+    <None Include="Rendering\Shader\Sky.frag" />
+    <None Include="Rendering\Shader\Sky.vert" />
+    <None Include="Rendering\Shader\Skybox.frag" />
+    <None Include="Rendering\Shader\Skybox.vert" />
+    <None Include="Rendering\Shader\Transparent.frag" />
+    <None Include="Rendering\Shader\Transparent.vert" />
+    <None Include="Rendering\Shader\UI.frag" />
+    <None Include="Rendering\Shader\UI.vert" />
     <None Include="Rendering\Shader\VertexShader.vert" />
+    <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
     <None Include="Shader\FragmentShader.frag" />
     <None Include="Shader\VertexShader.vert" />
   </ItemGroup>
@@ -161,18 +219,39 @@
     <ClCompile Include="Core\Events\EventSystem.cpp" />
     <ClCompile Include="Core\Events\KeyEvents.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="Physics\PXUtils.cpp" />
+    <ClCompile Include="Physics\RayCast.cpp" />
+    <ClCompile Include="Physics\vehicle\CarAPI.cpp" />
+    <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
+    <ClCompile Include="Rendering\PipeLine\MeshRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Particle.cpp" />
+    <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Renderable.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
-    <ClCompile Include="Rendering\stb_image_implementation.cpp" />
+    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
+    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
+    <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
+    <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="Rendering\ParticleSystem.cpp" />
     <ClCompile Include="System\Application.cpp" />
+    <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="System\Game.cpp" />
     <ClCompile Include="System\glad.c" />
     <ClCompile Include="System\InputReceiver.cpp" />
@@ -181,17 +260,20 @@
     <ClCompile Include="System\Memory\MemoryInterface.cpp" />
     <ClCompile Include="System\Memory\PoolAllocator.cpp" />
     <ClCompile Include="System\Memory\StackAllocator.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PXMathUtils.cpp" />
     <ClCompile Include="System\ThreadPool.cpp" />
     <ClCompile Include="System\Timer.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\glm.0.9.9.600\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.9.600\build\native\glm.targets')" />
+    <Import Project="..\packages\glm.0.9.9.700\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.9.700\build\native\glm.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\glm.0.9.9.600\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.9.600\build\native\glm.targets'))" />
+    <Error Condition="!Exists('..\packages\glm.0.9.9.700\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.9.700\build\native\glm.targets'))" />
   </Target>
 </Project>

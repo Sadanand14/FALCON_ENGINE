@@ -18,6 +18,22 @@ void Material::Bind()
 void Material::BindTo(int32_t location, Texture tex, const char* locName)
 {
 	glActiveTexture(GL_TEXTURE0 + location);
-	glBindTexture(GL_TEXTURE_2D, tex.textureID);
+
+	if (tex.type == TextureType::CUBEMAP)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, tex.textureID);
+	else if(tex.type == TextureType::TEXTURE2D)
+		glBindTexture(GL_TEXTURE_2D, tex.textureID);
+
 	m_shader->SetInt(locName, location);
+}
+
+
+Material::~Material()
+{
+	fmemory::fdelete<>(m_shader);
+	glDeleteTextures(1, &m_albedoTex.textureID);
+	glDeleteTextures(1, &m_roughnessTex.textureID);
+	glDeleteTextures(1, &m_normalTex.textureID);
+	glDeleteTextures(1, &m_metallicTex.textureID);
+	glDeleteTextures(1, &m_aoTex.textureID);
 }

@@ -1,5 +1,5 @@
 #include "ThreadPool.h"
-ThreadPool* ThreadPool::mainThreadPool = NULL;
+ThreadPool* ThreadPool::mainThreadPool = nullptr;
 unsigned int ThreadPool::count = 0;
 /**
 *ThreadPool Constructor which helps Initialize worker threads
@@ -22,20 +22,26 @@ ThreadPool::ThreadPool() :discard_threadPool(false)
 	}
 }
 
+void ThreadPool::ShutDown() 
+{
+	//if(mainThreadPool)fmemory::fdelete<ThreadPool>(mainThreadPool);
+	if (mainThreadPool!= nullptr)delete mainThreadPool;
+}
+
 /**
 ThreadPool Class Destructor
 */
 ThreadPool::~ThreadPool()
 {
 	discard_threadPool = true;
-	for (unsigned int i = 0; i < boost::thread::hardware_concurrency(); i++)
-		worker_threads[i].join();
-	delete mainThreadPool;
+	/*for (unsigned int i = 0; i < boost::thread::hardware_concurrency(); i++)
+		if(worker_threads[i].joinable())worker_threads[i].join();*/
+	//delete mainThreadPool;
 }
 
 ThreadPool* ThreadPool::GetThreadPool()
 {
-	if (!mainThreadPool)
+	if (mainThreadPool==nullptr)
 	{
 		mainThreadPool = new ThreadPool();
 		//mainThreadPool = fmemory::fnew<ThreadPool>();

@@ -1,4 +1,5 @@
 
+
 /**
 	Disabling warnings thrown out by vendor code
 */
@@ -12,7 +13,9 @@
 #pragma warning( disable : 4005)
 #pragma warning( disable : 26451)
 
+
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#define STB_IMAGE_DDS_IMPLEMENTATION
+#include "stb_dds.h"
 
 #pragma warning( pop )

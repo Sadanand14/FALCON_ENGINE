@@ -1,10 +1,16 @@
 #include "Mesh.h"
 #include "Log.h"
 
+// On g++, string.f contains the implementation of memcpy_s
+#ifdef FL_PLATFORM_UNIX
+#define __STDC_WANT_LIB_EXT1__ 1
+#include <string.h>
+#endif
+
 /**
-*Basic Mesh Constructor
+* Basic Mesh Constructor
 */
-Mesh::Mesh() :m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
+Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 {
 
 }
@@ -12,10 +18,9 @@ Mesh::Mesh() :m_VAO(nullptr), m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
 /**
 *Sets a vertex Array Object with the vertex and indexbuffer values in this mesh class.
 */
-void Mesh::SetupMesh()
+void Mesh::Setup()
 {
-	m_VAO = fmemory::fnew<VertexArray>();
-	m_VAO->Bind();
+	Renderable::Setup();
 	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
 	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
@@ -27,8 +32,8 @@ void Mesh::SetupMesh()
 	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
 	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
 	m_VBO1->Unbind();
-
 	m_VBO2->Bind();
+
 	for (u32 i = 0; i < 4; i++)
 	{
 		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
@@ -72,37 +77,35 @@ u32 Mesh::GetWorldMatrixAmount()
 }
 
 /**
- * Sets the material of the mesh
- * @param mat - The new material for the mesh
- */
-void Mesh::SetMaterial(Material* mat)
-{
-	m_material = mat;
-}
-
-/**
- * Gets the material of the mesh
- * @return - The material of the mesh
- */
-Material* Mesh::GetMaterial()
-{
-	return m_material;
-}
-
-/**
 * Binds the VertexArray object held by the mesh along with the relevant vertex and index buffer.
 */
 void Mesh::Bind()
 {
-	// Draw Mesh
-	m_VAO->Bind();
-
+	Renderable::Bind();
 	m_VBO2->Bind();
 	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_VBO2->Unbind();
+}
 
-	if (m_material != nullptr)
-		m_material->Bind();
+
+/**
+* Returns the vertexArray into the vector passed. 
+* @param glm::vec3 vector bufffer to copy data into.
+*/
+void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray) const
+{
+
+	vertPosArray.resize(m_vertexArray.size());
+	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
+	{
+#ifdef FL_PLATFORM_WINDOWS
+		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
+#else
+		memcpy(&vertPosArray[itr], &m_vertexArray[itr], sizeof(glm::vec3));
+#endif
+	}
+
+	//return &vertPosArray[0];
 }
 
 /**
@@ -110,7 +113,6 @@ void Mesh::Bind()
 */
 Mesh::~Mesh()
 {
-	fmemory::fdelete<VertexArray>(m_VAO);
 	fmemory::fdelete<VertexBuffer>(m_VBO2);
 	fmemory::fdelete<VertexBuffer>(m_VBO1);
 	fmemory::fdelete<IndexBuffer>(m_IBO);

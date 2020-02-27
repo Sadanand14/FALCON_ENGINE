@@ -8,7 +8,7 @@
 #include <Log.h>
 
 
-#include <Components/RenderCcomponent.h>
+#include <Components/RenderComponent.h>
 #include <Components/TransformComponent.h>
 #include <Components/AnimationComponent.h>
 #include <Components/AudioComponent.h>
@@ -16,6 +16,7 @@
 #include <Components/InputComponent.h>
 #include <Components/AIComponent.h>
 #include <Components/CameraComponent.h>
+#include <Components/ParticleEmitterComponent.h>
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)
@@ -24,6 +25,10 @@
 #include <boost/container/map.hpp>
 
 #pragma warning( pop )
+
+/*
+	TODO: Make use of custom allocators
+*/
 
 /**
 *Basic Game Object Definition
@@ -38,22 +43,41 @@ private:
 	InputComponent* m_inputC;
 	AnimationComponent* m_animationC;
 	AIComponent* m_AIComponent;
+	ParticleEmitterComponent* m_particleEmitterC;
 
 public:
 
 	Entity()
 		:m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr)
+		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
-		m_transform = new Transform();
+		m_transform = fmemory::fnew<Transform>();
 	}
 	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr)
+		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
-		m_transform = new Transform(pos, rot, scale);
+		m_transform = fmemory::fnew<Transform>(pos, rot, scale);
 	}
-	~Entity() {}
+	~Entity()
+	{
+		if(m_transform)
+			fmemory::fdelete<Transform>(m_transform);
+		if(m_renderC)
+			fmemory::fdelete<RenderComponent>(m_renderC);
+		if(m_audioC)
+			fmemory::fdelete<AudioComponent>(m_audioC);
+		if(m_physicsC)
+			fmemory::fdelete<PhysicsComponent>(m_physicsC);
+		if(m_animationC)
+			fmemory::fdelete<AnimationComponent>(m_animationC);
+		if(m_AIComponent)
+			fmemory::fdelete<AIComponent>(m_AIComponent);
+		if(m_inputC)
+			fmemory::fdelete<InputComponent>(m_inputC);
+		if(m_particleEmitterC)
+			fmemory::fdelete<ParticleEmitterComponent>(m_particleEmitterC);
+	}
 
 	inline Transform* GetTransform() { return m_transform; }
 
@@ -75,7 +99,7 @@ inline void Entity::AddComponent<RenderComponent>()
 	}
 	else
 	{
-		m_renderC = new RenderComponent();
+		m_renderC = fmemory::fnew<RenderComponent>();
 	}
 }
 
@@ -88,7 +112,7 @@ inline void Entity::AddComponent<PhysicsComponent>()
 	}
 	else
 	{
-		m_physicsC = new PhysicsComponent();
+		m_physicsC = fmemory::fnew<PhysicsComponent>();
 	}
 }
 
@@ -101,7 +125,7 @@ inline void Entity::AddComponent<AudioComponent>()
 	}
 	else
 	{
-		m_audioC = new AudioComponent();
+		m_audioC = fmemory::fnew<AudioComponent>();
 	}
 }
 
@@ -114,7 +138,7 @@ inline void Entity::AddComponent<AnimationComponent>()
 	}
 	else
 	{
-		m_animationC = new AnimationComponent();
+		m_animationC = fmemory::fnew<AnimationComponent>();
 	}
 }
 
@@ -127,7 +151,7 @@ inline void Entity::AddComponent<AIComponent>()
 	}
 	else
 	{
-		m_AIComponent = new AIComponent();
+		m_AIComponent = fmemory::fnew<AIComponent>();
 	}
 }
 
@@ -140,7 +164,20 @@ inline void Entity::AddComponent<InputComponent>()
 	}
 	else
 	{
-		m_inputC = new InputComponent();
+		m_inputC = fmemory::fnew <InputComponent>();
+	}
+}
+
+template<>
+inline void Entity::AddComponent<ParticleEmitterComponent>()
+{
+	if (m_particleEmitterC)
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else
+	{
+		m_particleEmitterC = fmemory::fnew<ParticleEmitterComponent>();
 	}
 }
 
@@ -161,5 +198,8 @@ inline InputComponent* Entity::GetComponent<InputComponent>() { return m_inputC;
 
 template<>
 inline AIComponent* Entity::GetComponent <AIComponent>() { return m_AIComponent; }
+
+template<>
+inline ParticleEmitterComponent* Entity::GetComponent<ParticleEmitterComponent>() { return m_particleEmitterC; }
 
 #endif // !1

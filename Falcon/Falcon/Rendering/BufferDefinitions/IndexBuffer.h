@@ -14,12 +14,14 @@ class IndexBuffer
 private:
 	unsigned int m_renderBufferId;
 	size_t m_count;
-	void SetupIndexBuffer(const unsigned int* indices);
+	void SetupIndexBuffer(const unsigned int* indices, u32 drawType);
 
 public:
 
+	IndexBuffer(const unsigned int*, size_t, u32 drawType);
 	IndexBuffer(const unsigned int*, size_t);
-	IndexBuffer(const std::vector<unsigned int,fmemory::StackSTLAllocator<unsigned int>>& indices, size_t count);
+	IndexBuffer(const std::vector<unsigned int,fmemory::StackSTLAllocator<unsigned int>>& indices, size_t count, u32 drawType);
+	void BufferData(const void* data, size_t size, u32 drawType);
 	~IndexBuffer();
 
 	void Bind() const;

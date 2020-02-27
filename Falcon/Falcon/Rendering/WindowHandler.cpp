@@ -1,9 +1,9 @@
+#include <string>
 #include "WindowHandler.h"
 #include "OpenGLErrorHandler.h"
 #include "Log.h"
 #include "Memory/fmemory.h"
-#include <string>
-
+#include "WindowData.h"
 
 //renderer gets initialized here
 WindowClass::WindowClass(const char* title, int width, int height ): m_width(width), m_height(height), m_title(title)
@@ -12,23 +12,25 @@ WindowClass::WindowClass(const char* title, int width, int height ): m_width(wid
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
 	Init();
 	glfwSetErrorCallback(&GLErrorHandler::glfwError);
-	
+
+	WindowData::windowSize = glm::vec2(m_width, m_height);
 }
 
-WindowClass::~WindowClass() 
+WindowClass::~WindowClass()
 {
-	if (m_gameWindow) glfwDestroyWindow(m_gameWindow);
+	if (m_gameWindow) { glfwDestroyWindow(m_gameWindow);  }
+
 	glfwTerminate();
 }
 
 
-void WindowClass::Init() 
+void WindowClass::Init()
 {
 	m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//For MacOS X
@@ -55,16 +57,15 @@ void WindowClass::Init()
 		FL_ENGINE_ERROR( "ERROR: Failed to initialize GLAD." );
 	}
 
-	
-	
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	
 
 }
 
 void framebuffer_size_callback(GLFWwindow* gameWindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
+
+	WindowData::windowSize = glm::vec2(width, height);
 }
 
