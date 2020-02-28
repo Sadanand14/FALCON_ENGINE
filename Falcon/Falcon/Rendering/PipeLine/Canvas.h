@@ -12,7 +12,7 @@
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #include <nuklear.h>
 
-class Texture;
+struct Texture;
 class CanvasItem;
 
 struct UIVertex

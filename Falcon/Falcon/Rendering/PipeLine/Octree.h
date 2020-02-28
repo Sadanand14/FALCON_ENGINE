@@ -25,6 +25,7 @@ namespace Rendering
 		
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
 		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR);
+		static unsigned int nodeCount;
 
 		static unsigned int m_nodeCount;
 		Scene::entityVector m_entities;

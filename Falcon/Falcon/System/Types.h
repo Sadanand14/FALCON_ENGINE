@@ -22,6 +22,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "PxPhysicsAPI.h"
+
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+
+
 typedef int8_t  i08;
 typedef int16_t i16;
 typedef int32_t i32;
