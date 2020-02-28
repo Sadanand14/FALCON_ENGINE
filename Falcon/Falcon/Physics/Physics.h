@@ -41,7 +41,7 @@ namespace physics
 	*/
 	bool InitPhysX();
 	void CreatePhysicsScene();
-	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,const size_t& count);
+	void StepPhysics(float& dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,const size_t& count);
 	bool ShutdownPhysX();
 
 	/*

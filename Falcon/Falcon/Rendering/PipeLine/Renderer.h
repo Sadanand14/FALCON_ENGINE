@@ -30,7 +30,6 @@ class Mesh;
 //TODO: REMOVE THIS
 class Label;
 
-void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -76,8 +75,8 @@ class Renderer
 	RenderEventSystem* m_RES;
 	GLFWwindow* m_window;
 	glm::mat4 m_projection;
-	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
-	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 
 	//TODO: REMOVE
@@ -88,7 +87,7 @@ public:
 	~Renderer();
 
 
-	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
 	void Ingame_Draw(Camera& cam);
 
 	void Pause_Draw();
@@ -99,9 +98,7 @@ public:
 
 	void Init(GLFWwindow* window);
 	void CreateDrawStates();
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
-	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(Camera &cam);
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection);
 };
 
 #endif // !RENDERER_H

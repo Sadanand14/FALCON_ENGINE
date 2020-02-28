@@ -188,7 +188,7 @@ namespace physics
 	*/
 
 	void StepPhysics(float& dt,
-		boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,
+		boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity,
 		const size_t& count)
 	{
 

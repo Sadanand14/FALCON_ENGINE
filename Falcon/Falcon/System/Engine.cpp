@@ -3,7 +3,7 @@
 
 namespace gameLoop
 {
-	
+
 	//Camera
 	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
@@ -20,8 +20,8 @@ namespace gameLoop
 		fmemory::fdelete(m_input);
 		fmemory::fdelete(m_window);
 		AssetManager::Clean();
-		fmemory::MeoryManagerShutDown();
 		physics::ShutdownPhysX();
+		fmemory::MeoryManagerShutDown();
 
 		m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
 		m_audio.Shutdown();
@@ -52,6 +52,9 @@ namespace gameLoop
 		m_input = fmemory::fnew<InputReceiver>(m_window);
 		m_input->Init(m_window->GetWindow());
 
+		//Booting up physics
+		physics::InitPhysX();
+
 		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
 		m_renderer->Init(m_window->GetWindow());
 
@@ -66,8 +69,7 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		m_octree->Update();
 
-		//Booting up physics
-		physics::InitPhysX();
+
 
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates();
@@ -82,14 +84,14 @@ namespace gameLoop
 		return true;
 	}
 
-	void Engine::MenuUpdate() 
+	void Engine::MenuUpdate()
 	{
 		m_renderer->Menu_Update();
 		m_renderer->Menu_Draw();
 		m_input->Update();
 	}
 
-	void Engine::IngameUpdate() 
+	void Engine::IngameUpdate()
 	{
 		float dt, rate;
 		std::string framerate;
@@ -109,9 +111,9 @@ namespace gameLoop
 
 		m_octree->Update();
 
-		m_particleSystem->Update(dt, m_octree->GetViewables());
+		m_particleSystem->Update(dt, m_scene->GetEntities());
 		////renderer Update
-		m_renderer->Ingame_Update(camera, dt, m_octree->GetViewables());
+		m_renderer->Ingame_Update(camera, dt, m_scene->GetEntities());
 		m_renderer->Ingame_Draw(camera);
 
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
@@ -123,12 +125,13 @@ namespace gameLoop
 		//camera movement setup
 		ProcessInputs(dt);
 
-		/*	static unsigned int temp = Rendering::OctreeNode::GetCount();
-			FL_ENGINE_WARN("NodeCount: {0}",temp);*/
+		//static unsigned int temp = Rendering::OctreeNode::GetCount();
+		//FL_ENGINE_WARN("NodeCount: {0}", temp);
+
 		m_input->Update();
 	}
 
-	void Engine::PauseUpdate() 
+	void Engine::PauseUpdate()
 	{
 		m_input->Update();
 	}

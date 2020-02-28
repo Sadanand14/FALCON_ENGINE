@@ -14,7 +14,7 @@ namespace Rendering
 	class OctreeNode;
 	class Octree;
 
-	typedef boost::container::vector<OctreeNode*, fmemory::StackSTLAllocator<OctreeNode*>> OctreeNodeVector;
+	typedef boost::container::vector<OctreeNode*, fmemory::STLAllocator<OctreeNode*>> OctreeNodeVector;
 
 	/**
 	* Data structure to hold all data and implementations related to a single node inside our dynamic Octree
@@ -25,7 +25,6 @@ namespace Rendering
 		
 		friend bool CheckEntityPosInNode(OctreeNode* node, Entity* entity);
 		friend bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR);
-		static unsigned int nodeCount;
 
 		static unsigned int m_nodeCount;
 		Scene::entityVector m_entities;
@@ -49,7 +48,7 @@ namespace Rendering
 		~OctreeNode();
 	};
 
-	typedef boost::container::vector<glm::vec4, fmemory::StackSTLAllocator<glm::vec4>> planeArray;
+	typedef boost::container::vector<glm::vec4, fmemory::STLAllocator<glm::vec4>> planeArray;
 
 	/**
 	* Data structure to hold all data and implementations related to the entire octree.

@@ -46,7 +46,7 @@ IncludeDirs["physxCcd"] ="Falcon/vendor/include/Physx/physx/source/geomutils/src
 IncludeDirs["fmodcore"] ="Falcon/vendor/FMODStudioAPI/api/core/inc/";
 IncludeDirs["fmodbank"] ="Falcon/vendor/FMODStudioAPI/api/fsbank/inc/";
 IncludeDirs["fmodstudio"] ="Falcon/vendor/FMODStudioAPI/api/studio/inc/";
-IncludeDirs["nuklear"] = "Falcon/vendor/include/nuklear";
+IncludeDirs["nuklear"] ="Falcon/vendor/include/nuklear";
 
 
 LinkDebugDirs = {}
@@ -102,11 +102,16 @@ project "Falcon"
 		"%{prj.name}/Rendering/RenderPasses**.hpp",
 		"%{prj.name}/Rendering/RenderPasses**.cpp",
 		"%{prj.name}/Physics/**.hpp",
+		"%{prj.name}/Physics/**.h",
 		"%{prj.name}/Physics/**.cpp",
 		"%{prj.name}/Physics/**.c",
+		"%{prj.name}/Physics/vehicle/**.hpp",
+		"%{prj.name}/Physics/vehicle/**.h",
+		"%{prj.name}/Physics/vehicle/**.cpp",
+		"%{prj.name}/Physics/vehicle/**.c",
 		"%{prj.name}/Shader/**.vert",
 		"%{prj.name}/Shader/**.frag",
-	        "%{prj.name}/Audio/**.h",
+	    "%{prj.name}/Audio/**.h",
 		"%{prj.name}/Audio/**.hpp",
 		"%{prj.name}/Audio/**.cpp",
 	}
@@ -127,7 +132,8 @@ project "Falcon"
         "%{prj.name}/Rendering/BufferDefinitions",
 		"%{prj.name}/Rendering/Shader",
         "%{prj.name}/Audio",
-        "%{prj.name}/Physics",
+		"%{prj.name}/Physics",
+		"%{prj.name}/Physics/vehicle",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",
@@ -407,7 +413,8 @@ project "FALCON_GAME"
         "%{sln.location}/Falcon/Rendering/BufferDefinitions",
         "%{sln.location}/Falcon/Rendering/Shader",
         "%{sln.location}/Falcon/Audio",
-        "%{sln.location}/Falcon/Physics",
+		"%{sln.location}/Falcon/Physics",
+		"%{sln.location}/Falcon/Physics/vehicle",
 		"%{IncludeDirs.vendor}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.GLFW}",

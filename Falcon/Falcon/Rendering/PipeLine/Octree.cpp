@@ -97,6 +97,7 @@ namespace Rendering
 			m_childNodes[7]->SetParent(this);
 
 			m_nodeCount += 8;
+			FL_ENGINE_ERROR("NodeCount : {0}", m_nodeCount);
 		}
 	}
 
@@ -277,9 +278,9 @@ namespace Rendering
 		}
 
 		//extract plane equations in world Space
-		GetPlanes();
+		//GetPlanes();
 
-		CullObjects();
+		//CullObjects();
 	}
 
 
@@ -339,9 +340,12 @@ namespace Rendering
 		//m_projection[2][3] = -r * zmin;
 		m_planeArr.clear();
 		using namespace glm;
-		mat4 View = m_camera->GetViewMatrix();
-		mat4 VP = m_projection * View;
-		mat4 TVP = glm::transpose(VP);
+		static mat4 View;
+		static mat4 VP;
+		static mat4 TVP;
+		View = m_camera->GetViewMatrix();
+		VP = m_projection * View;
+		TVP = glm::transpose(VP);
 		//vec4 xColumn = VP[0];
 		//vec4 yColumn = VP[1];
 		//vec4 zColumn = VP[2];
@@ -388,7 +392,8 @@ namespace Rendering
 	*/
 	void NormalizePlaneCoeff(glm::vec4& plane)
 	{
-		float magnitude = glm::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
+		static float magnitude;
+		magnitude = glm::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
 		plane.x /= magnitude;
 		plane.y /= magnitude;
 		plane.z /= magnitude;
@@ -405,9 +410,10 @@ namespace Rendering
 	{
 		static bool udpated = false;
 		//recalculate bounding box
-		boundingVector* BV;
+		static boundingVector* BV;
 
-		RenderComponent* rd = entity->GetComponent<RenderComponent>();
+		static RenderComponent* rd;
+		rd = entity->GetComponent<RenderComponent>();
 
 		if(rd)
 			BV = rd->GetBounds();
@@ -415,12 +421,14 @@ namespace Rendering
 		else
 			BV = &defaultVolume;
 
-		Transform* transform = entity->GetTransform();
+		static Transform* transform;
+		transform = entity->GetTransform();
 		//entity->GetTransform()->ClearOTID();
 
-		glm::mat4 modelMatrix = entity->GetTransform()->GetModel();
-		glm::vec3 temp;
-		glm::vec4 result;
+		static glm::mat4 modelMatrix;
+		modelMatrix = entity->GetTransform()->GetModel();
+		//static glm::vec3 temp;
+		static glm::vec4 result;
 
 		//get new axis aligned boudning corners
 		float minX = FLT_MAX, minY = FLT_MAX, minZ = FLT_MAX, maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
@@ -439,9 +447,11 @@ namespace Rendering
 			if (maxZ < result.z) maxZ = result.z;
 		}
 
-		glm::vec3 NTL = glm::vec3(minX, minY, minZ);
+		static glm::vec3 NTL;
+		NTL = glm::vec3(minX, minY, minZ);
 
-		glm::vec3 FBR = glm::vec3(maxX, maxY, maxZ);
+		static glm::vec3 FBR;
+		FBR = glm::vec3(maxX, maxY, maxZ);
 
 		static bool boundaryCheck = false;
 		boundaryCheck = CheckBounds(node, NTL, FBR);
@@ -457,9 +467,11 @@ namespace Rendering
 			entities.erase((entityPos));
 			transform->popOTID();
 
-			//go up the heirarchy to find the boudning node
+			FL_ENGINE_WARN("Going up!!");
+			////go up the heirarchy to find the boudning node
 			while (true)
 			{
+				
 				node = node->m_parent;
 				if (CheckBounds(node, NTL, FBR)) break;
 				else transform->popOTID();
@@ -472,6 +484,7 @@ namespace Rendering
 				}
 			}
 
+			FL_ENGINE_WARN("Going Down!!");
 			//go down from there to find the lowest bounding node
 			bool nodeFound = false, fitsInChild = false;
 			while (!nodeFound)
@@ -500,6 +513,7 @@ namespace Rendering
 		else if(boundaryCheck)
 		{
 			OctreeNode* original = node;
+			//FL_ENGINE_ERROR("Going Down!!");
 			//check if it fits inside children
 			bool nodeFound = false, fitsInChild = false;
 			while (!nodeFound)
@@ -525,6 +539,10 @@ namespace Rendering
 			}
 			if (original != node)
 				node->m_entities.push_back(entity);
+		}
+		else 
+		{
+			FL_ENGINE_WARN("GOING nowhere!" );
 		}
 		//node->m_entities.push_back(entity);
 
@@ -552,8 +570,10 @@ namespace Rendering
 	*/
 	bool CheckBounds(OctreeNode* node, glm::vec3 NTL, glm::vec3 FBR)
 	{
-		glm::vec3 nodeNTL = node->m_nearTopLeft;
-		glm::vec3 nodeFBR = node->m_farBottomRight;
+		static glm::vec3 nodeNTL;
+		nodeNTL = node->m_nearTopLeft;
+		static glm::vec3 nodeFBR;
+		nodeFBR = node->m_farBottomRight;
 
 		if (NTL.x < nodeNTL.x)
 		{
@@ -592,11 +612,19 @@ namespace Rendering
 	*/
 	bool CheckEntityPosInNode(OctreeNode* node, Entity* entity)
 	{
-		Transform* transform = entity->GetTransform();
-		glm::mat4 modelMatrix = transform->GetModel();
-		float xpos = modelMatrix[3][0];
-		float ypos = modelMatrix[3][1];
-		float zpos = modelMatrix[3][2];
+		static Transform* transform;
+		transform = entity->GetTransform();
+
+		static glm::mat4 modelMatrix;
+		modelMatrix = transform->GetModel();
+
+		static float xpos;
+		xpos= modelMatrix[3][0];
+		static float ypos;
+		ypos = modelMatrix[3][1];
+		static float zpos;
+		zpos = modelMatrix[3][2];
+
 		if (
 			((xpos >= node->m_nearTopLeft.x) && (xpos <= node->m_farBottomRight.x))
 			&& ((ypos <= node->m_nearTopLeft.y) && (ypos >= node->m_farBottomRight.y))
@@ -611,9 +639,10 @@ namespace Rendering
 	*/
 	void Octree::FilterEntities(Scene::entityVector& entities)
 	{
-		unsigned int eraseCount = 0;
-		unsigned int size = entities.size();
-		Scene::entityVector::iterator entityPos;
+		static unsigned int size;
+		size = entities.size();
+		static Scene::entityVector::iterator entityPos;
+
 		for (unsigned int i = 0; i < size; i++)
 		{
 			if (!CheckEntityPosInNode(m_rootNode, entities[i]))
@@ -623,7 +652,6 @@ namespace Rendering
 				entityPos = std::find(entities.begin(), entities.end(), entities[i]);
 				entities.erase(entityPos);
 				i--;
-				eraseCount++;
 				size = entities.size();
 				//FindEntityInVector(entities[i], entities)
 			}

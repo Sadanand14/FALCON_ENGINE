@@ -49,7 +49,7 @@ public:
 	~ParticleSystem();
 
 	void Init();
-	void Update(float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
+	void Update(float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
 };
 
 #endif //PARTICLE_SYSTEM_H

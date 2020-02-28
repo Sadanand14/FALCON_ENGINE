@@ -161,7 +161,7 @@ void Renderer::CreateDrawStates()
 /**
 *Function to Set the relevant data in the draw states.
 */
-void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
+void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
@@ -204,11 +204,16 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 	//	}
 	//}
 	//physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
-	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
-	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
-	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
-	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
-	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
+
+	//Menu RenderPasses
+	m_Menu_renderPasses.push_back(fmemory::fnew<QuadRenderPass>(0));
+
+	//Game RenderPasses
+	m_Game_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
+	m_Game_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
+	m_Game_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
+	m_Game_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
+	m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
 	l = fmemory::fnew<Label>("Test Text");
 	l->SetFlags(NK_WINDOW_DYNAMIC | NK_WINDOW_NO_SCROLLBAR);
@@ -247,10 +252,11 @@ void Renderer::Menu_Draw()
 }
 
 
-void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities)
 {
 	m_RES->ProcessEvents();
 	m_entities = entities;
+	//FL_ENGINE_INFO("Draw Count : {0}", m_entities->size());
 
 	//for skybox
 	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
