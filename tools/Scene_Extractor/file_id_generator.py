@@ -13,5 +13,5 @@ def generate_file_ids(file):
             SCENE_FILE_ID[file_id] = doc_index
             doc_index += 1
 
-    for key in SCENE_FILE_ID.keys():
-        print(key, SCENE_FILE_ID[key])
+    #for key in SCENE_FILE_ID.keys():
+    #    print(key, SCENE_FILE_ID[key])
