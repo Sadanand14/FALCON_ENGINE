@@ -278,9 +278,9 @@ namespace Rendering
 		}
 
 		//extract plane equations in world Space
-		//GetPlanes();
+		GetPlanes();
 
-		//CullObjects();
+		CullObjects();
 	}
 
 
