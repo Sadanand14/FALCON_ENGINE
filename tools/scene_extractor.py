@@ -54,7 +54,6 @@ def read_scene_file(filepath):
                     itr += 2  # skipping next entry of GameObject
                     new_data = []
                     while list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[0] != 'GameObject':
-                        print(list(data[itr].keys())[0])
                         new_data.append(data[itr])
                         itr += 1
                     temp_data = read_gameobject(new_data,True)
@@ -95,22 +94,7 @@ def read_scene_file(filepath):
 '''
 
 
-def clean_file(filepath):
-    file_desc = open(filepath, "r")
-    result = str()
-    for lineNumber, line in enumerate(file_desc.readlines()):
-        if lineNumber == 1:
-            continue
-        if line.startswith('--- !u!'):
-            result += '\n--- ' + line.split(' ')[2] + '\n'
-        else:
-            result += line
-    file_desc.close()
 
-    # write cleaned file
-    file_desc = open(filepath, 'w')
-    file_desc.write(result)
-    file_desc.close()
 
 
 if __name__ == "__main__":

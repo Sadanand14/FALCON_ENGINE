@@ -8,11 +8,28 @@ from Scene_Extractor.file_id_generator import *
 from Scene_Extractor.constants import *
 
 
+def clean_file(filepath):
+    file_desc = open(filepath, "r")
+    result = str()
+    for lineNumber, line in enumerate(file_desc.readlines()):
+        if lineNumber == 1:
+            continue
+        if line.startswith('--- !u!'):
+            result += '\n--- ' + line.split(' ')[2] + '\n'
+        else:
+            result += line
+    file_desc.close()
+
+    # write cleaned file
+    file_desc = open(filepath, 'w')
+    file_desc.write(result)
+    file_desc.close()
+
+
 def scale_for_falcon(unity_scale):
     scale = {'x': '', 'y': '', 'z': ''}
 
     for key in scale.keys():
-        print(type(unity_scale[key]))
         scale[key] = float(unity_scale[key]) * FALCON_SCALE_DOWN
     return scale
 
@@ -65,7 +82,7 @@ def read_prefab_source(prefab_yaml_file):
                 pass  # we will do material shit here
 
             elif any(x == current_key for x in UNITY_COLLIDER_LIST):
-                print(current_key)
+
                 collider_data['type'] = FALCON_COLLIDERS[current_key]
                 collider_data = read_collider_data(collider_data, current_key, d)
 
@@ -75,7 +92,7 @@ def read_prefab_source(prefab_yaml_file):
     return position, rotation, scale, collider_data, obj_mesh
 
 
-def read_gameobject(doc_data,is_prefab_related = False):
+def read_gameobject(doc_data, is_prefab_related=False):
     position = {'x': '', 'y': '', 'z': ''}
     rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
     scale = {'x': '', 'y': '', 'z': ''}
@@ -103,8 +120,8 @@ def read_gameobject(doc_data,is_prefab_related = False):
         elif current_key == 'MeshRenderer':
             mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
 
+
         elif any(x == current_key for x in UNITY_COLLIDER_LIST):
-            print(current_key)
             collider_data['type'] = FALCON_COLLIDERS[current_key]
             collider_data = read_collider_data(collider_data, current_key, d)
 
@@ -118,7 +135,7 @@ def read_gameobject(doc_data,is_prefab_related = False):
     return_data['parent'] = parent
     return_data['obj_mesh'] = obj_mesh
     return_data['collider_data'] = collider_data
-    return_data['mat'] = mat
+    return_data['mat'] = read_material_data(mat)
     return return_data
 
 
@@ -182,9 +199,34 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
     return_data['rotation'] = rotation
     return_data['parent'] = parent
     return_data['obj_mesh'] = obj_mesh
-    return_data['mat'] = mat
+    return_data['mat'] = read_material_data(mat)
     return_data['collider_data'] = collider_data
     if bool_read_prefab_source:
         os.remove(prefab_yaml)
     return return_data
 
+
+def read_material_data(material_file):
+    materials = {}
+    if material_file != '':
+        material_temp = "mat.yaml"
+        copyfile(material_file, material_temp)
+        clean_file(material_temp)
+        with open(material_temp, "r") as file_desc:
+            data = yaml.load_all(file_desc, Loader=yaml.Loader)
+            # data = data['Material']['m_SavedProperties']['m_TexEnv']
+            for d in data:
+                if list(d.keys())[0] == "Material":
+                    temp = d['Material']['m_SavedProperties']['m_TexEnvs']
+                    for tex in temp:
+                        if list(tex.keys())[0] == '_BumpMap':
+                            materials['Normal_Map'] = UNITY_MATERIALS_MAP[tex['_BumpMap']['m_Texture']['guid']]
+                        if list(tex.keys())[0] == '_MainTex':
+                            materials['Albedo_Map'] = UNITY_MATERIALS_MAP[tex['_MainTex']['m_Texture']['guid']]
+                        if list(tex.keys())[0] == '_OcclusionMap':
+                            materials['AO_Map'] = UNITY_MATERIALS_MAP[tex['_OcclusionMap']['m_Texture']['guid']]
+                        if list(tex.keys())[0] == '_MetallicGlossMap':
+                            materials['Metallic'] = UNITY_MATERIALS_MAP[tex['_MetallicGlossMap']['m_Texture']['guid']]
+
+        os.remove(material_temp)
+    return materials
