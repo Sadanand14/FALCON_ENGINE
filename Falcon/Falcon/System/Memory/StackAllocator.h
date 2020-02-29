@@ -5,7 +5,7 @@
 #include <Log.h>
 #include "Allocator.hpp"
 
-#define STACK_ALLOCATOR_MAX_SIZE 1073741824 //1GB
+#define STACK_ALLOCATOR_MAX_SIZE 3221225472 //1GB
 
 namespace fmemory {
 	class StackAllocator

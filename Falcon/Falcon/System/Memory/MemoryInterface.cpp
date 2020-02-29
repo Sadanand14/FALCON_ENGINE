@@ -13,15 +13,17 @@ namespace fmemory {
 		64,68,72,76,80,84,88,92,96,
 
 		//32 bytes increaments
-		128,160,192,224,256,288,320,352,384,416,448,512,544,576,
+		128,160,192,224,256,288,320,352,384
+		
+		/*416,448,512,544,576,
 		608,640,
 
 		////64 bytes increaments
-		704, 768, 832, 896, 960, 1024
+		704, 768, 832, 896, 960, 1024*/
 
 	};
 
-	static const unsigned POOL_SIZE = 400000; // Each pool will alocate 4MB
+	static const unsigned POOL_SIZE = 100000000; // Each pool will alocate 100MB
 
 
 	static const std::size_t BLOCK_SIZE_LIST_COUNT = sizeof(BLOCK_SIZES) / sizeof(BLOCK_SIZES[0]);
