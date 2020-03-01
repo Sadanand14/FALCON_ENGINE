@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <boost/function.hpp>
 #include "CanvasItem.h"
 
 class Font;
@@ -19,7 +20,7 @@ class Button : public CanvasItem
 		//nk_flags m_hAlignment;
 		//nk_flags m_vAlignment;
 		Font* m_font;
-		void (*m_callback)(void);
+		boost::function<void(void)> m_callback;
 
 	public:
 		Button();
@@ -29,7 +30,7 @@ class Button : public CanvasItem
 		inline void SetText(std::string txt) { m_text = txt; }
 		//inline void SetAlignment(nk_flags alignment) { m_hAlignment = alignment; }
 		//inline void SetVerticalAlignment(nk_flags alignment) { m_vAlignment = alignment; }
-		inline void SetCallback(void (*callback)(void)) { m_callback = callback; }
+		inline void SetCallback(boost::function<void(void)> callback) { m_callback = callback; }
 
 		//Text colors
 		inline void SetNormalTextColor(nk_color color) { m_textNormal = color; }

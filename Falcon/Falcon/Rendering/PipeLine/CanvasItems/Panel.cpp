@@ -13,8 +13,6 @@
 
 /**
  * Constructor for a panel
- *
- * @param name - The name for the nuklear window
  */
 Panel::Panel() : CanvasItem()
 {

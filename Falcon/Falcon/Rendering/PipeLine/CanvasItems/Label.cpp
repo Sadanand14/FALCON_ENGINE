@@ -13,11 +13,9 @@
 
 /**
  * Constructor for a label
- *
- * @param name - The name for the nuklear window
  */
 Label::Label() : CanvasItem(), m_wrap(false), m_hAlignment(NK_TEXT_ALIGN_LEFT),
-								 m_vAlignment(NK_TEXT_ALIGN_MIDDLE), m_font(AssetManager::GetFont("default"))
+				 m_vAlignment(NK_TEXT_ALIGN_MIDDLE), m_font(AssetManager::GetFont("default"))
 {
 
 }

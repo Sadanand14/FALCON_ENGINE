@@ -4,7 +4,7 @@
  * Base CanvasItem constructor
  */
 CanvasItem::CanvasItem() : m_bounds(nk_rect(0, 0, 100, 100)), m_color(nk_rgb(255, 255, 255)),
-										   m_flags(NK_WINDOW_NO_SCROLLBAR)
+						   m_flags(NK_WINDOW_NO_SCROLLBAR), m_active(true)
 {
 
 }
@@ -17,38 +17,20 @@ void CanvasItem::AddChild(CanvasItem* child)
 }
 
 /**
- * Calls the nuklear begin command
- * @param ctx - The nuklear context to draw to
- */
-void CanvasItem::Begin(nk_context* ctx)
-{
-	//ctx->style.window.background = m_color;
-	//ctx->style.window.fixed_background = nk_style_item_color(m_color);
-	nk_layout_space_push(ctx, m_bounds);
-}
-
-/**
- * Calls the nuklear end command
- * @param ctx - The nuklear context to draw to
- */
-void CanvasItem::End(nk_context* ctx)
-{
-
-}
-
-/**
  * Begins a nuklear context, calls the draw commands, then ends drawing
  */
 void CanvasItem::Draw(nk_context* ctx)
 {
-	Begin(ctx);
-	Commands(ctx);
-
-	for(auto child : m_children)
+	if(m_active)
 	{
-		child->Draw(ctx);
+		nk_layout_space_push(ctx, m_bounds);
+		Commands(ctx);
+
+		for(auto child : m_children)
+		{
+			child->Draw(ctx);
+		}
 	}
-	End(ctx);
 }
 
 /**

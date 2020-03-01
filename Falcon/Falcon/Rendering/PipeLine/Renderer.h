@@ -32,6 +32,7 @@ class Label;
 class Button;
 class Image;
 class Panel;
+class Slider;
 
 void PrintReception();
 
@@ -87,10 +88,23 @@ class Renderer
 	//TODO: REMOVE
 	Renderable* can;
 	Label* l;
-	Button* b;
+	static Button* prev;
+	static Button* next;
 	Image* i;
 	Panel* p;
+	Slider* s;
 	Texture t;
+
+	static void uiNext0();
+	static void uiNext1();
+	static void uiNext2();
+	static void uiNext3();
+
+	static void uiPrev0();
+	static void uiPrev1();
+	static void uiPrev2();
+	static void uiPrev3();
+
 public:
 	Renderer();
 	~Renderer();

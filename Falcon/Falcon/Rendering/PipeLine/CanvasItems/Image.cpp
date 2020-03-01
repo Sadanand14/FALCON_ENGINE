@@ -10,8 +10,6 @@
 
 /**
  * Constructor for an imagae
- *
- * @param name - The name for the nuklear window
  */
 Image::Image() : CanvasItem()
 {

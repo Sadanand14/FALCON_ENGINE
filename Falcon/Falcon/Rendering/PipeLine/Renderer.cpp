@@ -30,6 +30,62 @@
 #include "CanvasItems/Button.h"
 #include "CanvasItems/Image.h"
 #include "CanvasItems/Panel.h"
+#include "CanvasItems/Slider.h"
+
+Button* Renderer::prev = nullptr;
+Button* Renderer::next = nullptr;
+
+void Renderer::uiNext0()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext1));
+	prev->SetCallback(boost::function<void(void)>(uiPrev1));
+	printf("Next Callback 0\n");
+}
+
+void Renderer::uiNext1()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext2));
+	prev->SetCallback(boost::function<void(void)>(uiPrev2));
+	printf("Next Callback 1\n");
+}
+
+void Renderer::uiNext2()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext3));
+	prev->SetCallback(boost::function<void(void)>(uiPrev3));
+	printf("Next Callback 2\n");
+}
+
+void Renderer::uiNext3()
+{
+	FL_ENGINE_WARN("End of UI tree");
+}
+
+void Renderer::uiPrev0()
+{
+	FL_ENGINE_WARN("Beginning of UI tree");
+}
+
+void Renderer::uiPrev1()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext0));
+	prev->SetCallback(boost::function<void(void)>(uiPrev0));
+	printf("Prev Callback 1\n");
+}
+
+void Renderer::uiPrev2()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext1));
+	prev->SetCallback(boost::function<void(void)>(uiPrev1));
+	printf("Prev Callback 2\n");
+}
+
+void Renderer::uiPrev3()
+{
+	next->SetCallback(boost::function<void(void)>(uiNext2));
+	prev->SetCallback(boost::function<void(void)>(uiPrev2));
+	printf("Prev Callback 3\n");
+}
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -109,7 +165,8 @@ Renderer::~Renderer()
 {
 	fmemory::fdelete(can);
 	fmemory::fdelete(l);
-	fmemory::fdelete(b);
+	fmemory::fdelete(next);
+	fmemory::fdelete(prev);
 	fmemory::fdelete(i);
 	fmemory::fdelete(p);
 
@@ -158,47 +215,56 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
 	l = fmemory::fnew<Label>();
-	//l->SetFlags(NK_WINDOW_NO_SCROLLBAR);
 	l->SetColor(nk_rgb(244, 245, 248));
-	l->SetTextColor(nk_rgb(0, 0, 0));
+	l->SetTextColor(nk_rgb(200, 200, 200));
 	l->SetWrap(true);
 	l->SetBounds(nk_rect(0, 0, 0.5, 0.5));
 	l->SetText(std::string("This is a test"));
 	//static_cast<Canvas*>(can)->AddCanvasItem(l);
 
-	b = fmemory::fnew<Button>();
-	//b->SetFlags(NK_WINDOW_NO_SCROLLBAR);
-	b->SetColor(nk_rgb(255, 255, 255));
-	b->SetNormalTextColor(nk_rgb(255, 0, 0));
-	b->SetNormalButtonColor(nk_rgb(180, 180, 180));
+	next = fmemory::fnew<Button>();
+	next->SetColor(nk_rgb(255, 255, 255));
+	next->SetNormalTextColor(nk_rgb(255, 0, 0));
+	next->SetNormalButtonColor(nk_rgb(180, 180, 180));
 	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
 	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
-	b->SetBounds(nk_rect(0, 0, 0.5, 0.3));
-	//b->SetBounds(nk_rect(0, 0, 1.0, 1.0));
-	b->SetText(std::string("Button"));
-	b->SetCallback( []() {
-		printf("Button Pressed!\n");
-	});
-	//static_cast<Canvas*>(can)->AddCanvasItem(b);
+	next->SetBounds(nk_rect(0.5, 0.3, 0.2, 0.2));
+	next->SetText(std::string("Proceed"));
+	//b->SetActive(false);
+	next->SetCallback(boost::function<void(void)>(uiNext0));
+	static_cast<Canvas*>(can)->AddCanvasItem(next);
+
+	prev = fmemory::fnew<Button>();
+	prev->SetColor(nk_rgb(255, 255, 255));
+	prev->SetNormalTextColor(nk_rgb(255, 0, 0));
+	prev->SetNormalButtonColor(nk_rgb(180, 180, 180));
+	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
+	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
+	prev->SetBounds(nk_rect(0.3, 0.3, 0.2, 0.2));
+	prev->SetText(std::string("Back"));
+	prev->SetCallback(boost::function<void(void)>(uiPrev0));
+	static_cast<Canvas*>(can)->AddCanvasItem(prev);
 
 	t.textureID = AssetManager::LoadTexture("../Assets/Textures/car.png");
 	i = fmemory::fnew<Image>();
-	//i->SetFlags(NK_WINDOW_NO_SCROLLBAR);
-	//i->SetBounds(nk_rect(800, 400, 300, 152));
 	i->SetBounds(nk_rect(0.63, 0.56, 0.23, 0.21));
 	i->SetImage(t);
-	i->AddChild(b);
+	//i->AddChild(b);
 	//i->AddChild(l);
 	static_cast<Canvas*>(can)->AddCanvasItem(i);
 
+	s = fmemory::fnew<Slider>();
+	s->SetBounds(nk_rect(0.0, 0.6, 1.0, 0.4));
+	s->SetMinValue(0);
+	s->SetMaxValue(10);
+	s->SetStep(1);
+
 	p = fmemory::fnew<Panel>();
-	//p->SetBounds(nk_rect(200, 200, 400, 400));
-	//p->SetBounds(nk_rect(0.16, 0.28, 0.31, 0.56));
 	p->SetBounds(nk_rect(0.0, 0.0, 0.33, 0.33));
 	p->SetColor(nk_rgb(255, 255, 255));
 	//p->AddChild(b);
 	p->AddChild(l);
-	//p->AddChild(i);
+	p->AddChild(s);
 	static_cast<Canvas*>(can)->AddCanvasItem(p);
 
 	m_renderPasses[4]->QueueRenderable(can);

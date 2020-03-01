@@ -13,13 +13,11 @@
 
 /**
  * Constructor for a label
- *
- * @param name - The name for the nuklear window
  */
 Button::Button() : CanvasItem(), m_wrap(false),  m_font(AssetManager::GetFont("default")),
-								   m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
-								   m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
-								   m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0))
+				   m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
+				   m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
+				   m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0))
 {
 
 }
