@@ -36,11 +36,11 @@ def guid_mapper(file_path):
                         prefab_file = file.split('.')
                         UNITY_PREFAB_MAP[guid] = os.path.join(subdir, prefab_file[0] + "." + prefab_file[1])
 
-    for key in UNITY_MATERIALS_MAP.keys():
+    '''for key in UNITY_MATERIALS_MAP.keys():
         print(key + " : " + UNITY_MATERIALS_MAP[key])
     '''
 
-    for key in UNITY_MESHES_MAP.keys():
-        print(key + " : " + UNITY_MESHES_MAP[key])
+    '''for key in UNITY_MESHES_MAP.keys():
+        print(key + " : " + UNITY_MESHES_MAP[key])'''
     for key in UNITY_PREFAB_MAP.keys():
-        print(key + " : " + UNITY_PREFAB_MAP[key])'''
+        print(key + " : " + UNITY_PREFAB_MAP[key])

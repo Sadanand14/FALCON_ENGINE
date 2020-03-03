@@ -7,6 +7,8 @@ from Scene_Extractor.guid_mapper import *
 from Scene_Extractor.file_id_generator import *
 from Scene_Extractor.constants import *
 
+MESH_INSTANCE_COUNTER = {}
+
 
 def clean_file(filepath):
     file_desc = open(filepath, "r")
@@ -26,11 +28,18 @@ def clean_file(filepath):
     file_desc.close()
 
 
+def update_mesh_instance_count(obj_mesh):
+    tmp = obj_mesh.split('\\')[-1]
+    if tmp in MESH_INSTANCE_COUNTER.keys():
+        MESH_INSTANCE_COUNTER[tmp] += 1
+    else:
+        MESH_INSTANCE_COUNTER[tmp] = 1
+
+
 def scale_for_falcon(unity_scale):
     scale = {'x': '', 'y': '', 'z': ''}
-
     for key in scale.keys():
-        scale[key] = float(unity_scale[key]) * FALCON_SCALE_DOWN
+        scale[key] = round(float(unity_scale[key]) * FALCON_SCALE_DOWN, 3)
     return scale
 
 
@@ -59,7 +68,7 @@ def read_prefab_source(prefab_yaml_file):
     parent = ''
     collider_data = {}
     obj_mesh = ''
-
+    mat = ''
     collider_data['rigidbody'] = 0
 
     with open(prefab_yaml_file, "r") as file_desc:
@@ -75,6 +84,7 @@ def read_prefab_source(prefab_yaml_file):
                 mesh_data = d['MeshFilter']['m_Mesh']
                 if mesh_data['guid'] in UNITY_MESHES_MAP.keys():
                     obj_mesh = UNITY_MESHES_MAP[mesh_data['guid']]
+                    update_mesh_instance_count(obj_mesh)
                 else:
                     obj_mesh = "Some default mesh. See collider for details"
 
@@ -89,7 +99,10 @@ def read_prefab_source(prefab_yaml_file):
             elif current_key == 'Rigidbody':
                 collider_data['rigidbody'] = 1
 
-    return position, rotation, scale, collider_data, obj_mesh
+            elif current_key == 'MeshRenderer':
+                mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
+
+    return position, rotation, scale, collider_data, obj_mesh, mat
 
 
 def read_gameobject(doc_data, is_prefab_related=False):
@@ -114,6 +127,7 @@ def read_gameobject(doc_data, is_prefab_related=False):
             mesh_data = d['MeshFilter']['m_Mesh']
             if mesh_data['guid'] in UNITY_MESHES_MAP.keys():
                 obj_mesh = UNITY_MESHES_MAP[mesh_data['guid']]
+                update_mesh_instance_count(obj_mesh)
             else:
                 obj_mesh = "Some default mesh. See collider for details"
 
@@ -135,7 +149,7 @@ def read_gameobject(doc_data, is_prefab_related=False):
     return_data['parent'] = parent
     return_data['obj_mesh'] = obj_mesh
     return_data['collider_data'] = collider_data
-    return_data['mat'] = read_material_data(mat)
+    return_data['mat'], return_data['transparency'] = read_material_data(mat)
     return return_data
 
 
@@ -163,7 +177,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
 
         # By default we make rigidbody static
         collider_data['rigidbody'] = 0
-        position, rotation, scale, collider_data, obj_mesh = read_prefab_source(prefab_yaml)
+        position, rotation, scale, collider_data, obj_mesh, mat = read_prefab_source(prefab_yaml)
 
     for d in local_modifications:
         if d['propertyPath'] == 'm_Name':
@@ -190,7 +204,9 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
         elif d['propertyPath'] == 'm_LocalScale.z':
             scale['z'] = d['value']
         elif d['propertyPath'] == 'm_Materials.Array.data[0]':
-            mat = UNITY_MATERIALS_MAP[d['objectReference']['guid']]
+            temp_mat = UNITY_MATERIALS_MAP[d['objectReference']['guid']]
+            if temp_mat != '':
+                mat = temp_mat
             print(mat)
 
     return_data['name'] = name
@@ -199,7 +215,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
     return_data['rotation'] = rotation
     return_data['parent'] = parent
     return_data['obj_mesh'] = obj_mesh
-    return_data['mat'] = read_material_data(mat)
+    return_data['mat'], return_data['transparency'] = read_material_data(mat)
     return_data['collider_data'] = collider_data
     if bool_read_prefab_source:
         os.remove(prefab_yaml)
@@ -208,6 +224,8 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
 
 def read_material_data(material_file):
     materials = {}
+    transparency = False
+    print(material_file)
     if material_file != '':
         material_temp = "mat.yaml"
         copyfile(material_file, material_temp)
@@ -220,13 +238,23 @@ def read_material_data(material_file):
                     temp = d['Material']['m_SavedProperties']['m_TexEnvs']
                     for tex in temp:
                         if list(tex.keys())[0] == '_BumpMap':
-                            materials['Normal_Map'] = UNITY_MATERIALS_MAP[tex['_BumpMap']['m_Texture']['guid']]
+                            if 'guid' in tex['_BumpMap']['m_Texture'].keys():
+                                materials['Normal_Map'] = UNITY_MATERIALS_MAP[tex['_BumpMap']['m_Texture']['guid']]
                         if list(tex.keys())[0] == '_MainTex':
-                            materials['Albedo_Map'] = UNITY_MATERIALS_MAP[tex['_MainTex']['m_Texture']['guid']]
+                            if 'guid' in tex['_MainTex']['m_Texture'].keys():
+                                materials['Albedo_Map'] = UNITY_MATERIALS_MAP[tex['_MainTex']['m_Texture']['guid']]
                         if list(tex.keys())[0] == '_OcclusionMap':
-                            materials['AO_Map'] = UNITY_MATERIALS_MAP[tex['_OcclusionMap']['m_Texture']['guid']]
+                            if 'guid' in tex['_OcclusionMap']['m_Texture'].keys():
+                                materials['AO_Map'] = UNITY_MATERIALS_MAP[tex['_OcclusionMap']['m_Texture']['guid']]
                         if list(tex.keys())[0] == '_MetallicGlossMap':
-                            materials['Metallic'] = UNITY_MATERIALS_MAP[tex['_MetallicGlossMap']['m_Texture']['guid']]
+                            if 'guid' in tex['_MetallicGlossMap']['m_Texture'].keys():
+                                materials['Metallic'] = UNITY_MATERIALS_MAP[
+                                    tex['_MetallicGlossMap']['m_Texture']['guid']]
 
+                    temp = d['Material']['stringTagMap']
+                    print(temp.keys())
+                    if temp is not None and 'RenderType' in temp.keys():
+                        print(temp['RenderType'])
+                        transparency = (temp['RenderType'] == 'Transparent')
         os.remove(material_temp)
-    return materials
+    return materials, transparency

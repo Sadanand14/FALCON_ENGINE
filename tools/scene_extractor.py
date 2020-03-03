@@ -44,6 +44,7 @@ def read_scene_file(filepath):
                 # do shit for prefab instances
                 prefab = d['PrefabInstance']
                 prefab_data = None
+                print(prefab['m_SourcePrefab']['guid'] + "  "+ prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys())
                 if prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys():
                     prefab_file = UNITY_PREFAB_MAP[prefab['m_SourcePrefab']['guid']]
                     prefab_data = read_prefabs(prefab, prefab_file, True)
@@ -58,6 +59,7 @@ def read_scene_file(filepath):
                         itr += 1
                     temp_data = read_gameobject(new_data,True)
                     prefab_data['obj_mesh'] = prefab_file
+                    update_mesh_instance_count(prefab_file)
                     prefab_data['collider_data'] = temp_data['collider_data']
 
                     itr -= 1
@@ -110,6 +112,7 @@ if __name__ == "__main__":
 
     for d in data:
         print(d)
+    print(MESH_INSTANCE_COUNTER)
         # input()
 # os.remove("test.yaml")\
 # input("Hit enter")
