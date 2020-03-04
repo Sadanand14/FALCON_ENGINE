@@ -36,6 +36,25 @@ def update_mesh_instance_count(obj_mesh):
         MESH_INSTANCE_COUNTER[tmp] = 1
 
 
+def get_parent_name(data, file_id):
+    if file_id == '' or file_id == 0:
+        return ''
+
+    else:
+        obj_index = SCENE_FILE_ID_TO_INDEX[str(file_id)]
+        index = -1
+        while index != obj_index:
+            index += 1
+        d = data[index]['Transform']
+        obj_id = ''
+        if 'm_GameObject' in list(d.keys()):
+            obj_id = d['m_GameObject']['fileID']
+        elif 'm_PrefabInstance' in list(d.keys()):
+            obj_id = d['m_PrefabInstance']['fileID']
+
+        return FILE_ID_SCENE_NAME[str(obj_id)]
+
+
 def scale_for_falcon(unity_scale):
     scale = {'x': '', 'y': '', 'z': ''}
     for key in scale.keys():
@@ -65,7 +84,6 @@ def read_prefab_source(prefab_yaml_file):
     position = {'x': '', 'y': '', 'z': ''}
     rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
     scale = {'x': '', 'y': '', 'z': ''}
-    parent = ''
     collider_data = {}
     obj_mesh = ''
     mat = ''
@@ -117,7 +135,7 @@ def read_gameobject(doc_data, is_prefab_related=False):
     return_data = {}
     for d in doc_data:
         current_key = list(d.keys())[0]
-        if current_key == 'Transform':
+        if current_key == 'Transform' and not is_prefab_related:
             position = d['Transform']['m_LocalPosition']
             rotation = d['Transform']['m_LocalRotation']
             scale = d['Transform']['m_LocalScale']
@@ -146,7 +164,7 @@ def read_gameobject(doc_data, is_prefab_related=False):
         return_data['position'] = position
         return_data['scale'] = scale_for_falcon(scale)
         return_data['rotation'] = rotation
-    return_data['parent'] = parent
+    return_data['parent_id'] = parent
     return_data['obj_mesh'] = obj_mesh
     return_data['collider_data'] = collider_data
     return_data['mat'], return_data['transparency'] = read_material_data(mat)
@@ -171,6 +189,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
     local_modifications = prefab['m_Modification']['m_Modifications']
     prefab_yaml = "prefab.yaml"
     if bool_read_prefab_source is True:
+        print("Reading prefab file")
         prefab_yaml = "prefab.yaml"
         copyfile(prefab_file, prefab_yaml)
         clean_file(prefab_yaml)
@@ -213,7 +232,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
     return_data['position'] = position
     return_data['scale'] = scale_for_falcon(scale)
     return_data['rotation'] = rotation
-    return_data['parent'] = parent
+    return_data['parent_id'] = parent
     return_data['obj_mesh'] = obj_mesh
     return_data['mat'], return_data['transparency'] = read_material_data(mat)
     return_data['collider_data'] = collider_data

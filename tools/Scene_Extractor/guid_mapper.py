@@ -1,16 +1,12 @@
 import yaml
 import os
+from Scene_Extractor.constants import UNITY_MATERIALS_MAP, UNITY_PREFAB_MAP, UNITY_MESHES_MAP
 
-
-UNITY_MATERIALS_MAP = {}
-UNITY_MESHES_MAP = {}
-UNITY_PREFAB_MAP = {}
 model_extensions = ['FBX', 'OBJ']
-texture_file_extensions = ['tga','png','mat','jpeg','jpg']
+texture_file_extensions = ['tga', 'png', 'mat', 'jpeg', 'jpg']
 
 
 def guid_mapper(file_path):
-
     for subdir, dirs, files in os.walk(file_path):
         for file in files:
             if any(x in file for x in texture_file_extensions) and file.endswith("meta"):
@@ -41,6 +37,6 @@ def guid_mapper(file_path):
     '''
 
     '''for key in UNITY_MESHES_MAP.keys():
-        print(key + " : " + UNITY_MESHES_MAP[key])'''
+        print(key + " : " + UNITY_MESHES_MAP[key])
     for key in UNITY_PREFAB_MAP.keys():
-        print(key + " : " + UNITY_PREFAB_MAP[key])
+        print(key + " : " + UNITY_PREFAB_MAP[key])'''
