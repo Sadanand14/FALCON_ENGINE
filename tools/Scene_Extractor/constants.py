@@ -9,14 +9,14 @@ UNITY_PREFAB_MAP = {}
 
 SCENE_FILE_ID_TO_INDEX = {}
 SCENE_INDEX_TO_FILE_ID = {}
-FILE_ID_SCENE_NAME ={}
+FILE_ID_SCENE_NAME = {}
 
 ###################################################################################################
 # Unity to Falcon mapping constants
 ###################################################################################################
 
 
-UNITY_COLLIDER_LIST = ['SphereCollider', 'BoxCollider', 'CapsuleCollider','MeshCollider', 'WheelCollider']
+UNITY_COLLIDER_LIST = ['SphereCollider', 'BoxCollider', 'CapsuleCollider', 'MeshCollider', 'WheelCollider']
 
 FALCON_SCALE_DOWN = 0.01
 
@@ -33,16 +33,29 @@ FALCON_RG_TYPES = {
     "Dynamic": 1
 }
 
+MESH_INSTANCE_COUNTER = {}
 ###################################################################################################
 # Falcon assets directory related constants
 ###################################################################################################
 
 
-ASSETS_BASE_DIR =  os.path.join(os.getcwd(),"Assets")
+ASSETS_BASE_DIR = os.path.join(os.getcwd(), "..", "..", "Falcon", "Assets")
 MODELS_BASE_DIR = os.path.join(ASSETS_BASE_DIR, "Models")
 SCENES_BASE_DIR = os.path.join(ASSETS_BASE_DIR, "Scenes")
 TEXTURES_BASE_DIR = os.path.join(ASSETS_BASE_DIR, "Textures")
 ENTITIES_BASE_DIR = os.path.join(ASSETS_BASE_DIR, "Entity Templates")
+SOUNDS_BASE_DIR = os.path.join(ASSETS_BASE_DIR, "Sounds")
 
-# TODO: Get shader paths. Currently we just 2.
+# TODO: Get shader paths.
+SHADERS = {
+    "VShader": "Rendering/Shader/VertexShader.vert",
+    "FShader": "Rendering/Shader/FragmentShader.frag",
+    "FTransparent" : "Rendering/Shader/Transparent.frag"
+}
 
+BASIC_MODELS = {
+    "CUBE": os.path.join(os.getcwd(),"Cube.fbx"),
+    "SPHERE": os.path.join(os.getcwd(),"Sphere.obj"),
+    "CAPSULE": os.path.join(os.getcwd(),"Capsule.obj"),
+    "PLANE": os.path.join(os.getcwd(),"Plane.fbx"),
+}

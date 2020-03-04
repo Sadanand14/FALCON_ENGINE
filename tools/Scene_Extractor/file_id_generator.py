@@ -31,5 +31,5 @@ def generate_file_id_to_name(data):
                 if mod['propertyPath'] == 'm_Name':
                     FILE_ID_SCENE_NAME[SCENE_INDEX_TO_FILE_ID[index]] = mod['value']
 
-    for key in FILE_ID_SCENE_NAME.keys():
-        print(key + "  " + FILE_ID_SCENE_NAME[key])
+    #for key in FILE_ID_SCENE_NAME.keys():
+    #    print(key + "  " + FILE_ID_SCENE_NAME[key])

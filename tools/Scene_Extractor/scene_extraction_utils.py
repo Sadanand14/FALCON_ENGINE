@@ -7,7 +7,7 @@ from Scene_Extractor.guid_mapper import *
 from Scene_Extractor.file_id_generator import *
 from Scene_Extractor.constants import *
 
-MESH_INSTANCE_COUNTER = {}
+
 
 
 def clean_file(filepath):
@@ -69,9 +69,9 @@ def read_collider_data(falcon_collider_data, collider_type, unity_collider_data)
 
     elif collider_type == UNITY_COLLIDER_LIST[1]:  # box:
 
-        falcon_collider_data['half_sides'] = {float(unity_collider_data[collider_type]['m_Size']['x']) / 2.0,
+        falcon_collider_data['half_sides'] = [float(unity_collider_data[collider_type]['m_Size']['x']) / 2.0,
                                               float(unity_collider_data[collider_type]['m_Size']['y']) / 2.0,
-                                              float(unity_collider_data[collider_type]['m_Size']['z']) / 2.0, }
+                                              float(unity_collider_data[collider_type]['m_Size']['z']) / 2.0 ]
 
     elif collider_type == UNITY_COLLIDER_LIST[2]:  # capsule:
         falcon_collider_data['radius'] = unity_collider_data[collider_type]['m_Radius']

@@ -1,6 +1,6 @@
 import yaml
 import sys
-from shutil import copyfile
+import shutil
 import os
 import json
 
@@ -115,7 +115,10 @@ if __name__ == "__main__":
 
     for d in scene_data:
         print(d)
-    print(MESH_INSTANCE_COUNTER)
-    # input()
-# os.remove("test.yaml")\
-# input("Hit enter")
+    #print(MESH_INSTANCE_COUNTER)
+
+    if os.path.exists(ASSETS_BASE_DIR):
+        shutil.rmtree(ASSETS_BASE_DIR)
+    create_falcon_assets(scene_data)
+
+
