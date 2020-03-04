@@ -87,20 +87,21 @@ class Renderer
 
 	//TODO: REMOVE
 	Renderable* can;
-	Label* l;
 	static Button* prev;
 	static Button* next;
-	Image* i;
-	Panel* p;
-	Slider* s;
-	Texture t;
+	static Image* bg;
+	static Slider* wingAngle;
+	static Slider* gearRatio;
+	static Slider* suspension;
+
+	static Texture uiPage1;
+	static Texture uiPage2;
+	static Texture uiPage3;
 
 	static void uiNext0();
 	static void uiNext1();
 	static void uiNext2();
-	static void uiNext3();
 
-	static void uiPrev0();
 	static void uiPrev1();
 	static void uiPrev2();
 	static void uiPrev3();

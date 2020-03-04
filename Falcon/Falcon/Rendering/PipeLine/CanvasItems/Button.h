@@ -17,8 +17,7 @@ class Button : public CanvasItem
 		nk_color m_textNormal;
 		nk_color m_textHover;
 		nk_color m_textActive;
-		//nk_flags m_hAlignment;
-		//nk_flags m_vAlignment;
+		nk_color m_borderColor;
 		Font* m_font;
 		boost::function<void(void)> m_callback;
 
@@ -26,10 +25,7 @@ class Button : public CanvasItem
 		Button();
 		virtual ~Button();
 		void Commands(nk_context* ctx) override;
-		//inline void SetWrap(bool wrap) { m_wrap = wrap; }
 		inline void SetText(std::string txt) { m_text = txt; }
-		//inline void SetAlignment(nk_flags alignment) { m_hAlignment = alignment; }
-		//inline void SetVerticalAlignment(nk_flags alignment) { m_vAlignment = alignment; }
 		inline void SetCallback(boost::function<void(void)> callback) { m_callback = callback; }
 
 		//Text colors
@@ -42,7 +38,7 @@ class Button : public CanvasItem
 		inline void SetHoverButtonColor(nk_color color) { m_buttonHover = color; }
 		inline void SetActiveButtonColor(nk_color color) { m_buttonActive = color; }
 
-
+		inline void SetBorderColor(nk_color color) { m_borderColor = color; }
 };
 
 #endif

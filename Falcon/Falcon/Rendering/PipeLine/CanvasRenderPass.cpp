@@ -75,6 +75,7 @@ void CanvasRenderPass::Render()
 		m_ctx.style.window.spacing = can->GetPanelPadding();
 		m_ctx.style.window.padding = can->GetItemSpacing();
 		m_ctx.style.window.fixed_background = can->GetWindowBackground();
+		m_ctx.style.window.border = 0;
 
 		//////////////////////
 		//// Actual GL Drawing
@@ -150,8 +151,7 @@ void CanvasRenderPass::Render()
 		nk_clear(&m_ctx);
 	}
 
-	//m_renderQueue.clear();
-	glScissor(0, 0, 1280, 720);
+	//glScissor(0, 0, 1280, 720);
 }
 
 void CanvasRenderPass::PushInput(GLFWwindow* win)

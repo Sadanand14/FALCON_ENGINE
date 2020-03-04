@@ -34,57 +34,55 @@
 
 Button* Renderer::prev = nullptr;
 Button* Renderer::next = nullptr;
+Image* Renderer::bg = nullptr;
+Texture Renderer::uiPage1;
+Texture Renderer::uiPage2;
+Texture Renderer::uiPage3;
 
 void Renderer::uiNext0()
 {
 	next->SetCallback(boost::function<void(void)>(uiNext1));
 	prev->SetCallback(boost::function<void(void)>(uiPrev1));
-	printf("Next Callback 0\n");
+	prev->SetActive(true);
+	next->SetBounds(nk_rect(0.725, 0.883, 0.25, 0.08));
+	bg->SetImage(uiPage2);
 }
 
 void Renderer::uiNext1()
 {
 	next->SetCallback(boost::function<void(void)>(uiNext2));
 	prev->SetCallback(boost::function<void(void)>(uiPrev2));
-	printf("Next Callback 1\n");
+	bg->SetImage(uiPage3);
 }
 
 void Renderer::uiNext2()
 {
-	next->SetCallback(boost::function<void(void)>(uiNext3));
+	bg->SetActive(false);
+	next->SetActive(false);
 	prev->SetCallback(boost::function<void(void)>(uiPrev3));
-	printf("Next Callback 2\n");
-}
-
-void Renderer::uiNext3()
-{
-	FL_ENGINE_WARN("End of UI tree");
-}
-
-void Renderer::uiPrev0()
-{
-	FL_ENGINE_WARN("Beginning of UI tree");
 }
 
 void Renderer::uiPrev1()
 {
 	next->SetCallback(boost::function<void(void)>(uiNext0));
-	prev->SetCallback(boost::function<void(void)>(uiPrev0));
-	printf("Prev Callback 1\n");
+	prev->SetActive(false);
+	next->SetBounds(nk_rect(0.626, 0.820, 0.22, 0.122));
+	bg->SetImage(uiPage1);
 }
 
 void Renderer::uiPrev2()
 {
 	next->SetCallback(boost::function<void(void)>(uiNext1));
 	prev->SetCallback(boost::function<void(void)>(uiPrev1));
-	printf("Prev Callback 2\n");
+	bg->SetImage(uiPage2);
 }
 
 void Renderer::uiPrev3()
 {
 	next->SetCallback(boost::function<void(void)>(uiNext2));
 	prev->SetCallback(boost::function<void(void)>(uiPrev2));
-	printf("Prev Callback 3\n");
+	next->SetActive(true);
+	bg->SetActive(true);
 }
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
@@ -164,11 +162,11 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	fmemory::fdelete(can);
-	fmemory::fdelete(l);
 	fmemory::fdelete(next);
 	fmemory::fdelete(prev);
-	fmemory::fdelete(i);
-	fmemory::fdelete(p);
+	fmemory::fdelete(bg);
+	//fmemory::fdelete(p);
+	//fmemory::fdelete(l);
 
 	for(auto pass : m_renderPasses)
 	{
@@ -214,58 +212,42 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
 	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
-	l = fmemory::fnew<Label>();
-	l->SetColor(nk_rgb(244, 245, 248));
-	l->SetTextColor(nk_rgb(200, 200, 200));
-	l->SetWrap(true);
-	l->SetBounds(nk_rect(0, 0, 0.5, 0.5));
-	l->SetText(std::string("This is a test"));
-	//static_cast<Canvas*>(can)->AddCanvasItem(l);
+	uiPage1.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/start race.jpg");
+	uiPage2.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/choose track_lock.jpg");
+	uiPage3.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/tune car_1.jpg");
+	bg = fmemory::fnew<Image>();
+	bg->SetBounds(nk_rect(0.0, 0.0, 1.0, 1.0));
+	bg->SetImage(uiPage1);
+	//i->AddChild(b);
+	//i->AddChild(l);
+	static_cast<Canvas*>(can)->AddCanvasItem(bg);
 
 	next = fmemory::fnew<Button>();
-	next->SetColor(nk_rgb(255, 255, 255));
-	next->SetNormalTextColor(nk_rgb(255, 0, 0));
-	next->SetNormalButtonColor(nk_rgb(180, 180, 180));
-	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
-	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
-	next->SetBounds(nk_rect(0.5, 0.3, 0.2, 0.2));
-	next->SetText(std::string("Proceed"));
-	//b->SetActive(false);
+	next->SetColor(nk_rgba(255, 255, 255, 0));
+	next->SetNormalButtonColor(nk_rgba(255, 255, 255, 0));
+	next->SetHoverButtonColor(nk_rgba(255, 255, 255, 0));
+	next->SetActiveButtonColor(nk_rgba(255, 255, 255, 0));
+	next->SetBounds(nk_rect(0.626, 0.820, 0.22, 0.122));
+	next->SetText(std::string(""));
 	next->SetCallback(boost::function<void(void)>(uiNext0));
 	static_cast<Canvas*>(can)->AddCanvasItem(next);
 
 	prev = fmemory::fnew<Button>();
-	prev->SetColor(nk_rgb(255, 255, 255));
-	prev->SetNormalTextColor(nk_rgb(255, 0, 0));
-	prev->SetNormalButtonColor(nk_rgb(180, 180, 180));
-	//b->SetHoverButtonColor(nk_rgb(255, 255, 255));
-	//b->SetActiveButtonColor(nk_rgb(5, 255, 255));
-	prev->SetBounds(nk_rect(0.3, 0.3, 0.2, 0.2));
-	prev->SetText(std::string("Back"));
-	prev->SetCallback(boost::function<void(void)>(uiPrev0));
+	prev->SetColor(nk_rgba(255, 255, 255, 0));
+	prev->SetNormalButtonColor(nk_rgba(255, 255, 255, 0));
+	prev->SetHoverButtonColor(nk_rgba(255, 255, 255, 0));
+	prev->SetActiveButtonColor(nk_rgba(255, 255, 255, 0));
+	prev->SetBounds(nk_rect(0.025, 0.883, 0.274, 0.081));
+	prev->SetActive(false);
+	prev->SetText(std::string(""));
+	prev->SetCallback([]() { FL_ENGINE_ERROR("THIS SHOULD NOT BE CALLED"); });
 	static_cast<Canvas*>(can)->AddCanvasItem(prev);
 
-	t.textureID = AssetManager::LoadTexture("../Assets/Textures/car.png");
-	i = fmemory::fnew<Image>();
-	i->SetBounds(nk_rect(0.63, 0.56, 0.23, 0.21));
-	i->SetImage(t);
-	//i->AddChild(b);
-	//i->AddChild(l);
-	static_cast<Canvas*>(can)->AddCanvasItem(i);
-
-	s = fmemory::fnew<Slider>();
-	s->SetBounds(nk_rect(0.0, 0.6, 1.0, 0.4));
-	s->SetMinValue(0);
-	s->SetMaxValue(10);
-	s->SetStep(1);
-
-	p = fmemory::fnew<Panel>();
-	p->SetBounds(nk_rect(0.0, 0.0, 0.33, 0.33));
-	p->SetColor(nk_rgb(255, 255, 255));
-	//p->AddChild(b);
-	p->AddChild(l);
-	p->AddChild(s);
-	static_cast<Canvas*>(can)->AddCanvasItem(p);
+	//s = fmemory::fnew<Slider>();
+	//s->SetBounds(nk_rect(0.0, 0.6, 1.0, 0.4));
+	//s->SetMinValue(0);
+	//s->SetMaxValue(10);
+	//s->SetStep(1);
 
 	m_renderPasses[4]->QueueRenderable(can);
 }
