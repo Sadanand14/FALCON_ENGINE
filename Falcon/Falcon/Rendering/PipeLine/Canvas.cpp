@@ -10,6 +10,7 @@
 
 #include "Texture.h"
 #include "CanvasItems/CanvasItem.h"
+#include "WindowData.h"
 
 /**
  * Canvas constructor
@@ -63,9 +64,9 @@ void Canvas::CallDrawCommands(nk_context* ctx)
 	ctx->style.window.background = CANVAS_BACKGROUND;
 	ctx->style.window.fixed_background = nk_style_item_color(CANVAS_BACKGROUND);
 
-	nk_window_set_bounds(ctx, "Canvas", nk_rect(0, 0, 1280, 720));
-	nk_begin(ctx, "Canvas", nk_rect(0, 0, 1280, 720), NK_WINDOW_NO_SCROLLBAR);
-	nk_layout_space_begin(ctx, NK_DYNAMIC, 720, INT_MAX);
+	nk_window_set_bounds(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y));
+	nk_begin(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR);
+	nk_layout_space_begin(ctx, NK_DYNAMIC, WindowData::windowSize.y, INT_MAX);
 
 	for(u32 i = 0; i < m_canvasItems.size(); i++)
 		m_canvasItems[i]->Draw(ctx);

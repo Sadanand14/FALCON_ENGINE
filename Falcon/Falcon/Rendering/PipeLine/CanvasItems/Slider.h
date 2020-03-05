@@ -20,19 +20,19 @@
 class Slider: public CanvasItem
 {
 	protected:
-		i32 m_minValue;
-		i32 m_maxValue;
-		i32 m_curValue;
-		i32 m_step;
+		float m_minValue;
+		float m_maxValue;
+		float m_curValue;
+		float m_step;
 
 	public:
 		Slider();
 		virtual ~Slider();
 		void Commands(nk_context* ctx) override;
-		inline void SetMinValue(i32 minValue) { m_minValue = minValue; }
-		inline void SetMaxValue(i32 maxValue) { m_maxValue = maxValue; }
-		inline void SetStep(i32 step) { m_step = step; }
-		inline i32 GetCurValue() { return m_curValue; }
+		inline void SetMinValue(float minValue) { m_minValue = minValue; }
+		inline void SetMaxValue(float maxValue) { m_maxValue = maxValue; }
+		inline void SetStep(float step) { m_step = step; }
+		inline float GetCurValue() { return m_curValue; }
 };
 
 #endif

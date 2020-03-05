@@ -32,9 +32,13 @@
 #include "CanvasItems/Panel.h"
 #include "CanvasItems/Slider.h"
 
+GLFWwindow* Renderer::m_win = nullptr;
 Button* Renderer::prev = nullptr;
 Button* Renderer::next = nullptr;
 Image* Renderer::bg = nullptr;
+Slider* Renderer::wingAngle = nullptr;
+Slider* Renderer::gearRatio = nullptr;
+Slider* Renderer::suspension = nullptr;
 Texture Renderer::uiPage1;
 Texture Renderer::uiPage2;
 Texture Renderer::uiPage3;
@@ -53,13 +57,22 @@ void Renderer::uiNext1()
 	next->SetCallback(boost::function<void(void)>(uiNext2));
 	prev->SetCallback(boost::function<void(void)>(uiPrev2));
 	bg->SetImage(uiPage3);
+	wingAngle->SetActive(true);
+	gearRatio->SetActive(true);
+	suspension->SetActive(true);
 }
 
 void Renderer::uiNext2()
 {
 	bg->SetActive(false);
 	next->SetActive(false);
-	prev->SetCallback(boost::function<void(void)>(uiPrev3));
+	//prev->SetCallback(boost::function<void(void)>(uiPrev3));
+	prev->SetActive(false);
+	wingAngle->SetActive(false);
+	gearRatio->SetActive(false);
+	suspension->SetActive(false);
+
+	glfwSetInputMode(m_win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Renderer::uiPrev1()
@@ -75,6 +88,9 @@ void Renderer::uiPrev2()
 	next->SetCallback(boost::function<void(void)>(uiNext1));
 	prev->SetCallback(boost::function<void(void)>(uiPrev1));
 	bg->SetImage(uiPage2);
+	wingAngle->SetActive(false);
+	gearRatio->SetActive(false);
+	suspension->SetActive(false);
 }
 
 void Renderer::uiPrev3()
@@ -82,7 +98,12 @@ void Renderer::uiPrev3()
 	next->SetCallback(boost::function<void(void)>(uiNext2));
 	prev->SetCallback(boost::function<void(void)>(uiPrev2));
 	next->SetActive(true);
+	prev->SetActive(true);
 	bg->SetActive(true);
+	wingAngle->SetActive(true);
+	gearRatio->SetActive(true);
+	suspension->SetActive(true);
+	glfwSetInputMode(m_win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
@@ -165,7 +186,7 @@ Renderer::~Renderer()
 	fmemory::fdelete(next);
 	fmemory::fdelete(prev);
 	fmemory::fdelete(bg);
-	//fmemory::fdelete(p);
+	fmemory::fdelete(wingAngle);
 	//fmemory::fdelete(l);
 
 	for(auto pass : m_renderPasses)
@@ -243,11 +264,29 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	prev->SetCallback([]() { FL_ENGINE_ERROR("THIS SHOULD NOT BE CALLED"); });
 	static_cast<Canvas*>(can)->AddCanvasItem(prev);
 
-	//s = fmemory::fnew<Slider>();
-	//s->SetBounds(nk_rect(0.0, 0.6, 1.0, 0.4));
-	//s->SetMinValue(0);
-	//s->SetMaxValue(10);
-	//s->SetStep(1);
+	wingAngle = fmemory::fnew<Slider>();
+	wingAngle->SetBounds(nk_rect(0.016, 0.62, 0.22, 0.1));
+	wingAngle->SetMinValue(0.0f);
+	wingAngle->SetMaxValue(1.0f);
+	wingAngle->SetStep(0.1f);
+	wingAngle->SetActive(false);
+	static_cast<Canvas*>(can)->AddCanvasItem(wingAngle);
+
+	gearRatio = fmemory::fnew<Slider>();
+	gearRatio->SetBounds(nk_rect(0.258, 0.62, 0.22, 0.1));
+	gearRatio->SetMinValue(0.0f);
+	gearRatio->SetMaxValue(1.0f);
+	gearRatio->SetStep(0.1f);
+	gearRatio->SetActive(false);
+	static_cast<Canvas*>(can)->AddCanvasItem(gearRatio);
+
+	suspension = fmemory::fnew<Slider>();
+	suspension->SetBounds(nk_rect(0.5, 0.62, 0.22, 0.1));
+	suspension->SetMinValue(0.0f);
+	suspension->SetMaxValue(1.0f);
+	suspension->SetStep(0.1f);
+	suspension->SetActive(false);
+	static_cast<Canvas*>(can)->AddCanvasItem(suspension);
 
 	m_renderPasses[4]->QueueRenderable(can);
 }

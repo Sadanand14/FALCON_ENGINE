@@ -33,5 +33,5 @@ Slider::~Slider()
  */
 void Slider::Commands(nk_context* ctx)
 {
-	nk_slider_int(ctx, m_minValue, &m_curValue, m_maxValue, m_step);
+	nk_slider_float(ctx, m_minValue, &m_curValue, m_maxValue, m_step);
 }

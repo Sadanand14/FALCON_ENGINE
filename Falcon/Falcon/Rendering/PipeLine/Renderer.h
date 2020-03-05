@@ -83,7 +83,7 @@ class Renderer
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
-	GLFWwindow* m_win = nullptr;
+	static GLFWwindow* m_win;
 
 	//TODO: REMOVE
 	Renderable* can;
@@ -104,7 +104,6 @@ class Renderer
 
 	static void uiPrev1();
 	static void uiPrev2();
-	static void uiPrev3();
 
 public:
 	Renderer();
@@ -115,6 +114,9 @@ public:
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);
+
+	//Exposed for use in game
+	static void uiPrev3();
 };
 
 #endif // !RENDERER_H
