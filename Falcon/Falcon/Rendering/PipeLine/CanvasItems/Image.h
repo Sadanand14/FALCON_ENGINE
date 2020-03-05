@@ -13,7 +13,7 @@
 
 #include "CanvasItem.h"
 #include "System/Types.h"
-#include "Texture.h"
+#include "../Texture.h"
 
 /**
  * A basic label
@@ -22,12 +22,6 @@ class Image : public CanvasItem
 {
 	protected:
 		struct nk_image m_img;
-		//bool m_wrap;
-		//std::string m_text;
-		//nk_color m_textColor;
-		//nk_flags m_hAlignment;
-		//nk_flags m_vAlignment;
-		//Font* m_font;
 
 	public:
 		Image();
