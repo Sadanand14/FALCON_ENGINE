@@ -187,7 +187,8 @@ Renderer::~Renderer()
 	fmemory::fdelete(prev);
 	fmemory::fdelete(bg);
 	fmemory::fdelete(wingAngle);
-	//fmemory::fdelete(l);
+	fmemory::fdelete(gearRatio);
+	fmemory::fdelete(suspension);
 
 	for(auto pass : m_renderPasses)
 	{
@@ -312,7 +313,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTL
 
 	//		if (renderComp)
 	//		{
-	//			
+	//
 	//			if (i != 1)
 	//			{
 	//				physComp->SetBoxCollider(5, 5, 5);
