@@ -7,10 +7,12 @@ from Scene_Extractor.constants import *
 from Scene_Extractor.guid_mapper import *
 from Scene_Extractor.file_id_generator import *
 
-FILES_TO_COPY_SRC_DEST = {}
+FILES_TO_COPY_DEST_SRC = {}
 NAME_TO_TEMPLATE_MAP = {}
 MATERIAL_INSTANCE_COUNT = {}
 MESH_MATERIAL_MAP = {}
+MESH_MODEL_MAP = {}
+NAME_TO_MATERIAL_MAP = {}
 
 
 def create_dir_structure():
@@ -50,8 +52,8 @@ def create_dir_structure():
 
 
 def copy_assets_from_src():
-    for key in FILES_TO_COPY_SRC_DEST.keys():
-        copyfile(key, FILES_TO_COPY_SRC_DEST[key])
+    for key in FILES_TO_COPY_DEST_SRC.keys():
+        copyfile(FILES_TO_COPY_DEST_SRC[key], key)
 
 
 def add_to_mesh_list(material_json, mesh):
@@ -82,16 +84,16 @@ def create_material_json(name, mesh, mat, isTransparent):
     for key in mat.keys():
         if key == "Normal_Map":
             falcon_mat["normal"] = os.path.join(materials_textures_dir, os.path.split(mat["Normal_Map"])[1])
-            FILES_TO_COPY_SRC_DEST[mat["Normal_Map"]] = falcon_mat["normal"]
+            FILES_TO_COPY_DEST_SRC[falcon_mat["normal"]] = mat["Normal_Map"]
         elif key == "Albedo_Map":
             falcon_mat["albedo"] = os.path.join(materials_textures_dir, os.path.split(mat["Albedo_Map"])[1])
-            FILES_TO_COPY_SRC_DEST[mat["Albedo_Map"]] = falcon_mat["albedo"]
+            FILES_TO_COPY_DEST_SRC[falcon_mat["albedo"]] = mat["Albedo_Map"]
         elif key == "Metallic":
             falcon_mat["metallic"] = os.path.join(materials_textures_dir, os.path.split(mat["Metallic"])[1])
-            FILES_TO_COPY_SRC_DEST[mat["Metallic"]] = falcon_mat["metallic"]
+            FILES_TO_COPY_DEST_SRC[falcon_mat["metallic"]] = mat["Metallic"]
         elif key == "AO_Map":
             falcon_mat["ao"] = os.path.join(materials_textures_dir, os.path.split(mat["AO_Map"])[1])
-            FILES_TO_COPY_SRC_DEST[mat["AO_Map"]] = falcon_mat["ao"]
+            FILES_TO_COPY_DEST_SRC[falcon_mat["ao"]] = mat["AO_Map"]
     if isTransparent:
         falcon_mat['Fshader'] = SHADERS['FTransparent']
     else:
@@ -122,6 +124,7 @@ def create_material_json(name, mesh, mat, isTransparent):
                 json.dump(falcon_mat, fp)
 
     # generate metadata for further things
+    NAME_TO_MATERIAL_MAP[name] = material_json
     add_to_mesh_list(material_json, mesh)
     temp = os.path.split(material_json)[1]
     update_instance_counter(temp)
@@ -134,7 +137,7 @@ def create_model_json(mesh_location_map):
             model_file = os.path.join(MODELS_BASE_DIR, mesh + str(counter if counter > 0 else '') + ".json")
             falcon_model = {}
             falcon_model["path"] = os.path.join(MODELS_BASE_DIR, mesh, os.path.split(mesh_location_map[mesh])[1])
-            FILES_TO_COPY_SRC_DEST[mesh_location_map[mesh]] = falcon_model["path"]
+            FILES_TO_COPY_DEST_SRC[falcon_model["path"]] = mesh_location_map[mesh]
 
             falcon_model['material'] = mat
             falcon_model['instances'] = MATERIAL_INSTANCE_COUNT[os.path.split(mat)[1]]
@@ -147,6 +150,9 @@ def create_model_json(mesh_location_map):
             with open(model_file, 'w') as fp:
                 json.dump(falcon_model, fp)
 
+            key = mesh + "_" + os.path.split(mat)[1].split('.')[0]
+            MESH_MODEL_MAP[key] = model_file
+
             counter += 1
 
 
@@ -157,7 +163,10 @@ def create_entity_json(entity_data):
     physics_component = {}
 
     if 'obj_mesh' in entity_data.keys():
-        entity_template['renderComponent'] = {"mesh": FILES_TO_COPY_SRC_DEST[entity_data['obj_mesh']]}
+        entity_mat = os.path.split(NAME_TO_MATERIAL_MAP[entity_data['name']])[1].split('.')[0]
+        entity_mesh = os.path.split(entity_data['obj_mesh'])[1].split('.')[0]
+        key = entity_mesh + "_" + entity_mat
+        entity_template['renderComponent'] = {"mesh": MESH_MODEL_MAP[key]}
     if 'collider_data' in entity_data.keys():
         entity_template['physicsComponent'] = {}
         for key in entity_data['collider_data']:
@@ -174,9 +183,9 @@ def create_scene_file(unity_data, name_to_index):
     for entity in unity_data:
         tmp_entity = {}
         tmp_entity['name'] = entity['name']
-        tmp_entity['scale'] = entity['scale']
-        tmp_entity['pos'] = entity['position']
-        tmp_entity['rot'] = entity['rotation']
+        tmp_entity['scale'] = list(entity['scale'].values())
+        tmp_entity['pos'] = list(entity['position'].values())
+        tmp_entity['rot'] = list(entity['rotation'].values())
         tmp_entity['childCount'] = 0
         tmp_entity['template'] = NAME_TO_TEMPLATE_MAP[entity['name']]
         tmp_entity['parent'] = name_to_index[entity['parent']] if entity['parent'] != '' else -1
@@ -189,6 +198,7 @@ def create_scene_file(unity_data, name_to_index):
 def create_falcon_assets(unity_data):
     create_dir_structure()
     mesh_location_map = {}
+    name_to_mesh = {}
     name_to_list_index = {}
     # update default meshes in the obj_mesh
     for d in unity_data:
@@ -208,6 +218,7 @@ def create_falcon_assets(unity_data):
     for d in unity_data:
         mesh = os.path.split(d["obj_mesh"])[1].split('.')[0]
         mesh_location_map[mesh] = d['obj_mesh']
+
         create_material_json(d['name'], mesh, d['mat'], d['transparency'])
 
     create_model_json(mesh_location_map)
