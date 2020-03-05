@@ -443,7 +443,10 @@ namespace Rendering
 
 		glm::vec3 FBR = glm::vec3(maxX, maxY, maxZ);
 
-		if (!CheckBounds(node, NTL, FBR))
+		static bool boundaryCheck = false;
+		boundaryCheck = CheckBounds(node, NTL, FBR);
+
+		if (!boundaryCheck && node!=m_rootNode)
 		{
 			Transform* transform = entity->GetTransform();
 			Scene::entityVector& entities = node->m_entities;
@@ -494,7 +497,7 @@ namespace Rendering
 			}
 			node->m_entities.push_back(entity);
 		}
-		else
+		else if(boundaryCheck)
 		{
 			OctreeNode* original = node;
 			//check if it fits inside children

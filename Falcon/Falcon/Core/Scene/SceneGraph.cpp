@@ -146,10 +146,12 @@ namespace Scene
 	*
 	* @param[out] The data necessary to be relayed back for continuing to load the rest of the scene.
 	*/
-	NodeWithOffset SceneGraph::CreateNode(rapidjson::Document& doc, unsigned int index)
+	NodeWithOffset SceneGraph::CreateNode(rapidjson::Document& doc, unsigned int index, bool isReadingCar, unsigned int carIndex,RigidbodyDynamic* actor)
 	{
-		const rapidjson::Value& world = doc["entities"];
+		const rapidjson::Value& world = (!isReadingCar)?doc["entities"]: doc["vehicles"][carIndex];
 		//Get position, rotation, and scale
+		const rapidjson::Value& name = world[index]["name"];
+		FL_ENGINE_ERROR("Currently Loading: {0}", name.GetString());
 		const rapidjson::Value& pos = world[index]["pos"];
 		glm::vec3 position;
 		for (rapidjson::SizeType j = 0; j < 3; j++)
@@ -182,7 +184,7 @@ namespace Scene
 			FL_ENGINE_ERROR(" NO OBJECT TEMPLATE PROVIDED FOR ENTITY!!");
 		}
 
-		Entity* temp = EntityManager::CreateEntity(objTemplate, position, rotation, scale);
+		Entity* temp = EntityManager::CreateEntity(objTemplate, position, rotation, scale,actor);
 		m_entityList.push_back(temp);
 
 		//SceneNode* newNode = new SceneNode(temp);
@@ -200,7 +202,7 @@ namespace Scene
 			NodeWithOffset childNodeStuff;
 			for (rapidjson::SizeType j = 0; j < loopCount; j++)
 			{
-				childNodeStuff = CreateNode(doc, readIndex);
+				childNodeStuff = CreateNode(doc, readIndex,isReadingCar,carIndex, actor);
 				newNode->AddChild(childNodeStuff.m_sceneNode);
 				readIndex = childNodeStuff.m_nextOffset;
 			}
@@ -294,9 +296,9 @@ namespace Scene
 		}
 
 		//Check if JSON file has an entities array
+		unsigned int nextEntityOffset = 0;
 		if (doc.HasMember("entities"))
 		{
-			unsigned int nextEntityOffset = 0;
 
 			//Read entities
 			rapidjson::Value& world = doc["entities"];
@@ -305,10 +307,35 @@ namespace Scene
 			//Load all entities into the scene
 			while (nextEntityOffset < world.Size())
 			{
-				temp = CreateNode(doc, nextEntityOffset);
+				temp = CreateNode(doc, nextEntityOffset,false, 0, nullptr);
 				m_rootNode->AddChild(temp.m_sceneNode);
 				nextEntityOffset = temp.m_nextOffset;
 			}
+		}
+
+		if (doc.HasMember("vehicles"))
+		{
+			rapidjson::Value& vehicles = doc["vehicles"];
+
+			FL_ENGINE_ERROR("Cound of vehicles = {0}", vehicles.Size());
+			
+			for (unsigned itr = 0; itr < vehicles.Size(); ++itr)
+			{
+
+				rapidjson::Value& car = doc["vehicles"][itr];
+				NodeWithOffset temp;
+				RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+
+
+				for (unsigned looper = 0; looper < car.Size();++looper)
+				{
+					temp = CreateNode(doc, looper,true, itr,vehActor);
+					m_rootNode->AddChild(temp.m_sceneNode);
+					nextEntityOffset = temp.m_nextOffset;
+				}
+				physics::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+			}
+
 		}
 
 		SegregateEntities();

@@ -1,9 +1,12 @@
 
+#include "Physx/physx/include/vehicle/PxVehicleUtil.h"
+
 #include "Physics.h"
 #include "PXMathUtils.h"
 #include "PhysicsSystem.h"
 #include "PXUtils.h"
-
+#include "vehicle/Vehicle.h"
+#include "vehicle/CarAPI.h"
 #define PVD_HOST "127.0.0.1"
 
 namespace physics
@@ -15,19 +18,30 @@ namespace physics
 	namespace {
 		/* PhysX default variables*/
 
-		static physx::PxDefaultAllocator		gAllocator;
-		static FLPxErrorCallback	            gErrorCallback;
+		static physx::PxDefaultAllocator		     gAllocator;
+		static FLPxErrorCallback	                 gErrorCallback;
+												     
+		static physx::PxFoundation*                  gFoundation = NULL;
+		static physx::PxPhysics*                     gPhysics = NULL;
+		static physx::PxCooking*                     gCooking = NULL;
+												     
+		static physx::PxDefaultCpuDispatcher*        gDispatcher = NULL;
+		static physx::PxScene*                       gScene = NULL;
+												     
+		static physx::PxMaterial*                    gMaterial = NULL;
+												     
+		static physx::PxPvd*                         gPvd = NULL;
+												     
+	
+		static bool					                 gIsVehicleInScene = false;
 
-		static physx::PxFoundation* gFoundation = NULL;
-		static physx::PxPhysics* gPhysics = NULL;
-		static physx::PxCooking* gCooking = NULL;
-		physx::PxDefaultCpuDispatcher* gDispatcher = NULL;
-		physx::PxScene* gScene = NULL;
-
-		physx::PxMaterial* gMaterial = NULL;
-
-		physx::PxPvd* gPvd = NULL;
-
+		/**
+		*
+		* Function creates a Random convex mesh for collider shape which is used for the mesh collider.
+		* @param int number of vertecies
+		* @param pointer to vertex array
+		* @param int stride
+		*/
 		template<physx::PxConvexMeshCookingType::Enum convexMeshCookingType, bool directInsertion, int gaussMapLimit>
 		physx::PxConvexMesh* createRandomConvex(int numVerts, const physx::PxVec3* verts, int stride)
 		{
@@ -46,7 +60,7 @@ namespace physics
 
 			// We provide points only, therefore the PxConvexFlag::eCOMPUTE_CONVEX flag must be specified
 			desc.points.data = verts;
-			desc.points.count = 64;
+			desc.points.count = numVerts;
 			desc.points.stride = sizeof(physx::PxVec3);;
 			//desc.quantizedCount = numVerts ;
 			desc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
@@ -94,9 +108,17 @@ namespace physics
 			//convex->release();
 		}
 
-
+		physx::PxMeshScale scaleDown(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
+		physx::PxRigidStatic* gGround;
 
 	}
+
+
+	physx::PxPhysics* GetPhysics() { return gPhysics; }
+	physx::PxScene* GetPhysicsScene() { return gScene;	}
+	physx::PxCooking* GetCooking() { return gCooking; }
+	physx::PxDefaultAllocator GetAllocator() { return gAllocator; };
+	physx::PxMaterial* GetDefaultMaterial() { return gMaterial; }
 
 	/*
 	* Initiates the physX system.
@@ -118,7 +140,8 @@ namespace physics
 		gPvd = PxCreatePvd(*gFoundation);
 		physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 
-		if (!gPvd->connect(*transport, physx::PxPvdInstrumentationFlag::ePROFILE))
+		
+		if (!gPvd->connect(*transport,  physx::PxPvdInstrumentationFlag::eDEBUG | physx::PxPvdInstrumentationFlag::eMEMORY))
 		{
 			FL_ENGINE_ERROR("ERROR:Failed to connect to pvd");
 		}
@@ -131,6 +154,10 @@ namespace physics
 		gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, physx::PxCookingParams(physx::PxTolerancesScale()));
 		CreatePhysicsScene();
 
+		/*Will connect to NVIDIA PVD only in debug mode*/
+
+#ifdef BUILD_DEBUG_MODE
+		
 		physx::PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 		if (pvdClient)
 		{
@@ -138,9 +165,16 @@ namespace physics
 			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
+#endif
 
-
+		//Creating default material for the generic use
 		gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+		if (!vehicle::InitVehicleSDK())
+		{
+			FL_ENGINE_ERROR("ERROR: FATAL. Failed to initialize vehicle sdk.");
+		};
+
+
 		//CreatePlane();
 		return true;
 	}
@@ -157,7 +191,12 @@ namespace physics
 		boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity,
 		const size_t& count)
 	{
-		gScene->simulate(1.0f / 60.0f);
+
+		//Update vehicles
+		if(gIsVehicleInScene)
+			vehicle::StepVehicleSDK(1.0f / 60.0f);
+			
+		gScene->simulate( 1.0f / 60.0f);
 		gScene->fetchResults(true);
 
 		//Update physics System;
@@ -170,9 +209,9 @@ namespace physics
 	*/
 
 	void CreatePhysicsScene()
-	{
+	{ 
 		physx::PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-		sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+		sceneDesc.gravity = physx::PxVec3(0.0f, -9.0f, 0.0f);
 		gDispatcher = physx::PxDefaultCpuDispatcherCreate(1);
 		sceneDesc.cpuDispatcher = gDispatcher;
 		sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
@@ -187,11 +226,16 @@ namespace physics
 	bool ShutdownPhysX()
 	{
 		try {
+
 			FL_ENGINE_INFO("INFO: Releasing physx resources.");
+
+			vehicle::ReleaseVehcileSDK();
+			if(gGround) PX_RELEASE(gGround);
 			PX_RELEASE(gScene);
 			PX_RELEASE(gDispatcher);
 			PX_RELEASE(gPhysics);
 			PX_RELEASE(gCooking);
+
 			if (gPvd)
 			{
 				physx::PxPvdTransport* transport = gPvd->getTransport();
@@ -215,9 +259,9 @@ namespace physics
 	*/
 	physx::PxRigidStatic* CreatePlane()
 	{
-		physx::PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, physx::PxPlane(0, 1, 0, 0), *gMaterial);
-		gScene->addActor(*groundPlane);
-		return groundPlane;
+		gGround = PxCreatePlane(*gPhysics, physx::PxPlane(0, 1, 0, 0), *gMaterial);
+		gScene->addActor(*gGround);
+		return gGround;
 	}
 
 
@@ -229,7 +273,6 @@ namespace physics
 	*/
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider)
 	{
-		//physx::PxShape* shape = gPhysics->createShape(physx::PxBoxGeometry(2.0f, 2.0f, 2.0f), *gMaterial);
 		physx::PxVec3* localpos = PXMathUtils::Vec3ToPxVec3(transform->GetPosition());
 		physx::PxQuat* localrot = PXMathUtils::QuatToPxQuat(transform->GetRotation());
 		physx::PxTransform localTm(*localpos, *localrot);
@@ -262,13 +305,8 @@ namespace physics
 		physx::PxTransform localTm(*localpos, *localrot);
 
 		physx::PxRigidDynamic* body = physx::PxCreateDynamic(*gPhysics, localTm, *collider, 10.0f);
-		//physx::PxCreateDynamic(*gPhysics, localTm, physx::PxSphereGeometry(5), *gMaterial, 10.0f);
-
-		//PxCreateDynamic(*gPhysics, localTm, physx::PxSphereGeometry(5), *gMaterial, 10.0f);
 		if (body)
 		{
-			/*body->setMass(1.0f);
-			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);*/
 			gScene->addActor(*body);
 			return body;
 		}
@@ -280,6 +318,16 @@ namespace physics
 
 	}
 
+	/**
+	* Creates an empty rigid dynamic body which can be used to define multiple colliders.
+	*/
+
+	physx::PxRigidDynamic* CreateDynamicRigidActor() 
+	{ 
+		physx::PxRigidDynamic* actor = gPhysics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
+		gScene->addActor(*actor);
+		return actor;
+	}
 
 	/**
 	* Creates box collider.
@@ -319,30 +367,108 @@ namespace physics
 
 
 	
+	
+
+
 	/**
-	* Creates Mesh collider
+	* Createsconvext mesh for the collider
 	* @param vertexData vertices of the mesh
 	* @param stride the length for each vertex
 	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
-	* @return PxShape * for collider shape
+	* @return PxConvexMesh for the 
 	*/
-
-	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount,bool directInsert /*= false*/)
+	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert)
 	{
 		physx::PxConvexMesh* convexMesh = nullptr;
 		std::vector<physx::PxVec3> pxvertarry;
 		pxvertarry.resize(vertCount);
-		
-		for (int i =0;i<vertCount; ++i)
+
+		for (int i = 0; i < vertCount; ++i)
 		{
 			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
 		}
 		// direct insert is false = The default convex mesh creation serializing to a stream, useful for offline cooking.
-		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, true, 16>(vertCount,&pxvertarry[0],stride);
-		
+		convexMesh = createRandomConvex<physx::PxConvexMeshCookingType::eQUICKHULL, false, 32>(vertCount, &pxvertarry[0], stride);
+		return convexMesh;
+	}
+
+	/**
+	* Creates Mesh collider
+	* @param vertexData vertices of the mesh
+	* @param stride the length for each vertex
+	* @param count of the vertecies
+	* @param directInsertion defines if mesh data should be streamed or not. Default value False.
+	* @return PxShape * for collider shape
+	*/
+
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert /*= false*/)
+	{
+		physx::PxConvexMesh* convexMesh = GetConvexMesh(vertexData, stride, vertCount, directInsert);
+
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
-		physx::PxShape* shape = gPhysics->createShape(convexMeshGeometry, *gMaterial);
+		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
 		return shape;
+	}
+
+
+	/**
+	* Creates an exclusive shape for the collider. Can be used to create a rigidbody with multiple colliders.
+	* @param pointer to rigidactor
+	* @param pointer to the transform of entity
+	* @param vertexData vertices of the mesh
+	* @param stride the length for each vertex
+	* @param count of the vertecies 
+	* @return PxShape * for collider shape which is associated to the actor provided
+	*/
+
+	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform, const glm::vec3* vertexData, const int& count, const int& stride)
+	{
+
+		try
+		{
+			physx::PxConvexMesh* convexMesh = GetConvexMesh(&vertexData[0], stride, count);
+			physx::PxConvexMeshGeometry geom(convexMesh, scaleDown);
+			physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geom, *gMaterial);
+			shape->setLocalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(transform->GetPosition()), *PXMathUtils::QuatToPxQuat(transform->GetRotation())));
+			return shape;
+		}
+		
+		catch(std::exception& e)
+		{
+			FL_ENGINE_ERROR("ERROR:Failed to create exclusive shape {0}", e.what());
+			return nullptr;
+		}
+	}
+
+
+	/**
+	* Creates a vehicle using vehicle api. Which will be used for simulations later on.
+	* @param RigidDynamic* to the vehicle actor. 
+	* @param starting transform for the vehicle.
+	*/
+
+	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform)
+	{
+		try
+		{
+			vehicle::CreateCar(vehActor,startTransform);
+			gIsVehicleInScene = true;
+		}
+		catch (std::exception & e)
+		{
+			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
+		}
+	}
+
+
+	/*
+	* Release collider associated with certain entity.
+	* @param Rigidactor* to the reource that needs to be released.
+	*/
+
+	void ReleaseCollider(physx::PxRigidActor* ref)
+	{
+		PX_RELEASE(ref);
 	}
 
 

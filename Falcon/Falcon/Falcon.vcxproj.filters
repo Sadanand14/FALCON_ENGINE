@@ -40,6 +40,10 @@
     <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\RayCast.cpp" />
+    <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
+    <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp" />
+    <ClCompile Include="Physics\vehicle\CarAPI.cpp" />
     <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
@@ -117,6 +121,11 @@
     <ClInclude Include="Core\Events\PassingMeshEvent.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\RayCast.h" />
+    <ClInclude Include="Physics\vehicle\Vehicle.h" />
+    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
+    <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
+    <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
+    <ClInclude Include="Physics\vehicle\CarAPI.h" />
     <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
     <ClInclude Include="Core\Events\PassToRenderer.h" />
@@ -127,6 +136,7 @@
     <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\Font.h" />
+    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
