@@ -1,6 +1,6 @@
 #include "CanvasRenderPass.h"
 
-#include "glfw/glfw3.h"
+#include <framework.h>
 #include "Canvas.h"
 #include "WindowData.h"
 #include "Font.h"
@@ -46,36 +46,25 @@ void CanvasRenderPass::Render()
 {
 	RenderPass::Render();
 
+	//////////////////////
+	//// Setup default properties
+
+	nk_style_set_font(&m_ctx, defaultFont->GetFontHandle());
+	static const nk_color CANVAS_BACKGROUND = nk_rgba(0, 0, 0, 0);
+	m_ctx.style.window.spacing = nk_vec2(0, 0);
+	m_ctx.style.window.padding = nk_vec2(0, 0);
+	m_ctx.style.window.border = 0;
+	m_ctx.style.window.background = CANVAS_BACKGROUND;
+	m_ctx.style.window.fixed_background = nk_style_item_color(CANVAS_BACKGROUND);
+
 	for(auto it = m_renderQueue.begin(); it != m_renderQueue.end(); it++)
 	{
 		//Get the canvas
 		Canvas* can = static_cast<Canvas*>(*it);
 
-		//////////////////////
-		//// Setup drawing on nk canvas
-
-		//Save old properties
-		can->SetPanelPadding(m_ctx.style.window.padding);
-		can->SetItemSpacing(m_ctx.style.window.spacing);
-		can->SetWindowBackground(m_ctx.style.window.fixed_background);
-
-		//Set some vars
-		nk_style_set_font(&m_ctx, defaultFont->GetFontHandle());
-		//m_ctx.style.window.spacing = nk_vec2(5, 5);
-		//m_ctx.style.window.padding = nk_vec2(20, 20);
-		//nk_color bgColor = nk_rgb(255, 255, 255);
-		//m_ctx.style.window.background = nk_rgb(255, 255, 255);
-		//m_ctx.style.window.fixed_background = nk_style_item_color(bgColor);
-
-		//nk_rgb(234, 235, 238);
-
 		//Call Draw commands
 		can->CallDrawCommands(&m_ctx);
 		//End drawing
-		m_ctx.style.window.spacing = can->GetPanelPadding();
-		m_ctx.style.window.padding = can->GetItemSpacing();
-		m_ctx.style.window.fixed_background = can->GetWindowBackground();
-		m_ctx.style.window.border = 0;
 
 		//////////////////////
 		//// Actual GL Drawing
@@ -151,7 +140,7 @@ void CanvasRenderPass::Render()
 		nk_clear(&m_ctx);
 	}
 
-	//glScissor(0, 0, 1280, 720);
+	glScissor(0, 0, WindowData::windowSize.x, WindowData::windowSize.y);
 }
 
 void CanvasRenderPass::PushInput(GLFWwindow* win)

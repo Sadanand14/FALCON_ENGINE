@@ -60,10 +60,6 @@ void Canvas::Bind()
  */
 void Canvas::CallDrawCommands(nk_context* ctx)
 {
-	static const nk_color CANVAS_BACKGROUND = nk_rgba(0, 0, 0, 0);
-	ctx->style.window.background = CANVAS_BACKGROUND;
-	ctx->style.window.fixed_background = nk_style_item_color(CANVAS_BACKGROUND);
-
 	nk_window_set_bounds(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y));
 	nk_begin(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR);
 	nk_layout_space_begin(ctx, NK_DYNAMIC, WindowData::windowSize.y, INT_MAX);

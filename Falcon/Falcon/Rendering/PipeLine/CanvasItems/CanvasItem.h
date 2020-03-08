@@ -2,7 +2,7 @@
 #define CANVASITEM_H
 
 #include <string>
-#include <vector>
+#include <boost/container/vector.hpp>
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
@@ -15,7 +15,6 @@
 #include <glm/glm.hpp>
 
 #include "System/Types.h"
-#include "Style.h"
 
 /**
  * Base class for anything drawn on a canvas
@@ -26,7 +25,7 @@ class CanvasItem
 		struct nk_rect m_bounds;
 		nk_color m_color;
 		i32 m_flags;
-		std::vector<CanvasItem*> m_children;
+		boost::container::vector<CanvasItem*> m_children;
 		CanvasItem* parent = nullptr;
 		bool m_active = true;
 

@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include "glfw/glfw3.h"
+#include <framework.h>
 #include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
 
