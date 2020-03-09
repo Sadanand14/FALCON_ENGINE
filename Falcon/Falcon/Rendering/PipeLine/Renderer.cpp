@@ -1,7 +1,6 @@
 #include "Renderer.h"
 
 #include <framework.h>
-#include <boost/shared_ptr.hpp>
 #include <Memory/fmemory.h>
 
 //Included files

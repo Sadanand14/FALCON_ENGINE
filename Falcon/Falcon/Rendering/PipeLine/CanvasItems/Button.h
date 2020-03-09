@@ -1,8 +1,8 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <boost/function.hpp>
 #include "CanvasItem.h"
+#include "System/Types.h"
 
 class Font;
 

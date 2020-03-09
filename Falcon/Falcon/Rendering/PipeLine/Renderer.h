@@ -4,10 +4,7 @@
 #include <cstdlib>
 
 #include "Shader.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <boost/container/set.hpp>
-#include <boost/container/flat_map.hpp>
+#include "System/Types.h"
 
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
