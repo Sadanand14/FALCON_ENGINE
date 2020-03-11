@@ -77,7 +77,7 @@ namespace gameLoop
 		glfwSetScrollCallback(m_window1->GetWindow(), scroll_callback);
 
 		//Create Draw States in Renderer
-		m_renderer->CreateDrawStates();
+		m_renderer->CreateDrawStates(m_window1->GetWindow());
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(m_octree->GetViewables(),projection);
 
@@ -149,6 +149,8 @@ namespace gameLoop
 			camera.ProcessKeyboard(LEFT, deltaTime);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			camera.ProcessKeyboard(RIGHT, deltaTime);
+		if(glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
+			Renderer::uiPrev3();
 	}
 
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos)

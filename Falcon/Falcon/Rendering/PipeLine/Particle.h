@@ -4,7 +4,7 @@
 #include <framework.h>
 #include <vector>
 #include <string>
-#include <boost/container/vector.hpp>
+#include "System/Types.h"
 
 #include <Memory/fmemory.h>
 #include "Rendering/PipeLine/ParticleData.h"

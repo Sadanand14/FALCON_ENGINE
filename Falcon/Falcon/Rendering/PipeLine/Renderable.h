@@ -1,7 +1,7 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include <boost/container/vector.hpp>
+#include "System/Types.h"
 
 #include "Shader.h"
 #include "Material.h"

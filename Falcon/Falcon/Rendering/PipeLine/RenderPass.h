@@ -1,8 +1,7 @@
 #ifndef RENDERPASS_H
 #define RENDERPASS_H
 
-#include <boost/container/set.hpp>
-#include <boost/container/vector.hpp>
+#include "System/Types.h"
 #include "Shader.h"
 #include "Renderable.h"
 

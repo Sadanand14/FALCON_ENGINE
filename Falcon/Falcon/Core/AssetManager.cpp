@@ -4,14 +4,7 @@
 #include <Log.h>
 #include <filesystem>
 #include <algorithm>
-
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
+#include "System/Types.h"
 
 TextureType AssetManager::m_lastTextureType;
 Mesh* AssetManager::m_cubeMesh = nullptr;
@@ -292,6 +285,8 @@ u32 AssetManager::LoadTexture(std::string const& path)
 		}
 		return HDRtoCubemap(hdrTexture);
 	}
+
+	stbi_set_flip_vertically_on_load(false);
 
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	m_lastTextureType = TextureType::TEXTURE2D;

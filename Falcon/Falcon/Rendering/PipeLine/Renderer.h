@@ -4,10 +4,7 @@
 #include <cstdlib>
 
 #include "Shader.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <boost/container/set.hpp>
-#include <boost/container/flat_map.hpp>
+#include "System/Types.h"
 
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
@@ -29,6 +26,10 @@ class Mesh;
 
 //TODO: REMOVE THIS
 class Label;
+class Button;
+class Image;
+class Panel;
+class Slider;
 
 void PrintReception();
 
@@ -66,6 +67,7 @@ public:
 	void PrintReception();
 };
 
+class GLFWwindow;
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
@@ -78,19 +80,40 @@ class Renderer
 	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
 	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
+	static GLFWwindow* m_win;
 
 	//TODO: REMOVE
 	Renderable* can;
-	Label* l;
+	static Button* prev;
+	static Button* next;
+	static Image* bg;
+	static Slider* wingAngle;
+	static Slider* gearRatio;
+	static Slider* suspension;
+
+	static Texture uiPage1;
+	static Texture uiPage2;
+	static Texture uiPage3;
+
+	static void uiNext0();
+	static void uiNext1();
+	static void uiNext2();
+
+	static void uiPrev1();
+	static void uiPrev2();
+
 public:
 	Renderer();
 	~Renderer();
 
 	void Init();
-	void CreateDrawStates();
+	void CreateDrawStates(GLFWwindow* win);
 	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
 	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
 	void Draw(Camera &cam);
+
+	//Exposed for use in game
+	static void uiPrev3();
 };
 
 #endif // !RENDERER_H

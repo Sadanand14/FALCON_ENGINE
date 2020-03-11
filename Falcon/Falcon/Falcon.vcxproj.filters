@@ -53,6 +53,10 @@
     <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Button.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Image.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Slider.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Panel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\AssetManager.h" />
@@ -137,6 +141,11 @@
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Button.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Image.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Slider.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Panel.h" />
+    <ClInclude Include="Rendering\Style.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\FragmentShader.frag" />
