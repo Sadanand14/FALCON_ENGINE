@@ -6,6 +6,7 @@
 #include <boost/container/map.hpp>
 #include <boost/container/set.hpp>
 #include <boost/container/list.hpp>
+#include <boost/container/flat_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 #include <boost/chrono/chrono.hpp>
@@ -28,6 +29,13 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
 
 typedef int8_t  i08;
 typedef int16_t i16;

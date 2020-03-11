@@ -149,8 +149,13 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\ParticleSystem.h" />
     <ClInclude Include="Rendering\PipeLine\Canvas.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Button.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Image.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Panel.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Slider.h" />
+    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
@@ -167,6 +172,8 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
+    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
+    <ClInclude Include="Rendering\stb_image.h" />
     <ClInclude Include="Rendering\Style.h" />
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
@@ -214,8 +221,13 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\Font.cpp" />
     <ClCompile Include="Rendering\ParticleSystem.cpp" />
     <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Button.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Image.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Panel.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Slider.cpp" />
+    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />

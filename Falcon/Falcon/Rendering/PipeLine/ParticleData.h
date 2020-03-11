@@ -1,7 +1,7 @@
 #ifndef PARTICLEDATA_H
 #define PARTICLEDATA_H
 
-#include <glm/glm.hpp>
+#include "System/Types.h"
 
 struct ParticleData
 {

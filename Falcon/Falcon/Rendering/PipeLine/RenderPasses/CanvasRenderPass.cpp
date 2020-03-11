@@ -1,5 +1,6 @@
 #include "CanvasRenderPass.h"
 
+#include <framework.h>
 #include "Canvas.h"
 #include "WindowData.h"
 #include "Font.h"
@@ -45,35 +46,25 @@ void CanvasRenderPass::Render()
 {
 	RenderPass::Render();
 
+	//////////////////////
+	//// Setup default properties
+
+	nk_style_set_font(&m_ctx, defaultFont->GetFontHandle());
+	static const nk_color CANVAS_BACKGROUND = nk_rgba(0, 0, 0, 0);
+	m_ctx.style.window.spacing = nk_vec2(0, 0);
+	m_ctx.style.window.padding = nk_vec2(0, 0);
+	m_ctx.style.window.border = 0;
+	m_ctx.style.window.background = CANVAS_BACKGROUND;
+	m_ctx.style.window.fixed_background = nk_style_item_color(CANVAS_BACKGROUND);
+
 	for(auto it = m_renderQueue.begin(); it != m_renderQueue.end(); it++)
 	{
 		//Get the canvas
 		Canvas* can = static_cast<Canvas*>(*it);
 
-		//////////////////////
-		//// Setup drawing on nk canvas
-
-		//Save old properties
-		can->SetPanelPadding(m_ctx.style.window.padding);
-		can->SetItemSpacing(m_ctx.style.window.spacing);
-		can->SetWindowBackground(m_ctx.style.window.fixed_background);
-
-		//Set some vars
-		nk_style_set_font(&m_ctx, defaultFont->GetFontHandle());
-		m_ctx.style.window.spacing = nk_vec2(5, 5);
-		m_ctx.style.window.padding = nk_vec2(20, 20);
-		nk_color bgColor = nk_rgb(255, 255, 255);
-		m_ctx.style.window.background = nk_rgb(255, 255, 255);
-		m_ctx.style.window.fixed_background = nk_style_item_color(bgColor);
-
-		//nk_rgb(234, 235, 238);
-
 		//Call Draw commands
 		can->CallDrawCommands(&m_ctx);
 		//End drawing
-		m_ctx.style.window.spacing = can->GetPanelPadding();
-		m_ctx.style.window.padding = can->GetItemSpacing();
-		m_ctx.style.window.fixed_background = can->GetWindowBackground();
 
 		//////////////////////
 		//// Actual GL Drawing
@@ -94,7 +85,7 @@ void CanvasRenderPass::Render()
 			{ NK_VERTEX_POSITION, NK_FORMAT_FLOAT, NK_OFFSETOF(UIVertex, position) },
 			{ NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, NK_OFFSETOF(UIVertex, uv) },
 			{ NK_VERTEX_COLOR, NK_FORMAT_R8G8B8A8, NK_OFFSETOF(UIVertex, color) },
-			{ NK_VERTEX_LAYOUT_END}
+			{ NK_VERTEX_LAYOUT_END }
 		};
 
 		//Create config and set attribs
@@ -149,7 +140,53 @@ void CanvasRenderPass::Render()
 		nk_clear(&m_ctx);
 	}
 
-	//m_renderQueue.clear();
+	glScissor(0, 0, WindowData::windowSize.x, WindowData::windowSize.y);
+}
+
+void CanvasRenderPass::PushInput(GLFWwindow* win)
+{
+	nk_input_begin(&m_ctx);
+
+	if (glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ||
+		glfwGetKey(win, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS)
+	{
+		nk_input_key(&m_ctx, NK_KEY_COPY, glfwGetKey(win, GLFW_KEY_C) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_PASTE, glfwGetKey(win, GLFW_KEY_V) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_CUT, glfwGetKey(win, GLFW_KEY_X) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_UNDO, glfwGetKey(win, GLFW_KEY_Z) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_REDO, glfwGetKey(win, GLFW_KEY_R) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_WORD_LEFT, glfwGetKey(win, GLFW_KEY_LEFT) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_WORD_RIGHT, glfwGetKey(win, GLFW_KEY_RIGHT) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_LINE_START, glfwGetKey(win, GLFW_KEY_B) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_TEXT_LINE_END, glfwGetKey(win, GLFW_KEY_E) == GLFW_PRESS);
+	}
+	else
+	{
+		nk_input_key(&m_ctx, NK_KEY_LEFT, glfwGetKey(win, GLFW_KEY_LEFT) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_RIGHT, glfwGetKey(win, GLFW_KEY_RIGHT) == GLFW_PRESS);
+		nk_input_key(&m_ctx, NK_KEY_COPY, 0);
+		nk_input_key(&m_ctx, NK_KEY_PASTE, 0);
+		nk_input_key(&m_ctx, NK_KEY_CUT, 0);
+		nk_input_key(&m_ctx, NK_KEY_SHIFT, 0);
+	}
+
+	double x;
+	double y;
+	glfwGetCursorPos(win, &x, &y);
+	nk_input_motion(&m_ctx, (int)x, (int)y);
+	//if (m_ctx.input.mouse.grabbed) {
+	//	glfwSetCursorPos(win, (double)m_ctx.input.mouse.prev.x, (double)m_ctx.input.mouse.prev.y);
+	//	m_ctx.input.mouse.pos.x = m_ctx.input.mouse.prev.x;
+	//	m_ctx.input.mouse.pos.y = m_ctx.input.mouse.prev.y;
+	//}
+
+	nk_input_button(&m_ctx, NK_BUTTON_LEFT, (int)x, (int)y, glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
+	nk_input_button(&m_ctx, NK_BUTTON_MIDDLE, (int)x, (int)y, glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS);
+	nk_input_button(&m_ctx, NK_BUTTON_RIGHT, (int)x, (int)y, glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS);
+	//nk_input_button(&m_ctx, NK_BUTTON_DOUBLE, (int)glfw.double_click_pos.x, (int)glfw.double_click_pos.y, glfw.is_double_click_down);
+	//nk_input_scroll(&m_ctx, glfw.scroll);
+
+	nk_input_end(&m_ctx);
 }
 
 CanvasRenderPass::~CanvasRenderPass()
