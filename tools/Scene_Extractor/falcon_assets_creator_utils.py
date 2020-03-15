@@ -52,8 +52,9 @@ def create_dir_structure():
 
 
 def copy_assets_from_src():
-    for key in FILES_TO_COPY_DEST_SRC.keys():
-        copyfile(FILES_TO_COPY_DEST_SRC[key], key)
+    for key in FILES_TO_COPY_DEST_SRC.keys() :
+        if key != '' and FILES_TO_COPY_DEST_SRC[key] != '':
+            copyfile(FILES_TO_COPY_DEST_SRC[key], key)
 
 
 def add_to_mesh_list(material_json, mesh):
@@ -161,12 +162,15 @@ def create_entity_json(entity_data):
     entity_template = {}
     render_component = {}
     physics_component = {}
-
+    print (entity_data['name'])
     if 'obj_mesh' in entity_data.keys():
         entity_mat = os.path.split(NAME_TO_MATERIAL_MAP[entity_data['name']])[1].split('.')[0]
         entity_mesh = os.path.split(entity_data['obj_mesh'])[1].split('.')[0]
         key = entity_mesh + "_" + entity_mat
-        entity_template['renderComponent'] = {"mesh": MESH_MODEL_MAP[key]}
+        if key in MESH_MODEL_MAP.keys():
+            entity_template['renderComponent'] = {"mesh": MESH_MODEL_MAP[key]}
+        elif entity_data['name'] in UNITY_MESHES_MAP.keys():
+            entity_template['renderComponent'] = {"mesh": UNITY_MESHES_MAP[entity_data['name']]}
     if 'collider_data' in entity_data.keys():
         entity_template['physicsComponent'] = {}
         for key in entity_data['collider_data']:
@@ -203,7 +207,9 @@ def create_falcon_assets(unity_data):
     # update default meshes in the obj_mesh
     for d in unity_data:
         if " See collider for details" in d["obj_mesh"]:
-            if d['collider_data']['type'] == 0:
+            if 'type' not in d['collider_data'].keys():
+                d["obj_mesh"] = BASIC_MODELS["SPHERE"]
+            elif d['collider_data']['type'] == 0:
                 d["obj_mesh"] = BASIC_MODELS["SPHERE"]
             elif d['collider_data']['type'] == 1:
                 d["obj_mesh"] = BASIC_MODELS["CUBE"]

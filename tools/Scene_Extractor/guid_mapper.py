@@ -1,9 +1,9 @@
 import yaml
 import os
 from Scene_Extractor.constants import UNITY_MATERIALS_MAP, UNITY_PREFAB_MAP, UNITY_MESHES_MAP
-
+import json
 model_extensions = ['FBX', 'OBJ']
-texture_file_extensions = ['tga', 'png', 'mat', 'jpeg', 'jpg']
+texture_file_extensions = ['tga', 'png', 'mat', 'jpeg', 'jpg','tif']
 
 
 def guid_mapper(file_path):
@@ -35,7 +35,17 @@ def guid_mapper(file_path):
     '''for key in UNITY_MATERIALS_MAP.keys():
         print(key + " : " + UNITY_MATERIALS_MAP[key])
     '''
+    #test = 'material_guid.json'
+    #with open(test, 'w') as fp:
+     #   json.dump(UNITY_MATERIALS_MAP, fp)
 
+    #test = 'prefab_guid.json'
+    #with open(test, 'w') as fp:
+        #json.dump(UNITY_PREFAB_MAP, fp)
+
+    #test = 'mesh_guid.json'
+    #with open(test, 'w') as fp:
+        #json.dump(UNITY_MESHES_MAP, fp)
     '''for key in UNITY_MESHES_MAP.keys():
         print(key + " : " + UNITY_MESHES_MAP[key])
     for key in UNITY_PREFAB_MAP.keys():

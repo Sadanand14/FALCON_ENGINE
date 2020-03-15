@@ -12,7 +12,8 @@ Falcon/build/*
 #Ignoring zip & scene yaml
 *.zip
 *yaml
-
+*.json
+*.fbx
 # User-specific files
 *.rsuser
 *.suo

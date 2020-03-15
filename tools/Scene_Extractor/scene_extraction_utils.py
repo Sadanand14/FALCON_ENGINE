@@ -56,13 +56,14 @@ def get_parent_name(data, file_id):
 
 
 def scale_for_falcon(unity_scale):
-    scale = {'x': '', 'y': '', 'z': ''}
+    scale = {'x': 0, 'y': 0, 'z': 0}
     for key in scale.keys():
         scale[key] = round(float(unity_scale[key]) * FALCON_SCALE_DOWN, 3)
     return scale
 
 
 def read_collider_data(falcon_collider_data, collider_type, unity_collider_data):
+    print("In read collider data")
     if collider_type == UNITY_COLLIDER_LIST[0]:  # sphere:
 
         falcon_collider_data['radius'] = unity_collider_data[collider_type]['m_Radius']
@@ -81,6 +82,7 @@ def read_collider_data(falcon_collider_data, collider_type, unity_collider_data)
 
 
 def read_prefab_source(prefab_yaml_file):
+    print("In read prefab source")
     position = {'x': '', 'y': '', 'z': ''}
     rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
     scale = {'x': '', 'y': '', 'z': ''}
@@ -118,15 +120,19 @@ def read_prefab_source(prefab_yaml_file):
                 collider_data['rigidbody'] = 1
 
             elif current_key == 'MeshRenderer':
-                mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
+                if d['MeshRenderer']['m_Materials'][0]['guid'] in UNITY_MATERIALS_MAP.keys():
+                    mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
+                else:
+                    mat = ''
 
     return position, rotation, scale, collider_data, obj_mesh, mat
 
 
 def read_gameobject(doc_data, is_prefab_related=False):
-    position = {'x': '', 'y': '', 'z': ''}
-    rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
-    scale = {'x': '', 'y': '', 'z': ''}
+    print("In read gameobjects data")
+    position = DEFAULT_POSITION
+    rotation = DEFAULT_ROTATION
+    scale = DEFAULT_SCALE
     parent = str()
     collider_data = {}
     obj_mesh = ''
@@ -150,7 +156,9 @@ def read_gameobject(doc_data, is_prefab_related=False):
                 obj_mesh = "Some default mesh. See collider for details"
 
         elif current_key == 'MeshRenderer':
-            mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
+
+            if 'guid' in d['MeshRenderer']['m_Materials'][0].keys():
+                mat = UNITY_MATERIALS_MAP[d['MeshRenderer']['m_Materials'][0]['guid']]
 
 
         elif any(x == current_key for x in UNITY_COLLIDER_LIST):
@@ -172,13 +180,15 @@ def read_gameobject(doc_data, is_prefab_related=False):
 
 
 def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
+    print("In read prefab data")
     collider_data = {}
     name = str()
     return_data = {}
+    print(prefab_file)
     # read the soruce of prefab
-    position = {'x': '', 'y': '', 'z': ''}
-    rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
-    scale = {'x': '', 'y': '', 'z': ''}
+    position = DEFAULT_POSITION
+    rotation = DEFAULT_ROTATION
+    scale = DEFAULT_SCALE
 
     collider_data = {}
     obj_mesh = ''
@@ -197,10 +207,11 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
         # By default we make rigidbody static
         collider_data['rigidbody'] = 0
         position, rotation, scale, collider_data, obj_mesh, mat = read_prefab_source(prefab_yaml)
-
+    is_name_found = False
     for d in local_modifications:
         if d['propertyPath'] == 'm_Name':
             name = d['value']
+            is_name_found = True
 
         elif d['propertyPath'] == 'm_LocalPosition.x':
             position['x'] = d['value']
@@ -228,8 +239,15 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
                 mat = temp_mat
             print(mat)
 
+    if not is_name_found:
+        guid = prefab['m_SourcePrefab']['guid']
+        if guid in UNITY_MESHES_MAP.keys():
+            name = UNITY_MESHES_MAP[guid].split('\\')[-1].split('.')[0]
+            is_name_found = True
+
     return_data['name'] = name
     return_data['position'] = position
+    print (prefab_file,scale)
     return_data['scale'] = scale_for_falcon(scale)
     return_data['rotation'] = rotation
     return_data['parent_id'] = parent
@@ -242,6 +260,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
 
 
 def read_material_data(material_file):
+    print("In read material data")
     materials = {}
     transparency = False
     print(material_file)

@@ -28,9 +28,14 @@ def read_scene_file(filepath):
         generate_file_id_to_name(data)
         itr = 0
         while itr < len(data):
+            print ("Main itr" + str(itr))
             d = data[itr]
             if list(d.keys())[0] == 'GameObject':
-                if d['GameObject']['m_Name'] == "Main Camera" or d['GameObject']['m_Name'] == "Directional Light":
+                if 'm_Name' not in d['GameObject'].keys():
+                    itr+=1
+                    continue
+
+                if any(x == d['GameObject']['m_Name'] for x in OBJECTS_TO_EXCLUDE):
                     itr += 1
                     continue
                 name = d['GameObject']['m_Name']
@@ -71,6 +76,8 @@ def read_scene_file(filepath):
                     itr -= 1
                 prefab_data['parent'] = get_parent_name(data, file_id=prefab_data['parent_id'])
                 all_entities_list.append(prefab_data)
+
+
             else:
                 itr += 1
 
@@ -81,26 +88,7 @@ def read_scene_file(filepath):
     # Creating json scene now
 
 
-'''scene_dict = {'entities': []}
 
-    for key in obj_pos.keys():
-        position = obj_pos[key]
-        rotation = obj_rot[key]
-        scale = obj_scale[key]
-        tmp_dict = {"name": key,
-                    "pos": [position['x'], position['y'], position['z']],
-                    "rot": [rotation['x'], rotation['y'], rotation['z'], rotation['w']],
-                    "scale": [scale['x'], scale['y'], scale['z']],
-                    "template": '',
-                    "childCount": 0
-                    }
-        scene_dict['entities'].append(tmp_dict)
-
-    print(str(scene_dict))
-
-    with open('result.json', 'w') as fp:
-        json.dump(scene_dict, fp)
-'''
 
 if __name__ == "__main__":
     scene_file = sys.argv[1]
