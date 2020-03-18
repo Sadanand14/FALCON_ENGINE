@@ -11,7 +11,8 @@ namespace fmemory {
 	/*
 		Allocates the memory block of requested size.Returns nullptr on failure.
 	*/
-	void * AllocateUnaligned(std::size_t sz_in_byte) {
+	void * AllocateUnaligned(std::size_t sz_in_byte) 
+	{
 		try
 		{
 			void * main_memory_block = malloc(sz_in_byte);
@@ -22,7 +23,6 @@ namespace fmemory {
 			FL_ENGINE_ERROR("ERROR:{0}",e.what());
 			return nullptr;
 		}
-		
 	}
 
 	/*

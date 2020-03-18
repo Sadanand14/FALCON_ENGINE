@@ -56,7 +56,7 @@ void Canvas::CallDrawCommands(nk_context* ctx)
 	nk_begin(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR);
 	nk_layout_space_begin(ctx, NK_DYNAMIC, WindowData::windowSize.y, INT_MAX);
 
-	for(u32 i = 0; i < m_canvasItems.size(); i++)
+	for (u32 i = 0; i < m_canvasItems.size(); i++)
 		m_canvasItems[i]->Draw(ctx);
 
 	nk_layout_space_end(ctx);

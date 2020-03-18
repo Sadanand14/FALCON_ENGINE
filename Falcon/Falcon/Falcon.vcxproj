@@ -155,7 +155,6 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Panel.h" />
     <ClInclude Include="Rendering\PipeLine\CanvasItems\Slider.h" />
-    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
     <ClInclude Include="Rendering\PipeLine\Material.h" />
     <ClInclude Include="Rendering\PipeLine\Mesh.h" />
     <ClInclude Include="Rendering\PipeLine\Octree.h" />
@@ -172,9 +171,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\PipeLine\Renderer.h" />
     <ClInclude Include="Rendering\PipeLine\Shader.h" />
     <ClInclude Include="Rendering\PipeLine\Texture.h" />
-    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
-    <ClInclude Include="Rendering\stb_image.h" />
-    <ClInclude Include="Rendering\Style.h" />
+    <ClInclude Include="Rendering\PipeLine\UIManager.h" />
     <ClInclude Include="Rendering\WindowData.h" />
     <ClInclude Include="Rendering\WindowHandler.h" />
     <ClInclude Include="Rendering\stb_dds.h" />
@@ -227,7 +224,6 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Panel.cpp" />
     <ClCompile Include="Rendering\PipeLine\CanvasItems\Slider.cpp" />
-    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Material.cpp" />
     <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
     <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
@@ -242,6 +238,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.cpp" />
     <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
     <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
+    <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
     <ClCompile Include="Rendering\WindowData.cpp" />
     <ClCompile Include="Rendering\WindowHandler.cpp" />
     <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />

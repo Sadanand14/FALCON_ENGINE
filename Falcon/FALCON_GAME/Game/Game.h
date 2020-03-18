@@ -11,6 +11,7 @@ namespace gameLoop
 	private:
 		STATE m_currentState;
 		Engine* m_engine = nullptr;
+		UI::UI_Manager* m_UI = nullptr;
 		bool m_quitGame, m_initMenu, m_initGame, m_initPause;
 		InputReceiver* m_input = nullptr;
 

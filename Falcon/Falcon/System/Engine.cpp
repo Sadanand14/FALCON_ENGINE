@@ -48,6 +48,7 @@ namespace gameLoop
 		fmemory::MemoryManagerInit();
 
 		m_window = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
+		m_threads = ThreadPool::GetThreadPool(m_window->GetWindow());
 
 		m_input = fmemory::fnew<InputReceiver>(m_window);
 		m_input->Init(m_window->GetWindow());
@@ -69,15 +70,15 @@ namespace gameLoop
 		m_octree->SetProjection(projection);
 		m_octree->Update();
 
-
-
 		//Create Draw States in Renderer
-		m_renderer->CreateDrawStates();
+		m_renderer->CreateDrawStates(m_window->GetWindow());
+
 		//Set Draw States in Renderer
 		m_renderer->SetDrawStates(m_octree->GetViewables(), projection);
 
 		//Initialize the Audio Engine
 		m_audio.Init();
+
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
 		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
 

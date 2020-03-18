@@ -2,6 +2,8 @@
 #include <cassert>
 #include "Memory/fmemory.h"
 
+boost::mutex IndexBuffer::m_indexMtx;
+
 /**
 * Constructor for IndexBuffer Class.
 *
@@ -72,12 +74,16 @@ void IndexBuffer::BufferData(const void* data, size_t size, u32 drawType)
 */
 void IndexBuffer::Bind() const
 {
+	m_indexMtx.lock();
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderBufferId);//binds the index buffer to the current context
+	m_indexMtx.unlock();
 }
 /**
 *Unbinds this class instance's index buffer.
 */
 void IndexBuffer::Unbind() const
 {
+	m_indexMtx.lock();
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//unbinds the index buffer from the current context
+	m_indexMtx.unlock();
 }

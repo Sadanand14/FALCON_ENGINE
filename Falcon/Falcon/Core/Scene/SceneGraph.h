@@ -3,9 +3,11 @@
 
 #include <Types.h>
 #include "EntityManager.h"
+#include <ThreadPool.h>
 
 namespace Scene
 {
+
 	/**
 	* Enum class for entites to allow them to be exempted or included in the updateloop for the game.
 	*/
@@ -24,6 +26,7 @@ namespace Scene
 		bool m_updateFlag;
 		SceneNode* m_parent;
 		nodeVector m_childNodes;
+
 
 		glm::mat4 m_ReferenceMatrix;
 		Entity* m_entity;
@@ -75,20 +78,46 @@ namespace Scene
 	class SceneGraph
 	{
 	private:
+
 		entityVector  m_entityList, m_renderables, m_updatedRenderables;
 		SceneNode* m_rootNode;
+		ThreadPool* m_threads;
+		boost::mutex mtx;
+
 
 		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index, bool isReadingCar, unsigned int carIndex, RigidbodyDynamic* actor);
+
+		void CreateEntityNode(rapidjson::Document& doc, unsigned int index, nodeVector& vector, int* temp);
 		void SegregateEntities();
 
 	public:
 
+		
+
 		SceneGraph(const char* sceneFilePath);
 		~SceneGraph();
+
+		//SceneGraph(const SceneGraph& other) 
+		//{
+		//	m_entityList = other.m_entityList;
+		//	m_renderables = other.m_renderables;
+		//	m_updatedRenderables = other.m_updatedRenderables;
+		//	m_rootNode = other.m_rootNode;
+		//	m_threads = other.m_threads;
+		//}
+		//SceneGraph& operator =(const SceneGraph& other) 
+		//{
+		//	m_entityList = other.m_entityList;
+		//	m_renderables = other.m_renderables;
+		//	m_updatedRenderables = other.m_updatedRenderables;
+		//	m_rootNode = other.m_rootNode;
+		//	m_threads = other.m_threads;
+		//}
 
 		inline entityVector& GetRenderables() { return m_renderables; }
 		inline entityVector* GetEntities() { return &m_entityList; }
 		inline entityVector& GetOctreeEntities() { return m_updatedRenderables; }
+
 
 		void UpdateScene();
 

@@ -40,12 +40,13 @@ namespace gameLoop
 	class Engine {
 
 		//LoopProperties m_properties;
-		Timer* m_timer;
-		Renderer* m_renderer;
-		WindowClass* m_window;
-		InputReceiver* m_input;
-		Scene::SceneGraph* m_scene;
-		Rendering::Octree* m_octree;
+		ThreadPool* m_threads = nullptr;
+		Timer* m_timer = nullptr;
+		Renderer* m_renderer = nullptr;
+		WindowClass* m_window = nullptr;
+		InputReceiver* m_input = nullptr;
+		Scene::SceneGraph* m_scene = nullptr;
+		Rendering::Octree* m_octree = nullptr;
 		ParticleSystem* m_particleSystem = nullptr;
 		STATE m_currentState;
 
@@ -56,6 +57,8 @@ namespace gameLoop
 		//Audio Engine
 		CAudioEngine m_audio;
 
+
+		inline UI::UI_Manager* GetUI() { return m_renderer->GetUI(); }
 		inline WindowClass* GetWindow() { return m_window; }
 		inline InputReceiver* GetInput() { return m_input;  }
 		inline bool GetKey(int key) { return m_input->GetKey(key);  }

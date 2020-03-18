@@ -49,6 +49,7 @@ class Font;
 class AssetManager
 {
 private:
+	static boost::mutex AssetMtx;
 	static Shader* m_cubeShader;
 	static Mesh* m_cubeMesh;
 	static TextureType m_lastTextureType;

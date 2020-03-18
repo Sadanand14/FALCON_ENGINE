@@ -1,6 +1,7 @@
 #ifndef VERTEX_ARRAY_H
 #define VERTEX_ARRAY_H
 
+#include <Types.h>
 #include "VertexBuffer.h"
 #include "VertexLayout.h"
 
@@ -11,6 +12,8 @@ class VertexArray
 {
 private:
 	unsigned int m_rendererID;
+	static boost::mutex VAOMtx;
+
 public:
 
 	VertexArray();

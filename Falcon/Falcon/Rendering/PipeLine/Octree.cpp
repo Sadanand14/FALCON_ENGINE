@@ -467,7 +467,7 @@ namespace Rendering
 			entities.erase((entityPos));
 			transform->popOTID();
 
-			FL_ENGINE_WARN("Going up!!");
+			//FL_ENGINE_WARN("Going up!!");
 			////go up the heirarchy to find the boudning node
 			while (true)
 			{
@@ -542,7 +542,7 @@ namespace Rendering
 		}
 		else 
 		{
-			FL_ENGINE_WARN("GOING nowhere!" );
+			//FL_ENGINE_WARN("GOING nowhere!" );
 		}
 		//node->m_entities.push_back(entity);
 

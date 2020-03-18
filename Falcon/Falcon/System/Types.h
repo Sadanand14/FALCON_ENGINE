@@ -1,6 +1,8 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#include <framework.h>
+
 #include <cstdint>
 #include <boost/container/vector.hpp>
 #include <boost/container/map.hpp>
@@ -28,6 +30,9 @@
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+
+#include <string>
+#include <sstream>
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
