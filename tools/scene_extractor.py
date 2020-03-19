@@ -25,14 +25,16 @@ def read_scene_file(filepath):
     with open(filepath, "r") as file_desc:
         data = yaml.load_all(file_desc, Loader=yaml.Loader)
         data = list(data)
+
+        print("dfddfh" + str(len(data)))
         generate_file_id_to_name(data)
         itr = 0
         while itr < len(data):
-            print ("Main itr" + str(itr))
+            print("Main itr" + str(itr))
             d = data[itr]
             if list(d.keys())[0] == 'GameObject':
                 if 'm_Name' not in d['GameObject'].keys():
-                    itr+=1
+                    itr += 1
                     continue
 
                 if any(x == d['GameObject']['m_Name'] for x in OBJECTS_TO_EXCLUDE):
@@ -65,7 +67,8 @@ def read_scene_file(filepath):
                     prefab_data = read_prefabs(prefab, prefab_file, False)
                     itr += 2  # skipping next entry of GameObject
                     new_data = []
-                    while list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[0] != 'GameObject':
+                    while itr < len(data) and (list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[
+                        0] != 'GameObject'):
                         new_data.append(data[itr])
                         itr += 1
                     temp_data = read_gameobject(new_data, True)
@@ -88,8 +91,6 @@ def read_scene_file(filepath):
     # Creating json scene now
 
 
-
-
 if __name__ == "__main__":
     scene_file = sys.argv[1]
     # creating copy of the file
@@ -100,13 +101,11 @@ if __name__ == "__main__":
     clean_file("test.yaml")
     generate_file_ids("test.yaml")
     scene_data = read_scene_file("test.yaml")
-
+    print("jdsbjgbsdgbgsd")
     for d in scene_data:
         print(d)
-    #print(MESH_INSTANCE_COUNTER)
+    # print(MESH_INSTANCE_COUNTER)
 
     if os.path.exists(ASSETS_BASE_DIR):
         shutil.rmtree(ASSETS_BASE_DIR)
-    create_falcon_assets(scene_data)
-
-
+    # create_falcon_assets(scene_data)
