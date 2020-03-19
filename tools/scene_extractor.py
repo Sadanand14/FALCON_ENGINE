@@ -26,11 +26,9 @@ def read_scene_file(filepath):
         data = yaml.load_all(file_desc, Loader=yaml.Loader)
         data = list(data)
 
-        print("dfddfh" + str(len(data)))
         generate_file_id_to_name(data)
         itr = 0
         while itr < len(data):
-            print("Main itr" + str(itr))
             d = data[itr]
             if list(d.keys())[0] == 'GameObject':
                 if 'm_Name' not in d['GameObject'].keys():
@@ -56,8 +54,7 @@ def read_scene_file(filepath):
                 # do shit for prefab instances
                 prefab = d['PrefabInstance']
                 prefab_data = None
-                print(prefab['m_SourcePrefab']['guid'] + "  " + prefab['m_SourcePrefab'][
-                    'guid'] in UNITY_PREFAB_MAP.keys())
+                #print(prefab['m_SourcePrefab']['guid'] + "  " + prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys())
                 if prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys():
                     prefab_file = UNITY_PREFAB_MAP[prefab['m_SourcePrefab']['guid']]
                     prefab_data = read_prefabs(prefab, prefab_file, True)
@@ -65,7 +62,7 @@ def read_scene_file(filepath):
                 elif prefab['m_SourcePrefab']['guid'] in UNITY_MESHES_MAP.keys():
                     prefab_file = UNITY_MESHES_MAP[prefab['m_SourcePrefab']['guid']]
                     prefab_data = read_prefabs(prefab, prefab_file, False)
-                    itr += 2  # skipping next entry of GameObject
+                    itr += 1  # skipping next entry of GameObject
                     new_data = []
                     while itr < len(data) and (list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[
                         0] != 'GameObject'):
@@ -76,7 +73,7 @@ def read_scene_file(filepath):
                     update_mesh_instance_count(prefab_file)
                     prefab_data['collider_data'] = temp_data['collider_data']
 
-                    itr -= 1
+                    #itr -= 1
                 prefab_data['parent'] = get_parent_name(data, file_id=prefab_data['parent_id'])
                 all_entities_list.append(prefab_data)
 
@@ -101,11 +98,14 @@ if __name__ == "__main__":
     clean_file("test.yaml")
     generate_file_ids("test.yaml")
     scene_data = read_scene_file("test.yaml")
-    print("jdsbjgbsdgbgsd")
+
+    print("Unity Scene Data:")
     for d in scene_data:
         print(d)
     # print(MESH_INSTANCE_COUNTER)
 
     if os.path.exists(ASSETS_BASE_DIR):
         shutil.rmtree(ASSETS_BASE_DIR)
-    # create_falcon_assets(scene_data)
+
+    print("Generating Falcon Assets:")
+    create_falcon_assets(scene_data)

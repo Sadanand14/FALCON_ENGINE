@@ -162,7 +162,7 @@ def create_entity_json(entity_data):
     entity_template = {}
     render_component = {}
     physics_component = {}
-    print (entity_data['name'])
+    #print (entity_data['name'])
     if 'obj_mesh' in entity_data.keys():
         entity_mat = os.path.split(NAME_TO_MATERIAL_MAP[entity_data['name']])[1].split('.')[0]
         entity_mesh = os.path.split(entity_data['obj_mesh'])[1].split('.')[0]
@@ -224,7 +224,6 @@ def create_falcon_assets(unity_data):
     for d in unity_data:
         mesh = os.path.split(d["obj_mesh"])[1].split('.')[0]
         mesh_location_map[mesh] = d['obj_mesh']
-
         create_material_json(d['name'], mesh, d['mat'], d['transparency'])
 
     create_model_json(mesh_location_map)
@@ -237,5 +236,8 @@ def create_falcon_assets(unity_data):
         index += 1
 
     # scene json
+    print("Creating Scene jsons")
     create_scene_file(unity_data, name_to_list_index)
+
+    print("Copying assets")
     copy_assets_from_src()
