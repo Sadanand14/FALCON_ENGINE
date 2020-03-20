@@ -8,8 +8,6 @@ from Scene_Extractor.file_id_generator import *
 from Scene_Extractor.constants import *
 
 
-
-
 def clean_file(filepath):
     file_desc = open(filepath, "r")
     result = str()
@@ -63,7 +61,7 @@ def scale_for_falcon(unity_scale):
 
 
 def read_collider_data(falcon_collider_data, collider_type, unity_collider_data):
-    #print("In read collider data")
+    # print("In read collider data")
     if collider_type == UNITY_COLLIDER_LIST[0]:  # sphere:
 
         falcon_collider_data['radius'] = unity_collider_data[collider_type]['m_Radius']
@@ -72,7 +70,7 @@ def read_collider_data(falcon_collider_data, collider_type, unity_collider_data)
 
         falcon_collider_data['half_sides'] = [float(unity_collider_data[collider_type]['m_Size']['x']) / 2.0,
                                               float(unity_collider_data[collider_type]['m_Size']['y']) / 2.0,
-                                              float(unity_collider_data[collider_type]['m_Size']['z']) / 2.0 ]
+                                              float(unity_collider_data[collider_type]['m_Size']['z']) / 2.0]
 
     elif collider_type == UNITY_COLLIDER_LIST[2]:  # capsule:
         falcon_collider_data['radius'] = unity_collider_data[collider_type]['m_Radius']
@@ -82,10 +80,10 @@ def read_collider_data(falcon_collider_data, collider_type, unity_collider_data)
 
 
 def read_prefab_source(prefab_yaml_file):
-    #print("In read prefab source")
-    position = {'x': '', 'y': '', 'z': ''}
-    rotation = {'x': '', 'y': '', 'z': '', 'w': ''}
-    scale = {'x': '', 'y': '', 'z': ''}
+    # print("In read prefab source")
+    position = DEFAULT_POSITION
+    rotation = DEFAULT_ROTATION
+    scale = DEFAULT_SCALE
     collider_data = {}
     obj_mesh = ''
     mat = ''
@@ -129,7 +127,7 @@ def read_prefab_source(prefab_yaml_file):
 
 
 def read_gameobject(doc_data, is_prefab_related=False):
-    #print("In read gameobjects data")
+    # print("In read gameobjects data")
     position = DEFAULT_POSITION
     rotation = DEFAULT_ROTATION
     scale = DEFAULT_SCALE
@@ -180,11 +178,11 @@ def read_gameobject(doc_data, is_prefab_related=False):
 
 
 def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
-    #print("In read prefab data")
+    # print("In read prefab data")
     collider_data = {}
     name = str()
     return_data = {}
-    #print(prefab_file)
+    print(prefab_file)
     # read the soruce of prefab
     position = DEFAULT_POSITION
     rotation = DEFAULT_ROTATION
@@ -199,7 +197,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
     local_modifications = prefab['m_Modification']['m_Modifications']
     prefab_yaml = "prefab.yaml"
     if bool_read_prefab_source is True:
-        #print("Reading prefab file")
+        # print("Reading prefab file")
         prefab_yaml = "prefab.yaml"
         copyfile(prefab_file, prefab_yaml)
         clean_file(prefab_yaml)
@@ -237,7 +235,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
             temp_mat = UNITY_MATERIALS_MAP[d['objectReference']['guid']]
             if temp_mat != '':
                 mat = temp_mat
-            #print(mat)
+            # print(mat)
 
     if not is_name_found:
         guid = prefab['m_SourcePrefab']['guid']
@@ -247,7 +245,7 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
 
     return_data['name'] = name
     return_data['position'] = position
-    #print (prefab_file,scale)
+    # print (prefab_file,scale)
     return_data['scale'] = scale_for_falcon(scale)
     return_data['rotation'] = rotation
     return_data['parent_id'] = parent
@@ -260,10 +258,10 @@ def read_prefabs(prefab, prefab_file, bool_read_prefab_source=True):
 
 
 def read_material_data(material_file):
-    #print("In read material data")
+    # print("In read material data")
     materials = {}
     transparency = False
-    #print(material_file)
+    # print(material_file)
     if material_file != '':
         material_temp = "mat.yaml"
         copyfile(material_file, material_temp)
@@ -290,9 +288,9 @@ def read_material_data(material_file):
                                     tex['_MetallicGlossMap']['m_Texture']['guid']]
 
                     temp = d['Material']['stringTagMap']
-                    #print(temp.keys())
+                    # print(temp.keys())
                     if temp is not None and 'RenderType' in temp.keys():
-                        #print(temp['RenderType'])
+                        # print(temp['RenderType'])
                         transparency = (temp['RenderType'] == 'Transparent')
         os.remove(material_temp)
     return materials, transparency

@@ -28,6 +28,7 @@ def read_scene_file(filepath):
 
         generate_file_id_to_name(data)
         itr = 0
+        jump_by_two = False
         while itr < len(data):
             d = data[itr]
             if list(d.keys())[0] == 'GameObject':
@@ -54,26 +55,31 @@ def read_scene_file(filepath):
                 # do shit for prefab instances
                 prefab = d['PrefabInstance']
                 prefab_data = None
-                #print(prefab['m_SourcePrefab']['guid'] + "  " + prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys())
+                # print(prefab['m_SourcePrefab']['guid'] + "  " + prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys())
                 if prefab['m_SourcePrefab']['guid'] in UNITY_PREFAB_MAP.keys():
                     prefab_file = UNITY_PREFAB_MAP[prefab['m_SourcePrefab']['guid']]
                     prefab_data = read_prefabs(prefab, prefab_file, True)
                     itr += 1
+                    if itr < len(data) and list(data[itr].keys())[0] == 'GameObject':
+                        itr += 1
+                        jump_by_two = True
                 elif prefab['m_SourcePrefab']['guid'] in UNITY_MESHES_MAP.keys():
                     prefab_file = UNITY_MESHES_MAP[prefab['m_SourcePrefab']['guid']]
                     prefab_data = read_prefabs(prefab, prefab_file, False)
-                    itr += 1  # skipping next entry of GameObject
-                    new_data = []
-                    while itr < len(data) and (list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[
-                        0] != 'GameObject'):
-                        new_data.append(data[itr])
-                        itr += 1
+                    itr += 2  # skipping next entry of GameObject
+                    jump_by_two = True
+                new_data = []
+                while itr < len(data) and (list(data[itr].keys())[0] != 'PrefabInstance' and list(data[itr].keys())[
+                    0] != 'GameObject'):
+                    new_data.append(data[itr])
+                    itr += 1
+                if jump_by_two:
                     temp_data = read_gameobject(new_data, True)
                     prefab_data['obj_mesh'] = prefab_file
                     update_mesh_instance_count(prefab_file)
                     prefab_data['collider_data'] = temp_data['collider_data']
-
-                    #itr -= 1
+                    itr -= 1
+                    jump_by_two = False
                 prefab_data['parent'] = get_parent_name(data, file_id=prefab_data['parent_id'])
                 all_entities_list.append(prefab_data)
 
