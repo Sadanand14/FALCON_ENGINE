@@ -511,7 +511,7 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 	{
 		aiFace face = mesh->mFaces[i];
 
-		FL_ENGINE_ERROR("ProcessNode : {0} : {1}", face.mNumIndices);
+		//FL_ENGINE_ERROR("ProcessNode : {0} : {1}", face.mNumIndices);
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			newMesh->m_indexArray.push_back(face.mIndices[j]);

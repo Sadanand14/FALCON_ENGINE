@@ -13,8 +13,8 @@ namespace Rendering
 	*/
 	OctreeNode::OctreeNode(glm::vec3 nearTopLeft, glm::vec3 farBottomRight) :m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_parent(nullptr)
 	{
-		m_childNodes.reserve(10);
-		m_entities.reserve(10);
+		//m_childNodes.reserve(10);
+		//m_entities.reserve(10);
 		m_centre = (m_nearTopLeft + m_farBottomRight) / 2.0f;
 		float x = (m_nearTopLeft.x - m_centre.x);
 		float y = (m_nearTopLeft.y - m_centre.y);
@@ -56,6 +56,7 @@ namespace Rendering
 			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_100, vert_211));
 			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_010, vert_121));
 			this->m_childNodes.push_back(fmemory::fnew<OctreeNode>(vert_110, vert_221));*/
+			this->m_childNodes.reserve(8);
 
 			this->m_childNodes.push_back(new OctreeNode(m_nearTopLeft, CentrePoint));
 			this->m_childNodes.push_back(new OctreeNode(vert_100, vert_211));
@@ -484,7 +485,7 @@ namespace Rendering
 				}
 			}
 
-			FL_ENGINE_WARN("Going Down!!");
+			//FL_ENGINE_WARN("Going Down!!");
 			//go down from there to find the lowest bounding node
 			bool nodeFound = false, fitsInChild = false;
 			while (!nodeFound)
@@ -540,10 +541,7 @@ namespace Rendering
 			if (original != node)
 				node->m_entities.push_back(entity);
 		}
-		else 
-		{
-			//FL_ENGINE_WARN("GOING nowhere!" );
-		}
+
 		//node->m_entities.push_back(entity);
 
 		//if (udpated)
