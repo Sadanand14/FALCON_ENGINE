@@ -223,7 +223,7 @@ project "Falcon"
 			defines
 			{
 				"BUILD_RELEASE_MODE",
-				"_NDEBUG"
+				"NDEBUG"
 			}
 			optimize "On"
 
