@@ -517,6 +517,9 @@ project "FALCON_GAME"
 				"%{LinkReleaseDirs.boost}",
 				"%{LinkReleaseDirs.assimp}",
 				"%{LinkReleaseDirs.physx}",
+				"%{LinkDebugDirs.fmodcore}",
+				"%{LinkDebugDirs.fmodbank}",
+				"%{LinkDebugDirs.fmodstudio}"
 			}
 
 
