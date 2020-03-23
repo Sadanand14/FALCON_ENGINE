@@ -6,6 +6,10 @@
 
 namespace gameLoop
 {
+
+	/**
+	* Main game class. Provides interface for gameplay progamming and state change.
+	*/
 	class Game
 	{
 	private:

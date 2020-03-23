@@ -237,7 +237,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	Mesh* newmesh = fmemory::fnew<Mesh>();
 
-	FL_ENGINE_ERROR("LOADMODEL!!!");
+	//FL_ENGINE_ERROR("LOADMODEL!!!");
 	// Process rootnode
 	ProcessNode(scene->mRootNode, scene, newmesh);
 	newmesh->Setup();
@@ -421,7 +421,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 */
 void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh)
 {
-	FL_ENGINE_ERROR("ProcessNode!!!");
+	//FL_ENGINE_ERROR("ProcessNode!!!");
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -445,7 +445,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh
 */
 void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 {
-	FL_ENGINE_ERROR("ProcessMesh!!!");
+	//FL_ENGINE_ERROR("ProcessMesh!!!");
 	// Data to load
 	size_t indexOffset = 0;
 

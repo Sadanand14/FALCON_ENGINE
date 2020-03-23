@@ -12,16 +12,9 @@
 
 namespace UI
 {
-	/*struct UI_Layer
-	{
-	private:
-		boost::container::vector<CanvasItem*> m_items;
-
-	public:
-		inline void AddItem(CanvasItem* item) { m_items.push_back(item); }
-		UI_Layer() {}
-	};*/
-
+	/**
+	* Main UI management system. Controls one canvas object for drawing UI on it.	
+	*/
 	class UI_Manager
 	{
 	private:

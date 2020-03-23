@@ -2,13 +2,24 @@
 
 namespace gameLoop 
 {
+
+	/**
+	* Main Game Constructor.
+	*/
 	Game::Game() :m_quitGame(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::MENU) {}
 
+
+	/**
+	*Main Destructor.
+	*/
 	Game::~Game() 
 	{
 		delete m_engine;
 	}
 
+	/**
+	* Game initialization function. Initializes the engine.
+	*/
 	bool Game::Init() 
 	{
 		m_engine = new gameLoop::Engine();
@@ -21,6 +32,9 @@ namespace gameLoop
 		return true;
 	}
 
+	/**
+	* Main function that runs the gameloop and handles state transition for the game.
+	*/
 	void Game::Run() 
 	{
 		WindowClass* window= m_engine->GetWindow();
@@ -76,11 +90,17 @@ namespace gameLoop
 		}
 	}
 
+	/**
+	* Function for initilizing the ingame state.
+	*/
 	void Game::Game_Init() 
 	{
 	
 	}
 
+	/**
+	* Function for initilizing the Menu state.
+	*/
 	void Game::Menu_Init() 
 	{
 		boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
@@ -168,21 +188,33 @@ namespace gameLoop
 		m_UI->LoadUI("FIRST_PAGE");
 	}
 
+	/**
+	* Function for initilizing the pause state.
+	*/
 	void Game::PauseMenu_Init() 
 	{
 		
 	}
 
+	/**
+	* Function for running the menu update loop.
+	*/
 	void Game::Menu_Update() 
 	{
 	
 	}
 
+	/**
+	* Function for running the pause update loop.
+	*/
 	void Game::PauseMenu_Update() 
 	{
 		
 	}
 
+	/**
+	* Function for running the menu update loop.
+	*/
 	void Game::Game_Update()
 	{
 
