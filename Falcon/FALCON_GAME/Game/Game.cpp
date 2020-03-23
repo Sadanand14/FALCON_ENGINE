@@ -95,7 +95,7 @@ namespace gameLoop
 	*/
 	void Game::Game_Init() 
 	{
-	
+		glfwSetInputMode(m_engine->GetWindow()->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
 	/**
@@ -103,6 +103,8 @@ namespace gameLoop
 	*/
 	void Game::Menu_Init() 
 	{
+		
+
 		boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
 		boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
 		boost::function<void(void)> f3 = [&]() {m_UI->LoadUI("THIRD_PAGE"); };
