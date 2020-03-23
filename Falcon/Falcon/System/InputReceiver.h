@@ -16,8 +16,8 @@ class InputReceiver
 {
 
 private:
-	static boost::array<bool, MAX_KEYS> m_keyStates, m_prevStates;
-	static boost::array<bool, MAX_MOUSE_KEYS> m_mouseStates;
+	static bool m_keyStates[MAX_KEYS], m_prevStates[MAX_KEYS];
+	static bool m_mouseStates[MAX_MOUSE_KEYS];
 	static double m_mouseX, m_mouseY, m_scrollX, m_scrollY;
 
 public:

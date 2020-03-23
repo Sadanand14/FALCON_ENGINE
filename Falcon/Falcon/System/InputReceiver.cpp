@@ -3,9 +3,9 @@
 #include <iostream>
 #include "Log.h"
 
-boost::array<bool, MAX_KEYS> InputReceiver::m_prevStates = {false};
-boost::array<bool, MAX_KEYS> InputReceiver::m_keyStates = {false};
-boost::array<bool, MAX_MOUSE_KEYS> InputReceiver::m_mouseStates = { false };
+bool InputReceiver::m_prevStates[MAX_KEYS] = { false };
+bool InputReceiver::m_keyStates[MAX_KEYS] = {false};
+bool InputReceiver::m_mouseStates[MAX_MOUSE_KEYS] = { false };
 double InputReceiver::m_mouseX = 0, InputReceiver::m_mouseY= 0, InputReceiver::m_scrollX = 0 , InputReceiver::m_scrollY = 0;
 
 
