@@ -190,6 +190,8 @@ project "Falcon"
 			"PhysXFoundation_64.lib",
 			"PhysXPvdSDK_static_64.lib",
 			"PhysXExtensions_static_64.lib",
+			"fmodL_vc.lib",
+			"fmodstudioL_vc.lib"
 			--"PhysXTask_static_64.lib"--
 		}
 
@@ -255,12 +257,12 @@ project "Falcon"
 		{
 			"boost_thread",
 			"Xrandr",
-	                "Xi",
+	        "Xi",
 			"glfw3",
-        	        "GLEW",
-                        "GLU",
-                        "GL",
-                        "X11",
+	        "GLEW",
+            "GLU",
+            "GL",
+            "X11",
 			"dl",
 			"pthread",
 			"assimp",
@@ -473,6 +475,8 @@ project "FALCON_GAME"
 			"PhysXFoundation_64.lib",
 			"PhysXPvdSDK_static_64.lib",
 			"PhysXExtensions_static_64.lib",
+			"fmodL_vc.lib",
+			"fmodstudioL_vc.lib"
 			--"PhysXTask_static_64.lib"--
 		}
 
@@ -513,6 +517,9 @@ project "FALCON_GAME"
 				"%{LinkReleaseDirs.boost}",
 				"%{LinkReleaseDirs.assimp}",
 				"%{LinkReleaseDirs.physx}",
+				"%{LinkDebugDirs.fmodcore}",
+				"%{LinkDebugDirs.fmodbank}",
+				"%{LinkDebugDirs.fmodstudio}"
 			}
 
 
@@ -531,12 +538,12 @@ project "FALCON_GAME"
 				"Falcon",
 				"boost_thread",
 				"Xrandr",
-						"Xi",
+				"Xi",
 				"glfw3",
-						"GLEW",
-							"GLU",
-							"GL",
-							"X11",
+				"GLEW",
+				"GLU",
+				"GL",
+				"X11",
 				"dl",
 				"pthread",
 				"assimp",
