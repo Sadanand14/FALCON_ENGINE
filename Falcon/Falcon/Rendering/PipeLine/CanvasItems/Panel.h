@@ -6,17 +6,17 @@
 #include "CanvasItem.h"
 #include "System/Types.h"
 
+
 /**
  * A basic Panel
  */
 class Panel : public CanvasItem
 {
-	protected:
+protected:
 
-	public:
-		Panel();
-		virtual ~Panel();
-		void Commands(nk_context* ctx) override;
+public:
+	Panel();
+	virtual ~Panel();
+	void Commands(nk_context* ctx) override;
 };
-
 #endif

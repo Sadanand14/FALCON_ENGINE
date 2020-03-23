@@ -77,7 +77,7 @@ void ParticleSystem::Init()
  *@param[in] A float indicating delta time for the current frame.
  */
 
-void ParticleSystem::Update(float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void ParticleSystem::Update(float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities)
 {
 	m_PES->ProcessEvents();
 

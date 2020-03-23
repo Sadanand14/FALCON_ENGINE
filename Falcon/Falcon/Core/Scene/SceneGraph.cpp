@@ -1,6 +1,7 @@
 #include "SceneGraph.h"
 #include <Events/PassToRenderer.h> 
 #include <Events/EventManager.h>
+
 namespace Scene
 {
 	/**
@@ -219,6 +220,11 @@ namespace Scene
 		return returnValue;
 	}
 
+	void SceneGraph::CreateEntityNode(rapidjson::Document& doc, unsigned int index, nodeVector& vector, int* temp)
+	{
+		FL_ENGINE_WARN("THREAD RUNNING with {0}", index);
+	}
+
 	/**
 	* Function that filters the entities in the scene based on their components.
 	*/
@@ -245,6 +251,7 @@ namespace Scene
 		m_entityList.reserve(10);
 		m_updatedRenderables.reserve(10);
 		m_rootNode = fmemory::fnew<SceneNode>();
+		m_threads = ThreadPool::GetThreadPool();
 
 		//Get file data
 		char* json = nullptr;
@@ -304,6 +311,160 @@ namespace Scene
 			rapidjson::Value& world = doc["entities"];
 			NodeWithOffset temp;
 
+			unsigned int size = world.Size();
+
+			//nodeVector Nodes;
+			//Nodes.resize(size);
+			//boost::container::vector<int> parents;
+			//parents.resize(size);
+			//memset(parents.data(), -1, sizeof(int) * size);
+
+			//for (unsigned int i = 0; i < size; ++i) 
+			//{
+			//	FL_ENGINE_ERROR("{0}\n", parents[i]);
+			//}
+
+			//int loadCounter = 0;
+			//std::atomic<bool> proceed = false;
+
+			/*SceneNode* node1 = Nodes[0];
+			std::cout << "node1 : " << node1 << "\n";
+			SceneNode* node2 = Nodes[1];
+			std::cout << "node2 : " << node2 << "\n";
+			SceneNode* node3 = Nodes[2];
+			std::cout << "node3 : " << node3 << "\n";
+			SceneNode* node4 = Nodes[3];
+			std::cout << "node4 : " << node4 << "\n";
+			SceneNode* node5 = Nodes[4];
+			std::cout << "node5 : " << node5 << "\n";*/
+
+			//for (unsigned int i = 0; i < size; ++i) 
+			//{
+			//	//void_function f= std::bind(&SceneGraph::CreateEntityNode, this,&doc,i, Nodes, loadCounter);
+			//	void_function f = [&]() 
+			//	{
+			//		mtx.lock();
+			//		int index = loadCounter++;
+			//		mtx.unlock();
+			//		//FL_ENGINE_WARN("Ran on index : {0}.\n", value) ; 
+			//		
+
+			//		const rapidjson::Value& name = world[index]["name"];
+			//		FL_ENGINE_ERROR("Currently Loading: {0}", name.GetString());
+			//		const rapidjson::Value& pos = world[index]["pos"];
+			//		glm::vec3 position;
+			//		for (rapidjson::SizeType j = 0; j < 3; j++)
+			//		{
+			//			position[j] = pos[j].GetDouble();
+			//		}
+
+			//		const rapidjson::Value& rot = world[index]["rot"];
+			//		glm::quat rotation;
+			//		for (rapidjson::SizeType j = 0; j < 4; j++)
+			//		{
+			//			rotation[j] = rot[j].GetDouble();
+			//		}
+
+			//		const rapidjson::Value& sca = world[index]["scale"];
+			//		glm::vec3 scale;
+			//		for (rapidjson::SizeType j = 0; j < 3; j++)
+			//		{
+			//			scale[j] = sca[j].GetDouble();
+			//		}
+
+			//		const rapidjson::Value& parentInd = world[index]["parent"];
+			//		parents[index] = parentInd.GetInt();
+
+			//		const char* objTemplate = NULL;
+			//		if (world[index].HasMember("template"))
+			//		{
+			//			const rapidjson::Value& objPath = world[index]["template"];
+			//			objTemplate = objPath.GetString();
+			//		}
+			//		else
+			//		{
+			//			FL_ENGINE_ERROR(" NO OBJECT TEMPLATE PROVIDED FOR ENTITY!!");
+			//		}
+
+			//		//FL_ENGINE_ERROR("template : {0}",  objTemplate);
+
+			//		Entity* temp = EntityManager::CreateEntity(objTemplate, position, rotation, scale, nullptr);
+			//		//FL_ENGINE_ERROR("Loaded Entity Pointer : {0}", (int)temp);
+			//		
+			//		//SceneNode* newNode = new SceneNode();
+			//		SceneNode* newNode = fmemory::fnew<SceneNode>(temp);
+			//		//FL_ENGINE_ERROR("Loaded node Pointer : {0}", (int)newNode);
+
+			//		mtx.lock();
+			//		Nodes.push_back(newNode);
+			//		Nodes[index] = newNode;
+			//		m_entityList.push_back(temp);
+			//		//if (loadCounter >= size) 
+			//		//{
+			//		//	proceed = true; 
+			//		//	//FL_ENGINE_ERROR("Checking for proceeding: {0}", index);
+			//		//}
+			//		mtx.unlock();
+			//		FL_ENGINE_ERROR("LOAD COMPLETED : {0}", index);
+			//	};
+			//	m_threads->submit(f);
+			//}
+
+			//std::this_thread::sleep_for(std::chrono::seconds(10));
+			////while (!(proceed.load())) {
+			////	//FL_ENGINE_WARN("WAITING!!");
+			////}
+
+			//auto node1 = Nodes[0];
+			//std::cout << "node1 : "<<node1<< "\n";
+			//auto node2 = Nodes[1];
+			//std::cout << "node2 : " << node2 << "\n";
+			//auto node3 = Nodes[2];
+			//std::cout << "node3 : " << node3 << "\n";
+			//auto node4 = Nodes[3];
+			//std::cout << "node4 : " << node4 << "\n";
+			//auto node5 = Nodes[4];
+			//std::cout << "node5 : " << node5 << "\n";
+
+
+			//auto entity1 = m_entityList[0];
+			//auto entity2 = m_entityList[1];
+			//auto entity3 = m_entityList[2];
+			//auto entity4 = m_entityList[3];
+			//auto entity5 = m_entityList[4];
+
+			//auto rd1 =  entity1->GetComponent<RenderComponent>();
+			//auto rd2 =  entity2->GetComponent<RenderComponent>();
+			//auto rd3 =  entity3->GetComponent<RenderComponent>();
+			//auto rd4 =  entity4->GetComponent<RenderComponent>();
+			//auto rd5 =  entity5->GetComponent<RenderComponent>();
+
+			//for (unsigned int i = 0; i < size; ++i) 
+			//{
+			//	if (parents[i] > -1) 
+			//	{
+			//		Nodes[parents[i]]->AddChild(Nodes[i]);
+			//	}
+			//	else 
+			//	{
+			//		m_rootNode->AddChild(Nodes[i]);
+			//	}
+			//}
+
+		/*	for (unsigned int i = 0; i < size; ++i)
+			{
+				FL_ENGINE_ERROR("{0}\n", parents[i]);
+			}
+
+			for (unsigned int i = 0; i < Nodes.size(); ++i) 
+			{
+				std::cout << Nodes[i]<<"\n"; 
+			}*/
+		/*	while (!proceed) 
+			{}*/
+			FL_ENGINE_ERROR("Loaded Size : {0}", m_entityList.size());
+
+			//m_threads->execute_task();
 			//Load all entities into the scene
 			while (nextEntityOffset < world.Size())
 			{

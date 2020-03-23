@@ -3,12 +3,10 @@
 
 #include "Event.h"
 #include "EventSystem.h"
-
+#include <Types.h>
 #include <type_traits>
 #include <memory>
-#include <boost/unordered_map.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/container/vector.hpp>
+
 
 #include <Types.h>
 

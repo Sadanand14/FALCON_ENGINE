@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 
+#include "UIManager.h"
 #include "Shader.h"
 #include "System/Types.h"
 
@@ -23,15 +24,6 @@ struct RenderEvent;
 class EventSystem;
 class Renderable;
 class Mesh;
-
-//TODO: REMOVE THIS
-class Label;
-class Button;
-class Image;
-class Panel;
-class Slider;
-
-void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -76,44 +68,33 @@ class GLFWwindow;
 class Renderer
 {
 	RenderEventSystem* m_RES;
+	UI::UI_Manager* m_UI = nullptr;
+	GLFWwindow* m_window;
 	glm::mat4 m_projection;
-	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
-	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
 
-	//TODO: REMOVE
-	Renderable* can;
-	static Button* prev;
-	static Button* next;
-	static Image* bg;
-	static Slider* wingAngle;
-	static Slider* gearRatio;
-	static Slider* suspension;
-
-	static Texture uiPage1;
-	static Texture uiPage2;
-	static Texture uiPage3;
-
-	static void uiNext0();
-	static void uiNext1();
-	static void uiNext2();
-
-	static void uiPrev1();
-	static void uiPrev2();
 
 public:
 	Renderer();
 	~Renderer();
 
-	void Init();
-	void CreateDrawStates(GLFWwindow* win);
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
-	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(Camera &cam);
+	inline UI::UI_Manager* GetUI() { return m_UI; }
 
-	//Exposed for use in game
-	static void uiPrev3();
+	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
+	void Ingame_Draw(Camera& cam);
+
+	void Pause_Draw();
+	void Pause_Update();
+
+	void Menu_Update();
+	void Menu_Draw();
+
+	void Init(GLFWwindow* window);
+	void CreateDrawStates(GLFWwindow* win);
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection);
 };
 
 #endif // !RENDERER_H

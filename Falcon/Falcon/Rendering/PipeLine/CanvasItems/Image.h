@@ -11,14 +11,13 @@
  */
 class Image : public CanvasItem
 {
-	protected:
-		struct nk_image m_img;
+protected:
+	struct nk_image m_img;
 
-	public:
-		Image();
-		virtual ~Image();
-		void Commands(nk_context* ctx) override;
-		inline void SetImage(Texture tex) { m_img = nk_image_id(tex.textureID); }
+public:
+	Image();
+	virtual ~Image();
+	void Commands(nk_context* ctx) override;
+	inline void SetImage(Texture tex) { m_img = nk_image_id(tex.textureID); }
 };
-
 #endif

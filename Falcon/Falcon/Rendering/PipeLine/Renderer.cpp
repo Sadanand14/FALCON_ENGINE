@@ -14,6 +14,7 @@
 #include "TransparentRenderPass.h"
 #include "CanvasRenderPass.h"
 #include "SkyRenderPass.h"
+#include "QuadRenderPass.h"
 
 //Events
 #include <Events/PassToRenderer.h>
@@ -32,78 +33,6 @@
 #include "CanvasItems/Slider.h"
 
 GLFWwindow* Renderer::m_win = nullptr;
-Button* Renderer::prev = nullptr;
-Button* Renderer::next = nullptr;
-Image* Renderer::bg = nullptr;
-Slider* Renderer::wingAngle = nullptr;
-Slider* Renderer::gearRatio = nullptr;
-Slider* Renderer::suspension = nullptr;
-Texture Renderer::uiPage1;
-Texture Renderer::uiPage2;
-Texture Renderer::uiPage3;
-
-void Renderer::uiNext0()
-{
-	next->SetCallback(boost::function<void(void)>(uiNext1));
-	prev->SetCallback(boost::function<void(void)>(uiPrev1));
-	prev->SetActive(true);
-	next->SetBounds(nk_rect(0.725, 0.883, 0.25, 0.08));
-	bg->SetImage(uiPage2);
-}
-
-void Renderer::uiNext1()
-{
-	next->SetCallback(boost::function<void(void)>(uiNext2));
-	prev->SetCallback(boost::function<void(void)>(uiPrev2));
-	bg->SetImage(uiPage3);
-	wingAngle->SetActive(true);
-	gearRatio->SetActive(true);
-	suspension->SetActive(true);
-}
-
-void Renderer::uiNext2()
-{
-	bg->SetActive(false);
-	next->SetActive(false);
-	//prev->SetCallback(boost::function<void(void)>(uiPrev3));
-	prev->SetActive(false);
-	wingAngle->SetActive(false);
-	gearRatio->SetActive(false);
-	suspension->SetActive(false);
-
-	glfwSetInputMode(m_win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-void Renderer::uiPrev1()
-{
-	next->SetCallback(boost::function<void(void)>(uiNext0));
-	prev->SetActive(false);
-	next->SetBounds(nk_rect(0.626, 0.820, 0.22, 0.122));
-	bg->SetImage(uiPage1);
-}
-
-void Renderer::uiPrev2()
-{
-	next->SetCallback(boost::function<void(void)>(uiNext1));
-	prev->SetCallback(boost::function<void(void)>(uiPrev1));
-	bg->SetImage(uiPage2);
-	wingAngle->SetActive(false);
-	gearRatio->SetActive(false);
-	suspension->SetActive(false);
-}
-
-void Renderer::uiPrev3()
-{
-	next->SetCallback(boost::function<void(void)>(uiNext2));
-	prev->SetCallback(boost::function<void(void)>(uiPrev2));
-	next->SetActive(true);
-	prev->SetActive(true);
-	bg->SetActive(true);
-	wingAngle->SetActive(true);
-	gearRatio->SetActive(true);
-	suspension->SetActive(true);
-	glfwSetInputMode(m_win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-}
 
 RenderEventSystem* RenderEventSystem::m_instance = nullptr;
 
@@ -173,7 +102,6 @@ void RenderEventSystem::PrintReception()
 */
 Renderer::Renderer()
 {
-	Init();
 }
 
 /**
@@ -181,20 +109,26 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
-	fmemory::fdelete(can);
-	fmemory::fdelete(next);
-	fmemory::fdelete(prev);
-	fmemory::fdelete(bg);
-	fmemory::fdelete(wingAngle);
-	fmemory::fdelete(gearRatio);
-	fmemory::fdelete(suspension);
+	fmemory::fdelete(m_UI);
+	
 
-	for(auto pass : m_renderPasses)
+	for (auto pass : m_Menu_renderPasses)
 	{
 		CanvasRenderPass* crp = nullptr;
 		crp = dynamic_cast<CanvasRenderPass*>(pass);
 
-		if(crp)
+		if (crp)
+			fmemory::fdelete(crp);
+		else
+			fmemory::fdelete(pass);
+	}
+
+	for (auto pass : m_Game_renderPasses)
+	{
+		CanvasRenderPass* crp = nullptr;
+		crp = dynamic_cast<CanvasRenderPass*>(pass);
+
+		if (crp)
 			fmemory::fdelete(crp);
 		else
 			fmemory::fdelete(pass);
@@ -206,8 +140,10 @@ Renderer::~Renderer()
 /**
 *Initialization function for Renderer
 */
-void Renderer::Init()
+void Renderer::Init(GLFWwindow* window)
 {
+	m_UI = fmemory::fnew<UI::UI_Manager>();
+	m_window = window;
 	m_RES = RenderEventSystem::GetInstance();
 	m_RES->ProcessEvents();
 }
@@ -223,139 +159,150 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	//m_RES->ProcessEvents();
-
-	can = fmemory::fnew<Canvas>();
-	can->Setup();
-
-	m_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
-	m_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
-	m_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
-	m_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
-	m_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
-
-	uiPage1.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/start race.jpg");
-	uiPage2.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/choose track_lock.jpg");
-	uiPage3.textureID = AssetManager::LoadTexture("../Assets/Textures/UI/tune car_1.jpg");
-	bg = fmemory::fnew<Image>();
-	bg->SetBounds(nk_rect(0.0, 0.0, 1.0, 1.0));
-	bg->SetImage(uiPage1);
-	//i->AddChild(b);
-	//i->AddChild(l);
-	static_cast<Canvas*>(can)->AddCanvasItem(bg);
-
-	next = fmemory::fnew<Button>();
-	next->SetColor(nk_rgba(255, 255, 255, 0));
-	next->SetNormalButtonColor(nk_rgba(255, 255, 255, 0));
-	next->SetHoverButtonColor(nk_rgba(255, 255, 255, 0));
-	next->SetActiveButtonColor(nk_rgba(255, 255, 255, 0));
-	next->SetBounds(nk_rect(0.626, 0.820, 0.22, 0.122));
-	next->SetText(std::string(""));
-	next->SetCallback(boost::function<void(void)>(uiNext0));
-	static_cast<Canvas*>(can)->AddCanvasItem(next);
-
-	prev = fmemory::fnew<Button>();
-	prev->SetColor(nk_rgba(255, 255, 255, 0));
-	prev->SetNormalButtonColor(nk_rgba(255, 255, 255, 0));
-	prev->SetHoverButtonColor(nk_rgba(255, 255, 255, 0));
-	prev->SetActiveButtonColor(nk_rgba(255, 255, 255, 0));
-	prev->SetBounds(nk_rect(0.025, 0.883, 0.274, 0.081));
-	prev->SetActive(false);
-	prev->SetText(std::string(""));
-	prev->SetCallback([]() { FL_ENGINE_ERROR("THIS SHOULD NOT BE CALLED"); });
-	static_cast<Canvas*>(can)->AddCanvasItem(prev);
-
-	wingAngle = fmemory::fnew<Slider>();
-	wingAngle->SetBounds(nk_rect(0.016, 0.62, 0.22, 0.1));
-	wingAngle->SetMinValue(0.0f);
-	wingAngle->SetMaxValue(1.0f);
-	wingAngle->SetStep(0.1f);
-	wingAngle->SetActive(false);
-	static_cast<Canvas*>(can)->AddCanvasItem(wingAngle);
-
-	gearRatio = fmemory::fnew<Slider>();
-	gearRatio->SetBounds(nk_rect(0.258, 0.62, 0.22, 0.1));
-	gearRatio->SetMinValue(0.0f);
-	gearRatio->SetMaxValue(1.0f);
-	gearRatio->SetStep(0.1f);
-	gearRatio->SetActive(false);
-	static_cast<Canvas*>(can)->AddCanvasItem(gearRatio);
-
-	suspension = fmemory::fnew<Slider>();
-	suspension->SetBounds(nk_rect(0.5, 0.62, 0.22, 0.1));
-	suspension->SetMinValue(0.0f);
-	suspension->SetMaxValue(1.0f);
-	suspension->SetStep(0.1f);
-	suspension->SetActive(false);
-	static_cast<Canvas*>(can)->AddCanvasItem(suspension);
-
-	m_renderPasses[4]->QueueRenderable(can);
 }
 
 /**
 *Function to Set the relevant data in the draw states.
 */
-void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection)
+void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection)
 {
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
-	//RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
-	std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
-	//for (u32 i = 0; i < entities->size(); i++)
-	//{
-	//	RenderComponent* renderComp = entities->at(i)->GetComponent<RenderComponent>();
-	//	ParticleEmitterComponent* particleComp = entities->at(i)->GetComponent<ParticleEmitterComponent>();
-	//	if (renderComp || particleComp)
-	//	{
-	//		entities->at(i)->AddComponent<PhysicsComponent>();
-	//		PhysicsComponent* physComp = entities->at(i)->GetComponent<PhysicsComponent>();
 
-	//		if (renderComp)
-	//		{
+	
+	//Menu RenderPasses
+	m_Menu_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(0));
+	m_Menu_renderPasses[0]->QueueRenderable(m_UI->GetCanvas());
+
+	//Game RenderPasses
+	m_Game_renderPasses.push_back(fmemory::fnew<MeshRenderPass>(0));
+	m_Game_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
+	m_Game_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
+	m_Game_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
+	//m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
+
+	//m_Game_renderPasses[4]->QueueRenderable(m_UI->GetCanvas());
+
+
+	////First Layer setup
+	//m_UI->AddImage("FIRST_PAGE","start race.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
 	//
-	//			if (i != 1)
-	//			{
-	//				physComp->SetBoxCollider(5, 5, 5);
-	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
+	//boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
+	//boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
+	//boost::function<void(void)> f3 = [&]() {m_UI->LoadUI("THIRD_PAGE"); };
+	//boost::function<void(void)> f4 = [&]() {m_UI->GetCanvas()->ClearCanvas(); };
+	////Next Button
+	//m_UI->AddButton("FIRST_PAGE",
+	//	glm::vec4(255, 255, 255, 0),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.626, 0.820, 0.22, 0.122),
+	//	"",
+	//	f2
+	//);
 
-	//			}
-	//			else
-	//			{
-	//				renderComp->m_mesh->GetVertexPositionsArray(temp);
-	//				physComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
-	//				physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
-	//			}
-	//			//renderComp->m_mesh->GetVertexPositionsArray(temp);
-	//			//physComp->AddToExclusiveShape(vehActor, entities->at(i)->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
-	//		}
 
-	//		if (particleComp)
-	//		{
-	//			physComp->SetBoxCollider(5, 5, 5);
-	//			physComp->SetPhysicsBodyType(entities->at(i)->GetTransform(), physics::PhysicsBodyType::ESTATIC_BODY);
-	//		}
-	//	}
-	//}
-	//physics::CreateCar(vehActor, *entities->at(0)->GetTransform());
+	////Second Layer setup
+	//m_UI->AddImage("SECOND_PAGE", "choose track_lock.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
+
+	////next button
+	//m_UI->AddButton("SECOND_PAGE",
+	//	glm::vec4(255, 255, 255, 0),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
+	//	"",
+	//	f3
+	//);
+
+	////prev button
+	//m_UI->AddButton("SECOND_PAGE",
+	//	glm::vec4(255, 255, 255, 0),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
+	//	"",
+	//	f1);
+
+	////Third Layer Setup
+	//m_UI->AddImage("THIRD_PAGE", "tune car_1.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
+
+	////next button
+	//m_UI->AddButton("THIRD_PAGE",
+	//	glm::vec4(255, 255, 255, 0),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
+	//	"",
+	//	f4
+	//);
+
+	////prev button
+	//m_UI->AddButton("THIRD_PAGE",
+	//	glm::vec4(255, 255, 255, 0),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(255, 255, 255, 255),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
+	//	"",
+	//	f2);
+
+	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.016, 0.62, 0.22, 0.1),0.0f,1.0f,0.1f);
+	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.258, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
+	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.5, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
+
+	//m_UI->LoadUI("FIRST_PAGE");
 }
 
-/**
- * Function that provides consistent updates for the next rendering frame.
- *
- *@param[in] An integer indicating width.
- *@param[in] An integer indicating height.
- *@param[in] A camera to use for rendering
- *@param[in] A float indicating delta time for the current frame.
- */
-
-float temp = 0.0f;
-void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities)
+void Renderer::Pause_Update() 
 {
-	static_cast<CanvasRenderPass*>(m_renderPasses[4])->PushInput(m_win);
 
-	temp += 1.0f * dt;
+}
+
+void Renderer::Pause_Draw() 
+{
+	//Swap Buffers
+	glfwSwapBuffers(m_window);
+}
+
+void Renderer::Menu_Update() 
+{
+	static_cast<CanvasRenderPass*>(m_Menu_renderPasses[0])->PushInput(m_win);
+}
+
+void Renderer::Menu_Draw() 
+{
+	for (unsigned int i = 0; i < m_Menu_renderPasses.size(); ++i) 
+	{
+		m_Menu_renderPasses[i]->Render();
+	}
+	//Swap Buffers
+	glfwSwapBuffers(m_window);
+}
+
+
+void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities)
+{
+	//static_cast<CanvasRenderPass*>(m_Game_renderPasses[4])->PushInput(m_win);
+
 	m_RES->ProcessEvents();
 	m_entities = entities;
+	//FL_ENGINE_INFO("Draw Count : {0}", m_entities->size());
 
 	//for skybox
 	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
@@ -380,7 +327,7 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 			shader->SetMat4("view", cam.GetViewMatrix());
 		}
 
-		if(m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
+		if (m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
 		{
 			Shader* shader = m_entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->m_shader;
 			shader->UseShader();
@@ -389,13 +336,9 @@ void Renderer::Update(Camera& cam, float dt, boost::container::vector<Entity*, f
 			shader->SetVec3("camPos", cam.m_Position);
 		}
 	}
-	//entities->at(0)->GetTransform()->SetRotation(glm::angleAxis(temp, glm::vec3(0.0f,1.0f,0.0f)));
 }
 
-/**
- * Main Draw Function for the Renderer
- */
-void Renderer::Draw(Camera &cam)
+void Renderer::Ingame_Draw(Camera& cam)
 {
 	glDepthMask(true);
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
@@ -404,12 +347,12 @@ void Renderer::Draw(Camera &cam)
 	if (m_skyMesh != nullptr)
 	{
 		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
-		m_renderPasses[2]->QueueRenderable(m_skyMesh);
+		m_Game_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
 
 
 	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
-	m_renderPasses[0]->QueueRenderable(m_terrainMesh);
+	m_Game_renderPasses[0]->QueueRenderable(m_terrainMesh);
 	boost::container::flat_map<float, int> distanceEntityMap;
 	for (u32 i = 0; i < m_entities->size(); i++)
 	{
@@ -420,10 +363,10 @@ void Renderer::Draw(Camera &cam)
 		{
 			Mesh* m = rc->m_mesh;
 
-			if(!m->GetTransparent())
+			if (!m->GetTransparent())
 			{
 				m->AddWorldMatrix(trans->GetModel());
-				m_renderPasses[0]->QueueRenderable(m);
+				m_Game_renderPasses[0]->QueueRenderable(m);
 			}
 
 			else
@@ -440,13 +383,13 @@ void Renderer::Draw(Camera &cam)
 			p->SetWorldMatrix(trans->GetModel());
 			for (auto it = pec->m_particleBuffer.begin(); it != pec->m_particleBuffer.end(); it++)
 				p->AddParticleData(*it);
-			m_renderPasses[1]->QueueRenderable(p);
+			m_Game_renderPasses[1]->QueueRenderable(p);
 		}
 	}
 
 	uint32_t count = 0;
 	//Transparent meshes
-	for(auto it = distanceEntityMap.rbegin(); it != distanceEntityMap.rend(); it++)
+	for (auto it = distanceEntityMap.rbegin(); it != distanceEntityMap.rend(); it++)
 	{
 		RenderComponent* rc = m_entities->at(it->second)->GetComponent<RenderComponent>();
 		rc->m_mesh->AddWorldMatrix(m_entities->at(it->second)->GetTransform()->GetModel());
@@ -455,12 +398,12 @@ void Renderer::Draw(Camera &cam)
 		auto next = it;
 		next++;
 
-		if(next != distanceEntityMap.rend())
+		if (next != distanceEntityMap.rend())
 		{
-			if(m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
+			if (m_entities->at(next->second)->GetComponent<RenderComponent>()->m_mesh != rc->m_mesh)
 			{
-				m_renderPasses[3]->QueueRenderable(rc->m_mesh);
-				static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+				m_Game_renderPasses[3]->QueueRenderable(rc->m_mesh);
+				static_cast<TransparentRenderPass*>(m_Game_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
 				count = 0;
 			}
 
@@ -470,14 +413,17 @@ void Renderer::Draw(Camera &cam)
 
 		else
 		{
-			m_renderPasses[3]->QueueRenderable(rc->m_mesh);
-			static_cast<TransparentRenderPass*>(m_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
+			m_Game_renderPasses[3]->QueueRenderable(rc->m_mesh);
+			static_cast<TransparentRenderPass*>(m_Game_renderPasses[3])->AddCountAndOffset(count, rc->m_mesh->GetWorldMatrixAmount() - count);
 			count = 0;
 		}
 	}
 
-	for (u32 i = 0; i < m_renderPasses.size(); i++)
+	for (u32 i = 0; i < m_Game_renderPasses.size(); i++)
 	{
-		m_renderPasses[i]->Render();
+		m_Game_renderPasses[i]->Render();
 	}
+
+	//Swap Buffers
+	glfwSwapBuffers(m_window);
 }
