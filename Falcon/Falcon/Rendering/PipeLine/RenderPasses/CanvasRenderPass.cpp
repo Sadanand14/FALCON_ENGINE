@@ -60,7 +60,7 @@
 		for (auto it = m_renderQueue.begin(); it != m_renderQueue.end(); it++)
 		{
 			//Get the canvas
-			Canvas* can = static_cast<Canvas*>(*it);
+			UI::Canvas* can = static_cast<UI::Canvas*>(*it);
 
 			//Call Draw commands
 			can->CallDrawCommands(&m_ctx);
@@ -82,9 +82,9 @@
 
 			//Create the vertex layout for the config to use
 			static const nk_draw_vertex_layout_element vertexLayout[] = {
-				{ NK_VERTEX_POSITION, NK_FORMAT_FLOAT, NK_OFFSETOF(UIVertex, position) },
-				{ NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, NK_OFFSETOF(UIVertex, uv) },
-				{ NK_VERTEX_COLOR, NK_FORMAT_R8G8B8A8, NK_OFFSETOF(UIVertex, color) },
+				{ NK_VERTEX_POSITION, NK_FORMAT_FLOAT, NK_OFFSETOF(UI::UIVertex, position) },
+				{ NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, NK_OFFSETOF(UI::UIVertex, uv) },
+				{ NK_VERTEX_COLOR, NK_FORMAT_R8G8B8A8, NK_OFFSETOF(UI::UIVertex, color) },
 				{ NK_VERTEX_LAYOUT_END }
 			};
 
@@ -92,8 +92,8 @@
 			nk_convert_config config;
 			memset(&config, 0, sizeof(config));
 			config.vertex_layout = vertexLayout;
-			config.vertex_size = sizeof(UIVertex);
-			config.vertex_alignment = NK_ALIGNOF(UIVertex);
+			config.vertex_size = sizeof(UI::UIVertex);
+			config.vertex_alignment = NK_ALIGNOF(UI::UIVertex);
 			config.null = can->GetNull();
 			config.circle_segment_count = 22;
 			config.curve_segment_count = 22;

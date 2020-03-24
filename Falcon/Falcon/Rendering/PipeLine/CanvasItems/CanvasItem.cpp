@@ -3,13 +3,13 @@
 /**
  * Base CanvasItem constructor
  */
-CanvasItem::CanvasItem() : m_bounds(nk_rect(0, 0, 100, 100)), m_color(nk_rgb(255, 255, 255)),
+UI::CanvasItem::CanvasItem() : m_bounds(nk_rect(0, 0, 100, 100)), m_color(nk_rgb(255, 255, 255)),
 m_flags(NK_WINDOW_NO_SCROLLBAR), m_active(true), m_status(ItemStatus::Unused)
 {
 
 }
 
-void CanvasItem::AddChild(CanvasItem* child)
+void UI::CanvasItem::AddChild(CanvasItem* child)
 {
 	m_children.push_back(child);
 	child->parent = this;
@@ -19,7 +19,7 @@ void CanvasItem::AddChild(CanvasItem* child)
 /**
  * Begins a nuklear context, calls the draw commands, then ends drawing
  */
-void CanvasItem::Draw(nk_context* ctx)
+void UI::CanvasItem::Draw(nk_context* ctx)
 {
 	if (m_active)
 	{
@@ -36,7 +36,7 @@ void CanvasItem::Draw(nk_context* ctx)
 /**
  * Sets the bounds of the canvas
  */
-void CanvasItem::SetBounds(glm::vec4 bounds)
+void UI::CanvasItem::SetBounds(glm::vec4 bounds)
 {
 	m_bounds = nk_rect(bounds.x,bounds.y, bounds.z,bounds.w);
 	UpdateBounds();
@@ -45,7 +45,7 @@ void CanvasItem::SetBounds(glm::vec4 bounds)
 /**
  * Updates the bounds of a mesh
  */
-void CanvasItem::UpdateBounds()
+void UI::CanvasItem::UpdateBounds()
 {
 	if (parent != nullptr)
 	{
@@ -64,7 +64,7 @@ void CanvasItem::UpdateBounds()
 /**
  * Canvas item destructor
  */
-CanvasItem::~CanvasItem()
+UI::CanvasItem::~CanvasItem()
 {
 
 }
