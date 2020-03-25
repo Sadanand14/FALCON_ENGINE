@@ -1,11 +1,14 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#include <framework.h>
+
 #include <cstdint>
 #include <boost/container/vector.hpp>
 #include <boost/container/map.hpp>
 #include <boost/container/set.hpp>
 #include <boost/container/list.hpp>
+#include <boost/container/flat_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 #include <boost/chrono/chrono.hpp>
@@ -22,15 +25,22 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
-
 #include "PxPhysicsAPI.h"
-
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
+#include <string>
+#include <sstream>
+
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#include <nuklear.h>
 
 typedef int8_t  i08;
 typedef int16_t i16;

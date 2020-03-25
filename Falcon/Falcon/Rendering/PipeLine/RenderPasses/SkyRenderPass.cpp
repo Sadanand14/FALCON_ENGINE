@@ -1,18 +1,19 @@
 #include "SkyRenderPass.h"
 #include <PipeLine/Mesh.h>
 
-SkyRenderPass::SkyRenderPass(u32 priority) : RenderPass(priority) 
+SkyRenderPass::SkyRenderPass(u32 priority) : RenderPass(priority)
 {
 	AddEnabledProperty(GL_DEPTH_TEST);
 	AddEnabledProperty(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	AddEnabledProperty(GL_CULL_FACE);
 	AddDisabledProperty(GL_BLEND);
+	AddDisabledProperty(GL_SCISSOR_TEST);
 
 	SetCullFace(GL_FRONT);
 	SetDepthMask(GL_FALSE);
 }
 
-void SkyRenderPass::Render() 
+void SkyRenderPass::Render()
 {
 	RenderPass::Render();
 	glDepthFunc(GL_LEQUAL);

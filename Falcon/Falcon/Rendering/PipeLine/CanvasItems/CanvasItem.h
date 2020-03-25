@@ -3,37 +3,49 @@
 
 #include <string>
 
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
-
 #include <glm/glm.hpp>
 
 #include "System/Types.h"
-#include "Style.h"
 
-class CanvasItem
+#include "Canvas.h"
+#include "WindowData.h"
+#include "Font.h"
+
+namespace UI
 {
+	enum class ItemStatus {Active , Inactive, Unused};
+
+	/**
+	 * Base class for anything drawn on a canvas
+	 */
+	class CanvasItem
+	{
 	protected:
 		struct nk_rect m_bounds;
 		nk_color m_color;
 		i32 m_flags;
-		std::string m_name;
+		boost::container::vector<CanvasItem*> m_children;
+		CanvasItem* parent = nullptr;
+		bool m_active = true;
+		ItemStatus m_status;
+		std::string m_title;
 
 	public:
-		CanvasItem(const char* name);
+		CanvasItem();
 		virtual ~CanvasItem();
-		void Begin(nk_context* ctx);
-		void End(nk_context* ctx);
+		void AddChild(CanvasItem* child);
+
+		void SetBounds(glm::vec4 bounds);
+		void UpdateBounds();
+
 		virtual void Draw(nk_context* ctx);
 		virtual void Commands(nk_context* ctx) = 0;
-		inline void SetBounds(struct nk_rect bounds) { m_bounds = bounds; }
-		inline void SetColor(nk_color color) { m_color = color; }
+
+		inline void SetColor(glm::vec4 color) { m_color = nk_rgba(color.x,color.y,color.z,color.w); }
 		inline void SetFlags(int32_t flags) { m_flags = flags; }
-};
+		inline void SetActive(bool active) { m_active = active; }
+		inline void SetStatus(ItemStatus status) { m_status = status; }
+	};
+}
 
 #endif

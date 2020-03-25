@@ -58,7 +58,7 @@ void WindowClass::Init()
 	}
 
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_gameWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 }
 

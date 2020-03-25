@@ -1,10 +1,14 @@
 #include "ThreadPool.h"
+
 ThreadPool* ThreadPool::mainThreadPool = nullptr;
+//std::atomic<bool> ThreadPool::discard_threadPool = false;
 unsigned int ThreadPool::count = 0;
+
+
 /**
 *ThreadPool Constructor which helps Initialize worker threads
 */
-ThreadPool::ThreadPool() :discard_threadPool(false)
+ThreadPool::ThreadPool(GLFWwindow* window): m_window(window), discard_threadPool(false)
 {
 	int const max_threads = 5;// boost::thread::hardware_concurrency();
 
@@ -24,6 +28,7 @@ ThreadPool::ThreadPool() :discard_threadPool(false)
 
 void ThreadPool::ShutDown() 
 {
+	//discard_threadPool = true;
 	//if(mainThreadPool)fmemory::fdelete<ThreadPool>(mainThreadPool);
 	if (mainThreadPool!= nullptr)delete mainThreadPool;
 }
@@ -39,11 +44,17 @@ ThreadPool::~ThreadPool()
 	//delete mainThreadPool;
 }
 
-ThreadPool* ThreadPool::GetThreadPool()
+ThreadPool* ThreadPool::GetThreadPool() 
+{
+	count++;
+	return mainThreadPool;
+}
+
+ThreadPool* ThreadPool::GetThreadPool(GLFWwindow* window)
 {
 	if (mainThreadPool==nullptr)
 	{
-		mainThreadPool = new ThreadPool();
+		mainThreadPool = new ThreadPool(window);
 		//mainThreadPool = fmemory::fnew<ThreadPool>();
 	}
 	count++;
@@ -58,6 +69,7 @@ void ThreadPool::execute_task()
 	void_function job = NULL;
 	while (!discard_threadPool)
 	{
+		//FL_ENGINE_INFO("RUNNING");
 		job = NULL;
 		if (mtx.try_lock())
 		{
@@ -79,6 +91,10 @@ void ThreadPool::execute_task()
 		{
 			boost::this_thread::yield();
 		}
-		if (job) job();
+		if (job) 
+		{
+			//glfwMakeContextCurrent(m_window);
+			job(); 
+		}
 	}
 }

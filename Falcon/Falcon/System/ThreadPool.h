@@ -1,14 +1,15 @@
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 
-#include <boost/thread/thread.hpp>
 #include <atomic>
-#include <boost/function.hpp>
+#include <Types.h>
 #include <vector>
-#include <boost/thread/mutex.hpp>
+
+//#include <EntityManager.h>
 #include <queue>
 #include <mutex>
 #include "Memory/fmemory.h"
+
 
 typedef boost::function<void()> void_function;
 typedef std::queue<void_function> ThreadQueue;
@@ -19,20 +20,23 @@ typedef std::queue<void_function> ThreadQueue;
 class ThreadPool
 {
 private:
-	static unsigned int count;
-	ThreadQueue workerQueue;
+
 	boost::mutex mtx;
+	ThreadQueue workerQueue;
+	GLFWwindow* m_window = nullptr;
+	static unsigned int count;
 	std::atomic<bool> discard_threadPool;
-	static ThreadPool * mainThreadPool;
+	static ThreadPool* mainThreadPool;
 	std::vector<boost::thread> worker_threads;
 	//std::vector<boost::thread,fmemory::STLAllocator<boost::thread>> worker_threads;
 	~ThreadPool();
-	ThreadPool();
+	ThreadPool(GLFWwindow* window);
 public:
 
 	static ThreadPool* GetThreadPool();
+	static ThreadPool* GetThreadPool(GLFWwindow* window);
 	static void ShutDown();
-	
+
 
 	void execute_task();
 

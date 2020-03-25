@@ -1,14 +1,15 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include <System/Types.h>
 #include <framework.h>
 #include <vector>
 #include <string>
-#include <boost/container/vector.hpp>
+#include "System/Types.h"
 
 #include <Memory/fmemory.h>
 #include "Rendering/PipeLine/ParticleData.h"
-#include "Renderable.h"
+#include <RenderPasses/Renderable.h>
 
 /**
  * Particle Class tp store Particle Data for Renderables.

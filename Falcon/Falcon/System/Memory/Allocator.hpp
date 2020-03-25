@@ -1,6 +1,7 @@
 #ifndef ALLOCATOR_HPP
 #define ALLOCATOR_HPP
 
+#include <Types.h>
 #include <cstddef>
 #include "Log.h"
 

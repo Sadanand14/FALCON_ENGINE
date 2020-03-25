@@ -15,6 +15,7 @@ private:
 	unsigned int m_renderBufferId;
 	size_t m_count;
 	void SetupIndexBuffer(const unsigned int* indices, u32 drawType);
+	static boost::mutex m_indexMtx;
 
 public:
 

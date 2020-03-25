@@ -4,18 +4,13 @@
 #include <Log.h>
 #include <filesystem>
 #include <algorithm>
-
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
+#include "System/Types.h"
 
 TextureType AssetManager::m_lastTextureType;
 Mesh* AssetManager::m_cubeMesh = nullptr;
 Shader* AssetManager::m_cubeShader = nullptr;
+
+boost::mutex AssetManager::AssetMtx;
 
 boost::unordered_map<std::string, Mesh*> AssetManager::m_meshes;
 boost::unordered_map<std::string, Material*> AssetManager::m_materials;
@@ -30,7 +25,10 @@ void AssetManager::CreateDefaultFont()
 	nk_font* font = nk_font_atlas_add_default(&atlas, 13, 0);
 
 	Font* f = fmemory::fnew<Font>(atlas, font);
+
+	AssetMtx.lock();
 	m_fonts["default"] = f;
+	AssetMtx.unlock();
 }
 
 /**
@@ -73,7 +71,9 @@ Mesh* AssetManager::GetMesh(const std::string& path)
 	mesh->SetMaterial(GetMaterial(doc["material"].GetString()));
 	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
 
+	AssetMtx.lock();
 	m_meshes[path] = mesh;
+	AssetMtx.unlock();
 	return mesh;
 }
 
@@ -187,11 +187,11 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
 		if (doc.HasMember("instances")) newmesh->PreallocMatrixAmount(doc["instances"].GetInt());
 
 		newmesh->Setup();
+		AssetMtx.lock();
 		m_meshes[path] = newmesh;
+		AssetMtx.unlock();
 		return newmesh;
 	}
-
-
 	return nullptr;
 }
 
@@ -201,14 +201,18 @@ Mesh* AssetManager::LoadTerrain(const std::string& path)
  */
 Material* AssetManager::GetMaterial(const std::string& path)
 {
+	AssetMtx.lock();
 	//return if material is already loaded
 	auto mat = m_materials.find(path);
+	AssetMtx.unlock();
 	if (mat != m_materials.end())
 		return mat->second;
 
 	//Load material if it doesn't exist
 	Material* material = LoadMaterial(path);
+	AssetMtx.lock();
 	m_materials[path] = material;
+	AssetMtx.unlock();
 	return material;
 
 }
@@ -233,6 +237,7 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 
 	Mesh* newmesh = fmemory::fnew<Mesh>();
 
+	//FL_ENGINE_ERROR("LOADMODEL!!!");
 	// Process rootnode
 	ProcessNode(scene->mRootNode, scene, newmesh);
 	newmesh->Setup();
@@ -292,6 +297,8 @@ u32 AssetManager::LoadTexture(std::string const& path)
 		}
 		return HDRtoCubemap(hdrTexture);
 	}
+
+	stbi_set_flip_vertically_on_load(false);
 
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	m_lastTextureType = TextureType::TEXTURE2D;
@@ -414,6 +421,7 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 */
 void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh)
 {
+	//FL_ENGINE_ERROR("ProcessNode!!!");
 	// Process each mesh located at the current node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -421,6 +429,8 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh
 		ProcessMesh(mesh, newMesh);
 	}
 	//Process children nodes.
+
+	
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessNode(node->mChildren[i], scene, newMesh);
@@ -435,6 +445,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh
 */
 void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 {
+	//FL_ENGINE_ERROR("ProcessMesh!!!");
 	// Data to load
 	size_t indexOffset = 0;
 
@@ -499,6 +510,8 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
+
+		//FL_ENGINE_ERROR("ProcessNode : {0} : {1}", face.mNumIndices);
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			newMesh->m_indexArray.push_back(face.mIndices[j]);
@@ -546,7 +559,7 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
-	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("Rendering/Shader/VS_CubeMapShader.vert", "Rendering/Shader/PS_CubeMapShader.frag");
+	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/VS_CubeMapShader.vert", "../Falcon/Rendering/Shader/PS_CubeMapShader.frag");
 	m_cubeShader->UseShader();
 
 
@@ -590,7 +603,9 @@ Font* AssetManager::GetFont(std::string const &path)
 
 	//Load material if it doesn't exist
 	Font* font = LoadFont(path);
+	AssetMtx.lock();
 	m_fonts[path] = font;
+	AssetMtx.unlock();
 	return font;
 }
 

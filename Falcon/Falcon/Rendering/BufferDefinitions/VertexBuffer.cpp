@@ -1,5 +1,6 @@
 #include "VertexBuffer.h"
 
+boost::mutex VertexBuffer::VBMtx;
 
 /**
 * Main Constructor for the Vertex Buffer
@@ -29,7 +30,9 @@ VertexBuffer::~VertexBuffer()
 */
 void VertexBuffer::Bind() const
 {
+	VBMtx.lock();
 	glBindBuffer(GL_ARRAY_BUFFER, m_renderBufferId);// binds the buffer to the current context
+	VBMtx.unlock();
 }
 
 /**
@@ -37,7 +40,9 @@ void VertexBuffer::Bind() const
 */
 void VertexBuffer::Unbind() const
 {
+	VBMtx.lock();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);			//unbinds the buffer frpom the current context
+	VBMtx.unlock();
 }
 
 void VertexBuffer::BufferData(const void* data, size_t size, u32 drawType)

@@ -1,9 +1,12 @@
 #ifndef MEMORYINTERFACE_H
 #define MEMORYINTERFACE_H
 
+#include <Types.h>
 #include <cstddef>
 namespace fmemory
 {
+	static boost::mutex MemMtx;
+
 	/**
 	* <p>Initiates the memory manager. Needs to be called 
 	* before running any code which uses any fmemory features.</p>

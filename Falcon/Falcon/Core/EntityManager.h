@@ -3,13 +3,9 @@
 
 #include <string>
 #include <fstream>
-#include <boost/container/vector.hpp>
-#include <boost/unordered_map.hpp>
-#include <glm/glm.hpp>
+#include <Types.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glm/vec3.hpp>
 
 
 #include <AssetManager.h>

@@ -3,11 +3,9 @@
 
 #include <cstdlib>
 
+#include "UIManager.h"
 #include "Shader.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <boost/container/set.hpp>
-#include <boost/container/flat_map.hpp>
+#include "System/Types.h"
 
 #include <Events/RenderEvent.h>
 #include <Events/EventManager.h>
@@ -26,11 +24,6 @@ struct RenderEvent;
 class EventSystem;
 class Renderable;
 class Mesh;
-
-//TODO: REMOVE THIS
-class Label;
-
-void PrintReception();
 
 /**
 * Class Definition for a Render Event System which will respond to all Render Type Events.
@@ -66,6 +59,7 @@ public:
 	void PrintReception();
 };
 
+class GLFWwindow;
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
@@ -74,23 +68,33 @@ public:
 class Renderer
 {
 	RenderEventSystem* m_RES;
+	UI::UI_Manager* m_UI = nullptr;
+	GLFWwindow* m_window;
 	glm::mat4 m_projection;
-	boost::container::vector<RenderPass*, fmemory::StackSTLAllocator<RenderPass*>> m_renderPasses;
-	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* m_entities;
+	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
+	static GLFWwindow* m_win;
 
-	//TODO: REMOVE
-	Renderable* can;
-	Label* l;
+
 public:
 	Renderer();
 	~Renderer();
 
-	void Init();
-	void CreateDrawStates();
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities, glm::mat4 projection);
-	void Update(Camera& cam,float deltaTime, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entities);
-	void Draw(Camera &cam);
+	inline UI::UI_Manager* GetUI() { return m_UI; }
+
+	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
+	void Ingame_Draw(Camera& cam);
+
+	void Pause_Draw();
+	void Pause_Update();
+
+	void Menu_Update();
+	void Menu_Draw();
+
+	void Init(GLFWwindow* window);
+	void CreateDrawStates(GLFWwindow* win);
+	void SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection);
 };
 
 #endif // !RENDERER_H

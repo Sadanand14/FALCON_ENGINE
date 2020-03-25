@@ -1,27 +1,26 @@
 #include "Canvas.h"
 
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#include <nuklear.h>
-
 #include "Texture.h"
 #include "CanvasItems/CanvasItem.h"
+#include "WindowData.h"
 
-Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
+/**
+ * Canvas constructor
+ */
+UI::Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
 {
-	//TODO: AUTO LOAD SHADERS
+
 }
 
-void Canvas::Setup()
+/**
+ * Setups up buffers and shaders for a canvas
+ */
+void UI::Canvas::Setup()
 {
 	Renderable::Setup();
 
 	m_material = fmemory::fnew<Material>();
-	m_material->m_shader = fmemory::fnew<Shader>("Rendering/Shader/UI.vert", "Rendering/Shader/UI.frag");
+	m_material->m_shader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/UI.vert", "../Falcon/Rendering/Shader/UI.frag");
 
 	//Init command buffer
 	nk_buffer_init_default(&m_cmds);
@@ -32,11 +31,14 @@ void Canvas::Setup()
 	m_VBO->Bind();
 	m_VAO->AddVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(UIVertex), 0, 0);
 	m_VAO->AddVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(UIVertex), offsetof(UIVertex, uv), 0);
-	m_VAO->AddVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(UIVertex), offsetof(UIVertex, color), 0);
+	m_VAO->AddVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(UIVertex), offsetof(UIVertex, color), 0);
 	m_VBO->Unbind();
 }
 
-void Canvas::Bind()
+/**
+ * Binds a canvas for rendering
+ */
+void UI::Canvas::Bind()
 {
 	Renderable::Bind();
 	m_VBO->BufferData(nullptr, m_maxVerts, GL_STREAM_DRAW);
@@ -45,13 +47,26 @@ void Canvas::Bind()
 	m_IBO->Bind();
 }
 
-void Canvas::CallDrawCommands(nk_context* ctx)
+/**
+ * Calls the nuklear draw commands for all canvas items
+ */
+void UI::Canvas::CallDrawCommands(nk_context* ctx)
 {
-	for(u32 i = 0; i < m_canvasItems.size(); i++)
+	nk_window_set_bounds(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y));
+	nk_begin(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR);
+	nk_layout_space_begin(ctx, NK_DYNAMIC, WindowData::windowSize.y, INT_MAX);
+
+	for (u32 i = 0; i < m_canvasItems.size(); i++)
 		m_canvasItems[i]->Draw(ctx);
+
+	nk_layout_space_end(ctx);
+	nk_end(ctx);
 }
 
-Canvas::~Canvas()
+/**
+ * Free extra memory used by the canvas
+ */
+UI::Canvas::~Canvas()
 {
 	nk_buffer_free(&m_cmds);
 	fmemory::fdelete(m_material);

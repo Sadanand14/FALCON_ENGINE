@@ -1,12 +1,15 @@
 #include "VertexArray.h"
 
+boost::mutex VertexArray::VAOMtx;
 
 /**
-* Main Constructor for the Vertex Array Object Class. 
+* Main Constructor for the Vertex Array Object Class.
 */
 VertexArray::VertexArray():m_rendererID(0)
 {
+	VAOMtx.lock();
 	glGenVertexArrays(1, &m_rendererID);// generates a vertex Array
+	VAOMtx.unlock();
 }
 
 /**
@@ -17,7 +20,7 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_rendererID);// deletes the vertex array
 }
 
-void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u32 offset, u32 divisor)
+void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normalize, u32 byteSize, u32 offset, u64 divisor)
 {
 	//Vertex attribute pointers
 	glEnableVertexAttribArray(loc);	// enables the locations for those attributes
@@ -30,7 +33,9 @@ void VertexArray::AddVertexAttribPointer(u32 loc, u32 size, u32 type, u32 normal
 */
 void VertexArray::Bind() const
 {
+	VAOMtx.lock();
 	glBindVertexArray(m_rendererID);// binds the vertex array object to the current context
+	VAOMtx.unlock();
 }
 
 /**
@@ -38,5 +43,7 @@ void VertexArray::Bind() const
 */
 void VertexArray::Unbind() const
 {
+	VAOMtx.lock();
 	glBindVertexArray(0);// unbinds the array
+	VAOMtx.unlock();
 }

@@ -1,162 +1,482 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Core\AssetManager.cpp" />
-    <ClCompile Include="Rendering\WindowHandler.cpp" />
-    <ClCompile Include="Rendering\Camera.cpp" />
-    <ClCompile Include="System\Game.cpp" />
-    <ClCompile Include="System\glad.c" />
-    <ClCompile Include="System\InputReceiver.cpp" />
-    <ClCompile Include="System\Log.cpp" />
-    <ClCompile Include="System\ThreadPool.cpp" />
-    <ClCompile Include="System\Timer.cpp" />
-    <ClCompile Include="System\Memory\Allocator.cpp" />
-    <ClCompile Include="System\Memory\MemoryInterface.cpp" />
-    <ClCompile Include="System\Memory\PoolAllocator.cpp" />
-    <ClCompile Include="System\Memory\StackAllocator.cpp" />
-    <ClCompile Include="Core\Events\EventManager.cpp" />
-    <ClCompile Include="Core\Events\EventSystem.cpp" />
-    <ClCompile Include="Core\Events\KeyEvents.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Material.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Mesh.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Renderer.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Shader.cpp" />
-    <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp" />
-    <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
-    <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
-    <ClCompile Include="System\Application.cpp" />
-    <ClCompile Include="Core\Scene\SceneGraph.cpp" />
-    <ClCompile Include="Core\EntityManager.cpp" />
-    <ClCompile Include="Physics\Physics.cpp" />
-    <ClCompile Include="Physics\PhysicsSystem.cpp" />
-    <ClCompile Include="Physics\PXMathUtils.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Octree.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Particle.cpp" />
-    <ClCompile Include="Rendering\ParticleSystem.cpp" />
-    <ClCompile Include="Rendering\PipeLine\MeshRenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\ParticleRenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Renderable.cpp" />
-    <ClCompile Include="Rendering\PipeLine\RenderPass.cpp" />
-    <ClCompile Include="Rendering\PipeLine\TransparentRenderPass.cpp" />
-    <ClCompile Include="Physics\PXUtils.cpp" />
-    <ClCompile Include="Physics\RayCast.cpp" />
-    <ClCompile Include="Physics\vehicle\Vehicle.cpp" />
-    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp" />
-    <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp" />
-    <ClCompile Include="Physics\vehicle\CarAPI.cpp" />
-    <ClCompile Include="Rendering\PipeLine\SkyRenderPass.cpp" />
-    <ClCompile Include="Rendering\stb_image_dds_implementation.cpp" />
-    <ClCompile Include="Audio\AudioEngine.cpp" />
-    <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp" />
-    <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp" />
-    <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />
-    <ClCompile Include="Rendering\PipeLine\CanvasRenderPass.cpp" />
-    <ClCompile Include="Rendering\WindowData.cpp" />
-    <ClCompile Include="Rendering\Font.cpp" />
+    <Filter Include="Audio">
+      <UniqueIdentifier>{9718D90C-032D-01BE-CCAE-A41D3882FDEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Components">
+      <UniqueIdentifier>{83E0320B-EF6B-A0CF-F87C-23C46487FCCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Events">
+      <UniqueIdentifier>{52201B74-BED5-9369-47CA-8D40B37E8A6D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scene">
+      <UniqueIdentifier>{CB0B2ACE-B7C3-6B1B-20CB-44770CA2060C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{888B590D-F46A-D8A8-FD82-637F69E13E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\vehicle">
+      <UniqueIdentifier>{F7EC6C98-6378-DA5C-6C89-5D51D893365D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\BufferDefinitions">
+      <UniqueIdentifier>{E8CFBC74-54DD-EA5A-DDC3-E64549D0B611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\PipeLine">
+      <UniqueIdentifier>{483AA129-341E-627F-9D7E-5CD289814C01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\PipeLine\CanvasItems">
+      <UniqueIdentifier>{15C1421A-01E7-0C81-EA2C-924CD6F1314D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\PipeLine\RenderPasses">
+      <UniqueIdentifier>{6666A198-D249-B0D8-DB4C-DE1447AF7629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{6AD049D2-5672-74A8-3F2D-88FC2B6EFBF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Memory">
+      <UniqueIdentifier>{92AC5173-FE6C-CDA9-C7A7-162733271286}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\AssetManager.h" />
-    <ClInclude Include="Core\EntityInterface.h" />
-    <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
-    <ClInclude Include="Rendering\stb_image.h" />
-    <ClInclude Include="Rendering\WindowHandler.h" />
-    <ClInclude Include="Rendering\Camera.h" />
-    <ClInclude Include="System\framework.h" />
-    <ClInclude Include="System\Game.h" />
-    <ClInclude Include="System\InputReceiver.h" />
-    <ClInclude Include="System\Log.h" />
-    <ClInclude Include="System\targetver.h" />
-    <ClInclude Include="System\ThreadPool.h" />
-    <ClInclude Include="System\TimeBenchmark.h" />
-    <ClInclude Include="System\Timer.h" />
-    <ClInclude Include="System\Types.h" />
-    <ClInclude Include="System\TypeToInt.h" />
-    <ClInclude Include="System\Memory\Allocator.hpp" />
-    <ClInclude Include="System\Memory\fmemory.h" />
-    <ClInclude Include="System\Memory\fnew.h" />
-    <ClInclude Include="System\Memory\MemoryInterface.h" />
-    <ClInclude Include="System\Memory\PoolAllocator.hpp" />
-    <ClInclude Include="System\Memory\STLMemoryInterface.h" />
-    <ClInclude Include="System\Memory\StackAllocator.h" />
-    <ClInclude Include="System\Memory\StackSTLAllocator.h" />
-    <ClInclude Include="Core\Components\TransformComponent.h" />
-    <ClInclude Include="Core\Components\AnimationComponent.h" />
-    <ClInclude Include="Core\Components\PhysicsComponent.h" />
-    <ClInclude Include="Core\Components\AudioComponent.h" />
-    <ClInclude Include="Core\Components\AIComponent.h" />
-    <ClInclude Include="Core\Components\BasicComponent.h" />
-    <ClInclude Include="Core\Components\InputComponent.h" />
-    <ClInclude Include="Core\Components\CameraComponent.h" />
-    <ClInclude Include="Core\Events\Event.h" />
-    <ClInclude Include="Core\Events\EventManager.h" />
-    <ClInclude Include="Core\Events\EventSystem.h" />
-    <ClInclude Include="Core\Events\KeyEvents.h" />
-    <ClInclude Include="Core\Events\RenderEvent.h" />
-    <ClInclude Include="Rendering\PipeLine\Material.h" />
-    <ClInclude Include="Rendering\PipeLine\Mesh.h" />
-    <ClInclude Include="Rendering\PipeLine\Renderer.h" />
-    <ClInclude Include="Rendering\PipeLine\Shader.h" />
-    <ClInclude Include="Rendering\PipeLine\Texture.h" />
-    <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h" />
-    <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h" />
-    <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
-    <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
-    <ClInclude Include="Core\Scene\SceneGraph.h" />
-    <ClInclude Include="Core\EntityManager.h" />
-    <ClInclude Include="Physics\Physics.h" />
-    <ClInclude Include="Physics\PhysicsSystem.h" />
-    <ClInclude Include="Physics\PXMathUtils.h" />
-    <ClInclude Include="Rendering\PipeLine\Octree.h" />
-    <ClInclude Include="Rendering\PipeLine\Particle.h" />
-    <ClInclude Include="Rendering\PipeLine\ParticleData.h" />
-    <ClInclude Include="Rendering\ParticleSystem.h" />
-    <ClInclude Include="Core\Events\ParticleEvent.h" />
-    <ClInclude Include="Core\Components\ParticleEmitterComponent.h" />
-    <ClInclude Include="Rendering\PipeLine\MeshRenderPass.h" />
-    <ClInclude Include="Rendering\PipeLine\ParticleRenderPass.h" />
-    <ClInclude Include="Rendering\PipeLine\Renderable.h" />
-    <ClInclude Include="Rendering\PipeLine\RenderPass.h" />
-    <ClInclude Include="Core\Components\RenderComponent.h" />
-    <ClInclude Include="Rendering\PipeLine\TransparentRenderPass.h" />
-    <ClInclude Include="Core\Events\PassingMeshEvent.h" />
-    <ClInclude Include="Physics\PXUtils.h" />
-    <ClInclude Include="Physics\RayCast.h" />
-    <ClInclude Include="Physics\vehicle\Vehicle.h" />
-    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h" />
-    <ClInclude Include="Physics\vehicle\VehicleFilterShader.h" />
-    <ClInclude Include="Physics\vehicle\WheelQueryResult.h" />
-    <ClInclude Include="Physics\vehicle\CarAPI.h" />
-    <ClInclude Include="Rendering\PipeLine\SkyRenderPass.h" />
-    <ClInclude Include="Rendering\stb_dds.h" />
-    <ClInclude Include="Core\Events\PassToRenderer.h" />
-    <ClInclude Include="Audio\AudioEngine.h" />
-    <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h" />
-    <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h" />
-    <ClInclude Include="Rendering\PipeLine\Canvas.h" />
-    <ClInclude Include="Rendering\PipeLine\CanvasRenderPass.h" />
-    <ClInclude Include="Rendering\WindowData.h" />
-    <ClInclude Include="Rendering\Font.h" />
-    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h" />
+    <ClInclude Include="Audio\AudioEngine.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AssetManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\AIComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\AnimationComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\AudioComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\BasicComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\CameraComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\InputComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\ParticleEmitterComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\PhysicsComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\RenderComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\TransformComponent.h">
+      <Filter>Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EntityInterface.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EntityManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\Event.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\EventManager.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\EventSystem.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\KeyEvents.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\ParticleEvent.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\PassToRenderer.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\PassingMeshEvent.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\RenderEvent.h">
+      <Filter>Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene\SceneGraph.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PXMathUtils.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PXUtils.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\RayCast.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\CarAPI.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\Vehicle.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\VehicleFilterShader.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\VehicleInputHandler.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\VehicleSceneQuery.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\vehicle\WheelQueryResult.h">
+      <Filter>Physics\vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\BufferDefinitions\IndexBuffer.h">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\BufferDefinitions\VertexArray.h">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Camera.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Font.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\OpenGLErrorHandler.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\ParticleSystem.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Canvas.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Button.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\CanvasItem.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Image.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Label.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Panel.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\CanvasItems\Slider.h">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Material.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Mesh.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Octree.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Particle.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\ParticleData.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\RenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\Renderable.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.h">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Renderer.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Shader.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\Texture.h">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\WindowData.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\WindowHandler.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\stb_dds.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\stb_image.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Engine.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\InputReceiver.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Log.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\Allocator.hpp">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\MemoryInterface.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\PoolAllocator.hpp">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\STLMemoryInterface.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\StackAllocator.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\StackSTLAllocator.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\fmemory.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\fnew.h">
+      <Filter>System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="System\ThreadPool.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\TimeBenchmark.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Timer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Types.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\framework.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\targetver.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PipeLine\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\FragmentShader.frag" />
-    <None Include="Shader\VertexShader.vert" />
-    <None Include="Rendering\Shader\FragmentShader.frag" />
-    <None Include="Rendering\Shader\VertexShader.vert" />
-    <None Include="Rendering\Shader\Particle.frag" />
-    <None Include="Rendering\Shader\Particle.vert" />
-    <None Include="Rendering\Shader\Post.frag" />
-    <None Include="Rendering\Shader\Post.vert" />
-    <None Include="Rendering\Shader\Sky.frag" />
-    <None Include="Rendering\Shader\Sky.vert" />
-    <None Include="Rendering\Shader\Skybox.vert" />
-    <None Include="Rendering\Shader\Skybox.frag" />
+    <ClCompile Include="Audio\AudioEngine.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\AssetManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EntityManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Events\EventManager.cpp">
+      <Filter>Core\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Events\EventSystem.cpp">
+      <Filter>Core\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Events\KeyEvents.cpp">
+      <Filter>Core\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\SceneGraph.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PXMathUtils.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PXUtils.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsSystem.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\RayCast.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\vehicle\CarAPI.cpp">
+      <Filter>Physics\vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\vehicle\Vehicle.cpp">
+      <Filter>Physics\vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\vehicle\VehicleFilterShader.cpp">
+      <Filter>Physics\vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\vehicle\VehicleSceneQuery.cpp">
+      <Filter>Physics\vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\BufferDefinitions\IndexBuffer.cpp">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp">
+      <Filter>Rendering\BufferDefinitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Camera.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Font.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ParticleSystem.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Canvas.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Button.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\CanvasItem.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Image.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Label.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Panel.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\CanvasItems\Slider.cpp">
+      <Filter>Rendering\PipeLine\CanvasItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Material.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Mesh.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Octree.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Particle.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\CanvasRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\MeshRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\ParticleRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\QuadRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\RenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\Renderable.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\SkyRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\TransparentRenderPass.cpp">
+      <Filter>Rendering\PipeLine\RenderPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Renderer.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\Shader.cpp">
+      <Filter>Rendering\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\WindowData.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\WindowHandler.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\stb_image_dds_implementation.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Engine.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\InputReceiver.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Log.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\Allocator.cpp">
+      <Filter>System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\MemoryInterface.cpp">
+      <Filter>System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\PoolAllocator.cpp">
+      <Filter>System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\StackAllocator.cpp">
+      <Filter>System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="System\ThreadPool.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Timer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\glad.c">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Rendering\Shader\Transparent.frag" />
-    <None Include="Rendering\Shader\Transparent.vert" />
-    <None Include="Rendering\Shader\VS_CubeMapShader.vert" />
-    <None Include="Rendering\Shader\PS_CubeMapShader.frag" />
-    <None Include="Rendering\Shader\UI.vert" />
-    <None Include="Rendering\Shader\UI.frag" />
   </ItemGroup>
 </Project>
