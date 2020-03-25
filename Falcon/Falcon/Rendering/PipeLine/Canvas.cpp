@@ -7,7 +7,7 @@
 /**
  * Canvas constructor
  */
-Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
+UI::Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
 {
 
 }
@@ -15,7 +15,7 @@ Canvas::Canvas() : m_VBO(nullptr), m_IBO(nullptr)
 /**
  * Setups up buffers and shaders for a canvas
  */
-void Canvas::Setup()
+void UI::Canvas::Setup()
 {
 	Renderable::Setup();
 
@@ -38,7 +38,7 @@ void Canvas::Setup()
 /**
  * Binds a canvas for rendering
  */
-void Canvas::Bind()
+void UI::Canvas::Bind()
 {
 	Renderable::Bind();
 	m_VBO->BufferData(nullptr, m_maxVerts, GL_STREAM_DRAW);
@@ -50,7 +50,7 @@ void Canvas::Bind()
 /**
  * Calls the nuklear draw commands for all canvas items
  */
-void Canvas::CallDrawCommands(nk_context* ctx)
+void UI::Canvas::CallDrawCommands(nk_context* ctx)
 {
 	nk_window_set_bounds(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y));
 	nk_begin(ctx, "Canvas", nk_rect(0, 0, WindowData::windowSize.x, WindowData::windowSize.y), NK_WINDOW_NO_SCROLLBAR);
@@ -66,7 +66,7 @@ void Canvas::CallDrawCommands(nk_context* ctx)
 /**
  * Free extra memory used by the canvas
  */
-Canvas::~Canvas()
+UI::Canvas::~Canvas()
 {
 	nk_buffer_free(&m_cmds);
 	fmemory::fdelete(m_material);

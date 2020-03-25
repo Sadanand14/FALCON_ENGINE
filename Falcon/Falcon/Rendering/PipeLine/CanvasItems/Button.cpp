@@ -5,7 +5,7 @@
 /**
  * Constructor for a label
  */
-Button::Button() : CanvasItem(), m_wrap(false), m_font(AssetManager::GetFont("default")),
+UI::Button::Button() : CanvasItem(), m_wrap(false), m_font(AssetManager::GetFont("default")),
 m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
 m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
 m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0)), m_borderColor(nk_rgba(0, 0, 0, 0))
@@ -16,7 +16,7 @@ m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0)), m_borderColor(nk_rg
 /**
  * Button destructor
  */
-Button::~Button()
+UI::Button::~Button()
 {
 
 }
@@ -25,7 +25,7 @@ Button::~Button()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Button::Commands(nk_context* ctx)
+void UI::Button::Commands(nk_context* ctx)
 {
 	ctx->style.button.normal = nk_style_item_color(m_buttonNormal);
 	ctx->style.button.hover = nk_style_item_color(m_buttonHover);

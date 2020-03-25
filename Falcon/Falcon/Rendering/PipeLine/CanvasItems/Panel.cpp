@@ -14,7 +14,7 @@
 /**
  * Constructor for a panel
  */
-Panel::Panel() : CanvasItem()
+UI::Panel::Panel() : CanvasItem()
 {
 
 }
@@ -22,7 +22,7 @@ Panel::Panel() : CanvasItem()
 /**
  * Panel destructor
  */
-Panel::~Panel()
+UI::Panel::~Panel()
 {
 
 }
@@ -31,7 +31,7 @@ Panel::~Panel()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Panel::Commands(nk_context* ctx)
+void UI::Panel::Commands(nk_context* ctx)
 {
 	struct nk_rect bounds = nk_layout_space_bounds(ctx);
 	bounds = nk_rect(bounds.x * m_bounds.x, bounds.y * m_bounds.y, bounds.w * m_bounds.w, bounds.h * m_bounds.h);

@@ -1,10 +1,9 @@
 #include "Image.h"
 
-
 /**
  * Constructor for an imagae
  */
-Image::Image() : CanvasItem()
+UI::Image::Image() : CanvasItem()
 {
 
 }
@@ -12,7 +11,7 @@ Image::Image() : CanvasItem()
 /**
  * Image destructor
  */
-Image::~Image()
+UI::Image::~Image()
 {
 
 }
@@ -21,7 +20,7 @@ Image::~Image()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Image::Commands(nk_context* ctx)
+void UI::Image::Commands(nk_context* ctx)
 {
 	nk_image(ctx, m_img);
 }

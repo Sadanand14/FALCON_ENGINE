@@ -6,7 +6,7 @@
 /**
  * Constructor for a slider
  */
-Slider::Slider() : CanvasItem()
+UI::Slider::Slider() : CanvasItem()
 {
 
 }
@@ -14,7 +14,7 @@ Slider::Slider() : CanvasItem()
 /**
  * Slider destructor
  */
-Slider::~Slider()
+UI::Slider::~Slider()
 {
 
 }
@@ -23,7 +23,7 @@ Slider::~Slider()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Slider::Commands(nk_context* ctx)
+void UI::Slider::Commands(nk_context* ctx)
 {
 	nk_slider_float(ctx, m_minValue, &m_curValue, m_maxValue, m_step);
 }
