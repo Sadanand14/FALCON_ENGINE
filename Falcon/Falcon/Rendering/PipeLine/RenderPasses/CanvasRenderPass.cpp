@@ -127,7 +127,11 @@
 				if (!cmd->elem_count)
 					continue;
 				//Set texturing and scissor test
-				glBindTexture(GL_TEXTURE_2D, cmd->texture.id);
+
+				if(glIsTexture(cmd->texture.id))
+					glBindTexture(GL_TEXTURE_2D, cmd->texture.id);
+				else
+					glBindTexture(GL_TEXTURE_2D, can->GetMaterial()->m_albedoTex.textureID);
 				glScissor(cmd->clip_rect.x,
 					(WindowData::windowSize.y - (GLint)(cmd->clip_rect.y + cmd->clip_rect.h)),
 					cmd->clip_rect.w,

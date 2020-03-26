@@ -1,6 +1,6 @@
 #include "Game.h"
 
-namespace gameLoop 
+namespace gameLoop
 {
 
 	/**
@@ -12,7 +12,7 @@ namespace gameLoop
 	/**
 	*Main Destructor.
 	*/
-	Game::~Game() 
+	Game::~Game()
 	{
 		delete m_engine;
 	}
@@ -20,13 +20,13 @@ namespace gameLoop
 	/**
 	* Game initialization function. Initializes the engine.
 	*/
-	bool Game::Init() 
+	bool Game::Init()
 	{
 		m_engine = new gameLoop::Engine();
-		
+
 
 		if (!m_engine->Initialize()) return false;
-		
+
 		m_input = m_engine->GetInput();
 		m_UI = m_engine->GetUI();
 		return true;
@@ -35,12 +35,12 @@ namespace gameLoop
 	/**
 	* Main function that runs the gameloop and handles state transition for the game.
 	*/
-	void Game::Run() 
+	void Game::Run()
 	{
 		WindowClass* window= m_engine->GetWindow();
 		while (!window->WindowCloseStatus())
 		{
-			switch (m_currentState) 
+			switch (m_currentState)
 			{
 			case STATE::MENU:
 				if (m_initMenu)
@@ -93,7 +93,7 @@ namespace gameLoop
 	/**
 	* Function for initilizing the ingame state.
 	*/
-	void Game::Game_Init() 
+	void Game::Game_Init()
 	{
 		glfwSetInputMode(m_engine->GetWindow()->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
@@ -101,9 +101,9 @@ namespace gameLoop
 	/**
 	* Function for initilizing the Menu state.
 	*/
-	void Game::Menu_Init() 
+	void Game::Menu_Init()
 	{
-		
+
 
 		boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
 		boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
@@ -183,9 +183,41 @@ namespace gameLoop
 			"",
 			f2);
 
-		m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.016, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-		m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.258, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-		m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.5, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
+		m_UI->AddSlider("THIRD_PAGE",
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec2(16.0f, 16.0f),
+						8.0f,
+						glm::vec4(0.016, 0.62, 0.22, 0.1),
+						0.0f, 1.0f, 0.1f);
+		m_UI->AddSlider("THIRD_PAGE",
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec2(16.0f, 16.0f),
+						8.0f,
+						glm::vec4(0.258, 0.62, 0.22, 0.1),
+						0.0f, 1.0f, 0.1f);
+		m_UI->AddSlider("THIRD_PAGE", glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(156, 156, 156, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec4(200, 200, 200, 255),
+						glm::vec2(16.0f, 16.0f),
+						8.0f,
+						glm::vec4(0.5, 0.62, 0.22, 0.1),
+						0.0f, 1.0f, 0.1f);
 
 		m_UI->LoadUI("FIRST_PAGE");
 	}
@@ -193,25 +225,25 @@ namespace gameLoop
 	/**
 	* Function for initilizing the pause state.
 	*/
-	void Game::PauseMenu_Init() 
+	void Game::PauseMenu_Init()
 	{
-		
+
 	}
 
 	/**
 	* Function for running the menu update loop.
 	*/
-	void Game::Menu_Update() 
+	void Game::Menu_Update()
 	{
-	
+
 	}
 
 	/**
 	* Function for running the pause update loop.
 	*/
-	void Game::PauseMenu_Update() 
+	void Game::PauseMenu_Update()
 	{
-		
+
 	}
 
 	/**
