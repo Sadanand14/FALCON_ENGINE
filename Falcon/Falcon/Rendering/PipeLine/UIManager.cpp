@@ -1,11 +1,11 @@
 #include "UIManager.h"
 
-namespace UI 
+namespace UI
 {
 	/**
 	* Main constructor. Creates and sets up the cavas object.
 	*/
-	UI_Manager::UI_Manager() 
+	UI_Manager::UI_Manager()
 	{
 		canvas = fmemory::fnew<Canvas>();
 		canvas->Setup();
@@ -14,18 +14,18 @@ namespace UI
 	/**
 	* Destructor
 	*/
-	UI_Manager::~UI_Manager() 
+	UI_Manager::~UI_Manager()
 	{
-		for (auto iterator = m_layers.begin(); iterator != m_layers.end(); ++iterator) 
+		for (auto iterator = m_layers.begin(); iterator != m_layers.end(); ++iterator)
 		{
-			for (auto item : *iterator->second) 
+			for (auto item : *iterator->second)
 			{
 				fmemory::fdelete(item);
 			}
 			fmemory::fdelete(iterator->second);
 		}
 
-		for (auto iterator = m_backgrounds.begin(); iterator != m_backgrounds.end(); ++iterator) 
+		for (auto iterator = m_backgrounds.begin(); iterator != m_backgrounds.end(); ++iterator)
 		{
 			fmemory::fdelete(iterator->second);
 		}
@@ -38,12 +38,12 @@ namespace UI
 	*
 	* @param[in] a string which basically indicates the title of the page for mapping.
 	*/
-	void UI_Manager::LoadUI(std::string page) 
+	void UI_Manager::LoadUI(std::string page)
 	{
 		canvas->ClearCanvas();
 		boost::container::vector<CanvasItem*>* itemArr = m_layers[page];
 
-		for (unsigned int i = 0; i < itemArr->size(); ++i) 
+		for (unsigned int i = 0; i < itemArr->size(); ++i)
 		{
 			itemArr->at(i)->SetActive(true);
 			canvas->AddCanvasItem(itemArr->at(i));
@@ -82,7 +82,7 @@ namespace UI
 		button->SetText(text);
 		button->SetCallback(callback);
 
-		if (m_layers.find(layer) == m_layers.end()) 
+		if (m_layers.find(layer) == m_layers.end())
 		{
 			m_layers[layer] = fmemory::fnew<boost::container::vector<CanvasItem*>>();
 		}
@@ -96,6 +96,15 @@ namespace UI
 	* Primary function for adding a slider onto a layer in UI.
 	*
 	* @param[in] a string indicating the title of the layer.
+	* @param[in] color as vec4 indicating default bar color.
+	* @param[in] color as vec4 indicating hover bar color.
+	* @param[in] color as vec4 indicating active bar color.
+	* @param[in] color as vec4 indicating filled bar color.
+	* @param[in] color as vec4 indicating default cursor color.
+	* @param[in] color as vec4 indicating hover cursor color.
+	* @param[in] color as vec4 indicating active cursor color.
+	* @param[in] the size of the cursor on the bar
+	* @param[in] the height of the bar
 	* @param[in] coordinates for diagonally opposite points of the slider box(x1,y1,x2,y2)
 	* @param[in] minimum slider value in float.
 	* @param[in] maximum slider value in float.
@@ -103,9 +112,18 @@ namespace UI
 	*
 	* @param[out] pointer to the created slider object.
 	*/
-	Slider* UI_Manager::AddSlider(std::string layer, glm::vec4 bounds, float min, float max, float step)
+	Slider* UI_Manager::AddSlider(std::string layer, glm::vec4 NBC, glm::vec4 HBC, glm::vec4 ABC, glm::vec4 FBC, glm::vec4 NCC, glm::vec4 HCC, glm::vec4 ACC, glm::vec2 cursorSize, float barHeight, glm::vec4 bounds, float min, float max, float step)
 	{
 		Slider* slider = fmemory::fnew<Slider>();
+		slider->SetBarNormalColor(NBC);
+		slider->SetBarHoverColor(HBC);
+		slider->SetBarActiveColor(ABC);
+		slider->SetBarFillColor(FBC);
+		slider->SetCursorNormalColor(NCC);
+		slider->SetCursorHoverColor(HCC);
+		slider->SetCursorActiveColor(ACC);
+		slider->SetCursorSize(cursorSize);
+		slider->SetBarHeight(barHeight);
 		slider->SetBounds(bounds);
 		slider->SetMinValue(min);
 		slider->SetMaxValue(max);
@@ -130,11 +148,11 @@ namespace UI
 	*
 	* @param[out] a pointer to the background object created.
 	*/
-	
-	Image* UI_Manager::AddImage(std::string layer, std::string title, glm::vec4 bounds) 
+
+	Image* UI_Manager::AddImage(std::string layer, std::string title, glm::vec4 bounds)
 	{
 		Texture* tex;
-		if (m_backgrounds.find(title)==m_backgrounds.end()) 
+		if (m_backgrounds.find(title)==m_backgrounds.end())
 		{
 			std::stringstream ss;
 			ss << "../Assets/Textures/UI/" << title;
@@ -142,16 +160,16 @@ namespace UI
 			tex->textureID	= AssetManager::LoadTexture(ss.str());
 			m_backgrounds[title] = tex;
 		}
-		else 
+		else
 		{
 			tex = m_backgrounds[title];
 		}
-		
+
 		Image* background = fmemory::fnew<Image>();
 		background->SetBounds(bounds);
 		background->SetImage(*tex);
-	
-			
+
+
 		if (m_layers.find(layer) == m_layers.end())
 		{
 			m_layers[layer] = fmemory::fnew<boost::container::vector<CanvasItem*>>();
@@ -168,7 +186,7 @@ namespace UI
 	* @param[in] pointer to the background object.
 	* @param[in] the name of the image file with extention as string.
 	*/
-	void UI_Manager::ChangeImage(Image* bg, std::string title) 
+	void UI_Manager::ChangeImage(Image* bg, std::string title)
 	{
 		Texture* tex;
 		if (m_backgrounds.find(title) == m_backgrounds.end())
@@ -179,7 +197,7 @@ namespace UI
 			tex->textureID = AssetManager::LoadTexture(ss.str());
 			m_backgrounds[title] = tex;
 		}
-		else 
+		else
 		{
 			tex = m_backgrounds[title];
 		}
