@@ -9,13 +9,13 @@
 
 
 
-void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity, const size_t& entity_count)
+void PhysicsSystem::update(float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity, const size_t& entity_count)
 {
 	glm::vec3 pre_sim_pos, lerp_pos, post_sim_pos;
 	glm::quat pre_sim_rot, lerp_rot, post_sim_rot;
 	const physx::PxRigidActor* actor;
 	const physx::PxShape* collider;
-	boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entitySet = entity;
+	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entitySet = entity;
 	for (size_t i = 0; i < entity_count; ++i)
 	{
 		//Update logic

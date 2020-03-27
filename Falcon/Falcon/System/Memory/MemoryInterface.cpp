@@ -40,7 +40,6 @@ namespace fmemory {
 		//intializing the lookup pointer
 		try
 		{
-
 			/**Setting up stackAllocator**/
 			stackAllocator = new StackAllocator();
 			
@@ -122,7 +121,6 @@ namespace fmemory {
 	*/
 	static PoolAllocator* LookUp(const size_t size)
 	{
-
 		//Return the block if available
 		if (size > MAX_BLOCK_SIZE)
 		{
@@ -139,10 +137,12 @@ namespace fmemory {
 
 	void* Allocate(const std::size_t size)
 	{
+		MemMtx.lock();
 		PoolAllocator* pool = LookUp(size);
 
 		if (pool)
 		{
+			MemMtx.unlock();
 			return pool->GetBlocKFromPool();
 		}
 		else
@@ -150,16 +150,15 @@ namespace fmemory {
 			//If size is greater than the max block size, it is allocated using std::malloc and needs to be freed the same way.
 			//Planning to use our allocators instead once we override new and delete 
 			FL_ENGINE_WARN("WARNING: Allocating memeory with the std functions.");
+			MemMtx.unlock();
 			return std::malloc(size);
 		}
+		
 	}
-
-	
-
-
 
 	void Free(void* ref, const std::size_t size)
 	{
+		//MemMtx.lock();
 		if (ref == nullptr)
 			return;
 		//If size is greater than the max block size, it is allocated using std::malloc and needs to be freed the same way.
@@ -173,13 +172,16 @@ namespace fmemory {
 			PoolAllocator* pool = LookUp(size);
 			pool->Release(ref);
 		}
+		//MemMtx.unlock();
 	}
 
 
 
 	void* AllocateOnStack(const std::size_t size)
 	{
+		MemMtx.lock();
 		void* ptr = stackAllocator->GetMemoryBlock(size);
+		MemMtx.unlock();
 
 		if (!ptr)
 		{

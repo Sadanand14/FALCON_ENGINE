@@ -11,7 +11,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-typedef boost::container::vector<unsigned short int, fmemory::StackSTLAllocator<unsigned short int>> IDVector;
+typedef boost::container::vector<unsigned short int, fmemory::STLAllocator<unsigned short int>> IDVector;
 
 /**
 * Stucture to hold Transform data for each entity.
@@ -47,14 +47,14 @@ public:
 		:m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f }), m_model(1.0f),
 		m_updateFlag(true), m_parentMatrix(glm::mat4())
 	{
-		octreeID.reserve(6);
+		octreeID.reserve(10);
 		RecalculateMatrix();
 	}
 
 	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true), m_parentMatrix(glm::mat4())
 	{
-		octreeID.reserve(6);
+		octreeID.reserve(10);
 		RecalculateMatrix();
 	}
 

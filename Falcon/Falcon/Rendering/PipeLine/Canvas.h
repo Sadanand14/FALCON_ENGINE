@@ -1,23 +1,25 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include "Renderable.h"
+#include "RenderPasses/Renderable.h"
 
 struct Texture;
-class CanvasItem;
 
-struct UIVertex
+namespace UI
 {
-	glm::vec2 position;
-	glm::vec2 uv;
-	nk_byte color[4];
-};
+	class CanvasItem;
+	struct UIVertex
+	{
+		glm::vec2 position;
+		glm::vec2 uv;
+		nk_byte color[4];
+	};
 
-/**
- * Canvas for rendering a 2D UI
- */
-class Canvas : public Renderable
-{
+	/**
+	 * Canvas for rendering a 2D UI
+	 */
+	class Canvas : public Renderable
+	{
 	private:
 		VertexBuffer* m_VBO;
 		IndexBuffer* m_IBO;
@@ -44,6 +46,7 @@ class Canvas : public Renderable
 		inline nk_buffer* GetCommandBuffer() { return &m_cmds; }
 		inline const nk_draw_null_texture GetNull() { return m_null; }
 		inline void AddCanvasItem(CanvasItem* canvasItem) { m_canvasItems.push_back(canvasItem); }
-};
-
+		inline void ClearCanvas() { m_canvasItems.clear(); }
+	};
+}
 #endif

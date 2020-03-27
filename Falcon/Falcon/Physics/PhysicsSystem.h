@@ -19,7 +19,7 @@ public:
 	* @param vector of entities with physics compoenent
 	* @param count of entities
 	*/
-	static void update(float dt, boost::container::vector<Entity*, fmemory::StackSTLAllocator<Entity*>>* entity, const size_t& entity_count);
+	static void update(float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entity, const size_t& entity_count);
 };
 
 #endif

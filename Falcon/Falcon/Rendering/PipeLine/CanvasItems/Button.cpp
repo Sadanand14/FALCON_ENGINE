@@ -1,15 +1,14 @@
 #include "Button.h"
 
 #include "Font.h"
-#include "AssetManager.h"
 
 /**
  * Constructor for a label
  */
-Button::Button() : CanvasItem(), m_wrap(false),  m_font(AssetManager::GetFont("default")),
-				   m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
-				   m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
-				   m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0)), m_borderColor(nk_rgba(0, 0, 0, 0))
+UI::Button::Button() : CanvasItem(), m_wrap(false), m_font(AssetManager::GetFont("default")),
+m_buttonNormal(nk_rgb(188, 188, 188)), m_buttonHover(nk_rgb(255, 255, 255)),
+m_buttonActive(nk_rgb(130, 130, 130)), m_textNormal(nk_rgb(0, 0, 0)),
+m_textHover(nk_rgb(0, 0, 0)), m_textActive(nk_rgb(0, 0, 0)), m_borderColor(nk_rgba(0, 0, 0, 0))
 {
 
 }
@@ -17,7 +16,7 @@ Button::Button() : CanvasItem(), m_wrap(false),  m_font(AssetManager::GetFont("d
 /**
  * Button destructor
  */
-Button::~Button()
+UI::Button::~Button()
 {
 
 }
@@ -26,7 +25,7 @@ Button::~Button()
  *
  * @param ctx - The nuklear context to draw to
  */
-void Button::Commands(nk_context* ctx)
+void UI::Button::Commands(nk_context* ctx)
 {
 	ctx->style.button.normal = nk_style_item_color(m_buttonNormal);
 	ctx->style.button.hover = nk_style_item_color(m_buttonHover);
@@ -37,6 +36,6 @@ void Button::Commands(nk_context* ctx)
 	ctx->style.button.text_active = m_textActive;
 	ctx->style.button.border_color = m_borderColor;
 
-	if(nk_button_label(ctx, m_text.c_str()))
+	if (nk_button_label(ctx, m_text.c_str()))
 		m_callback();
 }

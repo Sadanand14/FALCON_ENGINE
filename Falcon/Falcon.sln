@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Falcon", "Falcon\Falcon.vcxproj", "{9BB1375C-930A-4FEA-A459-D51E238DFEAF}"
+# Visual Studio 16
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FALCON_GAME", "FALCON_GAME\FALCON_GAME.vcxproj", "{51BAA851-BD6F-2147-4664-1B1EB218184B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Falcon", "Falcon\Falcon.vcxproj", "{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,16 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9BB1375C-930A-4FEA-A459-D51E238DFEAF}.Debug|x64.ActiveCfg = Debug|x64
-		{9BB1375C-930A-4FEA-A459-D51E238DFEAF}.Debug|x64.Build.0 = Debug|x64
-		{9BB1375C-930A-4FEA-A459-D51E238DFEAF}.Release|x64.ActiveCfg = Release|x64
-		{9BB1375C-930A-4FEA-A459-D51E238DFEAF}.Release|x64.Build.0 = Release|x64
+		{51BAA851-BD6F-2147-4664-1B1EB218184B}.Debug|x64.ActiveCfg = Debug|x64
+		{51BAA851-BD6F-2147-4664-1B1EB218184B}.Debug|x64.Build.0 = Debug|x64
+		{51BAA851-BD6F-2147-4664-1B1EB218184B}.Release|x64.ActiveCfg = Release|x64
+		{51BAA851-BD6F-2147-4664-1B1EB218184B}.Release|x64.Build.0 = Release|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Debug|x64.ActiveCfg = Debug|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Debug|x64.Build.0 = Debug|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Release|x64.ActiveCfg = Release|x64
+		{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BD13E7DF-6930-4FEF-9519-07532E40ADB3}
 	EndGlobalSection
 EndGlobal

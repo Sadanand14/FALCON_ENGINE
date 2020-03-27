@@ -5,14 +5,16 @@
 
 #include "CanvasItem.h"
 #include "System/Types.h"
+#include "AssetManager.h"
 
-class Font;
-
-/**
- * A basic label
- */
-class Label : public CanvasItem
+namespace UI
 {
+	/**
+	 * A basic label
+	 */
+	class Label : public CanvasItem
+	{
+
 	protected:
 		bool m_wrap;
 		std::string m_text;
@@ -29,7 +31,7 @@ class Label : public CanvasItem
 		inline void SetText(std::string txt) { m_text = txt; }
 		inline void SetAlignment(nk_flags alignment) { m_hAlignment = alignment; }
 		inline void SetVerticalAlignment(nk_flags alignment) { m_vAlignment = alignment; }
-		inline void SetTextColor(nk_color color) { m_textColor = color; }
-};
-
+		inline void SetTextColor(glm::vec4 color) { m_textColor = nk_rgba(color.x, color.y, color.z,color.w); }
+	};
+}
 #endif

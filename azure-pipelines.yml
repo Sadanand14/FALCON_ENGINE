@@ -17,6 +17,12 @@ variables:
 
 
 steps:
+
+- script: |
+    GenProject.bat
+  workingDirectory: 'Falcon'
+  displayName: 'Running premake'
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -37,14 +43,10 @@ steps:
     pip install requests 
   displayName: 'Install required python modules'
 
-- script: | 
+- script: |
     python tools/setup_vendor.py
   displayName: 'Setting up vendors'
 
-#- script: | 
-#    GenProject.bat
-#  workingDirectory: 'Falcon'
-#  displayName: 'Running premake'
 
 
 - task: VSBuild@1

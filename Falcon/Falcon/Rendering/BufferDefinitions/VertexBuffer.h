@@ -11,6 +11,7 @@ class VertexBuffer
 {
 private:
 	u32 m_renderBufferId;
+	static boost::mutex VBMtx;
 
 public:
 	VertexBuffer(const void*,size_t size, u32 drawType);

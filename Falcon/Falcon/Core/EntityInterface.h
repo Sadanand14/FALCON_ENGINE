@@ -3,8 +3,8 @@
 
 #include <map>
 #include <vector>
+#include <Types.h>
 #include <PipeLine/Material.h>
-#include <glm/glm.hpp>
 #include <Log.h>
 
 
@@ -20,9 +20,6 @@
 
 #pragma warning( push )
 #pragma warning( disable: 26451 26439 6285)
-
-#include <smart_ptr.hpp>
-#include <boost/container/map.hpp>
 
 #pragma warning( pop )
 
