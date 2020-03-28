@@ -15,8 +15,10 @@ class Waypoint
 		Waypoint();
 
 		void AddWaypoint(glm::vec3 point);
+		void AddBezierWaypoint(glm::vec3 nextPoint, glm::vec3 controlB, glm::vec3 controlC, float sampleRate);
 		glm::vec3 NextWaypoint();
 		glm::vec3 GetCurrentWaypoint();
+		inline boost::container::vector<glm::vec3, fmemory::STLAllocator<glm::vec3>>* GetWaypoints() { return &m_points; }
 };
 
 #endif
