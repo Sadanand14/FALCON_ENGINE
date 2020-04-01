@@ -117,12 +117,12 @@ IF EXIST "..\Falcon\vendor\FMODStudioAPI\api\studio\lib\x64"\ (xcopy /Q /E /Y /I
     <ClCompile Include="Game\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Falcon\Falcon.vcxproj">
       <Project>{785640B2-64F8-6A88-4DB3-7EDC39F4F1D8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

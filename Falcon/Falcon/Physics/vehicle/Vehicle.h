@@ -246,12 +246,29 @@ namespace physics
 			~Car() = default;
 		};
 		
+
+
+		/**
+		* Controller class to handle car which exposes movement API for car motions. 
+		*/
+		class CarController
+		{
+		public:
+			CarController(bool mimicInput = false);
+			~CarController() = default;
+			void SetDriveMode(DriveMode drivemode, Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData);
+			inline bool ShouldMimicInput() const { return mMimicInput; }
+		private:
+			bool mMimicInput;
+		};
+
 		/**
 		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
 		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
 
 		extern boost::container::vector<Car*>gCars;
+		extern boost::container::vector<CarController*>gCarControllers;
 		extern boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;

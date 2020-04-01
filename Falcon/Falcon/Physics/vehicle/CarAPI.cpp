@@ -224,7 +224,7 @@ namespace physics
 				//Increment to next driving mode.
 				gVehicleModeTimer = 0.0f;
 				gVehicleOrderProgress++;
-				releaseAllControls(car, vehicleInputData);
+				ReleaseAllControls(car, vehicleInputData);
 
 				//If we are at the end of the list of driving modes then start again.
 				if (eDRIVE_MODE_NONE == gDriveModeOrder[gVehicleOrderProgress])
@@ -238,25 +238,25 @@ namespace physics
 				switch (eDriveMode)
 				{
 				case eDRIVE_MODE_ACCEL_FORWARDS:
-					startAccelerateForwardsMode(car, vehicleInputData);
+					StartAccelerateForwardsMode(car, vehicleInputData);
 					break;
 				case eDRIVE_MODE_ACCEL_REVERSE:
-					startAccelerateReverseMode(car, vehicleInputData);
+					StartAccelerateReverseMode(car, vehicleInputData);
 					break;
 				case eDRIVE_MODE_HARD_TURN_LEFT:
-					startTurnHardLeftMode(car , vehicleInputData);
+					StartTurnHardLeftMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HANDBRAKE_TURN_LEFT:
-					startHandbrakeTurnLeftMode(car , vehicleInputData);
+					StartHandbrakeTurnLeftMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HARD_TURN_RIGHT:
-					startTurnHardRightMode(car , vehicleInputData);
+					StartTurnHardRightMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_HANDBRAKE_TURN_RIGHT:
-					startHandbrakeTurnRightMode(car , vehicleInputData);
+					StartHandbrakeTurnRightMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_BRAKE:
-					startBrakeMode(car , vehicleInputData);
+					StartBrakeMode(car , vehicleInputData);
 					break;
 				case eDRIVE_MODE_NONE:
 					break;
@@ -473,7 +473,7 @@ namespace physics
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
 
-		void startAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -490,7 +490,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
 
@@ -509,7 +509,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -526,7 +526,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -545,7 +545,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -564,7 +564,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -583,7 +583,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{
@@ -603,7 +603,7 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void releaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void ReleaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			if (gMimicKeyInputs)
 			{

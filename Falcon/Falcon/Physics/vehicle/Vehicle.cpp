@@ -15,6 +15,7 @@ namespace physics
 		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
 		boost::container::vector<Car*>gCars;
+		boost::container::vector<CarController*>gCarControllers;
 		physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		boost::container::vector<physx::PxVehicleWheelQueryResult> gvehicleQueryResults;
@@ -262,6 +263,64 @@ namespace physics
 		}
 
 
+
+
+
+		CarController::CarController(bool mimicInput /*=false*/)
+			:mMimicInput(mimicInput)
+		{
+			//Making car stay still at the begining
+			//ReleaseAllControls(car, vehicleInputData);
+		}
+
+		void CarController::SetDriveMode(DriveMode drivemode, Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		{
+			ReleaseAllControls(car, vehicleInputData);
+
+			//Start driving in the selected mode.
+			//DriveMode eDriveMode = gDriveModeOrder[gVehicleOrderProgress];
+			switch (drivemode)
+			{
+			case eDRIVE_MODE_ACCEL_FORWARDS:
+				StartAccelerateForwardsMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_ACCEL_REVERSE:
+				StartAccelerateReverseMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_HARD_TURN_LEFT:
+				StartTurnHardLeftMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_HANDBRAKE_TURN_LEFT:
+				StartHandbrakeTurnLeftMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_HARD_TURN_RIGHT:
+				StartTurnHardRightMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_HANDBRAKE_TURN_RIGHT:
+				StartHandbrakeTurnRightMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_BRAKE:
+				StartBrakeMode(car, vehicleInputData);
+				break;
+			case eDRIVE_MODE_NONE:
+				break;
+			};
+
+			//If the mode about to Start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
+			/*if (eDRIVE_MODE_ACCEL_REVERSE == gDriveModeOrder[gVehicleOrderProgress])
+			{
+				car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
+			}*/
+		}
+
+
+
+
+
+
+
+
+
 		/**
 		* Car Creation API
 		* @param Rigiddynamic* to the actor
@@ -273,7 +332,9 @@ namespace physics
 			//Register car to the global car data
 			gCars.push_back(car);
 			gVehicles.push_back(car->m_car);
-
+			//Create a car controller
+			CarController* controller = fmemory::fnew<CarController>(false);
+			gCarControllers.push_back(controller);
 		}
 
 		/**
@@ -286,7 +347,15 @@ namespace physics
 				if(car!=nullptr)
 					fmemory::fdelete<Car>(car);
 			}
+
+			for (CarController* controller : gCarControllers)
+			{
+				if (controller != nullptr)
+					fmemory::fdelete<CarController>(controller);
+			}
 		}
+
+
 
 	}
 }
