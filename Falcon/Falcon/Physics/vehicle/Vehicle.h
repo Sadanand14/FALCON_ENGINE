@@ -7,6 +7,7 @@
 #include "Memory/fnew.h"
 #include "VehicleInputHandler.h"
 
+
 namespace physics
 {
 
@@ -145,7 +146,7 @@ namespace physics
 		*/
 		void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 		void ReleaseCarMemory();
-
+		
 		/**
 		* Vehicle Update
 		*/
@@ -273,6 +274,8 @@ namespace physics
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
+
+		CarController* GetCarContoller(const Car* car);
 
 	}
 

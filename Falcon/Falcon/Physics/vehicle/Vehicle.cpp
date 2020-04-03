@@ -27,8 +27,8 @@ namespace physics
 			physx::PxBatchQuery* gBatchQuery = NULL;
 			physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 			physx::PxRigidStatic* gGroundPlane = NULL;
+			std::unordered_map<Car*, CarController*> gCarControllerMap;
 			
-
 			/**
 			* Helper method to create a drivable plane.
 			* @param simulation filter data
@@ -335,6 +335,7 @@ namespace physics
 			//Create a car controller
 			CarController* controller = fmemory::fnew<CarController>(false);
 			gCarControllers.push_back(controller);
+			gCarControllerMap[car] = controller;
 		}
 
 		/**
@@ -353,6 +354,14 @@ namespace physics
 				if (controller != nullptr)
 					fmemory::fdelete<CarController>(controller);
 			}
+		}
+
+		CarController* GetCarContoller(Car* car)
+		{
+			if (gCarControllerMap.find(car) != gCarControllerMap.end())
+				return gCarControllerMap[car];
+			else
+				FL_ENGINE_ERROR("Failed to find controller for the car");
 		}
 
 
