@@ -110,7 +110,7 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	fmemory::fdelete(m_UI);
-	
+	if (m_camera) fmemory::fdelete(m_camera);
 
 	for (auto pass : m_Menu_renderPasses)
 	{
@@ -146,6 +146,7 @@ void Renderer::Init(GLFWwindow* window)
 	m_window = window;
 	m_RES = RenderEventSystem::GetInstance();
 	m_RES->ProcessEvents();
+	m_camera = fmemory::fnew<CameraSystem>();
 }
 
 /**
@@ -169,7 +170,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
-
+	m_camera->Update();
 	
 	//Menu RenderPasses
 	m_Menu_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(0));
@@ -183,90 +184,6 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	//m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
 	//m_Game_renderPasses[4]->QueueRenderable(m_UI->GetCanvas());
-
-
-	////First Layer setup
-	//m_UI->AddImage("FIRST_PAGE","start race.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-	//
-	//boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
-	//boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
-	//boost::function<void(void)> f3 = [&]() {m_UI->LoadUI("THIRD_PAGE"); };
-	//boost::function<void(void)> f4 = [&]() {m_UI->GetCanvas()->ClearCanvas(); };
-	////Next Button
-	//m_UI->AddButton("FIRST_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.626, 0.820, 0.22, 0.122),
-	//	"",
-	//	f2
-	//);
-
-
-	////Second Layer setup
-	//m_UI->AddImage("SECOND_PAGE", "choose track_lock.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-
-	////next button
-	//m_UI->AddButton("SECOND_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
-	//	"",
-	//	f3
-	//);
-
-	////prev button
-	//m_UI->AddButton("SECOND_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
-	//	"",
-	//	f1);
-
-	////Third Layer Setup
-	//m_UI->AddImage("THIRD_PAGE", "tune car_1.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-
-	////next button
-	//m_UI->AddButton("THIRD_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
-	//	"",
-	//	f4
-	//);
-
-	////prev button
-	//m_UI->AddButton("THIRD_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
-	//	"",
-	//	f2);
-
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.016, 0.62, 0.22, 0.1),0.0f,1.0f,0.1f);
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.258, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.5, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-
-	//m_UI->LoadUI("FIRST_PAGE");
 }
 
 void Renderer::Pause_Update() 
@@ -301,6 +218,7 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 	//static_cast<CanvasRenderPass*>(m_Game_renderPasses[4])->PushInput(m_win);
 
 	m_RES->ProcessEvents();
+	m_camera->Update();
 	m_entities = entities;
 	//FL_ENGINE_INFO("Draw Count : {0}", m_entities->size());
 
@@ -308,13 +226,13 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
 	skyShader->UseShader();
 	skyShader->SetMat4("projection", m_projection);
-	skyShader->SetMat4("view", cam.GetViewMatrix());
+	skyShader->SetMat4("view", m_camera->GetView());
 
 	//for terrain
 	Shader* temp = m_terrainMesh->GetMaterial()->m_shader;
 	temp->UseShader();
 	temp->SetMat4("projection", m_projection);
-	temp->SetMat4("view", cam.GetViewMatrix());
+	temp->SetMat4("view", m_camera->GetView());
 
 
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
@@ -324,7 +242,7 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 			Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
 			shader->UseShader();
 			shader->SetMat4("projection", m_projection);
-			shader->SetMat4("view", cam.GetViewMatrix());
+			shader->SetMat4("view", m_camera->GetView());
 		}
 
 		if (m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
@@ -332,8 +250,8 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 			Shader* shader = m_entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->m_shader;
 			shader->UseShader();
 			shader->SetMat4("projection", m_projection);
-			shader->SetMat4("view", cam.GetViewMatrix());
-			shader->SetVec3("camPos", cam.m_Position);
+			shader->SetMat4("view", m_camera->GetView());
+			shader->SetVec3("camPos", m_camera->GetPos());
 		}
 	}
 }

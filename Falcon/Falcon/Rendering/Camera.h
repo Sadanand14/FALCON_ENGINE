@@ -21,6 +21,9 @@ const float ZOOM = 45.0f;
 class Camera
 {
 private:
+
+	
+
 	// Calculates the front vector from the Camera's (updated) Euler Angles
 	void UpdateCameraVectors();
 

@@ -11,6 +11,7 @@
 #include <Events/EventManager.h>
 #include <EntityInterface.h>
 #include <AssetManager.h>
+#include <CameraSystem.h>
 
 #include <Camera.h>
 #include <stb_image.h>
@@ -67,15 +68,15 @@ class GLFWwindow;
  */
 class Renderer
 {
-	RenderEventSystem* m_RES;
+	RenderEventSystem* m_RES = nullptr;
 	UI::UI_Manager* m_UI = nullptr;
-	GLFWwindow* m_window;
+	GLFWwindow* m_window = nullptr ;
 	glm::mat4 m_projection;
+	CameraSystem* m_camera = nullptr;
 	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
 	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
-
 
 public:
 	Renderer();

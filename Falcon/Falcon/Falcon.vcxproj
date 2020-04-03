@@ -120,6 +120,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Core\EntityManager.h" />
+    <ClInclude Include="Core\Events\CameraEvent.h" />
     <ClInclude Include="Core\Events\Event.h" />
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
@@ -145,6 +146,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Rendering\BufferDefinitions\VertexBuffer.h" />
     <ClInclude Include="Rendering\BufferDefinitions\VertexLayout.h" />
     <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="Rendering\CameraSystem.h" />
     <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\OpenGLErrorHandler.h" />
     <ClInclude Include="Rendering\ParticleSystem.h" />
@@ -215,6 +217,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Rendering\BufferDefinitions\VertexArray.cpp" />
     <ClCompile Include="Rendering\BufferDefinitions\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="Rendering\CameraSystem.cpp" />
     <ClCompile Include="Rendering\Font.cpp" />
     <ClCompile Include="Rendering\ParticleSystem.cpp" />
     <ClCompile Include="Rendering\PipeLine\Canvas.cpp" />

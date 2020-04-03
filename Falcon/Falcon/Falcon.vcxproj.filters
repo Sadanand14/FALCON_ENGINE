@@ -304,6 +304,7 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\UIManager.h" />
+    <ClInclude Include="Rendering\CameraSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
@@ -475,6 +476,7 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
+    <ClCompile Include="Rendering\CameraSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
