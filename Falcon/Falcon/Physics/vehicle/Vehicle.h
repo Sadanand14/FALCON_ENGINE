@@ -144,7 +144,7 @@ namespace physics
 		/**
 		* Car creation/Deletion API
 		*/
-		void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
+		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 		void ReleaseCarMemory();
 		
 		/**

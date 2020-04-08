@@ -107,6 +107,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="CarSystem.h" />
     <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\Components\AIComponent.h" />
     <ClInclude Include="Core\Components\AnimationComponent.h" />

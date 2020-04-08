@@ -326,7 +326,7 @@ namespace physics
 		* @param Rigiddynamic* to the actor
 		* @param starting transform for the car
 		*/
-		void CreateCar(physx::PxRigidDynamic* vehActor,Transform& transform)
+		Car* CreateCar(physx::PxRigidDynamic* vehActor,Transform& transform)
 		{
 			Car* car = fmemory::fnew<Car>(vehActor, transform);
 			//Register car to the global car data
@@ -336,6 +336,7 @@ namespace physics
 			CarController* controller = fmemory::fnew<CarController>(false);
 			gCarControllers.push_back(controller);
 			gCarControllerMap[car] = controller;
+			return car;
 		}
 
 		/**
@@ -356,12 +357,21 @@ namespace physics
 			}
 		}
 
+
+		/**
+		* Get the car controller associated with the car* provided.
+		* @param car pointer to the car 
+		* @return controller assoiciated with the car* if exists or nullptr
+		*/
 		CarController* GetCarContoller(Car* car)
 		{
 			if (gCarControllerMap.find(car) != gCarControllerMap.end())
 				return gCarControllerMap[car];
 			else
+			{
 				FL_ENGINE_ERROR("Failed to find controller for the car");
+				return nullptr;
+			}
 		}
 
 

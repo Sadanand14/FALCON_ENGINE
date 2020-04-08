@@ -5,11 +5,13 @@
 #include "System/Memory/fmemory.h"
 #include "Core/Components/TransformComponent.h"
 #include "System/Log.h"
-
+#include "vehicle/Vehicle.h"
 #include "Rendering/BufferDefinitions/VertexLayout.h"
+
 
 class Entity;
 class Mesh;
+
 #define PX_SUPPORT_PVD	
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
 
@@ -85,8 +87,8 @@ namespace physics
 	* API to Vehicle SDK.
 	*/
 
-	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
-
+	vehicle::Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
+	vehicle::CarController* GetCarController(vehicle::Car* car);
 	//void HandleCarMovement();
 }
 

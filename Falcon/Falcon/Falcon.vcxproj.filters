@@ -304,6 +304,9 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\UIManager.h" />
+    <ClInclude Include="CarSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
