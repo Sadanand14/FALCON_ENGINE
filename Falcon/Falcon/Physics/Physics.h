@@ -5,7 +5,6 @@
 #include "System/Memory/fmemory.h"
 #include "Core/Components/TransformComponent.h"
 #include "System/Log.h"
-#include "vehicle/Vehicle.h"
 #include "Rendering/BufferDefinitions/VertexLayout.h"
 
 
@@ -83,13 +82,7 @@ namespace physics
 
 
 
-	/*
-	* API to Vehicle SDK.
-	*/
-
-	vehicle::Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
-	vehicle::CarController* GetCarController(vehicle::Car* car);
-	//void HandleCarMovement();
+	
 }
 
 #endif

@@ -1,6 +1,8 @@
 #include "SceneGraph.h"
 #include <Events/PassToRenderer.h> 
 #include <Events/EventManager.h>
+#include "Physics/vehicle/Vehicle.h"
+
 
 namespace Scene
 {
@@ -494,7 +496,7 @@ namespace Scene
 					m_rootNode->AddChild(temp.m_sceneNode);
 					nextEntityOffset = temp.m_nextOffset;
 				}
-				physics::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
 			}
 
 		}

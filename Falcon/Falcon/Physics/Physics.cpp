@@ -441,41 +441,7 @@ namespace physics
 	}
 
 
-	/**
-	* Creates a vehicle using vehicle api. Which will be used for simulations later on.
-	* @param RigidDynamic* to the vehicle actor. 
-	* @param starting transform for the vehicle.
-	*/
-
-	vehicle::Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform)
-	{
-		try
-		{
-			vehicle::Car* temp = vehicle::CreateCar(vehActor,startTransform);
-			gIsVehicleInScene = true;
-			return temp;
-		}
-		catch (std::exception & e)
-		{
-			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
-			return nullptr;
-		}
-	}
-
-
-	vehicle::CarController* GetCarController(vehicle::Car* car)
-	{
-		try
-		{
-			return vehicle::GetCarContoller(car);
-		}
-		catch (std::exception& e)
-		{
-			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
-			return nullptr;
-		}
-	}
-
+	
 
 	/*
 	* Release collider associated with certain entity.

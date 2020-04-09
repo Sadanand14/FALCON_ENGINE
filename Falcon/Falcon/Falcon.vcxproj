@@ -107,7 +107,6 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
-    <ClInclude Include="CarSystem.h" />
     <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\Components\AIComponent.h" />
     <ClInclude Include="Core\Components\AnimationComponent.h" />
@@ -121,6 +120,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Core\Components\TransformComponent.h" />
     <ClInclude Include="Core\EntityInterface.h" />
     <ClInclude Include="Core\EntityManager.h" />
+    <ClInclude Include="Core\Events\CarEvent.h" />
     <ClInclude Include="Core\Events\Event.h" />
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
@@ -130,6 +130,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Core\Events\PassingMeshEvent.h" />
     <ClInclude Include="Core\Events\RenderEvent.h" />
     <ClInclude Include="Core\Scene\SceneGraph.h" />
+    <ClInclude Include="Physics\CarSystem.h" />
     <ClInclude Include="Physics\PXMathUtils.h" />
     <ClInclude Include="Physics\PXUtils.h" />
     <ClInclude Include="Physics\Physics.h" />

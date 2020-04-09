@@ -141,11 +141,6 @@ namespace physics
 		*/
 		bool ReleaseVehcileSDK();
 
-		/**
-		* Car creation/Deletion API
-		*/
-		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
-		void ReleaseCarMemory();
 		
 		/**
 		* Vehicle Update
@@ -274,6 +269,13 @@ namespace physics
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
+
+
+		/**
+		* Car creation/Deletion API
+		*/
+		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
+		void ReleaseCarMemory();
 
 		CarController* GetCarContoller(const Car* car);
 
