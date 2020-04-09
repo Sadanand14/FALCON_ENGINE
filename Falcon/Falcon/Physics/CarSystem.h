@@ -4,19 +4,34 @@
 #include <Types.h>
 #include <Physics.h>
 #include <vehicle/Vehicle.h>
+#include <EventSystem.h>
+#include <EventManager.h>
 
 typedef physics::vehicle::Car CarStruct;
 typedef boost::container::vector<CarStruct*, fmemory::STLAllocator<CarStruct*>> CarArr;
 
+
+class CarEvents :public EventSystem
+{
+private:
+	friend class CarSystem;
+	virtual void SubscribeToEvents();
+	
+public:
+	virtual void ProcessEvents();
+	CarEvents();
+	~CarEvents();
+};
+
 class CarSystem
 {
 private:
-	CarArr m_userCars;
-	CarArr m_AICars;
-
+	static CarArr m_userCars;
+	static CarArr m_AICars;
 public:
-	inline CarArr* GetUserCars() { return &m_userCars; }
-	inline CarArr* GetAICars() { return &m_AICars; }
+	static inline CarArr* GetUserCars() { return &m_userCars; }
+	static inline CarArr* GetAICars() { return &m_AICars; }
+	static void AddCar(CarStruct* car, bool isUserCar);
 	void Update();
 };
 
