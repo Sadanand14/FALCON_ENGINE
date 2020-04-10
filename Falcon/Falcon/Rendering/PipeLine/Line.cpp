@@ -41,4 +41,5 @@ void Line::Bind()
 Line::~Line()
 {
 	fmemory::fdelete<VertexBuffer>(m_VBO);
+	fmemory::fdelete<Material>(m_material);
 }
