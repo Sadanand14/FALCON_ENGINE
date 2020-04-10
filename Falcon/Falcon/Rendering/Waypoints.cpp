@@ -7,23 +7,43 @@ Waypoint::Waypoint()
 
 void Waypoint::AddWaypoint(glm::vec3 point)
 {
-	m_points.push_back(point);
+	m_beziers.push_back(point);
+	m_beziers.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	UpdateWaypointList();
 }
 
-void Waypoint::AddBezierWaypoint(glm::vec3 nextPoint, glm::vec3 controlB, glm::vec3 controlC, float sampleRate)
+void Waypoint::AddBezier(glm::vec3 point, glm::vec3 control)
 {
-	glm::vec3 startPoint = m_points.back();
-	for(float t = sampleRate; t < 1.0f; t += sampleRate)
-	{
-		float s = 1 - t;
-		glm::vec3 a = s * s * s * startPoint;
-		glm::vec3 b = 3 * s * s * t * controlB;
-		glm::vec3 c = 3 * s * t * t * controlC;
-		glm::vec3 d = t * t * t * nextPoint;
-		m_points.push_back(a + b + c + d);
-	}
+	m_beziers.push_back(point);
+	m_beziers.push_back(control);
+	UpdateWaypointList();
+}
 
-	m_points.push_back(nextPoint);
+void Waypoint::UpdateWaypointList()
+{
+	m_points.clear();
+	for(u32 i = 0; i < m_beziers.size(); i += 2)
+	{
+		if(m_beziers[i + 1] != glm::vec3(0.0f, 0.0f, 0.0f))
+		{
+			glm::vec3 startPoint = m_points.back();
+
+			for(float t = m_sampleRate; t < 1.0f; t += m_sampleRate)
+			{
+				float s = 1 - t;
+				//glm::vec3 a = s * s * s * startPoint;
+				//glm::vec3 b = 3 * s * s * t * controlB;
+				//glm::vec3 c = 3 * s * t * t * controlC;
+				//glm::vec3 d = t * t * t * nextPoint
+				glm::vec3 a = m_beziers[i + 1];
+				glm::vec3 b = s * s * (startPoint - a);
+				glm::vec3 c = t * t * (m_beziers[i] - a);
+				m_points.push_back(a + b + c);
+			}
+		}
+
+		m_points.push_back(m_beziers[i]);
+	}
 }
 
 glm::vec3 Waypoint::NextWaypoint()

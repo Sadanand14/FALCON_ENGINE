@@ -166,7 +166,7 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//m_RES->ProcessEvents();
 
 	wp.AddWaypoint(glm::vec3( 0.0f,   0.0f,  0.0f));
-	wp.AddBezierWaypoint(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3(10.0f, 0.0f, -2.0f), 0.1f);
+	wp.AddBezier(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(5.0f, 0.0f, -2.0f));
 	//wp.AddWaypoint(glm::vec3(10.0f,   0.0f,  0.0f));
 	wp.AddWaypoint(glm::vec3(20.0f, -5.0f,  0.0f));
 	wp.AddWaypoint(glm::vec3(20.0f, -5.0f, 10.0f));
