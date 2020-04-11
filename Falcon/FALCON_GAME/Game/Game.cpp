@@ -103,8 +103,6 @@ namespace gameLoop
 	*/
 	void Game::Menu_Init()
 	{
-
-
 		boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
 		boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
 		boost::function<void(void)> f3 = [&]() {m_UI->LoadUI("THIRD_PAGE"); };
@@ -125,7 +123,6 @@ namespace gameLoop
 			"",
 			f2
 		);
-
 
 		//Second Layer setup
 		m_UI->AddImage("SECOND_PAGE", "choose track_lock.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
@@ -247,10 +244,10 @@ namespace gameLoop
 	}
 
 	/**
-	* Function for running the menu update loop.
+	* Function for running the game update loop.
 	*/
 	void Game::Game_Update()
 	{
-
+		if (GetKeyPress(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(m_engine->GetWindow()->GetWindow(), GLFW_TRUE);
 	}
 }

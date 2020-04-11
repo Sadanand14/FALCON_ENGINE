@@ -24,6 +24,7 @@ private:
 
 	IDVector octreeID;
 
+	glm::vec3 m_front;
 	glm::mat4 m_model; //* The model matrix of the transform
 	glm::vec3 m_position; //* The position of the Tranform
 	glm::vec3 m_scale; //* The scale of the transform
@@ -38,6 +39,7 @@ private:
 		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
+		//m_front *= m_rotation;
 		//m_updated = true;
 		m_updateFlag = false;
 	}
@@ -45,14 +47,15 @@ private:
 public:
 	Transform()
 		:m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f }), m_model(1.0f),
-		m_updateFlag(true), m_parentMatrix(glm::mat4())
+		m_updateFlag(true), m_parentMatrix(glm::mat4()), m_front({1.0f, 0.0f, 0.0f})
 	{
 		octreeID.reserve(10);
 		RecalculateMatrix();
 	}
 
 	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
-		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true), m_parentMatrix(glm::mat4())
+		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true),
+		m_parentMatrix(glm::mat4()), m_front({ 1.0f, 0.0f, 0.0f })
 	{
 		octreeID.reserve(10);
 		RecalculateMatrix();
@@ -83,6 +86,7 @@ public:
 	inline void SetRotation(const glm::quat& rot) { m_rotation = rot; m_updateFlag = true; }//m_updateFlag = true; }
 	inline void SetScale(const glm::vec3& scale) { m_scale = scale; m_updateFlag = true; }//m_updateFlag = true; }
 
+	inline const glm::vec3& GetFront() const { return m_front; }
 	inline const glm::vec3& GetPosition() const { return m_position; }
 	inline const glm::quat& GetRotation() const { return m_rotation; }
 	inline const glm::vec3& GetScale() const { return m_scale; }

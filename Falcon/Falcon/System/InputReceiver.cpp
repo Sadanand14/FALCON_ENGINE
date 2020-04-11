@@ -1,5 +1,7 @@
 #include "InputReceiver.h"
-
+#include <Events/KeyEvents.h>
+#include <Events/MouseEvents.h>
+#include <EventManager.h>
 #include <iostream>
 #include "Log.h"
 
@@ -93,6 +95,13 @@ bool InputReceiver::GetKeyRelease(int key)
 */
 void InputReceiver::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (action == GLFW_PRESS) 
+		EventManager::PushEvent(boost::make_shared<KeyEvent>(key, keyType::Pressed), EVENT_KEY_INPUT);
+	else if (action == GLFW_REPEAT)
+		EventManager::PushEvent(boost::make_shared<KeyEvent>(key, keyType::Repeat), EVENT_KEY_INPUT);
+	else
+		EventManager::PushEvent(boost::make_shared<KeyEvent>(key, keyType::Released), EVENT_KEY_INPUT);
+
 	m_keyStates[key] = (action != GLFW_RELEASE);
 }
 
@@ -106,6 +115,12 @@ void InputReceiver::key_callback(GLFWwindow* window, int key, int scancode, int 
 */
 void InputReceiver::mouse_callback(GLFWwindow* window, int button, int action, int mods) 
 {
+	if (action == GLFW_PRESS)
+		EventManager::PushEvent(boost::make_shared<MouseClickEvent>(button, ClickType::pressed), EVENT_MOUSE_INPUT);
+	else if (action == GLFW_REPEAT)
+		EventManager::PushEvent(boost::make_shared<MouseClickEvent>(button, ClickType::repeat), EVENT_MOUSE_INPUT);
+	else 
+		EventManager::PushEvent(boost::make_shared<MouseClickEvent>(button, ClickType::released), EVENT_MOUSE_INPUT);
 	m_mouseStates[button] = (action==GLFW_PRESS);
 }
 
@@ -118,6 +133,7 @@ void InputReceiver::mouse_callback(GLFWwindow* window, int button, int action, i
 */
 void InputReceiver::cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	EventManager::PushEvent(boost::make_shared<MouseCursorEvent>(glm::vec2(xpos - m_mouseX, ypos - m_mouseY)), EVENT_MOUSE_INPUT);
 	m_mouseX = xpos;
 	m_mouseY = ypos;
 }
