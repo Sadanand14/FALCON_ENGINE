@@ -17,6 +17,12 @@
 
 #include <ThreadPool.h>
 
+#if defined(_DEBUG) || defined(DEBUG)
+#include <Line.h>
+#endif
+
+#include <Waypoints.h>
+
 class RenderPass;
 class Camera;
 class Entity;
@@ -61,6 +67,9 @@ public:
 
 class GLFWwindow;
 
+//TODO: REMOVE
+class Waypoint;
+
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Class Definition for the Rendering System Responsible for Rendering each frame.
@@ -76,6 +85,10 @@ class Renderer
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
 
+	Waypoint wp;
+#if defined(_DEBUG) || defined(DEBUG)
+	Line wpTestLine;
+#endif //Line debug
 
 public:
 	Renderer();

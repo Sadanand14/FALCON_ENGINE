@@ -16,6 +16,10 @@
 #include "SkyRenderPass.h"
 #include "QuadRenderPass.h"
 
+#if defined(_DEBUG) || defined(DEBUG)
+#include "LineRenderPass.h"
+#endif //Line debug
+
 //Events
 #include <Events/PassToRenderer.h>
 #include <Events/EventManager.h>
@@ -102,6 +106,7 @@ void RenderEventSystem::PrintReception()
 */
 Renderer::Renderer()
 {
+
 }
 
 /**
@@ -110,7 +115,7 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	fmemory::fdelete(m_UI);
-	
+
 
 	for (auto pass : m_Menu_renderPasses)
 	{
@@ -159,6 +164,14 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	//m_RES->ProcessEvents();
+
+	wp.AddWaypoint(glm::vec3( 0.0f,   0.0f,  0.0f));
+	wp.AddBezier(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(5.0f, 0.0f, -2.0f));
+	//wp.AddWaypoint(glm::vec3(10.0f,   0.0f,  0.0f));
+	wp.AddWaypoint(glm::vec3(20.0f, -5.0f,  0.0f));
+	wp.AddWaypoint(glm::vec3(20.0f, -5.0f, 10.0f));
+	wp.AddWaypoint(glm::vec3(10.0f, -5.0f, 10.0f));
+	wp.AddWaypoint(glm::vec3( 5.0f,  0.0f, 10.0f));
 }
 
 /**
@@ -170,7 +183,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
 
-	
+
 	//Menu RenderPasses
 	m_Menu_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(0));
 	m_Menu_renderPasses[0]->QueueRenderable(m_UI->GetCanvas());
@@ -180,114 +193,41 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_Game_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_Game_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
 	m_Game_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
-	//m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
 
-	//m_Game_renderPasses[4]->QueueRenderable(m_UI->GetCanvas());
+#if defined(_DEBUG) || defined(DEBUG)
+	wpTestLine.Setup();
+	auto points = wp.GetWaypoints();
 
+	for(u32 i = 0; i < points->size(); i++)
+		wpTestLine.AddPoint(points->at(i));
 
-	////First Layer setup
-	//m_UI->AddImage("FIRST_PAGE","start race.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-	//
-	//boost::function<void(void)> f1 = [&]() {m_UI->LoadUI("FIRST_PAGE"); };
-	//boost::function<void(void)> f2 = [&]() {m_UI->LoadUI("SECOND_PAGE"); };
-	//boost::function<void(void)> f3 = [&]() {m_UI->LoadUI("THIRD_PAGE"); };
-	//boost::function<void(void)> f4 = [&]() {m_UI->GetCanvas()->ClearCanvas(); };
-	////Next Button
-	//m_UI->AddButton("FIRST_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.626, 0.820, 0.22, 0.122),
-	//	"",
-	//	f2
-	//);
+	wpTestLine.SetLineType(LineType::LOOP);
+	wpTestLine.SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
 
-
-	////Second Layer setup
-	//m_UI->AddImage("SECOND_PAGE", "choose track_lock.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-
-	////next button
-	//m_UI->AddButton("SECOND_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
-	//	"",
-	//	f3
-	//);
-
-	////prev button
-	//m_UI->AddButton("SECOND_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
-	//	"",
-	//	f1);
-
-	////Third Layer Setup
-	//m_UI->AddImage("THIRD_PAGE", "tune car_1.jpg", glm::vec4(0.0, 0.0, 1.0, 1.0));
-
-	////next button
-	//m_UI->AddButton("THIRD_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.725, 0.883, 0.25, 0.08),
-	//	"",
-	//	f4
-	//);
-
-	////prev button
-	//m_UI->AddButton("THIRD_PAGE",
-	//	glm::vec4(255, 255, 255, 0),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(255, 255, 255, 255),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
-	//	glm::vec4(glm::vec4(0.025, 0.883, 0.274, 0.081)),
-	//	"",
-	//	f2);
-
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.016, 0.62, 0.22, 0.1),0.0f,1.0f,0.1f);
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.258, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-	//m_UI->AddSlider("THIRD_PAGE", glm::vec4(0.5, 0.62, 0.22, 0.1), 0.0f, 1.0f, 0.1f);
-
-	//m_UI->LoadUI("FIRST_PAGE");
+	m_Game_renderPasses.push_back(fmemory::fnew<LineRenderPass>(4));
+	m_Game_renderPasses.back()->QueueRenderable(&wpTestLine);
+#endif //Line debug
 }
 
-void Renderer::Pause_Update() 
+void Renderer::Pause_Update()
 {
 
 }
 
-void Renderer::Pause_Draw() 
+void Renderer::Pause_Draw()
 {
 	//Swap Buffers
 	glfwSwapBuffers(m_window);
 }
 
-void Renderer::Menu_Update() 
+void Renderer::Menu_Update()
 {
 	static_cast<CanvasRenderPass*>(m_Menu_renderPasses[0])->PushInput(m_win);
 }
 
-void Renderer::Menu_Draw() 
+void Renderer::Menu_Draw()
 {
-	for (unsigned int i = 0; i < m_Menu_renderPasses.size(); ++i) 
+	for (unsigned int i = 0; i < m_Menu_renderPasses.size(); ++i)
 	{
 		m_Menu_renderPasses[i]->Render();
 	}
@@ -316,7 +256,6 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 	temp->SetMat4("projection", m_projection);
 	temp->SetMat4("view", cam.GetViewMatrix());
 
-
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
 		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
@@ -336,6 +275,13 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 			shader->SetVec3("camPos", cam.m_Position);
 		}
 	}
+
+#if defined(_DEBUG) || defined(DEBUG)
+	Shader* lineShader = wpTestLine.GetMaterial()->m_shader;
+	lineShader->UseShader();
+	lineShader->SetMat4("projection", m_projection);
+	lineShader->SetMat4("view", cam.GetViewMatrix());
+#endif //Line debug
 }
 
 void Renderer::Ingame_Draw(Camera& cam)
@@ -418,6 +364,10 @@ void Renderer::Ingame_Draw(Camera& cam)
 			count = 0;
 		}
 	}
+
+#if defined(_DEBUG) || defined(DEBUG)
+ 	m_Game_renderPasses.back()->QueueRenderable(&wpTestLine);
+#endif //Line debug
 
 	for (u32 i = 0; i < m_Game_renderPasses.size(); i++)
 	{
