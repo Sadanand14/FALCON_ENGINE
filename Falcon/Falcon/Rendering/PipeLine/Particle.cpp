@@ -35,7 +35,7 @@ void Particle::PreallocParticleDataAmount(u32 maxParticleData)
 
 /**
  * Adds particle data to the list of data for instanced rendering
- * @param data - The particle data toadd
+ * @param data - The particle data to add
  */
 void Particle::AddParticleData(const ParticleData &data)
 {

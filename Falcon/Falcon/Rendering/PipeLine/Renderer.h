@@ -12,10 +12,17 @@
 #include <EntityInterface.h>
 #include <AssetManager.h>
 
-#include <Camera.h>
+
+//#include <Camera.h>
 #include <stb_image.h>
 
 #include <ThreadPool.h>
+
+#if defined(_DEBUG) || defined(DEBUG)
+#include <Line.h>
+#endif
+
+#include <Waypoints.h>
 
 class RenderPass;
 class Camera;
@@ -61,21 +68,29 @@ public:
 
 class GLFWwindow;
 
+//TODO: REMOVE
+class Waypoint;
+
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Class Definition for the Rendering System Responsible for Rendering each frame.
  */
 class Renderer
 {
-	RenderEventSystem* m_RES;
+	RenderEventSystem* m_RES = nullptr;
 	UI::UI_Manager* m_UI = nullptr;
-	GLFWwindow* m_window;
+	GLFWwindow* m_window = nullptr ;
 	glm::mat4 m_projection;
+	//CameraSystem* m_camera = nullptr;
 	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
 	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
 
+	Waypoint wp;
+#if defined(_DEBUG) || defined(DEBUG)
+	Line wpTestLine;
+#endif //Line debug
 
 public:
 	Renderer();
@@ -83,8 +98,8 @@ public:
 
 	inline UI::UI_Manager* GetUI() { return m_UI; }
 
-	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
-	void Ingame_Draw(Camera& cam);
+	void Ingame_Update( float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
+	void Ingame_Draw();
 
 	void Pause_Draw();
 	void Pause_Update();

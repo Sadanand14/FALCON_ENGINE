@@ -308,6 +308,12 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Events\CarEvent.h" />
+    <ClInclude Include="Rendering\CameraSystem.h" />
+    <ClInclude Include="Core\Events\CameraEvent.h" />
+    <ClInclude Include="Core\Events\MouseEvents.h" />
+    <ClInclude Include="Rendering\Waypoints.h" />
+    <ClInclude Include="Rendering\PipeLine\Line.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\LineRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
@@ -323,9 +329,6 @@
       <Filter>Core\Events</Filter>
     </ClCompile>
     <ClCompile Include="Core\Events\EventSystem.cpp">
-      <Filter>Core\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Events\KeyEvents.cpp">
       <Filter>Core\Events</Filter>
     </ClCompile>
     <ClCompile Include="Core\Scene\SceneGraph.cpp">
@@ -480,6 +483,10 @@
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
     <ClCompile Include="Physics\CarSystem.cpp" />
+    <ClCompile Include="Rendering\CameraSystem.cpp" />
+    <ClCompile Include="Rendering\Waypoints.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Line.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\LineRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

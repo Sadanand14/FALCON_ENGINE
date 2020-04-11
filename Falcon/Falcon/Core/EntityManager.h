@@ -13,6 +13,7 @@
 #include "EntityInterface.h"
 #include <Log.h>
 #include "Types.h"
+#include <EventManager.h>
 
 class EntityManager
 {

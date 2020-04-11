@@ -33,47 +33,46 @@
 class Entity
 {
 private:
-	Transform* m_transform;
-	RenderComponent* m_renderC;
-	AudioComponent* m_audioC;
-	PhysicsComponent* m_physicsC;
-	InputComponent* m_inputC;
-	AnimationComponent* m_animationC;
-	AIComponent* m_AIComponent;
-	ParticleEmitterComponent* m_particleEmitterC;
+	Transform* m_transform = nullptr;
+	RenderComponent* m_renderC = nullptr;
+	AudioComponent* m_audioC = nullptr;
+	PhysicsComponent* m_physicsC = nullptr;
+	InputComponent* m_inputC = nullptr;
+	AnimationComponent* m_animationC = nullptr;
+	AIComponent* m_AIComponent = nullptr;
+	ParticleEmitterComponent* m_particleEmitterC = nullptr;
+	CameraComponent* m_cameraC = nullptr;
 
 public:
 
 	Entity()
-		:m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
 		m_transform = fmemory::fnew<Transform>();
 	}
 	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
-		: m_renderC(nullptr), m_audioC(nullptr), m_animationC(nullptr), m_physicsC(nullptr), m_inputC(nullptr),
-		m_AIComponent(nullptr), m_particleEmitterC(nullptr)
 	{
 		m_transform = fmemory::fnew<Transform>(pos, rot, scale);
 	}
 	~Entity()
 	{
 		if(m_transform)
-			fmemory::fdelete<Transform>(m_transform);
+			fmemory::fdelete<>(m_transform);
 		if(m_renderC)
-			fmemory::fdelete<RenderComponent>(m_renderC);
+			fmemory::fdelete<>(m_renderC);
 		if(m_audioC)
-			fmemory::fdelete<AudioComponent>(m_audioC);
+			fmemory::fdelete<>(m_audioC);
 		if(m_physicsC)
-			fmemory::fdelete<PhysicsComponent>(m_physicsC);
+			fmemory::fdelete<>(m_physicsC);
 		if(m_animationC)
-			fmemory::fdelete<AnimationComponent>(m_animationC);
+			fmemory::fdelete<>(m_animationC);
 		if(m_AIComponent)
-			fmemory::fdelete<AIComponent>(m_AIComponent);
+			fmemory::fdelete<>(m_AIComponent);
 		if(m_inputC)
-			fmemory::fdelete<InputComponent>(m_inputC);
+			fmemory::fdelete<>(m_inputC);
 		if(m_particleEmitterC)
-			fmemory::fdelete<ParticleEmitterComponent>(m_particleEmitterC);
+			fmemory::fdelete<>(m_particleEmitterC);
+		if (m_cameraC)
+			fmemory::fdelete(m_cameraC);
 	}
 
 	inline Transform* GetTransform() { return m_transform; }
@@ -177,6 +176,23 @@ inline void Entity::AddComponent<ParticleEmitterComponent>()
 		m_particleEmitterC = fmemory::fnew<ParticleEmitterComponent>();
 	}
 }
+
+template<>
+inline void Entity::AddComponent<CameraComponent>() 
+{
+	if (m_cameraC) 
+	{
+		FL_ENGINE_ERROR("This entity already has this component!");
+	}
+	else 
+	{
+		m_cameraC = fmemory::fnew<CameraComponent>(m_transform);
+	}
+}
+
+
+template<>
+inline CameraComponent* Entity::GetComponent<CameraComponent>() { return m_cameraC; }
 
 template<>
 inline RenderComponent* Entity::GetComponent<RenderComponent>() { return m_renderC; }
