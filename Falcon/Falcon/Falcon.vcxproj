@@ -204,6 +204,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Core\Events\EventSystem.cpp" />
     <ClCompile Include="Core\Events\KeyEvents.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Physics\CarSystem.cpp" />
     <ClCompile Include="Physics\PXMathUtils.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
