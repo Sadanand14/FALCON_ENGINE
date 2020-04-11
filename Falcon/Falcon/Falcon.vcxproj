@@ -125,6 +125,7 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClInclude Include="Core\Events\EventManager.h" />
     <ClInclude Include="Core\Events\EventSystem.h" />
     <ClInclude Include="Core\Events\KeyEvents.h" />
+    <ClInclude Include="Core\Events\MouseEvents.h" />
     <ClInclude Include="Core\Events\ParticleEvent.h" />
     <ClInclude Include="Core\Events\PassToRenderer.h" />
     <ClInclude Include="Core\Events\PassingMeshEvent.h" />
@@ -202,7 +203,6 @@ IF EXIST "vendor\libs\physx\Release"\ (xcopy /Q /E /Y /I "vendor\libs\physx\Rele
     <ClCompile Include="Core\EntityManager.cpp" />
     <ClCompile Include="Core\Events\EventManager.cpp" />
     <ClCompile Include="Core\Events\EventSystem.cpp" />
-    <ClCompile Include="Core\Events\KeyEvents.cpp" />
     <ClCompile Include="Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Physics\PXMathUtils.cpp" />
     <ClCompile Include="Physics\PXUtils.cpp" />

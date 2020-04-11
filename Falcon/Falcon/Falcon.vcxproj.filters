@@ -305,6 +305,8 @@
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\UIManager.h" />
     <ClInclude Include="Rendering\CameraSystem.h" />
+    <ClInclude Include="Core\Events\CameraEvent.h" />
+    <ClInclude Include="Core\Events\MouseEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
@@ -320,9 +322,6 @@
       <Filter>Core\Events</Filter>
     </ClCompile>
     <ClCompile Include="Core\Events\EventSystem.cpp">
-      <Filter>Core\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Events\KeyEvents.cpp">
       <Filter>Core\Events</Filter>
     </ClCompile>
     <ClCompile Include="Core\Scene\SceneGraph.cpp">

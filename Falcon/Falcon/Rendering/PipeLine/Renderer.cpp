@@ -1,11 +1,12 @@
 #include "Renderer.h"
 
+#include <CameraSystem.h>
 #include <framework.h>
 #include <Memory/fmemory.h>
 
 //Included files
 //Camera
-#include <Camera.h>
+//#include <Camera.h>
 
 //Render passes
 #include "RenderPass.h"
@@ -101,8 +102,7 @@ void RenderEventSystem::PrintReception()
 *Constructor for Renderer
 */
 Renderer::Renderer()
-{
-}
+{}
 
 /**
 *Destructor for Renderer
@@ -110,7 +110,7 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	fmemory::fdelete(m_UI);
-	if (m_camera) fmemory::fdelete(m_camera);
+	CameraSystem::ShutDown();
 
 	for (auto pass : m_Menu_renderPasses)
 	{
@@ -142,11 +142,11 @@ Renderer::~Renderer()
 */
 void Renderer::Init(GLFWwindow* window)
 {
+	CameraSystem::Initialize();
 	m_UI = fmemory::fnew<UI::UI_Manager>();
 	m_window = window;
 	m_RES = RenderEventSystem::GetInstance();
 	m_RES->ProcessEvents();
-	m_camera = fmemory::fnew<CameraSystem>();
 }
 
 /**
@@ -170,8 +170,9 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
-	m_camera->Update();
 	
+	CameraSystem::Update(0.016f);
+
 	//Menu RenderPasses
 	m_Menu_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(0));
 	m_Menu_renderPasses[0]->QueueRenderable(m_UI->GetCanvas());
@@ -182,7 +183,6 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_Game_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
 	m_Game_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
 	//m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
-
 	//m_Game_renderPasses[4]->QueueRenderable(m_UI->GetCanvas());
 }
 
@@ -213,12 +213,14 @@ void Renderer::Menu_Draw()
 }
 
 
-void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities)
+void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities)
 {
 	//static_cast<CanvasRenderPass*>(m_Game_renderPasses[4])->PushInput(m_win);
 
 	m_RES->ProcessEvents();
-	m_camera->Update();
+
+	CameraSystem::Update(dt);
+
 	m_entities = entities;
 	//FL_ENGINE_INFO("Draw Count : {0}", m_entities->size());
 
@@ -226,13 +228,13 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
 	skyShader->UseShader();
 	skyShader->SetMat4("projection", m_projection);
-	skyShader->SetMat4("view", m_camera->GetView());
+	skyShader->SetMat4("view", CameraSystem::GetView());
 
 	//for terrain
 	Shader* temp = m_terrainMesh->GetMaterial()->m_shader;
 	temp->UseShader();
 	temp->SetMat4("projection", m_projection);
-	temp->SetMat4("view", m_camera->GetView());
+	temp->SetMat4("view", CameraSystem::GetView());
 
 
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
@@ -242,7 +244,7 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 			Shader* shader = m_entities->at(i)->GetComponent<RenderComponent>()->m_mesh->GetMaterial()->m_shader;
 			shader->UseShader();
 			shader->SetMat4("projection", m_projection);
-			shader->SetMat4("view", m_camera->GetView());
+			shader->SetMat4("view", CameraSystem::GetView());
 		}
 
 		if (m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
@@ -250,13 +252,13 @@ void Renderer::Ingame_Update(Camera& cam, float dt, boost::container::vector<Ent
 			Shader* shader = m_entities->at(i)->GetComponent<ParticleEmitterComponent>()->m_particle->GetMaterial()->m_shader;
 			shader->UseShader();
 			shader->SetMat4("projection", m_projection);
-			shader->SetMat4("view", m_camera->GetView());
-			shader->SetVec3("camPos", m_camera->GetPos());
+			shader->SetMat4("view", CameraSystem::GetView());
+			shader->SetVec3("camPos", CameraSystem::GetPos());
 		}
 	}
 }
 
-void Renderer::Ingame_Draw(Camera& cam)
+void Renderer::Ingame_Draw()
 {
 	glDepthMask(true);
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
@@ -267,7 +269,6 @@ void Renderer::Ingame_Draw(Camera& cam)
 		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
 		m_Game_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
-
 
 	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
 	m_Game_renderPasses[0]->QueueRenderable(m_terrainMesh);
@@ -289,7 +290,7 @@ void Renderer::Ingame_Draw(Camera& cam)
 
 			else
 			{
-				float dist = glm::distance(trans->GetRelativePosition(), cam.m_Position);
+				float dist = glm::distance(trans->GetRelativePosition(), CameraSystem::GetPos());
 				distanceEntityMap[dist] = i;
 			}
 		}

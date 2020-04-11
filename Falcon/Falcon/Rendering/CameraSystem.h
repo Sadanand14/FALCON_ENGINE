@@ -9,18 +9,20 @@
 #include <Memory/PoolAllocator.hpp>
 //#include <>
 
-typedef boost::container::vector<CameraComponent*, fmemory::STLAllocator<CameraComponent*>> CamArray;
+typedef boost::container::vector<CameraComponent*> CamArray;
 
-class CameraEvents :public EventSystem
+class CameraSystem;
+
+class CameraEventSystem :public EventSystem
 {
 private: 
 	friend class CameraSystem;
 	virtual void SubscribeToEvents();
-	CamArray m_arr;
+	
 public:
 	virtual void ProcessEvents();
-	CameraEvents();
-	~CameraEvents();
+	CameraEventSystem();
+	~CameraEventSystem();
 };
 
 
@@ -28,20 +30,27 @@ public:
 class CameraSystem
 {
 private: 
-	CameraEvents* m_camEvents = nullptr;
-	CamArray m_entityCams;
-	CameraComponent* m_mainCam = nullptr;
-	
+	friend class CameraEventSystem;
+	static CameraEventSystem* m_camEvents;
+	static CamArray m_entityCams;
+	static CameraComponent* m_mainCam;
+	static bool m_cameraMoveable;
+	//static void MoveMainCam();
 
 public:
 	CameraSystem();
 	~CameraSystem();
+
+	static inline const bool IsMoveable() { return m_cameraMoveable; }
 	
-	inline glm::mat4 GetView() { return m_mainCam->GetViewMatrix(); }
-	inline glm::vec3 GetPos() { return m_mainCam->GetPos(); }
-	void Update();
-	void SetMainCam(unsigned int index);
+	static void Initialize();
+	static void ShutDown();
+
+	static inline CameraComponent* GetMain() { return m_mainCam; }
+	static inline glm::mat4 GetView() { return m_mainCam->GetViewMatrix(); }
+	static inline glm::vec3 GetPos() { return m_mainCam->GetPos(); }
+	static void Update(float dt);
+	static void SetMainCam(unsigned int index);
 
 };
-
 #endif//DEBUG

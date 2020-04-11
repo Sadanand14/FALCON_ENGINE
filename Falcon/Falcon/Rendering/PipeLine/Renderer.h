@@ -11,9 +11,9 @@
 #include <Events/EventManager.h>
 #include <EntityInterface.h>
 #include <AssetManager.h>
-#include <CameraSystem.h>
 
-#include <Camera.h>
+
+//#include <Camera.h>
 #include <stb_image.h>
 
 #include <ThreadPool.h>
@@ -72,7 +72,7 @@ class Renderer
 	UI::UI_Manager* m_UI = nullptr;
 	GLFWwindow* m_window = nullptr ;
 	glm::mat4 m_projection;
-	CameraSystem* m_camera = nullptr;
+	//CameraSystem* m_camera = nullptr;
 	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
 	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
@@ -84,8 +84,8 @@ public:
 
 	inline UI::UI_Manager* GetUI() { return m_UI; }
 
-	void Ingame_Update(Camera& cam, float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
-	void Ingame_Draw(Camera& cam);
+	void Ingame_Update( float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
+	void Ingame_Draw();
 
 	void Pause_Draw();
 	void Pause_Update();

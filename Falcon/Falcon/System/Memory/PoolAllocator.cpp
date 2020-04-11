@@ -27,7 +27,6 @@ namespace fmemory {
 		m_poolref = nullptr;
 		m_free_list_head = nullptr;
 		CreatePool(element_size_in_bytes, num_of_elements,alignment);
-		
 	}
 
 

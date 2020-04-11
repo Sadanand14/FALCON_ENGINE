@@ -199,7 +199,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		if (doc.HasMember("cameraComponent")) 
 		{
 			newEntity->AddComponent<CameraComponent>();
-			EventManager::PushEvent(boost::make_shared <CameraEvent>(newEntity->GetComponent<CameraComponent>()), EVENT_CAMERA_COMPONENT);
+			//EventManager::PushEvent(boost::make_shared <CameraEvent>(newEntity->GetComponent<CameraComponent>()), EVENT_CAMERA_COMPONENT);
 		}
 
 		//TODO:: DO REST OF THE COMPONENT READINGS WHEN THE COMPONENTS BECOME AVAILABLE

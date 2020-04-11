@@ -21,29 +21,8 @@ public:
 
 	inline unsigned int GetCode() { return m_keyCode; }
 	inline keyType GetKeyType() { return m_type; }
-	KeyEvent(unsigned int KeyCode, keyType type);
-	~KeyEvent();
+	KeyEvent(unsigned int keycode, keyType type) : m_keyCode(keycode), m_type(type), Event(EVENT_KEY_INPUT){}
+	~KeyEvent() {}
 };
 
-struct KeyPressed : public KeyEvent 
-{
-
-public:
-	KeyPressed(unsigned int KeyCode);
-	~KeyPressed();
-};
-
-struct KeyReleased : public KeyEvent
-{
-public:
-	KeyReleased(unsigned int KeyCode);
-	~KeyReleased();
-};
-
-struct KeyRepeat : public KeyEvent
-{
-public:
-	KeyRepeat(unsigned int KeyCode);
-	~KeyRepeat();
-};
-#endif // !1
+#endif// !1

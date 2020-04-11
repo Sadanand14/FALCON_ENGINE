@@ -80,7 +80,7 @@ namespace gameLoop
 		m_audio.Init();
 
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
+		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
 
 		return true;
 	}
@@ -114,8 +114,8 @@ namespace gameLoop
 
 		m_particleSystem->Update(dt, m_scene->GetEntities());
 		////renderer Update
-		m_renderer->Ingame_Update(camera, dt, m_scene->GetEntities());
-		m_renderer->Ingame_Draw(camera);
+		m_renderer->Ingame_Update(dt, m_scene->GetEntities());
+		m_renderer->Ingame_Draw();
 
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
@@ -139,10 +139,10 @@ namespace gameLoop
 
 	void Engine::ProcessInputs(float dt)
 	{
-		if (m_input->GetKeyPress(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(m_window->GetWindow(), true);
+		/*if (m_input->GetKeyPress(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(m_window->GetWindow(), true);
 		if (m_input->GetKey(GLFW_KEY_W))camera.ProcessKeyboard(FORWARD, dt);
 		if (m_input->GetKey(GLFW_KEY_A))camera.ProcessKeyboard(LEFT, dt);
 		if (m_input->GetKey(GLFW_KEY_D))camera.ProcessKeyboard(RIGHT, dt);
-		if (m_input->GetKey(GLFW_KEY_S))camera.ProcessKeyboard(BACKWARD, dt);
+		if (m_input->GetKey(GLFW_KEY_S))camera.ProcessKeyboard(BACKWARD, dt);*/
 	}
 }

@@ -10,5 +10,4 @@ struct CameraEvent : public Event
 	CameraEvent(BasicComponent* cam): Event(EVENT_CAMERA_COMPONENT),m_componentPointer(cam)
 	{}
 };
-
 #endif//
