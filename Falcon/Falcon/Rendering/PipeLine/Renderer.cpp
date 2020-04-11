@@ -284,7 +284,7 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 	Shader* lineShader = wpTestLine.GetMaterial()->m_shader;
 	lineShader->UseShader();
 	lineShader->SetMat4("projection", m_projection);
-	lineShader->SetMat4("view", cam.GetViewMatrix());
+	lineShader->SetMat4("view", CameraSystem::GetView());
 #endif //Line debug
 }
 

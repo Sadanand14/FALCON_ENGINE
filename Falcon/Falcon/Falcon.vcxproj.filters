@@ -307,6 +307,9 @@
     <ClInclude Include="Rendering\CameraSystem.h" />
     <ClInclude Include="Core\Events\CameraEvent.h" />
     <ClInclude Include="Core\Events\MouseEvents.h" />
+    <ClInclude Include="Rendering\Waypoints.h" />
+    <ClInclude Include="Rendering\PipeLine\Line.h" />
+    <ClInclude Include="Rendering\PipeLine\RenderPasses\LineRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
@@ -476,6 +479,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
     <ClCompile Include="Rendering\CameraSystem.cpp" />
+    <ClCompile Include="Rendering\Waypoints.cpp" />
+    <ClCompile Include="Rendering\PipeLine\Line.cpp" />
+    <ClCompile Include="Rendering\PipeLine\RenderPasses\LineRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

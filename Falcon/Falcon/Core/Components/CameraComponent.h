@@ -51,6 +51,7 @@ public:
 		return glm::lookAt(m_currentPos + m_offsetPos, (m_currentPos + m_offsetPos) +
 			(m_forward + m_offsetRot), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
+	inline void SetCamera(CameraType type) { m_type = type; }
 
 	void Update(float dt) 
 	{
@@ -135,13 +136,18 @@ public:
 	void Fixed_Update() 
 	{
 		m_currentPos = m_localTrans->GetPosition();
-		m_forward = glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation();
+
+		static glm::vec3 newRot;
+		newRot = glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation();
+		m_forward += newRot - m_entityRot;
+		m_entityRot = newRot;
 	}
 
 	void Fixed_Chase_Update() 
 	{
 		m_currentPos = m_currentPos + (m_localTrans->GetPosition() - m_currentPos) * 0.6f;
-		m_forward = m_forward + (glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation() - m_forward) * 0.6f;
+
+		m_forward +=  (glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation() - m_forward) * 0.6f;
 	}
 
 	void Free_Update() 
