@@ -17,6 +17,10 @@
 #include "SkyRenderPass.h"
 #include "QuadRenderPass.h"
 
+#if defined(_DEBUG) || defined(DEBUG)
+#include "LineRenderPass.h"
+#endif //Line debug
+
 //Events
 #include <Events/PassToRenderer.h>
 #include <Events/EventManager.h>
@@ -160,6 +164,14 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	//m_RES->ProcessEvents();
+
+	wp.AddWaypoint(glm::vec3( 0.0f,   0.0f,  0.0f));
+	wp.AddBezier(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(5.0f, 0.0f, -2.0f));
+	//wp.AddWaypoint(glm::vec3(10.0f,   0.0f,  0.0f));
+	wp.AddWaypoint(glm::vec3(20.0f, -5.0f,  0.0f));
+	wp.AddWaypoint(glm::vec3(20.0f, -5.0f, 10.0f));
+	wp.AddWaypoint(glm::vec3(10.0f, -5.0f, 10.0f));
+	wp.AddWaypoint(glm::vec3( 5.0f,  0.0f, 10.0f));
 }
 
 /**
@@ -182,29 +194,41 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_Game_renderPasses.push_back(fmemory::fnew<ParticleRenderPass>(1));
 	m_Game_renderPasses.push_back(fmemory::fnew<SkyRenderPass>(2));
 	m_Game_renderPasses.push_back(fmemory::fnew<TransparentRenderPass>(3));
-	//m_Game_renderPasses.push_back(fmemory::fnew<CanvasRenderPass>(4));
-	//m_Game_renderPasses[4]->QueueRenderable(m_UI->GetCanvas());
+
+#if defined(_DEBUG) || defined(DEBUG)
+	wpTestLine.Setup();
+	auto points = wp.GetWaypoints();
+
+	for(u32 i = 0; i < points->size(); i++)
+		wpTestLine.AddPoint(points->at(i));
+
+	wpTestLine.SetLineType(LineType::LOOP);
+	wpTestLine.SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
+
+	m_Game_renderPasses.push_back(fmemory::fnew<LineRenderPass>(4));
+	m_Game_renderPasses.back()->QueueRenderable(&wpTestLine);
+#endif //Line debug
 }
 
-void Renderer::Pause_Update() 
+void Renderer::Pause_Update()
 {
 
 }
 
-void Renderer::Pause_Draw() 
+void Renderer::Pause_Draw()
 {
 	//Swap Buffers
 	glfwSwapBuffers(m_window);
 }
 
-void Renderer::Menu_Update() 
+void Renderer::Menu_Update()
 {
 	static_cast<CanvasRenderPass*>(m_Menu_renderPasses[0])->PushInput(m_win);
 }
 
-void Renderer::Menu_Draw() 
+void Renderer::Menu_Draw()
 {
-	for (unsigned int i = 0; i < m_Menu_renderPasses.size(); ++i) 
+	for (unsigned int i = 0; i < m_Menu_renderPasses.size(); ++i)
 	{
 		m_Menu_renderPasses[i]->Render();
 	}
@@ -236,7 +260,6 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 	temp->SetMat4("projection", m_projection);
 	temp->SetMat4("view", CameraSystem::GetView());
 
-
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
 		if (m_entities->at(i)->GetComponent<RenderComponent>() != nullptr)
@@ -256,6 +279,13 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 			shader->SetVec3("camPos", CameraSystem::GetPos());
 		}
 	}
+
+#if defined(_DEBUG) || defined(DEBUG)
+	Shader* lineShader = wpTestLine.GetMaterial()->m_shader;
+	lineShader->UseShader();
+	lineShader->SetMat4("projection", m_projection);
+	lineShader->SetMat4("view", cam.GetViewMatrix());
+#endif //Line debug
 }
 
 void Renderer::Ingame_Draw()
@@ -337,6 +367,10 @@ void Renderer::Ingame_Draw()
 			count = 0;
 		}
 	}
+
+#if defined(_DEBUG) || defined(DEBUG)
+ 	m_Game_renderPasses.back()->QueueRenderable(&wpTestLine);
+#endif //Line debug
 
 	for (u32 i = 0; i < m_Game_renderPasses.size(); i++)
 	{

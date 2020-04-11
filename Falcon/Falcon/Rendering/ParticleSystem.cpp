@@ -102,9 +102,6 @@ void ParticleSystem::Update(float dt, boost::container::vector<Entity*, fmemory:
 																  0.0f, 1.0f,
 																}
 													   );
-					//Increment counters and reset timer
-					//this->newest = this->particleIndex++;
-					//this->particleCount++;
 					emitter->m_timer = 0.0f;
 					//FL_ENGINE_INFO("emit");
 				}
@@ -128,7 +125,7 @@ void ParticleSystem::Update(float dt, boost::container::vector<Entity*, fmemory:
 
 				else
 				{
-					emitter->m_particleBuffer.erase(it);
+					emitter->m_particleBuffer.pop_front();
 				}
 			}
 		}
