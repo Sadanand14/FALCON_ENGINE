@@ -8,10 +8,10 @@
 #include <EventManager.h>
 
 typedef physics::vehicle::Car CarStruct;
-typedef boost::container::vector<CarStruct*, fmemory::STLAllocator<CarStruct*>> CarArr;
+typedef boost::container::vector<CarStruct*> CarArr;
 
 
-class CarEvents :public EventSystem
+class CarEventSystem :public EventSystem
 {
 private:
 	friend class CarSystem;
@@ -19,20 +19,25 @@ private:
 	
 public:
 	virtual void ProcessEvents();
-	CarEvents();
-	~CarEvents();
+	CarEventSystem();
+	~CarEventSystem();
 };
 
 class CarSystem
 {
 private:
+	static CarEventSystem* m_carEvents;
 	static CarArr m_userCars;
 	static CarArr m_AICars;
 public:
 	static inline CarArr* GetUserCars() { return &m_userCars; }
 	static inline CarArr* GetAICars() { return &m_AICars; }
+
+	static void Initialize();
+	static void ShutDown();
 	static void AddCar(CarStruct* car, bool isUserCar);
-	void Update();
+	static void Update();
+
 };
 
 

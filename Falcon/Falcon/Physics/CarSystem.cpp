@@ -2,18 +2,22 @@
 #include <Core/Events/Event.h>
 #include <Core/Events/CarEvent.h>
 
+CarEventSystem* CarSystem::m_carEvents = nullptr;
+CarArr CarSystem::m_userCars;
+CarArr CarSystem::m_AICars;
 
-CarEvents::CarEvents()
+
+CarEventSystem::CarEventSystem()
 {
 	subscribedList.push_back(EVENT_CAR_CREATED);
 	SubscribeToEvents();
 }
 
-CarEvents::~CarEvents()
+CarEventSystem::~CarEventSystem()
 {
 }
 
-void CarEvents::SubscribeToEvents()
+void CarEventSystem::SubscribeToEvents()
 {
 	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
@@ -21,7 +25,7 @@ void CarEvents::SubscribeToEvents()
 	}
 }
 
-void CarEvents::ProcessEvents()
+void CarEventSystem::ProcessEvents()
 {
 	while (!eventQueue.empty())
 	{
@@ -37,6 +41,25 @@ void CarEvents::ProcessEvents()
 		}
 	}
 }	
+
+
+void CarSystem::Initialize()
+{
+	m_carEvents = fmemory::fnew<CarEventSystem>();
+}
+
+void CarSystem::ShutDown()
+{
+	fmemory::fdelete<CarEventSystem>(m_carEvents);
+	m_userCars.clear();
+	m_AICars.clear();
+}
+
+void CarSystem::Update()
+{
+	m_carEvents->ProcessEvents();
+}
+
 
 void CarSystem::AddCar(CarStruct* car, bool isUserCar)
 {

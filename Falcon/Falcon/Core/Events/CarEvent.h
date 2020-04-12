@@ -3,16 +3,16 @@
 
 
 #include "Event.h"
-#include "Physics/Physics.h"
+#include "Physics/vehicle/Vehicle.h"
 
 struct CarEvent : public Event
 {
 	physics::vehicle::Car* m_car;
 	bool m_isUserCar;
-	Car(physics::vehicle::Car* car, isUserCar = true) :
-		Event(EVENT_CAR_CREATED), 
+	CarEvent(physics::vehicle::Car* car, bool isUserCar = true) :
+		Event(EVENT_CAR_CREATED),
 		m_car(car),
 		m_isUserCar(isUserCar)
 	{}
-}
-#endif // !1
+};
+#endif // !CAREVENT_H

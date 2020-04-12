@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "Physics/Physics.h"
-
+#include "Physics/CarSystem.h"
 namespace gameLoop
 {
 
@@ -20,12 +20,14 @@ namespace gameLoop
 		fmemory::fdelete(m_input);
 		fmemory::fdelete(m_window);
 		AssetManager::Clean();
+
+		CarSystem::ShutDown();
 		physics::ShutdownPhysX();
+		ThreadPool::ShutDown();
 		fmemory::MeoryManagerShutDown();
 
 		m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
 		m_audio.Shutdown();
-		ThreadPool::ShutDown();
 	}
 
 	/**
@@ -56,14 +58,22 @@ namespace gameLoop
 		//Booting up physics
 		physics::InitPhysX();
 
-		m_renderer = fmemory::fnew<Renderer>(); // creates a new renderer class on the heap
+		//Initializing CarSystem
+		CarSystem::Initialize();
+
+		// creates a new renderer class on the heap
+		m_renderer = fmemory::fnew<Renderer>(); 
 		m_renderer->Init(m_window->GetWindow());
 
-		m_timer = fmemory::fnew<Timer>(); // creates a new timer class in the heap
+		// creates a new timer
+		m_timer = fmemory::fnew<Timer>(); 
+
+		// Scene load
 		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
 		m_particleSystem = fmemory::fnew<ParticleSystem>();
 		m_scene->UpdateScene();
 
+		// Octree load
 		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
 		//calculate Projection temporarily here
 		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
@@ -78,9 +88,11 @@ namespace gameLoop
 
 		//Initialize the Audio Engine
 		m_audio.Init();
-
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
 		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
+
+
+		
 
 		return true;
 	}

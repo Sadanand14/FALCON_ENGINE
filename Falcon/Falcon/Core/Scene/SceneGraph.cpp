@@ -1,8 +1,9 @@
 #include "SceneGraph.h"
 #include <Events/PassToRenderer.h> 
 #include <Events/EventManager.h>
-#include "Physics/vehicle/Vehicle.h"
-
+#include <Events/CarEvent.h>
+#include <Physics/vehicle/Vehicle.h>
+#include <Physics/CarSystem.h>
 
 namespace Scene
 {
@@ -496,9 +497,11 @@ namespace Scene
 					m_rootNode->AddChild(temp.m_sceneNode);
 					nextEntityOffset = temp.m_nextOffset;
 				}
-				physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				physics::vehicle::Car* vehicle = physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				EventManager::PushEvent(boost::make_shared<CarEvent>(vehicle, true), EVENT_CAR_CREATED);
 			}
 
+			CarSystem::Update();
 		}
 
 		SegregateEntities();
