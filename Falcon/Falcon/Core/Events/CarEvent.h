@@ -3,6 +3,7 @@
 
 
 #include "Event.h"
+#include "KeyEvents.h"
 #include "Physics/vehicle/Vehicle.h"
 
 struct CarEvent : public Event
@@ -15,4 +16,19 @@ struct CarEvent : public Event
 		m_isUserCar(isUserCar)
 	{}
 };
+
+
+struct CarInputEvent : public KeyEvent
+{
+	//KeyEvent(unsigned int keycode, keyType type) : m_keyCode(keycode), m_type(type), Event(EVENT_KEY_INPUT) {}
+	physics::vehicle::Car* m_car;
+
+	CarInputEvent(physics::vehicle::Car* car, unsigned int keycode, keyType type)
+		: KeyEvent(EVENT_CAR_INPUT,keycode, type),
+		  m_car(car)
+	{}
+
+};
+
+
 #endif // !CAREVENT_H

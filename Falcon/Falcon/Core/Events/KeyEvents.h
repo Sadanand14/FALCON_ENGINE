@@ -22,6 +22,8 @@ public:
 	inline unsigned int GetCode() { return m_keyCode; }
 	inline keyType GetKeyType() { return m_type; }
 	KeyEvent(unsigned int keycode, keyType type) : m_keyCode(keycode), m_type(type), Event(EVENT_KEY_INPUT){}
+	KeyEvent(EventsCategory event, unsigned int keycode, keyType type) 
+		: m_keyCode(keycode), m_type(type), Event(event) {}
 	~KeyEvent() {}
 };
 

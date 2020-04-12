@@ -10,6 +10,7 @@ CarArr CarSystem::m_AICars;
 CarEventSystem::CarEventSystem()
 {
 	subscribedList.push_back(EVENT_CAR_CREATED);
+	subscribedList.push_back(EVENT_CAR_INPUT);
 	SubscribeToEvents();
 }
 
@@ -38,6 +39,17 @@ void CarEventSystem::ProcessEvents()
 			boost::shared_ptr<CarEvent> dataEvent = boost::static_pointer_cast<CarEvent>(temp);
 			CarSystem::AddCar(dataEvent->m_car, dataEvent->m_isUserCar);
 			
+		}
+
+		if (temp->CheckCategory(EVENT_CAR_INPUT))
+		{
+			//Do the controller logic
+			FL_ENGINE_INFO("Received a car input event");
+			boost::shared_ptr<CarInputEvent> dataEvent = boost::static_pointer_cast<CarInputEvent>(temp);
+			FL_ENGINE_WARN("car = {0}", (void*)dataEvent->m_car);
+			FL_ENGINE_WARN("key = {0}", (void*)dataEvent->GetKeyType());
+			FL_ENGINE_WARN("keyCode = {0}", (void*)dataEvent->GetCode());
+
 		}
 	}
 }	

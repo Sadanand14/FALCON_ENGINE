@@ -19,7 +19,8 @@ enum EventsCategory {
 	EVENT_PARTICLE			 = BIT(4),
 	EVENT_DATA_TO_RENDERER	 = BIT(5),
 	EVENT_CAMERA_COMPONENT   = BIT(6),
-	EVENT_CAR_CREATED	     = BIT(7)
+	EVENT_CAR_CREATED	     = BIT(7),
+	EVENT_CAR_INPUT	         = BIT(8)
 };
 
 
