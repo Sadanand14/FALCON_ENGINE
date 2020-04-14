@@ -20,6 +20,7 @@ namespace physics
 		boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		boost::container::vector<physx::PxVehicleWheelQueryResult> gvehicleQueryResults;
 		bool gMimicKeyInputs = false;
+		bool gIsVehicleInScene = false;
 		namespace
 		{
 			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
@@ -329,17 +330,28 @@ namespace physics
 		*/
 		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& transform)
 		{
-			Car* car = fmemory::fnew<Car>(vehActor, transform);
-			//Register car to the global car data
-			gCars.push_back(car);
-			gVehicles.push_back(car->m_car);
-			//Create a car controller
-			CarController* controller = fmemory::fnew<CarController>(false);
-			gCarControllers.push_back(controller);
-			gCarControllerMap[car] = controller;
+			try
+			{
+				Car* car = fmemory::fnew<Car>(vehActor, transform);
+				//Register car to the global car data
+				gCars.push_back(car);
+				gVehicles.push_back(car->m_car);
+				//Create a car controller
+				CarController* controller = fmemory::fnew<CarController>(false);
+				gCarControllers.push_back(controller);
+				gCarControllerMap[car] = controller;
 
-			gCarIndexMap[car] = gCars.size() - 1;
-			return car;
+				gCarIndexMap[car] = gCars.size() - 1;
+
+
+				gIsVehicleInScene =  true;
+				return car;
+			}
+			catch (std::exception &e )
+			{
+				FL_ENGINE_ERROR("ERROR: Failed to create car. {0}", e.what());
+				return nullptr;
+			}
 		}
 
 		/**
@@ -387,6 +399,7 @@ namespace physics
 				CarController ref = gCarControllers[carIndex];
 				physx::PxVehicleDrive4WRawInputData inputData = gVehicleInputData[carIndex];
 				ref.SetDriveMode(driveMode,car, gVehicleInputData[carIndex]);
+				
 			}
 			catch (std::exception& e)
 			{

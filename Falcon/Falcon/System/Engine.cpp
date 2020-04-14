@@ -130,7 +130,7 @@ namespace gameLoop
 		m_renderer->Ingame_Draw();
 		
 
-		CarSystem::Update();
+		
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
 
@@ -144,6 +144,7 @@ namespace gameLoop
 		//FL_ENGINE_WARN("NodeCount: {0}", temp);
 
 		m_input->Update();
+		CarSystem::Update();
 	}
 
 	void Engine::PauseUpdate()

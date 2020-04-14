@@ -33,7 +33,7 @@ namespace physics
 		static physx::PxPvd*                         gPvd = NULL;
 												     
 	
-		static bool					                 gIsVehicleInScene = false;
+		
 
 		/**
 		*
@@ -193,7 +193,7 @@ namespace physics
 	{
 
 		//Update vehicles
-		if(gIsVehicleInScene)
+		if(vehicle::gIsVehicleInScene)
 			vehicle::StepVehicleSDK(1.0f / 60.0f);
 			
 		gScene->simulate( 1.0f / 60.0f);

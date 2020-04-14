@@ -253,8 +253,7 @@ namespace physics
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
-
-
+		extern bool gIsVehicleInScene;
 		/**
 		* Car API
 		*/
