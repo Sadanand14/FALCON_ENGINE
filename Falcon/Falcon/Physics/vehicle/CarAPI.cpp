@@ -283,8 +283,8 @@ namespace physics
 
 					//Engine
 					physx::PxVehicleEngineData engine;
-					engine.mPeakTorque = 5000.0f;//50000.0f;
-					engine.mMaxOmega = 20000.0f;//60000.0f;//approx 6000 rpm
+					engine.mPeakTorque = 500.0f;//50000.0f;
+					engine.mMaxOmega = 2000.0f;//60000.0f;//approx 6000 rpm
 					driveSimData.setEngineData(engine);
 
 					//Gears
