@@ -19,7 +19,7 @@ namespace physics
 		physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		boost::container::vector<physx::PxVehicleWheelQueryResult> gvehicleQueryResults;
-		bool gMimicKeyInputs = true;
+		bool gMimicKeyInputs = false;
 		namespace
 		{
 			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
@@ -28,7 +28,8 @@ namespace physics
 			physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 			physx::PxRigidStatic* gGroundPlane = NULL;
 			std::unordered_map<Car*, CarController*> gCarControllerMap;
-			
+			std::unordered_map<Car*, int> gCarIndexMap;
+
 			/**
 			* Helper method to create a drivable plane.
 			* @param simulation filter data
@@ -111,7 +112,7 @@ namespace physics
 				FL_ENGINE_INFO("INFO: Vehcile SDK initiated successfully.");
 				return true;
 			}
-			catch (std::exception & e)
+			catch (std::exception& e)
 			{
 				FL_ENGINE_ERROR("ERROR: Failed to init the vehicle sdk. {0}", e.what());
 				return false;
@@ -136,7 +137,7 @@ namespace physics
 				ReleaseCarMemory();
 				return true;
 			}
-			catch (std::exception & e)
+			catch (std::exception& e)
 			{
 				FL_ENGINE_ERROR("ERROR: Failed to release the vehicle sdk. {0}", e.what());
 				return false;
@@ -157,10 +158,10 @@ namespace physics
 			{
 				//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 
-				for (uint8_t itr = 0; itr < gCars.size() && gCars[itr] != nullptr; ++itr)
+				/*for (uint8_t itr = 0; itr < gCars.size() && gCars[itr] != nullptr; ++itr)
 				{
 					IncrementDrivingMode(gCars[itr], gVehicleInputData[itr], dt);
-				}
+				}*/
 
 				//Raycasts
 				//if (gVehicles[0] != nullptr)
@@ -175,13 +176,13 @@ namespace physics
 				//vehicle update
 				physx::PxWheelQueryResult wheelQueryResults[4];
 				physx::PxVec3 grav = GetPhysicsScene()->getGravity();
-				if(gvehicleQueryResults.size() < gVehicles.size())
+				if (gvehicleQueryResults.size() < gVehicles.size())
 					gvehicleQueryResults.resize(gVehicles.size());
 				for (unsigned itr = 0; itr < gVehicles.size(); ++itr)
 				{
 					//PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 					physx::PxVehicleWheelQueryResult temp{ wheelQueryResults ,gVehicles[itr]->mWheelsSimData.getNbWheels() };
-					gvehicleQueryResults[itr]=temp;
+					gvehicleQueryResults[itr] = temp;
 					//Update the control inputs for the vehicle.
 					if (gMimicKeyInputs)
 					{
@@ -207,7 +208,7 @@ namespace physics
 					gCars[itr]->m_isInAir = gCars[itr]->m_car->getRigidDynamicActor()->isSleeping() ? false : physx::PxVehicleIsInAir(gvehicleQueryResults[itr]);
 				}
 			}
-			catch (std::exception & e)
+			catch (std::exception& e)
 			{
 				FL_ENGINE_ERROR("ERROR: Vehicle update failed, {0}", e.what());
 			}
@@ -252,14 +253,14 @@ namespace physics
 		* @param Rigiddynamic* to the actor
 		* @param starting transform for the car
 		*/
-		Car::Car(physx::PxRigidDynamic* vehActor,Transform& startTransform)
+		Car::Car(physx::PxRigidDynamic* vehActor, Transform& startTransform)
 			: m_car(nullptr),
-			  m_isInAir(true)
+			m_isInAir(true)
 		{
 			CreateVehicleDescriptionObject(this);
 			CreateVehicle4W(this, vehActor);
 			m_car->getRigidDynamicActor()->setGlobalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(startTransform.GetPosition()),
-														 *PXMathUtils::QuatToPxQuat(startTransform.GetRotation())));
+				*PXMathUtils::QuatToPxQuat(startTransform.GetRotation())));
 		}
 
 
@@ -326,7 +327,7 @@ namespace physics
 		* @param Rigiddynamic* to the actor
 		* @param starting transform for the car
 		*/
-		Car* CreateCar(physx::PxRigidDynamic* vehActor,Transform& transform)
+		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& transform)
 		{
 			Car* car = fmemory::fnew<Car>(vehActor, transform);
 			//Register car to the global car data
@@ -336,6 +337,8 @@ namespace physics
 			CarController* controller = fmemory::fnew<CarController>(false);
 			gCarControllers.push_back(controller);
 			gCarControllerMap[car] = controller;
+
+			gCarIndexMap[car] = gCars.size() - 1;
 			return car;
 		}
 
@@ -346,7 +349,7 @@ namespace physics
 		{
 			for (Car* car : gCars)
 			{
-				if(car!=nullptr)
+				if (car != nullptr)
 					fmemory::fdelete<Car>(car);
 			}
 
@@ -360,7 +363,7 @@ namespace physics
 
 		/**
 		* Get the car controller associated with the car* provided.
-		* @param car pointer to the car 
+		* @param car pointer to the car
 		* @return controller assoiciated with the car* if exists or nullptr
 		*/
 		CarController* GetCarContoller(Car* car)
@@ -374,6 +377,24 @@ namespace physics
 			}
 		}
 
+
+
+		void ApplyInputToCar(Car* car, DriveMode& driveMode)
+		{
+			try
+			{
+				int carIndex = gCarIndexMap[car];
+				CarController ref = gCarControllers[carIndex];
+				physx::PxVehicleDrive4WRawInputData inputData = gVehicleInputData[carIndex];
+				ref.SetDriveMode(driveMode,car, gVehicleInputData[carIndex]);
+			}
+			catch (std::exception& e)
+			{
+				FL_ENGINE_ERROR("ERROR: Failed to apply input to car {0}", e.what());
+				
+			}
+			return;
+		}
 
 
 	}

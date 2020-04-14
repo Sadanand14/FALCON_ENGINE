@@ -9,7 +9,7 @@
 
 typedef physics::vehicle::Car CarStruct;
 typedef boost::container::vector<CarStruct*> CarArr;
-
+typedef physics::vehicle::DriveMode DriveMode;
 
 class CarEventSystem :public EventSystem
 {
@@ -29,6 +29,7 @@ private:
 	static CarEventSystem* m_carEvents;
 	static CarArr m_userCars;
 	static CarArr m_AICars;
+	static CarStruct* m_currentCar;
 public:
 	static inline CarArr* GetUserCars() { return &m_userCars; }
 	static inline CarArr* GetAICars() { return &m_AICars; }
@@ -37,7 +38,7 @@ public:
 	static void ShutDown();
 	static void AddCar(CarStruct* car, bool isUserCar);
 	static void Update();
-
+	static void ApplyInputToUserCar(DriveMode driveMode);
 };
 
 

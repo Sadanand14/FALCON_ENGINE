@@ -70,36 +70,6 @@ namespace physics
 				}
 			};
 
-			
-
-			enum DriveMode
-			{
-				eDRIVE_MODE_ACCEL_FORWARDS = 0,
-				eDRIVE_MODE_ACCEL_REVERSE,
-				eDRIVE_MODE_HARD_TURN_LEFT,
-				eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
-				eDRIVE_MODE_HARD_TURN_RIGHT,
-				eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_NONE
-			};
-
-			DriveMode gDriveModeOrder[] =
-			{
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_ACCEL_REVERSE,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_HARD_TURN_LEFT,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_HARD_TURN_RIGHT,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
-				eDRIVE_MODE_NONE
-			};
 
 			//Drivable surface types. Later on can be updated via json or if less count can be done manually.
 			enum SurfaceTypes
@@ -129,7 +99,21 @@ namespace physics
 			bool gVehicleOrderComplete;
 		}
 
-	
+
+		/**
+		* Predefined driving modes.
+		*/
+		enum DriveMode
+		{
+			eDRIVE_MODE_ACCEL_FORWARDS = 0,
+			eDRIVE_MODE_ACCEL_REVERSE,
+			eDRIVE_MODE_HARD_TURN_LEFT,
+			eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+			eDRIVE_MODE_HARD_TURN_RIGHT,
+			eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+			eDRIVE_MODE_BRAKE,
+			eDRIVE_MODE_NONE
+		};
 		
 		/**
 		* Initiates the vehicle sdk for the physics.
@@ -272,13 +256,13 @@ namespace physics
 
 
 		/**
-		* Car creation/Deletion API
+		* Car API
 		*/
 		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
 		void ReleaseCarMemory();
-
+		
 		CarController* GetCarContoller(const Car* car);
-
+		void ApplyInputToCar(Car* car, DriveMode& driveMode);
 	}
 
 

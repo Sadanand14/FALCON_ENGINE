@@ -128,7 +128,9 @@ namespace gameLoop
 		////renderer Update
 		m_renderer->Ingame_Update(dt, m_scene->GetEntities());
 		m_renderer->Ingame_Draw();
+		
 
+		CarSystem::Update();
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
 

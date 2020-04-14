@@ -1,16 +1,19 @@
 #include "CarSystem.h"
 #include <Core/Events/Event.h>
 #include <Core/Events/CarEvent.h>
+#include <MouseEvents.h>
+#include <KeyEvents.h>
 
 CarEventSystem* CarSystem::m_carEvents = nullptr;
 CarArr CarSystem::m_userCars;
 CarArr CarSystem::m_AICars;
-
+CarStruct* CarSystem::m_currentCar = nullptr;
 
 CarEventSystem::CarEventSystem()
 {
 	subscribedList.push_back(EVENT_CAR_CREATED);
-	subscribedList.push_back(EVENT_CAR_INPUT);
+	subscribedList.push_back(EVENT_KEY_INPUT);
+	subscribedList.push_back(EVENT_MOUSE_INPUT);
 	SubscribeToEvents();
 }
 
@@ -41,14 +44,35 @@ void CarEventSystem::ProcessEvents()
 			
 		}
 
-		if (temp->CheckCategory(EVENT_CAR_INPUT))
+		if (temp->CheckCategory(EVENT_KEY_INPUT))
 		{
 			//Do the controller logic
 			FL_ENGINE_INFO("Received a car input event");
-			boost::shared_ptr<CarInputEvent> dataEvent = boost::static_pointer_cast<CarInputEvent>(temp);
-			FL_ENGINE_WARN("car = {0}", (void*)dataEvent->m_car);
-			FL_ENGINE_WARN("key = {0}", (void*)dataEvent->GetKeyType());
-			FL_ENGINE_WARN("keyCode = {0}", (void*)dataEvent->GetCode());
+			boost::shared_ptr<KeyEvent> keyEvent = boost::static_pointer_cast<KeyEvent>(temp);
+
+			//KeyInputResponse
+			if (keyEvent->GetKeyType() == keyType::Released) continue;
+
+			unsigned int key = keyEvent->GetCode();
+
+			switch (key)
+			{
+			case GLFW_KEY_UP:
+				CarSystem::ApplyInputToUserCar(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
+				break;
+			case GLFW_KEY_DOWN:
+				CarSystem::ApplyInputToUserCar(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
+				break;
+			case GLFW_KEY_LEFT:
+				CarSystem::ApplyInputToUserCar(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+				break;
+			case GLFW_KEY_RIGHT:
+				CarSystem::ApplyInputToUserCar(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
+				break;
+			case GLFW_KEY_SPACE:
+				CarSystem::ApplyInputToUserCar(DriveMode::eDRIVE_MODE_BRAKE);
+				break;
+			}
 
 		}
 	}
@@ -72,6 +96,11 @@ void CarSystem::Update()
 	m_carEvents->ProcessEvents();
 }
 
+void CarSystem::ApplyInputToUserCar(DriveMode driveMode)
+{
+	physics::vehicle::ApplyInputToCar(m_currentCar, driveMode);
+}
+
 
 void CarSystem::AddCar(CarStruct* car, bool isUserCar)
 {
@@ -81,6 +110,10 @@ void CarSystem::AddCar(CarStruct* car, bool isUserCar)
 	if (isUserCar)
 	{
 		m_userCars.push_back(car);
+		if (m_currentCar == nullptr)
+		{
+			m_currentCar = m_userCars[0];
+		}
 	}
 	else
 	{
