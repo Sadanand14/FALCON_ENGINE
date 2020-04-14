@@ -18,14 +18,12 @@ struct CarEvent : public Event
 };
 
 
-struct CarInputEvent : public KeyEvent
+struct CarAIInputEvent: public Event
 {
-	//KeyEvent(unsigned int keycode, keyType type) : m_keyCode(keycode), m_type(type), Event(EVENT_KEY_INPUT) {}
 	physics::vehicle::Car* m_car;
-
-	CarInputEvent(physics::vehicle::Car* car, unsigned int keycode, keyType type)
-		: KeyEvent(EVENT_CAR_INPUT,keycode, type),
-		  m_car(car)
+	physics::vehicle::DriveMode m_driveMode;
+	CarAIInputEvent(physics::vehicle::Car* car, physics::vehicle::DriveMode mode)
+		: Event(EVENT_CAR_CREATED),m_car(car), m_driveMode(mode)
 	{}
 
 };

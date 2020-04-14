@@ -503,7 +503,7 @@ namespace Scene
 					nextEntityOffset = temp.m_nextOffset;
 				}
 				physics::vehicle::Car* vehicle = physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
-				EventManager::PushEvent(boost::make_shared<CarEvent>(vehicle, true), EVENT_CAR_CREATED);
+				EventManager::PushEvent(boost::make_shared<CarEvent>(vehicle, is_user_car), EVENT_CAR_CREATED);
 			}
 
 			CarSystem::Update();

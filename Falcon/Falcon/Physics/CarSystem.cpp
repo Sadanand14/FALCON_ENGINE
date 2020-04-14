@@ -14,6 +14,7 @@ CarEventSystem::CarEventSystem()
 	subscribedList.push_back(EVENT_CAR_CREATED);
 	subscribedList.push_back(EVENT_KEY_INPUT);
 	subscribedList.push_back(EVENT_MOUSE_INPUT);
+	subscribedList.push_back(EVENT_CAR_AI_INPUT);
 	SubscribeToEvents();
 }
 
@@ -74,6 +75,11 @@ void CarEventSystem::ProcessEvents()
 				break;
 			}
 
+		}
+
+		if (temp->CheckCategory(EVENT_CAR_AI_INPUT))
+		{
+			//Do AI stuff
 		}
 	}
 }	
