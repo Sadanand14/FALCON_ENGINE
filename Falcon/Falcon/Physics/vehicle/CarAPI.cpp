@@ -473,7 +473,7 @@ namespace physics
 			else
 			{
 				vehicleInputData.setAnalogAccel(true);
-				vehicleInputData.setAnalogSteer(-1.0f);
+				vehicleInputData.setAnalogSteer(1.0f);
 			}
 		}
 
@@ -492,7 +492,7 @@ namespace physics
 			else
 			{
 				vehicleInputData.setAnalogAccel(1.0f);
-				vehicleInputData.setAnalogSteer(1.0f);
+				vehicleInputData.setAnalogSteer(-1.0f);
 			}
 		}
 
