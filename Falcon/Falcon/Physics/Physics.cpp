@@ -34,7 +34,10 @@ namespace physics
 												     
 	
 		
+		//Fixed step calculation variables for the physx update
 
+		static float gaccumlator = 0.0f;
+		static float gstepSize = 1.0f / 60.0f;
 		/**
 		*
 		* Function creates a Random convex mesh for collider shape which is used for the mesh collider.
@@ -192,17 +195,28 @@ namespace physics
 		const size_t& count)
 	{
 
-		//Update vehicles
-		if(vehicle::gIsVehicleInScene)
-			vehicle::StepVehicleSDK(1.0f / 60.0f);
-			
-		gScene->simulate( 1.0f / 60.0f);
-		gScene->fetchResults(true);
 
-		//Update physics System;
-		PhysicsSystem::update(dt, entity, count);
+		FL_ENGINE_ERROR("dt in physx = {0}", dt);
+		gaccumlator += dt;
+
+		if (gaccumlator < gstepSize)
+			return;
+
+		else
+		{	
+			gaccumlator -= gstepSize;
+			//Update vehicles
+			if (vehicle::gIsVehicleInScene)
+				vehicle::StepVehicleSDK(gstepSize);
+
+			gScene->simulate(gstepSize);
+			gScene->fetchResults(true);
+
+			//Update physics System;
+			PhysicsSystem::update(dt, entity, count);
+
+		}
 	}
-
 
 	/**
 	* Creates the physX scene.
