@@ -36,15 +36,16 @@ namespace physics
 
 			physx::PxVehicleKeySmoothingData gKeySmoothingData =
 			{
+				
 				{
-					2.0f,	//rise rate eANALOG_INPUT_ACCEL
-					2.0f,	//rise rate eANALOG_INPUT_BRAKE		
-					2.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-					0.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-					0.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+					6.0f,	//rise rate eANALOG_INPUT_ACCEL
+					6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+					6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+					2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+					2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
 				},
 				{
-					5.0f,	//fall rate eANALOG_INPUT_ACCEL
+					10.0f,	//fall rate eANALOG_INPUT_ACCEL
 					10.0f,	//fall rate eANALOG_INPUT_BRAKE		
 					10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
 					5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
@@ -56,17 +57,17 @@ namespace physics
 			{
 				{
 					0.060f,	//rise rate eANALOG_INPUT_ACCEL
-					0.010f,	//rise rate eANALOG_INPUT_BRAKE		
-					0.060f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+					0.10f,	//rise rate eANALOG_INPUT_BRAKE		
+					0.10f,	//rise rate eANALOG_INPUT_HANDBRAKE	
 					0.025f,	//rise rate eANALOG_INPUT_STEER_LEFT
 					0.025f,	//rise rate eANALOG_INPUT_STEER_RIGHT
 				},
 				{
 					0.0100f,	//fall rate eANALOG_INPUT_ACCEL
-					0.0100f,	//fall rate eANALOG_INPUT_BRAKE		
-					0.0100f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-					0.0050f,	//fall rate eANALOG_INPUT_STEER_LEFT
-					0.0050f	   //fall rate eANALOG_INPUT_STEER_RIGHT
+					0.100f,	//fall rate eANALOG_INPUT_BRAKE		
+					0.100f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+					0.050f,	//fall rate eANALOG_INPUT_STEER_LEFT
+					0.050f	   //fall rate eANALOG_INPUT_STEER_RIGHT
 				}
 			};
 
@@ -254,6 +255,7 @@ namespace physics
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
 		extern bool gIsVehicleInScene;
+		extern bool gIsInputDigital;
 		/**
 		* Car API
 		*/

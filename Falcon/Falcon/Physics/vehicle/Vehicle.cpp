@@ -21,6 +21,7 @@ namespace physics
 		boost::container::vector<physx::PxVehicleWheelQueryResult> gvehicleQueryResults;
 		bool gMimicKeyInputs = false;
 		bool gIsVehicleInScene = false;
+		bool gIsInputDigital = true;
 		namespace
 		{
 			//physx::PxMaterial * gTarmacMaterial = GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);;
@@ -30,7 +31,7 @@ namespace physics
 			physx::PxRigidStatic* gGroundPlane = NULL;
 			std::unordered_map<Car*, CarController*> gCarControllerMap;
 			std::unordered_map<Car*, int> gCarIndexMap;
-
+	
 			/**
 			* Helper method to create a drivable plane.
 			* @param simulation filter data
@@ -185,7 +186,7 @@ namespace physics
 					physx::PxVehicleWheelQueryResult temp{ wheelQueryResults ,gVehicles[itr]->mWheelsSimData.getNbWheels() };
 					gvehicleQueryResults[itr] = temp;
 					//Update the control inputs for the vehicle.
-					if (gMimicKeyInputs)
+					if (gIsInputDigital)
 					{
 						PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData[0], dt, gCars[itr]->m_isInAir, *gCars[itr]->m_car);
 					}

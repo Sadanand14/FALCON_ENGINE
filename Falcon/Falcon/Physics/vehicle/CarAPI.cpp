@@ -412,7 +412,10 @@ namespace physics
 
 		void StartAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if(car->m_car->mDriveDynData.getCurrentGear() == physx::PxVehicleGearsData::eREVERSE)
+				car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
+
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
 			}
@@ -431,7 +434,7 @@ namespace physics
 		{
 			car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
 
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
 			}
@@ -448,7 +451,7 @@ namespace physics
 		*/
 		void StartBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalBrake(true);
 			}
@@ -465,10 +468,10 @@ namespace physics
 		*/
 		void StartTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
-				vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalSteerRight(true);
 			}
 			else
 			{
@@ -484,10 +487,10 @@ namespace physics
 		*/
 		void StartTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
-				vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalSteerLeft(true);
 			}
 			else
 			{
@@ -503,9 +506,9 @@ namespace physics
 		*/
 		void StartHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalSteerRight(true);
 				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
@@ -522,9 +525,9 @@ namespace physics
 		*/
 		void StartHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalSteerLeft(true);
 				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
@@ -542,7 +545,7 @@ namespace physics
 		*/
 		void ReleaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(false);
 				vehicleInputData.setDigitalSteerLeft(false);
