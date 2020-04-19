@@ -113,6 +113,7 @@ Renderer::Renderer()
 */
 Renderer::~Renderer()
 {
+	glDeleteTextures(1, &m_brdfTextue.textureID);
 	fmemory::fdelete(m_UI);
 	CameraSystem::ShutDown();
 
@@ -163,6 +164,7 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	//Draw in Wireframe mode - Comment out
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	//m_RES->ProcessEvents();
 
 	wp.AddWaypoint(glm::vec3( 0.0f,   0.0f,  0.0f));
@@ -172,6 +174,52 @@ void Renderer::CreateDrawStates(GLFWwindow* win)
 	wp.AddWaypoint(glm::vec3(20.0f, -5.0f, 10.0f));
 	wp.AddWaypoint(glm::vec3(10.0f, -5.0f, 10.0f));
 	wp.AddWaypoint(glm::vec3( 5.0f,  0.0f, 10.0f));
+
+	Mesh quad;
+	quad.m_vertexArray.push_back(Vertex{ glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec2( 0.0f,  1.0f), glm::vec3(), glm::vec3(), glm::vec3()});
+	quad.m_vertexArray.push_back(Vertex{ glm::vec3(-1.0f, -3.0f, 0.0f), glm::vec2( 0.0f, -1.0f), glm::vec3(), glm::vec3(), glm::vec3()});
+	quad.m_vertexArray.push_back(Vertex{ glm::vec3( 3.0f,  1.0f, 0.0f), glm::vec2( 2.0f,  1.0f), glm::vec3(), glm::vec3(), glm::vec3()});
+	quad.m_indexArray.push_back(0);
+	quad.m_indexArray.push_back(1);
+	quad.m_indexArray.push_back(2);
+	quad.Setup();
+
+	quad.Bind();
+
+	Shader* brdfShad = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/brdf.vert", "../Falcon/Rendering/Shader/brdf.frag");
+
+	unsigned int captureFBO, captureRBO;
+	glGenFramebuffers(1, &captureFBO);
+	glGenRenderbuffers(1, &captureRBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+
+	glGenTextures(1, &m_brdfTextue.textureID);
+	glBindTexture(GL_TEXTURE_2D, m_brdfTextue.textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glViewport(0, 0, 512, 512);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_brdfTextue.textureID, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	brdfShad->UseShader();
+	//Draw to quad
+	glDrawElements(GL_TRIANGLES, quad.m_indexArray.size(), GL_UNSIGNED_INT, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, 1280, 720);
+
+	glDeleteFramebuffers(1, &captureFBO);
+	glDeleteRenderbuffers(1, &captureRBO);
+
+	fmemory::fdelete(brdfShad);
 }
 
 /**
@@ -182,7 +230,7 @@ void Renderer::SetDrawStates(boost::container::vector<Entity*, fmemory::STLAlloc
 	m_skyMesh = m_RES->GetSkyMesh();
 	m_terrainMesh = m_RES->GetTerrainMesh();
 	m_projection = projection;
-	
+
 	CameraSystem::Update(0.016f);
 
 	//Menu RenderPasses
@@ -249,7 +297,8 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 	//FL_ENGINE_INFO("Draw Count : {0}", m_entities->size());
 
 	//for skybox
-	Shader* skyShader = m_skyMesh->GetMaterial()->m_shader;
+	Material* skyMat = m_skyMesh->GetMaterial();
+	Shader* skyShader = skyMat->m_shader;
 	skyShader->UseShader();
 	skyShader->SetMat4("projection", m_projection);
 	skyShader->SetMat4("view", CameraSystem::GetView());
@@ -259,6 +308,7 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 	temp->UseShader();
 	temp->SetMat4("projection", m_projection);
 	temp->SetMat4("view", CameraSystem::GetView());
+	temp->SetVec3("camPos", CameraSystem::GetPos());
 
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
@@ -268,6 +318,16 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 			shader->UseShader();
 			shader->SetMat4("projection", m_projection);
 			shader->SetMat4("view", CameraSystem::GetView());
+			shader->SetVec3("camPos", CameraSystem::GetPos());
+			shader->SetInt("irradianceMap", 6);
+			glActiveTexture(GL_TEXTURE0 + 6);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, skyMat->m_normalTex.textureID);
+			shader->SetInt("prefilterMap", 7);
+			glActiveTexture(GL_TEXTURE0 + 7);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, skyMat->m_roughnessTex.textureID);
+			shader->SetInt("brdf", 8);
+			glActiveTexture(GL_TEXTURE0 + 8);
+			glBindTexture(GL_TEXTURE_2D, m_brdfTextue.textureID);
 		}
 
 		if (m_entities->at(i)->GetComponent<ParticleEmitterComponent>() != nullptr)
@@ -296,11 +356,11 @@ void Renderer::Ingame_Draw()
 
 	if (m_skyMesh != nullptr)
 	{
-		m_skyMesh->AddWorldMatrix(glm::mat4(0.0f));
+		m_skyMesh->AddWorldAndNormalMatrix(glm::mat4(0.0f), glm::mat3(0.0f));
 		m_Game_renderPasses[2]->QueueRenderable(m_skyMesh);
 	}
 
-	m_terrainMesh->AddWorldMatrix(glm::mat4(1.0f));
+	m_terrainMesh->AddWorldAndNormalMatrix(glm::mat4(1.0f), glm::mat3(1.0f));
 	m_Game_renderPasses[0]->QueueRenderable(m_terrainMesh);
 	boost::container::flat_map<float, int> distanceEntityMap;
 	for (u32 i = 0; i < m_entities->size(); i++)
@@ -314,7 +374,7 @@ void Renderer::Ingame_Draw()
 
 			if (!m->GetTransparent())
 			{
-				m->AddWorldMatrix(trans->GetModel());
+				m->AddWorldAndNormalMatrix(trans->GetModel(), trans->GetNormal());
 				m_Game_renderPasses[0]->QueueRenderable(m);
 			}
 
@@ -341,7 +401,7 @@ void Renderer::Ingame_Draw()
 	for (auto it = distanceEntityMap.rbegin(); it != distanceEntityMap.rend(); it++)
 	{
 		RenderComponent* rc = m_entities->at(it->second)->GetComponent<RenderComponent>();
-		rc->m_mesh->AddWorldMatrix(m_entities->at(it->second)->GetTransform()->GetModel());
+		rc->m_mesh->AddWorldAndNormalMatrix(m_entities->at(it->second)->GetTransform()->GetModel(), m_entities->at(it->second)->GetTransform()->GetNormal());
 		count++;
 
 		auto next = it;

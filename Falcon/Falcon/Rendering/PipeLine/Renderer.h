@@ -86,6 +86,7 @@ class Renderer
 	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
+	Texture m_brdfTextue;
 
 	Waypoint wp;
 #if defined(_DEBUG) || defined(DEBUG)

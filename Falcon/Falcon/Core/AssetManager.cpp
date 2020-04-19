@@ -9,6 +9,8 @@
 TextureType AssetManager::m_lastTextureType;
 Mesh* AssetManager::m_cubeMesh = nullptr;
 Shader* AssetManager::m_cubeShader = nullptr;
+Shader* AssetManager::m_irradianceShader = nullptr;
+Shader* AssetManager::m_prefilterShader = nullptr;
 
 boost::mutex AssetManager::AssetMtx;
 
@@ -77,6 +79,51 @@ Mesh* AssetManager::GetMesh(const std::string& path)
 	return mesh;
 }
 
+/**
+ * Loads a sky into the scene
+ * @param path - The path to the sky json file
+ */
+Mesh* AssetManager::GetSky(const std::string& path)
+{
+	//return if mesh is already loaded
+	auto iterator = m_meshes.find(path);
+	if (iterator != m_meshes.end())
+		return iterator->second;
+
+	//Get file data
+	char* json = nullptr;
+	int32_t size;
+	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
+	if (jsonFile.is_open()) {
+		size = jsonFile.tellg();
+		jsonFile.seekg(std::ios::beg);
+		json = fmemory::fnew_arr<char>(size + 1);
+		jsonFile.read(json, size);
+		json[size] = 0;
+		jsonFile.close();
+	}
+
+	//Start json doc
+	rapidjson::Document doc;
+	doc.Parse(json);
+	fmemory::fdelete<char>(json);
+
+	//Set the mesh path
+	//std::string const& temp = path;
+	std::string meshPath = doc["path"].GetString();
+	Mesh* mesh = LoadModel(meshPath);
+
+	bool transparent = doc["transparent"].GetBool();
+	mesh->SetTransparent(transparent);
+
+	mesh->SetMaterial(GetSkyMaterial(doc["material"].GetString()));
+	mesh->PreallocMatrixAmount(doc["instances"].GetInt());
+
+	AssetMtx.lock();
+	m_meshes[path] = mesh;
+	AssetMtx.unlock();
+	return mesh;
+}
 
 /**
 * AssetManager function that creates a terrain based on the heightmap data provided in the .raw file.
@@ -218,6 +265,28 @@ Material* AssetManager::GetMaterial(const std::string& path)
 }
 
 /**
+ * Loads a material into the scene
+ * @param matPath - The path to the material json file
+ */
+Material* AssetManager::GetSkyMaterial(const std::string& path)
+{
+	AssetMtx.lock();
+	//return if material is already loaded
+	auto mat = m_materials.find(path);
+	AssetMtx.unlock();
+	if (mat != m_materials.end())
+		return mat->second;
+
+	//Load material if it doesn't exist
+	Material* material = LoadSkyMaterial(path);
+	AssetMtx.lock();
+	m_materials[path] = material;
+	AssetMtx.unlock();
+	return material;
+
+}
+
+/**
 *This function intializes the loading of a model using the ASSIMP Library.
 *
 *@param[in] File Path
@@ -249,9 +318,10 @@ Mesh* AssetManager::LoadModel(std::string const& path)
 *This function loads a texture file using the STBI library.
 *
 *@param[in] File Location
+*@param[in] The number of channels
 *@param[out] Texture ID
 */
-u32 AssetManager::LoadTexture(std::string const& path)
+u32 AssetManager::LoadTexture(std::string const& path, int channels)
 {
 	std::string filename(path);
 
@@ -259,49 +329,14 @@ u32 AssetManager::LoadTexture(std::string const& path)
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
-	std::string temp = path.substr(path.size() - 3, 3);
-	//if (temp == "dds")
-	//{
-	//	m_lastTextureType = TextureType::cubeMap;
-	//	unsigned char* data = stbi_dds_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	//	if (data)
-	//	{
-	//		return texture_loadDDS(path.c_str());
-	//	}
-	//}
-
-	if (temp == "hdr")
-	{
-		stbi_set_flip_vertically_on_load(true);
-		int width, height, nrComponents;
-		m_lastTextureType = TextureType::CUBEMAP;
-		float* data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
-		unsigned int hdrTexture;
-		if (data)
-		{
-			glGenTextures(1, &hdrTexture);
-			glBindTexture(GL_TEXTURE_2D, hdrTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			stbi_image_free(data);
-		}
-		else
-		{
-			FL_ENGINE_ERROR("ERROR: HDR Texture failed to load at {0} ", path);
-			stbi_image_free(data);
-		}
-		return HDRtoCubemap(hdrTexture);
-	}
-
 	stbi_set_flip_vertically_on_load(false);
 
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, channels);
 	m_lastTextureType = TextureType::TEXTURE2D;
+
+	if(channels != 0)
+		nrComponents = channels;
+
 	if (data)
 	{
 		GLenum format = 0;
@@ -343,7 +378,7 @@ u32 AssetManager::LoadTexture(std::string const& path)
 
 /**
 * AssetManager Function Responsible for loading Material data from the provided json file path.
-@param[in] A path to the json file defining the type of data to be held by that Material instance.
+* @param[in] A path to the json file defining the type of data to be held by that Material instance.
 */
 Material* AssetManager::LoadMaterial(std::string const& path)
 {
@@ -383,10 +418,44 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 		mat->m_albedoTex.type = m_lastTextureType;
 	}
 
+	else
+	{
+		uint8_t albedo[3] = { 255, 255, 255 };
+
+		//Create some default textures
+		mat->m_albedoTex.type = TextureType::TEXTURE2D;
+
+		glGenTextures(1, &mat->m_albedoTex.textureID);
+		glBindTexture(GL_TEXTURE_2D, mat->m_albedoTex.textureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &albedo);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	if (doc.HasMember("roughness"))
 	{
-		mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString());
+		mat->m_roughnessTex.textureID = LoadTexture(doc["roughness"].GetString(), 1);
 		mat->m_roughnessTex.type = m_lastTextureType;
+	}
+
+	else
+	{
+		uint8_t rough = 255;
+		mat->m_roughnessTex.type = TextureType::TEXTURE2D;
+
+		glGenTextures(1, &mat->m_roughnessTex.textureID);
+		glBindTexture(GL_TEXTURE_2D, mat->m_roughnessTex.textureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 1, 1, 0, GL_RED, GL_UNSIGNED_BYTE, &rough);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	if (doc.HasMember("normal"))
@@ -395,16 +464,143 @@ Material* AssetManager::LoadMaterial(std::string const& path)
 		mat->m_normalTex.type = m_lastTextureType;
 	}
 
+	else
+	{
+		uint8_t normal[3] = { 128, 128, 255 };
+		mat->m_normalTex.type = TextureType::TEXTURE2D;
+
+		glGenTextures(1, &mat->m_normalTex.textureID);
+		glBindTexture(GL_TEXTURE_2D, mat->m_normalTex.textureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &normal);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	if (doc.HasMember("metallic"))
 	{
-		mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString());
+		mat->m_metallicTex.textureID = LoadTexture(doc["metallic"].GetString(), 1);
 		mat->m_metallicTex.type = m_lastTextureType;
+	}
+
+	else
+	{
+		uint8_t metallic = 0;
+		mat->m_metallicTex.type = TextureType::TEXTURE2D;
+
+		glGenTextures(1, &mat->m_metallicTex.textureID);
+		glBindTexture(GL_TEXTURE_2D, mat->m_metallicTex.textureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 1, 1, 0, GL_RED, GL_UNSIGNED_BYTE, &metallic);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	if (doc.HasMember("ao"))
 	{
-		mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString());
+		mat->m_aoTex.textureID = LoadTexture(doc["ao"].GetString(), 1);
 		mat->m_aoTex.type = m_lastTextureType;
+	}
+
+	else
+	{
+		uint8_t ao = 255;
+		mat->m_aoTex.type = TextureType::TEXTURE2D;
+
+		glGenTextures(1, &mat->m_aoTex.textureID);
+		glBindTexture(GL_TEXTURE_2D, mat->m_aoTex.textureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 1, 1, 0, GL_RED, GL_UNSIGNED_BYTE, &ao);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	return mat;
+}
+
+/**
+ * AssetManager Function Responsible for loading Material data from the provided json file path.
+ * @param[in] A path to the json file defining the type of data to be held by that Material instance.
+ */
+Material* AssetManager::LoadSkyMaterial(std::string const& path)
+{
+	//Get file data
+	char* json = nullptr;
+	int32_t size;
+	std::ifstream jsonFile(path, std::ios::in | std::ios::ate | std::ios::binary);
+	if (jsonFile.is_open()) {
+		size = jsonFile.tellg();
+		jsonFile.seekg(std::ios::beg);
+		json = fmemory::fnew_arr<char>(size + 1);
+		//json = new char[size + 1];
+		jsonFile.read(json, size);
+		json[size] = 0;
+		jsonFile.close();
+	}
+
+	//Start json doc
+	rapidjson::Document doc;
+	doc.Parse(json);
+	fmemory::fdelete<char>(json);
+
+	////TODO: Change this to actually load a material using json and remove tmp things
+	Material* mat = fmemory::fnew<Material>();
+
+	if (doc.HasMember("Vshader") && doc.HasMember("Fshader"))
+	{
+		std::string Vshader = doc["Vshader"].GetString();
+		std::string Fshader = doc["Fshader"].GetString();
+		Shader* shader = fmemory::fnew<Shader>(Vshader.c_str(), Fshader.c_str());
+		mat->SetShader(shader);
+	}
+
+	if (doc.HasMember("albedo"))
+	{
+		std::string filename(doc["albedo"].GetString());
+
+		int width, height, nrComponents;
+		std::string temp = filename.substr(filename.size() - 3, 3);
+
+		if (temp == "hdr")
+		{
+			stbi_set_flip_vertically_on_load(true);
+			int width, height, nrComponents;
+			float* data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
+			unsigned int hdrTexture;
+			if (data)
+			{
+				glGenTextures(1, &hdrTexture);
+				glBindTexture(GL_TEXTURE_2D, hdrTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+				stbi_image_free(data);
+			}
+			else
+			{
+				FL_ENGINE_ERROR("ERROR: HDR Texture failed to load at {0} ", path);
+				stbi_image_free(data);
+			}
+
+			HDRtoCubemap(hdrTexture, &mat->m_albedoTex.textureID, &mat->m_normalTex.textureID, &mat->m_roughnessTex.textureID);
+		}
+
+		mat->m_albedoTex.type = TextureType::CUBEMAP;
+		mat->m_normalTex.type = TextureType::CUBEMAP;
+		mat->m_roughnessTex.type = TextureType::CUBEMAP;
 	}
 
 	return mat;
@@ -430,7 +626,7 @@ void AssetManager::ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh
 	}
 	//Process children nodes.
 
-	
+
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessNode(node->mChildren[i], scene, newMesh);
@@ -522,32 +718,17 @@ void AssetManager::ProcessMesh(aiMesh* mesh, Mesh* newMesh)
 * Private AssetManager function to convert loaded HDR textures into cubemap textures.
 @param[in] The handle to the HDR texture that needs to be converted (GLuint).
 */
-GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
+void AssetManager::HDRtoCubemap(GLuint hdrTex, u32* cubeMap, u32* irradianceMap, u32* prefilterMap)
 {
 	unsigned int captureFBO, captureRBO;
 	glGenFramebuffers(1, &captureFBO);
 	glGenRenderbuffers(1, &captureRBO);
-
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
-	unsigned int envCubemap;
-	glGenTextures(1, &envCubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-	for (unsigned int i = 0; i < 6; ++i)
-	{
-		// note that we store each face with 16 bit floating point values
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
-			512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	//Capture views
 	glm::mat4 captureProjection = (glm::mat4)glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -559,6 +740,8 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
+	/////////////////////
+	//// Generate cubemap
 	if (m_cubeShader == nullptr)m_cubeShader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/VS_CubeMapShader.vert", "../Falcon/Rendering/Shader/PS_CubeMapShader.frag");
 	m_cubeShader->UseShader();
 
@@ -573,7 +756,23 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 	m_cubeShader->SetInt("equirectangularMap", 0);
 	m_cubeShader->SetMat4("projection", captureProjection);
 
-	glViewport(0, 0,512, 512); // don't forget to configure the viewport to the capture dimensions.
+	glGenTextures(1, cubeMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *cubeMap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		// note that we store each face with 16 bit floating point values
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+					 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
@@ -581,7 +780,7 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 		{*/
 			m_cubeShader->SetMat4("view", captureViews[i]);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, *cubeMap, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//TODO DRAW A 1x1 CUBE
@@ -589,9 +788,103 @@ GLuint AssetManager::HDRtoCubemap(GLuint hdrTex)
 			//renderCube(); // renders a 1x1 cube
 		//}
 	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	/////////////////////
+	//// Generate irradiance map
+	if (m_irradianceShader == nullptr) m_irradianceShader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/VS_CubeMapShader.vert", "../Falcon/Rendering/Shader/irradianceMap.frag");
+	m_irradianceShader->UseShader();
+	m_irradianceShader->SetMat4("projection", captureProjection);
+
+	glGenTextures(1, irradianceMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *irradianceMap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		// note that we store each face with 16 bit floating point values
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+					 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *cubeMap);
+	m_irradianceShader->SetInt("cubeMap", 0);
+
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		/*if (i == 0)
+		 *{*/
+		m_irradianceShader->SetMat4("view", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+							   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, *irradianceMap, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//TODO DRAW A 1x1 CUBE
+		glDrawElements(GL_TRIANGLES, m_cubeMesh->m_indexArray.size(), GL_UNSIGNED_INT, 0);
+		//renderCube(); // renders a 1x1 cube
+		//}
+	}
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	/////////////////////
+	//// Generate prefilter map
+	if (m_prefilterShader == nullptr) m_prefilterShader = fmemory::fnew<Shader>("../Falcon/Rendering/Shader/VS_CubeMapShader.vert", "../Falcon/Rendering/Shader/prefilterMap.frag");
+	m_prefilterShader->UseShader();
+
+	m_prefilterShader->SetMat4("projection", captureProjection);
+	m_prefilterShader->SetVec2("res", 512, 512);
+
+	glGenTextures(1, prefilterMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *prefilterMap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		// note that we store each face with 16 bit floating point values
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+					 128, 128, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *cubeMap);
+	m_prefilterShader->SetInt("cubeMap", 0);
+
+	for (uint32_t mip = 0; mip < 5; mip++) {
+		uint32_t mipSize = 128 * std::pow(0.5f, mip);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipSize, mipSize);
+		glViewport(0, 0, mipSize, mipSize); // don't forget to configure the viewport to the capture dimensions.
+		float roughness = (float)mip / 4.0f;
+		m_prefilterShader->SetFloat("roughness", roughness);
+
+		//For each view: set the ubo matrices, attach the texture, clear the fb, run the prefilter shader
+		for (uint32_t i = 0; i < 6; i++) {
+			m_prefilterShader->SetMat4("view", captureViews[i]);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+							   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, *prefilterMap, mip);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glDrawElements(GL_TRIANGLES, m_cubeMesh->m_indexArray.size(), GL_UNSIGNED_INT, 0);
+		}
+	}
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, 1280, 720);
-	return envCubemap;
+
+	glDeleteFramebuffers(1, &captureFBO);
+	glDeleteRenderbuffers(1, &captureRBO);
 }
 
 Font* AssetManager::GetFont(std::string const &path)

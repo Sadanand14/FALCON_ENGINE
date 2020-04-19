@@ -15,8 +15,10 @@ private:
 	//Render Data
 	VertexBuffer* m_VBO1;
 	VertexBuffer* m_VBO2;
+	VertexBuffer* m_VBO3;
 	IndexBuffer* m_IBO;
 	boost::container::vector<glm::mat4, fmemory::STLAllocator<glm::mat4>> m_worldMats;
+	boost::container::vector<glm::mat3, fmemory::STLAllocator<glm::mat3>> m_normalMats;
 	bool m_transparent = false;
 
 public:
@@ -30,7 +32,7 @@ public:
 	//Functions
 	void Setup() override;
 	void PreallocMatrixAmount(u32 maxMatrices);
-	void AddWorldMatrix(const glm::mat4& mat);
+	void AddWorldAndNormalMatrix(const glm::mat4& mat, const glm::mat3& normal);
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void Bind() override;

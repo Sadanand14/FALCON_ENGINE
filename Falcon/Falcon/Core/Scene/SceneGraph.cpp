@@ -1,5 +1,5 @@
 #include "SceneGraph.h"
-#include <Events/PassToRenderer.h> 
+#include <Events/PassToRenderer.h>
 #include <Events/EventManager.h>
 
 namespace Scene
@@ -282,19 +282,19 @@ namespace Scene
 
 		Mesh *terrainMesh = nullptr, *skyMesh = nullptr;
 
-		if (doc.HasMember("terrain")) 
+		if (doc.HasMember("terrain"))
 		{
 			terrainMesh = AssetManager::LoadTerrain(doc["terrain"].GetString());
-			
+
 			//std::cout << "Terrain Loaded";
 		}
 
-		
+
 		//check for Skybox
-		if (doc.HasMember("sky")) 
+		if (doc.HasMember("sky"))
 		{
 			rapidjson::Value& sky = doc["sky"];
-			skyMesh = AssetManager::GetMesh(sky.GetString());
+			skyMesh = AssetManager::GetSky(sky.GetString());
 		}
 
 		if (skyMesh != nullptr || terrainMesh != nullptr)
@@ -319,7 +319,7 @@ namespace Scene
 			//parents.resize(size);
 			//memset(parents.data(), -1, sizeof(int) * size);
 
-			//for (unsigned int i = 0; i < size; ++i) 
+			//for (unsigned int i = 0; i < size; ++i)
 			//{
 			//	FL_ENGINE_ERROR("{0}\n", parents[i]);
 			//}
@@ -338,16 +338,16 @@ namespace Scene
 			SceneNode* node5 = Nodes[4];
 			std::cout << "node5 : " << node5 << "\n";*/
 
-			//for (unsigned int i = 0; i < size; ++i) 
+			//for (unsigned int i = 0; i < size; ++i)
 			//{
 			//	//void_function f= std::bind(&SceneGraph::CreateEntityNode, this,&doc,i, Nodes, loadCounter);
-			//	void_function f = [&]() 
+			//	void_function f = [&]()
 			//	{
 			//		mtx.lock();
 			//		int index = loadCounter++;
 			//		mtx.unlock();
-			//		//FL_ENGINE_WARN("Ran on index : {0}.\n", value) ; 
-			//		
+			//		//FL_ENGINE_WARN("Ran on index : {0}.\n", value) ;
+			//
 
 			//		const rapidjson::Value& name = world[index]["name"];
 			//		FL_ENGINE_ERROR("Currently Loading: {0}", name.GetString());
@@ -390,7 +390,7 @@ namespace Scene
 
 			//		Entity* temp = EntityManager::CreateEntity(objTemplate, position, rotation, scale, nullptr);
 			//		//FL_ENGINE_ERROR("Loaded Entity Pointer : {0}", (int)temp);
-			//		
+			//
 			//		//SceneNode* newNode = new SceneNode();
 			//		SceneNode* newNode = fmemory::fnew<SceneNode>(temp);
 			//		//FL_ENGINE_ERROR("Loaded node Pointer : {0}", (int)newNode);
@@ -399,9 +399,9 @@ namespace Scene
 			//		Nodes.push_back(newNode);
 			//		Nodes[index] = newNode;
 			//		m_entityList.push_back(temp);
-			//		//if (loadCounter >= size) 
+			//		//if (loadCounter >= size)
 			//		//{
-			//		//	proceed = true; 
+			//		//	proceed = true;
 			//		//	//FL_ENGINE_ERROR("Checking for proceeding: {0}", index);
 			//		//}
 			//		mtx.unlock();
@@ -439,13 +439,13 @@ namespace Scene
 			//auto rd4 =  entity4->GetComponent<RenderComponent>();
 			//auto rd5 =  entity5->GetComponent<RenderComponent>();
 
-			//for (unsigned int i = 0; i < size; ++i) 
+			//for (unsigned int i = 0; i < size; ++i)
 			//{
-			//	if (parents[i] > -1) 
+			//	if (parents[i] > -1)
 			//	{
 			//		Nodes[parents[i]]->AddChild(Nodes[i]);
 			//	}
-			//	else 
+			//	else
 			//	{
 			//		m_rootNode->AddChild(Nodes[i]);
 			//	}
@@ -456,11 +456,11 @@ namespace Scene
 				FL_ENGINE_ERROR("{0}\n", parents[i]);
 			}
 
-			for (unsigned int i = 0; i < Nodes.size(); ++i) 
+			for (unsigned int i = 0; i < Nodes.size(); ++i)
 			{
-				std::cout << Nodes[i]<<"\n"; 
+				std::cout << Nodes[i]<<"\n";
 			}*/
-		/*	while (!proceed) 
+		/*	while (!proceed)
 			{}*/
 			FL_ENGINE_ERROR("Loaded Size : {0}", m_entityList.size());
 
@@ -479,7 +479,7 @@ namespace Scene
 			rapidjson::Value& vehicles = doc["vehicles"];
 
 			FL_ENGINE_ERROR("Cound of vehicles = {0}", vehicles.Size());
-			
+
 			for (unsigned itr = 0; itr < vehicles.Size(); ++itr)
 			{
 

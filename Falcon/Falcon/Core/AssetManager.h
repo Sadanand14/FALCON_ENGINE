@@ -51,6 +51,8 @@ class AssetManager
 private:
 	static boost::mutex AssetMtx;
 	static Shader* m_cubeShader;
+	static Shader* m_irradianceShader;
+	static Shader* m_prefilterShader;
 	static Mesh* m_cubeMesh;
 	static TextureType m_lastTextureType;
 	static boost::unordered_map<std::string, Mesh*> m_meshes;
@@ -58,7 +60,7 @@ private:
 	static boost::unordered_map<std::string, Font*> m_fonts;
 
 	// Process nodes
-	static GLuint HDRtoCubemap(GLuint hdrTex);
+	static void HDRtoCubemap(GLuint hdrTex, u32* cubeMap, u32* irradianceMap, u32* prefilter);
 	//static GLuint texture_loadDDS(const char* path);
 	static void ProcessNode(aiNode* node, const aiScene* scene, Mesh* newMesh);
 	static void ProcessMesh(aiMesh* mesh, Mesh* newMesh);
@@ -68,12 +70,15 @@ private:
 public:
 	static void CreateDefaultFont();
 	static Material* GetMaterial(const std::string& path);
+	static Material* GetSkyMaterial(const std::string& path);
 	static Mesh* GetMesh(const std::string& path);
+	static Mesh* GetSky(const std::string& path);
 	static Font* GetFont(const std::string& path);
 	static Mesh* LoadTerrain(const std::string& path);
 	static Mesh* LoadModel(std::string const& path);
-	static u32 LoadTexture(std::string const& path);
+	static u32 LoadTexture(std::string const& path, int channels = 0);
 	static Material* LoadMaterial(std::string const& path);
+	static Material* LoadSkyMaterial(std::string const& path);
 	static Font* LoadFont(std::string const &path);
 	static void Clean();
 };
