@@ -196,7 +196,7 @@ namespace physics
 	{
 
 
-		FL_ENGINE_ERROR("dt in physx = {0}", dt);
+		//FL_ENGINE_ERROR("dt in physx = {0}", dt);
 		gaccumlator += dt;
 
 		if (gaccumlator < gstepSize)
