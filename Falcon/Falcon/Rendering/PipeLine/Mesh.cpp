@@ -10,7 +10,7 @@
 /**
 * Basic Mesh Constructor
 */
-Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_IBO(nullptr)
+Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_VBO3(nullptr), m_IBO(nullptr)
 {
 
 }
@@ -23,6 +23,7 @@ void Mesh::Setup()
 	Renderable::Setup();
 	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
 	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	m_VBO3 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat3), GL_DYNAMIC_DRAW);
 	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
 
 	m_VBO1->Bind();
@@ -32,13 +33,20 @@ void Mesh::Setup()
 	m_VAO->AddVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent), 0);
 	m_VAO->AddVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Bitangent), 0);
 	m_VBO1->Unbind();
-	m_VBO2->Bind();
 
+	m_VBO2->Bind();
 	for (u32 i = 0; i < 4; i++)
 	{
 		m_VAO->AddVertexAttribPointer(5 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), sizeof(glm::vec4) * i, 1);
 	}
 	m_VBO2->Unbind();
+
+	m_VBO3->Bind();
+	for (u32 i = 0; i < 3; i++)
+	{
+		m_VAO->AddVertexAttribPointer(9 + i, 3, GL_FLOAT, GL_FALSE, sizeof(glm::mat3), sizeof(glm::vec3) * i, 1);
+	}
+	m_VBO3->Unbind();
 }
 
 /**
@@ -48,15 +56,18 @@ void Mesh::Setup()
 void Mesh::PreallocMatrixAmount(u32 maxMatrices)
 {
 	m_worldMats.resize(maxMatrices);
+	m_normalMats.resize(maxMatrices);
 }
 
 /**
- * Adds a world matrix to the list of matrices for instanced rendering
+ * Adds a world and normal matrix to the list of matrices for instanced rendering
  * @param mat - The world matrix to add
+ * @param normal - The normal matrix to add
  */
-void Mesh::AddWorldMatrix(const glm::mat4& mat)
+void Mesh::AddWorldAndNormalMatrix(const glm::mat4& mat, const glm::mat3& normal)
 {
 	m_worldMats.push_back(mat);
+	m_normalMats.push_back(normal);
 }
 
 /**
@@ -65,6 +76,7 @@ void Mesh::AddWorldMatrix(const glm::mat4& mat)
 void Mesh::ClearWorldMatrices()
 {
 	m_worldMats.clear();
+	m_normalMats.clear();
 }
 
 /**
@@ -85,11 +97,15 @@ void Mesh::Bind()
 	m_VBO2->Bind();
 	m_VBO2->BufferData(m_worldMats.data(), m_worldMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
 	m_VBO2->Unbind();
+
+	m_VBO3->Bind();
+	m_VBO3->BufferData(m_normalMats.data(), m_normalMats.size() * sizeof(glm::mat3), GL_DYNAMIC_DRAW);
+	m_VBO3->Unbind();
 }
 
 
 /**
-* Returns the vertexArray into the vector passed. 
+* Returns the vertexArray into the vector passed.
 * @param glm::vec3 vector bufffer to copy data into.
 */
 void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray) const
