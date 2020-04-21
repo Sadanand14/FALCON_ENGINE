@@ -926,6 +926,8 @@ void AssetManager::Clean()
 {
 	if (m_cubeMesh != nullptr) fmemory::fdelete<>(m_cubeMesh);
 	if (m_cubeShader != nullptr) fmemory::fdelete<>(m_cubeShader);
+	if (m_irradianceShader != nullptr) fmemory::fdelete<>(m_irradianceShader);
+	if (m_prefilterShader!= nullptr) fmemory::fdelete<>(m_prefilterShader);
 	for (auto it = m_meshes.begin(); it != m_meshes.end(); it++)
 	{
 		fmemory::fdelete<Mesh>(it->second);
