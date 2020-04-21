@@ -7,6 +7,7 @@
 #include "Memory/fnew.h"
 #include "VehicleInputHandler.h"
 
+
 namespace physics
 {
 
@@ -35,6 +36,7 @@ namespace physics
 
 			physx::PxVehicleKeySmoothingData gKeySmoothingData =
 			{
+				
 				{
 					6.0f,	//rise rate eANALOG_INPUT_ACCEL
 					6.0f,	//rise rate eANALOG_INPUT_BRAKE		
@@ -54,51 +56,21 @@ namespace physics
 			physx::PxVehiclePadSmoothingData gPadSmoothingData =
 			{
 				{
-					6.0f,	//rise rate eANALOG_INPUT_ACCEL
-					6.0f,	//rise rate eANALOG_INPUT_BRAKE		
-					6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-					2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-					2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+					0.060f,	//rise rate eANALOG_INPUT_ACCEL
+					0.10f,	//rise rate eANALOG_INPUT_BRAKE		
+					0.10f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+					0.025f,	//rise rate eANALOG_INPUT_STEER_LEFT
+					0.025f,	//rise rate eANALOG_INPUT_STEER_RIGHT
 				},
 				{
-					10.0f,	//fall rate eANALOG_INPUT_ACCEL
-					10.0f,	//fall rate eANALOG_INPUT_BRAKE		
-					10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-					5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-					5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+					0.0100f,	//fall rate eANALOG_INPUT_ACCEL
+					0.100f,	//fall rate eANALOG_INPUT_BRAKE		
+					0.100f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+					0.050f,	//fall rate eANALOG_INPUT_STEER_LEFT
+					0.050f	   //fall rate eANALOG_INPUT_STEER_RIGHT
 				}
 			};
 
-			
-
-			enum DriveMode
-			{
-				eDRIVE_MODE_ACCEL_FORWARDS = 0,
-				eDRIVE_MODE_ACCEL_REVERSE,
-				eDRIVE_MODE_HARD_TURN_LEFT,
-				eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
-				eDRIVE_MODE_HARD_TURN_RIGHT,
-				eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_NONE
-			};
-
-			DriveMode gDriveModeOrder[] =
-			{
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_ACCEL_REVERSE,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_HARD_TURN_LEFT,
-				eDRIVE_MODE_BRAKE,
-				eDRIVE_MODE_HARD_TURN_RIGHT,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
-				eDRIVE_MODE_ACCEL_FORWARDS,
-				eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
-				eDRIVE_MODE_NONE
-			};
 
 			//Drivable surface types. Later on can be updated via json or if less count can be done manually.
 			enum SurfaceTypes
@@ -128,7 +100,21 @@ namespace physics
 			bool gVehicleOrderComplete;
 		}
 
-	
+
+		/**
+		* Predefined driving modes.
+		*/
+		enum DriveMode
+		{
+			eDRIVE_MODE_ACCEL_FORWARDS = 0,
+			eDRIVE_MODE_ACCEL_REVERSE,
+			eDRIVE_MODE_HARD_TURN_LEFT,
+			eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+			eDRIVE_MODE_HARD_TURN_RIGHT,
+			eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+			eDRIVE_MODE_BRAKE,
+			eDRIVE_MODE_NONE
+		};
 		
 		/**
 		* Initiates the vehicle sdk for the physics.
@@ -140,12 +126,7 @@ namespace physics
 		*/
 		bool ReleaseVehcileSDK();
 
-		/**
-		* Car creation/Deletion API
-		*/
-		void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
-		void ReleaseCarMemory();
-
+		
 		/**
 		* Vehicle Update
 		*/
@@ -246,17 +227,43 @@ namespace physics
 			~Car() = default;
 		};
 		
+
+
+		/**
+		* Controller class to handle car which exposes movement API for car motions. 
+		*/
+		class CarController
+		{
+		public:
+			CarController(bool mimicInput = false);
+			~CarController() = default;
+			void SetDriveMode(DriveMode drivemode, Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData);
+			inline bool ShouldMimicInput() const { return mMimicInput; }
+		private:
+			bool mMimicInput;
+		};
+
 		/**
 		* Global vec to maintain all cars' Driver4W component. This is used by vehicle update to update all the cars.
 		* As custom allocators are not initialized before these allocations, I am using default allocators.
 		*/
 
 		extern boost::container::vector<Car*>gCars;
+		extern boost::container::vector<CarController*>gCarControllers;
 		extern boost::container::vector<physx::PxVehicleWheels*>gVehicles;
 		extern physx::PxVehicleDrive4WRawInputData gVehicleInputData[10];
 		extern boost::container::vector<physx::PxVehicleWheelQueryResult>gvehicleQueryResults;
 		extern bool gMimicKeyInputs;
-
+		extern bool gIsVehicleInScene;
+		extern bool gIsInputDigital;
+		/**
+		* Car API
+		*/
+		Car* CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform);
+		void ReleaseCarMemory();
+		
+		CarController* GetCarContoller(const Car* car);
+		void ApplyInputToCar(Car* car, DriveMode& driveMode);
 	}
 
 

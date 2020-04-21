@@ -304,6 +304,10 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\PipeLine\UIManager.h" />
+    <ClInclude Include="Physics\CarSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Events\CarEvent.h" />
     <ClInclude Include="Rendering\CameraSystem.h" />
     <ClInclude Include="Core\Events\CameraEvent.h" />
     <ClInclude Include="Core\Events\MouseEvents.h" />
@@ -478,6 +482,7 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\PipeLine\UIManager.cpp" />
+    <ClCompile Include="Physics\CarSystem.cpp" />
     <ClCompile Include="Rendering\CameraSystem.cpp" />
     <ClCompile Include="Rendering\Waypoints.cpp" />
     <ClCompile Include="Rendering\PipeLine\Line.cpp" />
