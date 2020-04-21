@@ -33,8 +33,11 @@ namespace physics
 		static physx::PxPvd*                         gPvd = NULL;
 												     
 	
-		static bool					                 gIsVehicleInScene = false;
+		
+		//Fixed step calculation variables for the physx update
 
+		static float gaccumlator = 0.0f;
+		static float gstepSize = 1.0f / 60.0f;
 		/**
 		*
 		* Function creates a Random convex mesh for collider shape which is used for the mesh collider.
@@ -192,17 +195,28 @@ namespace physics
 		const size_t& count)
 	{
 
-		//Update vehicles
-		if(gIsVehicleInScene)
-			vehicle::StepVehicleSDK(1.0f / 60.0f);
-			
-		gScene->simulate( 1.0f / 60.0f);
-		gScene->fetchResults(true);
 
-		//Update physics System;
-		PhysicsSystem::update(dt, entity, count);
+		FL_ENGINE_ERROR("dt in physx = {0}", dt);
+		gaccumlator += dt;
+
+		if (gaccumlator < gstepSize)
+			return;
+
+		else
+		{	
+			gaccumlator -= gstepSize;
+			//Update vehicles
+			if (vehicle::gIsVehicleInScene)
+				vehicle::StepVehicleSDK(gstepSize);
+
+			gScene->simulate(gstepSize);
+			gScene->fetchResults(true);
+
+			//Update physics System;
+			PhysicsSystem::update(dt, entity, count);
+
+		}
 	}
-
 
 	/**
 	* Creates the physX scene.
@@ -441,25 +455,7 @@ namespace physics
 	}
 
 
-	/**
-	* Creates a vehicle using vehicle api. Which will be used for simulations later on.
-	* @param RigidDynamic* to the vehicle actor. 
-	* @param starting transform for the vehicle.
-	*/
-
-	void CreateCar(physx::PxRigidDynamic* vehActor, Transform& startTransform)
-	{
-		try
-		{
-			vehicle::CreateCar(vehActor,startTransform);
-			gIsVehicleInScene = true;
-		}
-		catch (std::exception & e)
-		{
-			FL_ENGINE_ERROR("ERROR:Failed to create car {0}", e.what());
-		}
-	}
-
+	
 
 	/*
 	* Release collider associated with certain entity.

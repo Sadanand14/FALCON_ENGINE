@@ -1,6 +1,9 @@
 #include "SceneGraph.h"
 #include <Events/PassToRenderer.h> 
 #include <Events/EventManager.h>
+#include <Events/CarEvent.h>
+#include <Physics/vehicle/Vehicle.h>
+#include <Physics/CarSystem.h>
 
 namespace Scene
 {
@@ -144,7 +147,10 @@ namespace Scene
 	*
 	* @param[in] The document containing the data for all the enitities in this scene.
 	* @param[in] The index for the entity to be read in the document.
-	*
+	* @param[in] boolean specifying if we're reading a car or not
+	* @param[in] Index of the car in vehicle
+	* @param[in] Pointer to rigidbody, null for the common entities, specify pointer for the car.
+	* 
 	* @param[out] The data necessary to be relayed back for continuing to load the rest of the scene.
 	*/
 	NodeWithOffset SceneGraph::CreateNode(rapidjson::Document& doc, unsigned int index, bool isReadingCar, unsigned int carIndex,RigidbodyDynamic* actor)
@@ -486,17 +492,21 @@ namespace Scene
 				rapidjson::Value& car = doc["vehicles"][itr];
 				NodeWithOffset temp;
 				RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+				unsigned looper = 0;
+				const rapidjson::Value& user_car_flag = doc["vehicles"][itr][looper]["user_car"];
+				bool is_user_car = user_car_flag.GetBool();
 
-
-				for (unsigned looper = 0; looper < car.Size();++looper)
+				for (looper = 1; looper < car.Size();++looper)
 				{
 					temp = CreateNode(doc, looper,true, itr,vehActor);
 					m_rootNode->AddChild(temp.m_sceneNode);
 					nextEntityOffset = temp.m_nextOffset;
 				}
-				physics::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				physics::vehicle::Car* vehicle = physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				EventManager::PushEvent(boost::make_shared<CarEvent>(vehicle, is_user_car), EVENT_CAR_CREATED);
 			}
 
+			CarSystem::Update();
 		}
 
 		SegregateEntities();

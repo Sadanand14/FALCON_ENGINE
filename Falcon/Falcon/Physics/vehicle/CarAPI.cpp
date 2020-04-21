@@ -205,70 +205,7 @@ namespace physics
 
 		}
 
-		/**
-		* Nvidia'a Sample code to itereate through multiple driving routines. Being used here for testing.
-		* Will be removed once we have inputs coming in via Falcon's APIs.
-		*
-		*/
-		void IncrementDrivingMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData,const float timestep)
-		{
-			gVehicleModeTimer += timestep;
-			if (gVehicleModeTimer > gVehicleModeLifetime)
-			{
-				//If the mode just completed was eDRIVE_MODE_ACCEL_REVERSE then switch back to forward gears.
-				if (eDRIVE_MODE_ACCEL_REVERSE == gDriveModeOrder[gVehicleOrderProgress])
-				{
-					car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
-				}
-
-				//Increment to next driving mode.
-				gVehicleModeTimer = 0.0f;
-				gVehicleOrderProgress++;
-				releaseAllControls(car, vehicleInputData);
-
-				//If we are at the end of the list of driving modes then start again.
-				if (eDRIVE_MODE_NONE == gDriveModeOrder[gVehicleOrderProgress])
-				{
-					gVehicleOrderProgress = 0;
-					gVehicleOrderComplete = true;
-				}
-
-				//Start driving in the selected mode.
-				DriveMode eDriveMode = gDriveModeOrder[gVehicleOrderProgress];
-				switch (eDriveMode)
-				{
-				case eDRIVE_MODE_ACCEL_FORWARDS:
-					startAccelerateForwardsMode(car, vehicleInputData);
-					break;
-				case eDRIVE_MODE_ACCEL_REVERSE:
-					startAccelerateReverseMode(car, vehicleInputData);
-					break;
-				case eDRIVE_MODE_HARD_TURN_LEFT:
-					startTurnHardLeftMode(car , vehicleInputData);
-					break;
-				case eDRIVE_MODE_HANDBRAKE_TURN_LEFT:
-					startHandbrakeTurnLeftMode(car , vehicleInputData);
-					break;
-				case eDRIVE_MODE_HARD_TURN_RIGHT:
-					startTurnHardRightMode(car , vehicleInputData);
-					break;
-				case eDRIVE_MODE_HANDBRAKE_TURN_RIGHT:
-					startHandbrakeTurnRightMode(car , vehicleInputData);
-					break;
-				case eDRIVE_MODE_BRAKE:
-					startBrakeMode(car , vehicleInputData);
-					break;
-				case eDRIVE_MODE_NONE:
-					break;
-				};
-
-				//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
-				if (eDRIVE_MODE_ACCEL_REVERSE == gDriveModeOrder[gVehicleOrderProgress])
-				{
-					car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
-				}
-			}
-		}
+		
 
 		/**
 		* This method can be used to setup the vehicle description.
@@ -346,8 +283,8 @@ namespace physics
 
 					//Engine
 					physx::PxVehicleEngineData engine;
-					engine.mPeakTorque = 5000.0f;//50000.0f;
-					engine.mMaxOmega = 20000.0f;//60000.0f;//approx 6000 rpm
+					engine.mPeakTorque = 500.0f;//50000.0f;
+					engine.mMaxOmega = 2000.0f;//60000.0f;//approx 6000 rpm
 					driveSimData.setEngineData(engine);
 
 					//Gears
@@ -473,9 +410,12 @@ namespace physics
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
 
-		void startAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if(car->m_car->mDriveDynData.getCurrentGear() == physx::PxVehicleGearsData::eREVERSE)
+				car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
+
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
 			}
@@ -490,11 +430,11 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
 			car->m_car->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eREVERSE);
 
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
 			}
@@ -509,9 +449,9 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalBrake(true);
 			}
@@ -526,17 +466,17 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
-				vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalSteerRight(true);
 			}
 			else
 			{
 				vehicleInputData.setAnalogAccel(true);
-				vehicleInputData.setAnalogSteer(-1.0f);
+				vehicleInputData.setAnalogSteer(1.0f);
 			}
 		}
 
@@ -545,17 +485,17 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(true);
-				vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalSteerLeft(true);
 			}
 			else
 			{
 				vehicleInputData.setAnalogAccel(1.0f);
-				vehicleInputData.setAnalogSteer(1.0f);
+				vehicleInputData.setAnalogSteer(-1.0f);
 			}
 		}
 
@@ -564,11 +504,11 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalSteerLeft(true);
+				vehicleInputData.setDigitalSteerRight(true);
 				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
@@ -583,11 +523,11 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void startHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void StartHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalSteerRight(true);
+				vehicleInputData.setDigitalSteerLeft(true);
 				vehicleInputData.setDigitalHandbrake(true);
 			}
 			else
@@ -603,9 +543,9 @@ namespace physics
 		* @param pointer to the car.
 		* @param PxVehicleDrive4WRawInputData associated with the car.
 		*/
-		void releaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
+		void ReleaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData)
 		{
-			if (gMimicKeyInputs)
+			if (gIsInputDigital)
 			{
 				vehicleInputData.setDigitalAccel(false);
 				vehicleInputData.setDigitalSteerLeft(false);

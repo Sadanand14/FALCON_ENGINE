@@ -31,14 +31,14 @@ namespace physics
 		/**
 		* Methods to pass on inuts to phyX.
 		*/
-		void startAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void startHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
-		void releaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartAccelerateForwardsMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartAccelerateReverseMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartBrakeMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartTurnHardLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartTurnHardRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartHandbrakeTurnLeftMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void StartHandbrakeTurnRightMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
+		void ReleaseAllControls(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData);
 	}
 }
 
