@@ -92,6 +92,15 @@ public:
 	inline const glm::vec3& GetScale() const { return m_scale; }
 	inline const glm::mat4& GetModel() const { return m_model; }
 
+	inline const glm::vec3 GetRotDiff() const 
+	{
+		static glm::vec3 prevRot = { 0.0f,0.0f,0.0f }; 
+		static glm::vec3 diff;
+		diff = glm::vec3(0.0f, 0.0f, -1.0f) * m_rotation - prevRot;
+		prevRot = glm::vec3(0.0f, 0.0f, -1.0f) * m_rotation;
+		return diff;
+	}
+
 	inline const glm::vec3 GetRelativePosition() const { return glm::vec3(m_parentMatrix * glm::vec4(m_position, 1.0)); }
 
 	void CheckFlag()
