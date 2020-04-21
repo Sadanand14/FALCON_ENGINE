@@ -309,6 +309,15 @@ void Renderer::Ingame_Update(float dt, boost::container::vector<Entity*, fmemory
 	temp->SetMat4("projection", m_projection);
 	temp->SetMat4("view", CameraSystem::GetView());
 	temp->SetVec3("camPos", CameraSystem::GetPos());
+	temp->SetInt("irradianceMap", 6);
+	glActiveTexture(GL_TEXTURE0 + 6);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyMat->m_normalTex.textureID);
+	temp->SetInt("prefilterMap", 7);
+	glActiveTexture(GL_TEXTURE0 + 7);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyMat->m_roughnessTex.textureID);
+	temp->SetInt("brdf", 8);
+	glActiveTexture(GL_TEXTURE0 + 8);
+	glBindTexture(GL_TEXTURE_2D, m_brdfTextue.textureID);
 
 	for (unsigned int i = 0; i < m_entities->size(); ++i)
 	{
