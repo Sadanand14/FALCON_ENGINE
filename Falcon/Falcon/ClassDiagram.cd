@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RenderEventSystem">
+    <Position X="2.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAASABBQAAABIAAAAAIAAAAYQAAAAA=</HashCode>
+      <FileName>Rendering\PipeLine\Renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer">
+    <Position X="4" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAgACAAIAgAEAAACKBQABAAAAAAAAgAEACCKBEQCBQ=</HashCode>
+      <FileName>Rendering\PipeLine\Renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rendering::OctreeNode">
+    <Position X="7.75" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AJUAAAAAAAAIAAAAAAAAAAggAEAAIFAAEEAAAAQQAAA=</HashCode>
+      <FileName>Rendering\PipeLine\Octree.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rendering::Octree">
+    <Position X="9.5" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>BASgARGQIAACAIAAACAAAAAAAUAEAGQAQAAgAIAAAAA=</HashCode>
+      <FileName>Rendering\PipeLine\Octree.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputReceiver">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAEIAAAAAAAAIAABAAQBAARAAAABgAISAAACAFA=</HashCode>
+      <FileName>System\InputReceiver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="AIComponent">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Core\Components\AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="KeyEvent">
+    <Position X="12.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAABAAAAAAAAAAAAEAAAAgAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Core\Events\KeyEvents.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Rendering::OctreeNodeVector" Collapsed="true">
+    <Position X="6.75" Y="1" Width="6.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Rendering\PipeLine\Octree.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Rendering::planeArray" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Rendering\PipeLine\Octree.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="keyType">
+    <Position X="12.5" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIAAAAEAAA=</HashCode>
+      <FileName>Core\Events\KeyEvents.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
