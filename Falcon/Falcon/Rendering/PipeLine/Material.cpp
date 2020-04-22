@@ -5,11 +5,11 @@
  */
 void Material::Bind()
 {
-	BindTo(0, m_albedoTex, "albedo");
-	BindTo(1, m_roughnessTex, "roughness");
-	BindTo(2, m_normalTex, "normal");
-	BindTo(3, m_metallicTex, "metal");
-	BindTo(4, m_aoTex, "ao");
+	BindTo(0, m_albedoTex, "albedoTex");
+	BindTo(1, m_normalTex, "normalTex");
+	BindTo(2, m_roughnessTex, "roughnessTex");
+	BindTo(3, m_metallicTex, "metallicTex");
+	BindTo(4, m_aoTex, "aoTex");
 }
 
 /**

@@ -8,7 +8,7 @@ CamArray CameraSystem::m_entityCams;
 CameraComponent* CameraSystem::m_mainCam = nullptr;
 bool CameraSystem::m_cameraMoveable = false;
 
-CameraEventSystem::CameraEventSystem() 
+CameraEventSystem::CameraEventSystem()
 {
 	subscribedList.push_back(EVENT_CAMERA_COMPONENT);
 	subscribedList.push_back(EVENT_KEY_INPUT);
@@ -16,12 +16,12 @@ CameraEventSystem::CameraEventSystem()
 	SubscribeToEvents();
 }
 
-CameraEventSystem::~CameraEventSystem() 
+CameraEventSystem::~CameraEventSystem()
 {
-	
+
 }
 
-void CameraEventSystem::SubscribeToEvents() 
+void CameraEventSystem::SubscribeToEvents()
 {
 	for (unsigned int i = 0; i < subscribedList.size(); i++)
 	{
@@ -29,7 +29,7 @@ void CameraEventSystem::SubscribeToEvents()
 	}
 }
 
-void CameraEventSystem::ProcessEvents() 
+void CameraEventSystem::ProcessEvents()
 {
 	while (!eventQueue.empty())
 	{
@@ -40,20 +40,20 @@ void CameraEventSystem::ProcessEvents()
 		if (temp->CheckCategory(EVENT_CAMERA_COMPONENT))
 		{
 			boost::shared_ptr<CameraEvent> dataEvent = boost::static_pointer_cast<CameraEvent>(temp);
-			//if (dataEvent->m_addCamera) 
+			//if (dataEvent->m_addCamera)
 			CameraSystem::m_entityCams.push_back(static_cast<CameraComponent*>(dataEvent->m_componentPointer));
 		}
 		else if (temp->CheckCategory(EVENT_MOUSE_INPUT))
 		{
 			boost::shared_ptr<MouseEvent> mouseEvent = boost::static_pointer_cast<MouseEvent>(temp);
 			Mouse_Type type= mouseEvent->GetType();
-			if (type == Mouse_Type::CursorEvent) 
+			if (type == Mouse_Type::CursorEvent)
 			{
 				boost::shared_ptr<MouseCursorEvent> cursorEvent = boost::static_pointer_cast<MouseCursorEvent>(mouseEvent);
 				CameraSystem::m_mainCam->RotateCamera(cursorEvent->GetOffset());
 			}
 		}
-		else if (temp->CheckCategory(EVENT_KEY_INPUT) && CameraSystem::IsMoveable()) 
+		else if (temp->CheckCategory(EVENT_KEY_INPUT) && CameraSystem::IsMoveable())
 		{
 			boost::shared_ptr<KeyEvent> keyEvent = boost::static_pointer_cast<KeyEvent>(temp);
 
@@ -83,31 +83,31 @@ void CameraEventSystem::ProcessEvents()
 }
 
 
-CameraSystem::CameraSystem() 
+CameraSystem::CameraSystem()
 {
 }
 
-CameraSystem::~CameraSystem() 
+CameraSystem::~CameraSystem()
 {
 }
 
-void CameraSystem::Initialize() 
+void CameraSystem::Initialize()
 {
 	m_camEvents = fmemory::fnew<CameraEventSystem>();
 }
 
-void CameraSystem::ShutDown() 
+void CameraSystem::ShutDown()
 {
 	m_entityCams.clear();
 	if (m_camEvents != nullptr)
 		fmemory::fdelete(m_camEvents);
 }
-void CameraSystem::Update(float dt) 
+void CameraSystem::Update(float dt)
 {
 	m_camEvents->ProcessEvents();
 
 	if (m_mainCam)m_mainCam->Update(dt);
-	else 
+	else
 	{
 		m_mainCam = m_entityCams[0];
 		m_mainCam->Update(dt);
@@ -120,7 +120,7 @@ void CameraSystem::Update(float dt)
 		m_cameraMoveable = true;
 }
 
-void CameraSystem::SetMainCam(unsigned int index) 
+void CameraSystem::SetMainCam(unsigned int index)
 {
 	m_mainCam = m_entityCams[index];
 }

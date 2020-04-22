@@ -10,6 +10,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
 
 typedef boost::container::vector<unsigned short int, fmemory::STLAllocator<unsigned short int>> IDVector;
 
@@ -26,6 +27,7 @@ private:
 
 	glm::vec3 m_front;
 	glm::mat4 m_model; //* The model matrix of the transform
+	glm::mat3 m_normal; //* The normal matrix of the transform
 	glm::vec3 m_position; //* The position of the Tranform
 	glm::vec3 m_scale; //* The scale of the transform
 	glm::quat m_rotation; //* The rotation of the transform
@@ -39,6 +41,7 @@ private:
 		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
+		m_normal = glm::mat3(glm::inverseTranspose(m_model));
 		//m_front *= m_rotation;
 		//m_updated = true;
 		m_updateFlag = false;
@@ -47,7 +50,7 @@ private:
 public:
 	Transform()
 		:m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f }), m_model(1.0f),
-		m_updateFlag(true), m_parentMatrix(glm::mat4()), m_front({1.0f, 0.0f, 0.0f})
+		m_normal(1.0f), m_updateFlag(true), m_parentMatrix(glm::mat4()), m_front({1.0f, 0.0f, 0.0f})
 	{
 		octreeID.reserve(10);
 		RecalculateMatrix();
@@ -91,6 +94,7 @@ public:
 	inline const glm::quat& GetRotation() const { return m_rotation; }
 	inline const glm::vec3& GetScale() const { return m_scale; }
 	inline const glm::mat4& GetModel() const { return m_model; }
+	inline const glm::mat3& GetNormal() const { return m_normal; }
 
 	inline const glm::vec3 GetRotDiff() const 
 	{
