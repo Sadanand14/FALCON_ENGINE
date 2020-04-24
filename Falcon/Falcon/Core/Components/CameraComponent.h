@@ -28,14 +28,14 @@ private:
 public:
 
 	inline CameraType GetType() { return m_type; }
-
+	inline void SetType(CameraType type) { m_type = type; if (type != CameraType::Free) m_camPos = glm::vec3(0.0f, 2.0f, -4.0f); }
 	CameraComponent(Transform* transform)
 		:m_offsetMagX(-10.0f), m_offsetMagY(5.0f), m_localTrans(transform), m_type(CameraType::Free), m_yaw(-90.0f),
 		m_pitch(0.0f)
 	{
 		m_forward = glm::vec3(0.0f, 0.0f, 1.0f) * glm::inverse(m_localTrans->GetRotation());
-		m_camPos = glm::vec3(0.0f,2.0f,-4.0f);
-
+		m_camPos = glm::vec3(0.0f, 2.0f, -4.0f);
+		
 		UpdateVectors();
 		EventManager::PushEvent(boost::make_shared <CameraEvent>(this), EVENT_CAMERA_COMPONENT);
 	}
@@ -46,7 +46,6 @@ public:
 	{
 		return m_view;
 	}
-	inline void SetCamera(CameraType type) { m_type = type; }
 
 	void Update(float dt)
 	{
@@ -74,7 +73,7 @@ public:
 	{
 		if (m_type == CameraType::Fixed || m_type == CameraType::Fixed_Chase) return;
 
-		static float moveSpeed = 50.0f;
+		static float moveSpeed = 300.0f;
 		switch (direction)
 		{
 		case Camera_Move::FORWARD:
@@ -125,7 +124,7 @@ public:
 		forwardVec.y = sin(glm::radians(m_pitch));
 		forwardVec.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 		forwardVec = glm::normalize(forwardVec);
-		
+
 		//if(glm::length(diff)!=0)
 		m_camForward = forwardVec;
 
@@ -134,7 +133,7 @@ public:
 		m_camUp = glm::normalize(glm::cross(m_camRight, m_camForward));
 	}
 
-	void GetSpace() 
+	void GetSpace()
 	{
 		m_camSpace = glm::translate(m_localTrans->GetParent(), m_localTrans->GetPosition());
 		m_camSpace *= glm::mat4_cast(m_localTrans->GetRotation());
@@ -143,22 +142,25 @@ public:
 
 	void Fixed_Update()
 	{
+		//FL_ENGINE_WARN("Fixed update running");
 		GetSpace();
-		m_view =  glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp)* m_camSpace;
+		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp) * m_camSpace;
 	}
 
 	void Fixed_Chase_Update()
 	{
-	
+
 	}
 
 	void Free_Update()
 	{
+		//FL_ENGINE_WARN("Free update running");
 		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp);
 	}
 
 	void Free_Chase_Update()
 	{
+		//FL_ENGINE_WARN("Free chase update running");
 		GetSpace();
 		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp) * m_camSpace;
 	}

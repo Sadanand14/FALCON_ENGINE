@@ -42,7 +42,7 @@ public:
 	~CameraSystem();
 
 	static inline const bool IsMoveable() { return m_cameraMoveable; }
-	
+	static inline void SetCamType(CameraType type) { m_mainCam->SetType(type); }
 	static void Initialize();
 	static void ShutDown();
 
