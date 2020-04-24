@@ -41,7 +41,14 @@ public:
 	}
 	~CameraComponent() {}
 
-	inline glm::vec3 GetPos() { return m_camPos; }
+	inline glm::vec3 GetPos() 
+	{
+		if (m_type == CameraType::Free)
+			return m_camPos;
+		else
+			return m_camSpace* glm::vec4(m_camPos, 1.0);
+	}
+
 	inline glm::mat4 GetViewMatrix() const
 	{
 		return m_view;
@@ -49,6 +56,8 @@ public:
 
 	void Update(float dt)
 	{
+		
+		GetSpace();
 		timestep = dt;
 		switch (m_type)
 		{
@@ -143,7 +152,6 @@ public:
 	void Fixed_Update()
 	{
 		//FL_ENGINE_WARN("Fixed update running");
-		GetSpace();
 		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp) * m_camSpace;
 	}
 
@@ -161,7 +169,6 @@ public:
 	void Free_Chase_Update()
 	{
 		//FL_ENGINE_WARN("Free chase update running");
-		GetSpace();
 		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp) * m_camSpace;
 	}
 };

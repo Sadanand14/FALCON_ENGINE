@@ -41,7 +41,7 @@ private:
 		//m_model = m_parentMatrix *glm::mat4(1.0f) ;
 		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
-		m_model = glm::scale(m_model, m_scale);-
+		m_model = glm::scale(m_model, m_scale);
 
 		m_normal = glm::mat3(glm::inverseTranspose(m_model));
 		//m_front *= m_rotation;
