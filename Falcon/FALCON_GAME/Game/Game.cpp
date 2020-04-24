@@ -249,5 +249,8 @@ namespace gameLoop
 	void Game::Game_Update()
 	{
 		if (GetKeyPress(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(m_engine->GetWindow()->GetWindow(), GLFW_TRUE);
+		else if (GetKeyPress(GLFW_KEY_1)) CameraSystem::SetCamType(CameraType::Free);
+		else if (GetKeyPress(GLFW_KEY_2)) CameraSystem::SetCamType(CameraType::Fixed);
+		else if (GetKeyPress(GLFW_KEY_3)) CameraSystem::SetCamType(CameraType::Free_Chase);
 	}
 }

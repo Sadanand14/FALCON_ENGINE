@@ -32,6 +32,7 @@ private:
 	glm::vec3 m_scale; //* The scale of the transform
 	glm::quat m_rotation; //* The rotation of the transform
 	glm::mat4 m_parentMatrix;//matrix of parent in world Space
+
 	/**
 	 * Recalculates the world matrix
 	 */
@@ -41,6 +42,7 @@ private:
 		m_model = glm::translate(m_parentMatrix, m_position);
 		m_model *= glm::mat4_cast(m_rotation);
 		m_model = glm::scale(m_model, m_scale);
+
 		m_normal = glm::mat3(glm::inverseTranspose(m_model));
 		//m_front *= m_rotation;
 		//m_updated = true;
@@ -77,6 +79,7 @@ public:
 		else return -1;
 	}
 
+	inline glm::mat4 GetParent() { return m_parentMatrix; }
 	inline const IDVector& GetOTID() const { return octreeID; }
 	inline void ClearOTID() { octreeID.clear(); }
 	inline void pushOTID(unsigned short int value) { octreeID.push_back(value); }

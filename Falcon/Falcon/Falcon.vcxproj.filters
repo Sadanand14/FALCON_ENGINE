@@ -63,9 +63,6 @@
     <ClInclude Include="Core\Components\BasicComponent.h">
       <Filter>Core\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Components\CameraComponent.h">
-      <Filter>Core\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Components\InputComponent.h">
       <Filter>Core\Components</Filter>
     </ClInclude>
@@ -314,6 +311,7 @@
     <ClInclude Include="Rendering\Waypoints.h" />
     <ClInclude Include="Rendering\PipeLine\Line.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPasses\LineRenderPass.h" />
+    <ClInclude Include="Core\Components\CameraComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
