@@ -18,40 +18,33 @@ struct CameraComponent : public BasicComponent
 {
 private:
 	CameraType m_type;
-	glm::vec3 m_cameraPos, m_cameraForward, m_mouseLook, m_updateForward, m_entityForward, m_offsetRot, m_right, m_up, m_entityPos, m_entityRot;
-	float m_yaw, m_pitch, m_offsetMag;
+	glm::vec3 m_camPos, m_camForward, m_camUp, m_camRight, m_forward, m_transPos;
+	glm::quat m_transRot;
+	glm::mat4 m_view, m_camSpace;
+	float m_yaw, m_pitch, m_offsetMagX, m_offsetMagY;
 	Transform* m_localTrans;
 	float timestep;
 
 public:
 
-	//CameraComponent() :m_offsetPos({ 0.0f,0.0f,0.0f }), m_offsetRot(0.0f, 0.0f, 0.0f), m_localTrans(nullptr)
-	//{}
-
 	inline CameraType GetType() { return m_type; }
 
 	CameraComponent(Transform* transform)
-		:m_offsetMag(10.0f), m_offsetRot(0.0f, 0.0f, 0.0f), m_localTrans(transform), m_type(CameraType::Fixed), m_yaw(-90.0f),
+		:m_offsetMagX(-10.0f), m_offsetMagY(5.0f), m_localTrans(transform), m_type(CameraType::Free), m_yaw(-90.0f),
 		m_pitch(0.0f)
 	{
-		m_cameraForward = glm::vec3(0.0, 0.0, 0.0);
-		m_cameraPos = transform->GetPosition();
-		m_entityForward = glm::normalize(glm::vec3(0.0, 0.0, 1.0f) * glm::inverse(transform->GetRotation()));
-		m_entityPos = m_cameraPos;
-		m_entityRot = m_entityForward;
-		m_right = glm::normalize(glm::cross(m_entityForward, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_pitch = asin(-m_entityForward.y);
-		m_yaw = atan2(m_entityForward.x, m_entityForward.z);
+		m_forward = glm::vec3(0.0f, 0.0f, 1.0f) * glm::inverse(m_localTrans->GetRotation());
+		m_camPos = glm::vec3(0.0f,2.0f,-4.0f);
+
 		UpdateVectors();
 		EventManager::PushEvent(boost::make_shared <CameraEvent>(this), EVENT_CAMERA_COMPONENT);
 	}
 	~CameraComponent() {}
 
-	inline glm::vec3 GetPos() { return m_cameraPos; }
+	inline glm::vec3 GetPos() { return m_camPos; }
 	inline glm::mat4 GetViewMatrix() const
 	{
-		//m_cameraPos = m_entityPos + (m_forward * m_offsetMag);
-		return glm::lookAt(m_cameraPos, m_cameraPos+ m_cameraForward, glm::vec3(0.0f, 1.0f, 0.0f));
+		return m_view;
 	}
 	inline void SetCamera(CameraType type) { m_type = type; }
 
@@ -85,16 +78,16 @@ public:
 		switch (direction)
 		{
 		case Camera_Move::FORWARD:
-			m_cameraPos += m_entityForward * moveSpeed * timestep;
+			m_camPos += m_camForward * moveSpeed * timestep;
 			break;
 		case Camera_Move::BACKWARD:
-			m_cameraPos -= m_entityForward * moveSpeed * timestep;
+			m_camPos -= m_camForward * moveSpeed * timestep;
 			break;
 		case Camera_Move::LEFT:
-			m_cameraPos -= m_right * moveSpeed * timestep;
+			m_camPos -= m_camRight * moveSpeed * timestep;
 			break;
 		case Camera_Move::RIGHT:
-			m_cameraPos += m_right * moveSpeed * timestep;
+			m_camPos += m_camRight * moveSpeed * timestep;
 			break;
 		default:
 			return;
@@ -105,7 +98,7 @@ public:
 	{
 		//if (m_type == CameraType::Fixed || m_type == CameraType::Fixed_Chase) return;
 
-		static float sensitivity = 0.1f;
+		static float sensitivity = 1.0f;
 
 		coord.x *= sensitivity;
 		coord.y *= sensitivity;
@@ -126,63 +119,48 @@ public:
 	{
 		// Calculate the new Front vector
 		static glm::vec3 prevforward = { 0.0f,0.0f,0.0f };
-		static glm::vec3 diff;
+
 		glm::vec3 forwardVec;
 		forwardVec.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 		forwardVec.y = sin(glm::radians(m_pitch));
 		forwardVec.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 		forwardVec = glm::normalize(forwardVec);
-		diff = forwardVec - prevforward;
+		
 		//if(glm::length(diff)!=0)
-		//m_cameraForward += diff;
+		m_camForward = forwardVec;
 
-		m_mouseLook = forwardVec;
-
-		//prevforward = forwardVec;
 		// Also re-calculate the Right and Up vector
-		m_right = glm::normalize(glm::cross(m_cameraForward, glm::vec3(0.0f, 1.0f, 0.0f)));  // Normalize the vectors
-		m_up = glm::normalize(glm::cross(m_right, m_cameraForward));
+		m_camRight = glm::normalize(glm::cross(m_camForward, glm::vec3(0.0f, 1.0f, 0.0f)));// Normalize the vectors
+		m_camUp = glm::normalize(glm::cross(m_camRight, m_camForward));
+	}
+
+	void GetSpace() 
+	{
+		m_camSpace = glm::translate(m_localTrans->GetParent(), m_localTrans->GetPosition());
+		m_camSpace *= glm::mat4_cast(m_localTrans->GetRotation());
+		m_camSpace = glm::inverse(m_camSpace);
 	}
 
 	void Fixed_Update()
 	{
-		static glm::vec3 prevRot = {0.0f,0.0f,0.0f};
-		m_entityPos = m_localTrans->GetPosition();
-		m_entityForward = glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f) * glm::inverse(m_localTrans->GetRotation()));
-
-		m_cameraPos = m_entityPos - (m_entityForward * m_offsetMag);
-		m_updateForward += (m_entityForward - prevRot);
-		m_cameraForward = m_mouseLook + m_updateForward;
-		m_cameraForward = glm::normalize(m_cameraForward);
-
-		prevRot = m_entityForward;
-		
-		//m_entityRot = newRot;
+		GetSpace();
+		m_view =  glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp)* m_camSpace;
 	}
 
 	void Fixed_Chase_Update()
 	{
-		m_cameraPos = m_cameraPos + (m_localTrans->GetPosition() - m_cameraPos) * 0.6f;
-
-		m_entityForward += (glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation() - m_entityForward) * 0.6f;
+	
 	}
 
 	void Free_Update()
 	{
-
+		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp);
 	}
 
 	void Free_Chase_Update()
 	{
-		static glm::vec3 newPos;
-		newPos = m_localTrans->GetPosition();
-		m_cameraPos += newPos - m_entityPos;
-		m_entityPos = newPos;
-
-		static glm::vec3 newRot;
-		newRot = glm::vec3(0.0, 0.0, 1.0f) * m_localTrans->GetRotation();
-		m_entityForward += newRot - m_entityRot;
-		m_entityRot = newRot;
+		GetSpace();
+		m_view = glm::lookAt(m_camPos, m_camPos + m_camForward, m_camUp) * m_camSpace;
 	}
 };
 #endif//!1
