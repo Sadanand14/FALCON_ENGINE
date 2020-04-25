@@ -115,6 +115,25 @@ public:
 	}
 
 
+	void SetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertcount, const int& vertexStride,
+		const u32* indexData, const int& indexCount, const int& indexStride)
+	{
+		if (m_collider != nullptr)
+		{
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ", m_collider->getGeometryType());
+			return;
+		}
+
+		m_collider = physics::GetMeshColliderWithTriangleMeshes(vertexData, vertcount,  vertexStride, 
+																indexData, indexCount, indexStride);
+
+		if (!m_collider)
+		{
+			FL_ENGINE_ERROR("Failed to create mesh m_collider");
+		}
+	}
+
+
 	void SetCollider(Collider* m_collider)
 	{
 		if (m_collider == nullptr)

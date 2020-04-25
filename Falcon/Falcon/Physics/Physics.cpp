@@ -93,28 +93,125 @@ namespace physics
 			}
 
 			return convex;
-			//// Print the elapsed time for comparison
-			//PxU64 stopTime = SnippetUtils::getCurrentTimeCounterValue();
-			//float elapsedTime = SnippetUtils::getElapsedTimeInMilliseconds(stopTime - startTime);
-			//printf("\t -----------------------------------------------\n");
-			//printf("\t Create convex mesh with %d triangles: \n", numVerts);
-			//directInsertion ? printf("\t\t Direct mesh insertion enabled\n") : printf("\t\t Direct mesh insertion disabled\n");
-			//printf("\t\t Gauss map limit: %d \n", gaussMapLimit);
-			//printf("\t\t Created hull number of vertices: %d \n", convex->getNbVertices());
-			//printf("\t\t Created hull number of polygons: %d \n", convex->getNbPolygons());
-			//printf("\t Elapsed time in ms: %f \n", double(elapsedTime));
-			//if (!directInsertion)
-			//{
-			//	printf("\t Mesh size: %d \n", meshSize);
-			//}
+			
 
 			//convex->release();
 		}
+
+
+
+		// Setup common cooking params
+		void setupCommonCookingParams(physx::PxCookingParams& params, bool skipMeshCleanup, bool skipEdgeData)
+		{
+			// we suppress the triangle mesh remap table computation to gain some speed, as we will not need it 
+		// in this snippet
+			params.suppressTriangleMeshRemapTable = true;
+
+			// If DISABLE_CLEAN_MESH is set, the mesh is not cleaned during the cooking. The input mesh must be valid. 
+			// The following conditions are true for a valid triangle mesh :
+			//  1. There are no duplicate vertices(within specified vertexWeldTolerance.See PxCookingParams::meshWeldTolerance)
+			//  2. There are no large triangles(within specified PxTolerancesScale.)
+			// It is recommended to run a separate validation check in debug/checked builds, see below.
+
+			if (!skipMeshCleanup)
+				params.meshPreprocessParams &= ~static_cast<physx::PxMeshPreprocessingFlags>(physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH);
+			else
+				params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+
+			// If DISABLE_ACTIVE_EDGES_PREDOCOMPUTE is set, the cooking does not compute the active (convex) edges, and instead 
+			// marks all edges as active. This makes cooking faster but can slow down contact generation. This flag may change 
+			// the collision behavior, as all edges of the triangle mesh will now be considered active.
+			if (!skipEdgeData)
+				params.meshPreprocessParams &= ~static_cast<physx::PxMeshPreprocessingFlags>(physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE);
+			else
+				params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+		}
+
+		// Creates a triangle mesh using BVH34 midphase with different settings.
+		physx::PxTriangleMesh* createBV34TriangleMesh(uint32_t numVertices, const physx::PxVec3* vertices, uint32_t numTriangles, const uint32_t* indices,
+			bool skipMeshCleanup, bool skipEdgeData, bool inserted, const uint32_t numTrisPerLeaf)
+		{
+			
+			physx::PxTriangleMeshDesc meshDesc;
+			meshDesc.points.count = numVertices;
+			meshDesc.points.data = vertices;
+			meshDesc.points.stride = sizeof(physx::PxVec3);
+			meshDesc.triangles.count = numTriangles;
+			meshDesc.triangles.data = indices;
+			meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
+
+			physx::PxCookingParams params = gCooking->getParams();
+
+			// Create BVH34 midphase
+			params.midphaseDesc = physx::PxMeshMidPhase::eBVH34;
+
+			// setup common cooking params
+			setupCommonCookingParams(params, skipMeshCleanup, skipEdgeData);
+
+			// Cooking mesh with less triangles per leaf produces larger meshes with better runtime performance
+			// and worse cooking performance. Cooking time is better when more triangles per leaf are used.
+			params.midphaseDesc.mBVH34Desc.numPrimsPerLeaf = numTrisPerLeaf;
+
+			gCooking->setParams(params);
+
+#if defined(PX_CHECKED) || defined(PX_DEBUG)
+			// If DISABLE_CLEAN_MESH is set, the mesh is not cleaned during the cooking. 
+			// We should check the validity of provided triangles in debug/checked builds though.
+			if (skipMeshCleanup)
+			{
+				PX_ASSERT(gCooking->validateTriangleMesh(meshDesc));
+			}
+#endif // DEBUG
+
+
+			physx::PxTriangleMesh* triMesh = NULL;
+			uint32_t meshSize = 0;
+
+			// The cooked mesh may either be saved to a stream for later loading, or inserted directly into PxPhysics.
+			if (inserted)
+			{
+				triMesh = gCooking->createTriangleMesh(meshDesc, gPhysics->getPhysicsInsertionCallback());
+			}
+			else
+			{
+				physx::PxDefaultMemoryOutputStream outBuffer;
+				gCooking->cookTriangleMesh(meshDesc, outBuffer);
+
+				physx::PxDefaultMemoryInputData stream(outBuffer.getData(), outBuffer.getSize());
+				triMesh = gPhysics->createTriangleMesh(stream);
+
+				meshSize = outBuffer.getSize();
+			}
+
+			return triMesh;
+			//triMesh->release();
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		physx::PxMeshScale scaleDown(physx::PxVec3(0.01, 0.01, 0.01), physx::PxQuat(0,0,0,1));
 		physx::PxRigidStatic* gGround;
 
 	}
+
+
+
 
 
 	physx::PxPhysics* GetPhysics() { return gPhysics; }
@@ -423,6 +520,49 @@ namespace physics
 		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
 		return shape;
 	}
+
+
+
+
+	physx::PxShape* GetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertCount, const int& vertStride, const u32* indexData,
+													  const int& indexCount, const int& indexStride, bool directInsert /*= false*/)
+	{
+		std::vector<physx::PxVec3> pxvertarry;
+		pxvertarry.resize(vertCount);
+		for (int i = 0; i < vertCount; ++i)
+		{
+			PXMathUtils::Vec3ToPxVec3(vertexData[i], pxvertarry[i]);
+		}
+
+
+		u32 numTriangles = indexCount / 3;
+
+		try
+		{
+			// Favor runtime speed, cleaning the mesh and precomputing active edges. Store the mesh in a stream.
+			// These are the default settings, suitable for offline cooking.
+			// For details See SnippetTriangleMesh.cpp in PhysX snippets
+			physx::PxTriangleMesh* triMesh = createBV34TriangleMesh(vertCount, &pxvertarry[0], numTriangles, indexData, false, false, false, 4);
+
+
+			physx::PxShape* shape = gPhysics->createShape(physx::PxTriangleMeshGeometry(triMesh), *gMaterial);
+			return shape;
+		}
+		catch (std::exception& e)
+		{
+			FL_ENGINE_ERROR("ERROR: Failed to create the triangle mesh based collider shape. {0}", e.what());
+			return nullptr;
+		}
+		
+	}
+
+
+
+
+
+
+
+
 
 
 	/**

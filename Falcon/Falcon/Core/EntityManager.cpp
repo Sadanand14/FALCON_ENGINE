@@ -171,16 +171,20 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			case 3:
 			{
 				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+				std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
+				newEntity->GetComponent<RenderComponent>()->m_mesh->GetindicesArray(tempIndices);
 				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+				//physxComp->SetMeshColliderWithTriangleMeshes(&temp[0], temp.size(), sizeof(glm::vec3),
+															 &tempIndices[0], tempIndices.size(), sizeof(u32));
 				break;
 			}
 			case 4:
 			{
 				assert(actor != nullptr);
-				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
-				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
-				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> tempVerts;
+				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(tempVerts);
+				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &tempVerts[0], tempVerts.size(), sizeof(glm::vec3));
 			}
 			}
 

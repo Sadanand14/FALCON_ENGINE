@@ -124,6 +124,25 @@ void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocato
 	//return &vertPosArray[0];
 }
 
+
+/**
+* Returns the indices array into the vector passed.
+* @param glm::vec3 vector bufffer to copy data into.
+*/
+void Mesh::GetindicesArray(std::vector < u32, fmemory::STLAllocator<u32>>& indicesArray) const
+{
+
+	indicesArray.resize(m_indexArray.size());
+	
+#ifdef FL_PLATFORM_WINDOWS
+		memcpy_s(&indicesArray[0],m_indexArray.size(), &m_indexArray[0], m_indexArray.size());
+#else
+		memcpy(&indicesArray[0], &m_indexArray[0], m_indexArray.size());
+#endif
+
+	//return &vertPosArray[0];
+}
+
 /**
 * Mesh class Destructor.
 */
