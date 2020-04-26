@@ -162,10 +162,10 @@ public:
 		return m_actor != nullptr;
 	}
 
-	void AddToExclusiveShape(Rigidbody* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride)
+	void AddToExclusiveShape(Rigidbody* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scale)
 	{
 		m_actor = actor;
-		m_collider = physics::GetExclusiveShape(actor,transform,vertexData,count,stride);
+		m_collider = physics::GetExclusiveShape(actor,transform,vertexData,count,stride,scale);
 	}
 
 

@@ -79,7 +79,7 @@ namespace physics
 	physx::PxShape* GetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertCount, const int& vertStride,const u32* indexData,
 													  const int& indexCount, const int& indexStride, glm::vec3& scaling, bool directInsert = false);
 	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert = false);
-	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride);
+	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scaleFactor);
 	
 
 

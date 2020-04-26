@@ -581,13 +581,16 @@ namespace physics
 	* @return PxShape * for collider shape which is associated to the actor provided
 	*/
 
-	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform, const glm::vec3* vertexData, const int& count, const int& stride)
+	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform, const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scaleFactor)
 	{
 
 		try
 		{
 			physx::PxConvexMesh* convexMesh = GetConvexMesh(&vertexData[0], stride, count);
-			physx::PxConvexMeshGeometry geom(convexMesh, scaleDown);
+			physx::PxVec3 pxscaling;
+			PXMathUtils::Vec3ToPxVec3(scaleFactor, pxscaling);
+			physx::PxMeshScale scaleDownFactor(pxscaling, physx::PxQuat(0.0f, 0.0f, 0.0f, 1.0f));
+			physx::PxConvexMeshGeometry geom(convexMesh, pxscaling);
 			physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geom, *gMaterial);
 			shape->setLocalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(transform->GetPosition()), *PXMathUtils::QuatToPxQuat(transform->GetRotation())));
 			return shape;

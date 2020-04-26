@@ -194,7 +194,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				assert(actor != nullptr);
 				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> tempVerts;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(tempVerts);
-				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &tempVerts[0], tempVerts.size(), sizeof(glm::vec3));
+				glm::vec3 meshScale = newEntity->GetTransform()->GetScale();
+				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &tempVerts[0], tempVerts.size(), sizeof(glm::vec3),meshScale);
 			}
 			}
 
@@ -229,6 +230,11 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	return newEntity;
 }
 
+
+/**
+* Creats a terrain Entity.
+* @param pointer to the terrain mesh
+*/
 Terrain* EntityManager::CreateTerrainEntity(Mesh* terrainMesh)
 {
 
