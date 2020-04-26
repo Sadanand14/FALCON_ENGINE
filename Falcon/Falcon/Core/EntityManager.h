@@ -11,6 +11,7 @@
 #include <AssetManager.h>
 #include <Memory/fmemory.h>
 #include "EntityInterface.h"
+#include "Terrain.h"
 #include <Log.h>
 #include "Types.h"
 #include <EventManager.h>
@@ -25,7 +26,7 @@ private:
 public:
 	//void LoadEntity(const char* EntityPathFile);
 	static Entity* CreateEntity(const char*  objTemplate, glm::vec3 pos, glm::quat rot, glm::vec3 scale, RigidbodyDynamic* actor);
-	
+	static Terrain* CreateTerrainEntity(Mesh* terrainMesh);
 	static void SaveScene(const char* sceneFilePath);
 	static void CloseScene();
 };

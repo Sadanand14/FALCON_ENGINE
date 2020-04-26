@@ -117,7 +117,7 @@ public:
 
 
 	void SetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertcount, const int& vertexStride,
-		const u32* indexData, const int& indexCount, const int& indexStride)
+										  const u32* indexData, const int& indexCount, const int& indexStride, glm::vec3& scale)
 	{
 		if (m_collider != nullptr)
 		{
@@ -126,7 +126,7 @@ public:
 		}
 
 		m_collider = physics::GetMeshColliderWithTriangleMeshes(vertexData, vertcount,  vertexStride, 
-																indexData, indexCount, indexStride);
+																indexData, indexCount, indexStride,scale);
 
 		if (!m_collider)
 		{

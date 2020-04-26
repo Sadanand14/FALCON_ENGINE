@@ -529,7 +529,7 @@ namespace physics
 
 
 	physx::PxShape* GetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertCount, const int& vertStride, const u32* indexData,
-													  const int& indexCount, const int& indexStride, bool directInsert /*= false*/)
+													  const int& indexCount, const int& indexStride, glm::vec3& scaleFactor,bool directInsert /*= false*/)
 	{
 		std::vector<physx::PxVec3> pxvertarry;
 		pxvertarry.resize(vertCount);
@@ -540,7 +540,9 @@ namespace physics
 
 
 		u32 numTriangles = indexCount / 3;
-
+		physx::PxVec3 pxscaling;
+		PXMathUtils::Vec3ToPxVec3(scaleFactor, pxscaling);
+		physx::PxMeshScale scaleDownFactor(pxscaling, physx::PxQuat(0.0f, 0.0f, 0.0f, 1.0f));
 		try
 		{
 			// Favor runtime speed, cleaning the mesh and precomputing active edges. Store the mesh in a stream.
@@ -549,7 +551,7 @@ namespace physics
 			physx::PxTriangleMesh* triMesh = createBV34TriangleMesh(vertCount, &pxvertarry[0], numTriangles, indexData, false, false, false, 4);
 
 
-			physx::PxShape* shape = gPhysics->createShape(physx::PxTriangleMeshGeometry(triMesh), *gMaterial);
+			physx::PxShape* shape = gPhysics->createShape(physx::PxTriangleMeshGeometry(triMesh, pxscaling), *gMaterial);
 			return shape;
 		}
 		catch (std::exception& e)

@@ -2,6 +2,7 @@
 #include <Events/PassToRenderer.h>
 #include <Events/EventManager.h>
 #include <Events/CarEvent.h>
+#include <Physics/Physics.h>
 #include <Physics/vehicle/Vehicle.h>
 #include <Physics/CarSystem.h>
 
@@ -291,7 +292,7 @@ namespace Scene
 		if (doc.HasMember("terrain"))
 		{
 			terrainMesh = AssetManager::LoadTerrain(doc["terrain"].GetString());
-
+			m_terrain = EntityManager::CreateTerrainEntity(terrainMesh);
 			//std::cout << "Terrain Loaded";
 		}
 
@@ -519,6 +520,8 @@ namespace Scene
 	{
 		//nodeVector* childArr = &m_rootNode->GetChildren();
 		fmemory::fdelete<SceneNode>(m_rootNode);
+		fmemory::fdelete<Terrain>(m_terrain);
+
 	}
 
 	/**

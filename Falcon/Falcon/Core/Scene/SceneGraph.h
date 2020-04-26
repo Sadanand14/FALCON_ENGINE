@@ -83,7 +83,7 @@ namespace Scene
 		SceneNode* m_rootNode;
 		ThreadPool* m_threads;
 		boost::mutex mtx;
-
+		Terrain* m_terrain;
 
 		NodeWithOffset CreateNode(rapidjson::Document& entity, unsigned int index, bool isReadingCar, unsigned int carIndex, RigidbodyDynamic* actor);
 

@@ -229,6 +229,29 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	return newEntity;
 }
 
+Terrain* EntityManager::CreateTerrainEntity(Mesh* terrainMesh)
+{
+
+	Terrain* terrain = fmemory::fnew<Terrain>();
+	
+	try {
+
+		std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+		std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
+		terrainMesh->GetVertexPositionsArray(temp);
+		terrainMesh->GetindicesArray(tempIndices);
+		terrain->AddPhysicsToTerrain(&temp[0], temp.size(), sizeof(glm::vec3),
+									 &tempIndices[0], tempIndices.size(), sizeof(u32));
+
+		return terrain;
+	}
+	catch (std::exception& e)
+	{
+		FL_ENGINE_ERROR("ERROR: Failed to create physics for the terrain in {0} {1}. \n {2}", __FUNCTION__,__LINE__, e.what());
+		return nullptr;
+	}
+}
+
 /**
  * Saves a scene
  * @param sceneFilePath - The path to the scene file
