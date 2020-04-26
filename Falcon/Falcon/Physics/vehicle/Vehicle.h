@@ -135,7 +135,7 @@ namespace physics
 
 		//Creating friction pairs for simulation calculations.
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const physx::PxMaterial* defaultMaterial);
-
+		bool MakeActorDrivableSurface(physx::PxShape* shape);
 
 
 

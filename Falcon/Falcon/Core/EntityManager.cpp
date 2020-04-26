@@ -137,6 +137,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			int type;
 			int rigidbodyType = -1;
+			bool isDrivable = false;
 
 			const rapidjson::Value& colliderType = doc["physicsComponent"]["type"];
 			type = colliderType.GetInt();
@@ -145,6 +146,12 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			{
 				const rapidjson::Value& rgType = doc["physicsComponent"]["rigidbody"];
 				rigidbodyType = rgType.GetInt();
+			}
+
+			if (doc["physicsComponent"].HasMember("isDrivable"))
+			{
+				const rapidjson::Value& drive = doc["physicsComponent"]["isDrivable"];
+				isDrivable = drive.GetBool();
 			}
 
 			switch (type)
@@ -174,9 +181,12 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetindicesArray(tempIndices);
-				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+				glm::vec3 meshScale = newEntity->GetTransform()->GetScale();
+				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3), meshScale);
+
+
 				//physxComp->SetMeshColliderWithTriangleMeshes(&temp[0], temp.size(), sizeof(glm::vec3),
-															 &tempIndices[0], tempIndices.size(), sizeof(u32));
+				//											 &tempIndices[0], tempIndices.size(), sizeof(u32), meshScale);
 				break;
 			}
 			case 4:
@@ -188,6 +198,10 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			}
 			}
 
+			if (isDrivable)
+			{
+				physxComp->MakeDrivableSurface();
+			}
 
 			switch (rigidbodyType)
 			{
@@ -198,6 +212,9 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				physxComp->SetPhysicsBodyType(newEntity->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 				break;
 			}
+
+			
+
 		}
 
 		if (doc.HasMember("cameraComponent")) 

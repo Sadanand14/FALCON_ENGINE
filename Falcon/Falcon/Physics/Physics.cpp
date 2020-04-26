@@ -512,12 +512,16 @@ namespace physics
 	* @return PxShape * for collider shape
 	*/
 
-	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert /*= false*/)
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, glm::vec3& scaling, bool directInsert /*= false*/)
 	{
 		physx::PxConvexMesh* convexMesh = GetConvexMesh(vertexData, stride, vertCount, directInsert);
 
 		physx::PxConvexMeshGeometry convexMeshGeometry(convexMesh);
-		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDown), *gMaterial);
+
+		physx::PxVec3 pxscaling;
+		PXMathUtils::Vec3ToPxVec3(scaling, pxscaling);
+		physx::PxMeshScale scaleDownFactor(pxscaling, physx::PxQuat(0.0f,0.0f,0.0f,1.0f));
+		physx::PxShape* shape = gPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh, scaleDownFactor), *gMaterial);
 		return shape;
 	}
 
