@@ -16,9 +16,9 @@ void Terrain::AddPhysicsToTerrain(const glm::vec3* vertexData, const int& vertco
 	try
 	{
 		m_physicsC = fmemory::fnew<PhysicsComponent>();
-
+		glm::vec3 scale(1, 1, 1);
 		m_physicsC->SetMeshColliderWithTriangleMeshes(vertexData, vertcount, vertexStride,
-			indexData, indexCount, indexStride, glm::vec3(1, 1, 1));
+			indexData, indexCount, indexStride, scale);
 		m_physicsC->MakeDrivableSurface();
 
 		Transform t(glm::vec3(0, 0, 0), glm::quat(1,0,0,0), glm::vec3(1, 1, 1));
