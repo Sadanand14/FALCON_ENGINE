@@ -21,7 +21,7 @@ protected:
 public:
 	Renderable();
 	virtual ~Renderable();
-	boost::container::vector<Vertex, fmemory::STLAllocator<Vertex>> m_vertexArray;
+	boost::container::vector<Vertex> m_vertexArray;
 	virtual void Setup();
 	virtual void Bind();
 	inline void SetMaterial(Material* mat) { m_material = mat; }

@@ -10,7 +10,8 @@ Renderable::Renderable() : m_VAO(nullptr)
  */
 void Renderable::Setup()
 {
-	m_VAO = fmemory::fnew<VertexArray>();
+	//m_VAO = fmemory::fnew<VertexArray>();
+	m_VAO = new VertexArray();
 	m_VAO->Bind();
 }
 
@@ -27,5 +28,6 @@ void Renderable::Bind()
 
 Renderable::~Renderable()
 {
-	fmemory::fdelete<VertexArray>(m_VAO);
+	//fmemory::fdelete<VertexArray>(m_VAO);
+	delete m_VAO;
 }

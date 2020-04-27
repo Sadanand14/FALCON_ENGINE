@@ -82,8 +82,8 @@ class Renderer
 	GLFWwindow* m_window = nullptr ;
 	glm::mat4 m_projection;
 	//CameraSystem* m_camera = nullptr;
-	boost::container::vector<RenderPass*, fmemory::STLAllocator<RenderPass*>> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
-	boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* m_entities;
+	boost::container::vector<RenderPass*> m_Game_renderPasses, m_Menu_renderPasses, m_Pause_renderPasses;
+	boost::container::vector<Entity*>* m_entities;
 	Mesh* m_terrainMesh = nullptr, * m_skyMesh = nullptr;
 	static GLFWwindow* m_win;
 	Texture m_brdfTextue;
@@ -99,7 +99,7 @@ public:
 
 	inline UI::UI_Manager* GetUI() { return m_UI; }
 
-	void Ingame_Update( float dt, boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities);
+	void Ingame_Update( float dt, boost::container::vector<Entity*>* entities);
 	void Ingame_Draw();
 
 	void Pause_Draw();
@@ -110,7 +110,7 @@ public:
 
 	void Init(GLFWwindow* window);
 	void CreateDrawStates(GLFWwindow* win);
-	void SetDrawStates(boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>>* entities, glm::mat4 projection);
+	void SetDrawStates(boost::container::vector<Entity*>* entities, glm::mat4 projection);
 };
 
 #endif // !RENDERER_H

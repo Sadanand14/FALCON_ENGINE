@@ -26,7 +26,7 @@ WindowClass::~WindowClass()
 
 void WindowClass::Init()
 {
-	m_threadPool = ThreadPool::GetThreadPool();
+	//m_threadPool = ThreadPool::GetThreadPool();
 	//GLFW Configuration
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

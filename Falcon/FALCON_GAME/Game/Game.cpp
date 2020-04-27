@@ -6,7 +6,7 @@ namespace gameLoop
 	/**
 	* Main Game Constructor.
 	*/
-	Game::Game() :m_quitGame(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::MENU) {}
+	Game::Game() :m_quitGame(false), m_initMenu(true), m_initGame(false), m_initPause(false),m_currentState(STATE::INGAME) {}
 
 
 	/**

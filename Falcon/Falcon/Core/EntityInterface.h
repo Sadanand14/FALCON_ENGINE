@@ -47,32 +47,43 @@ public:
 
 	Entity()
 	{
-		m_transform = fmemory::fnew<Transform>();
+		//m_transform = fmemory::fnew<Transform>();
+		m_transform = new Transform();
 	}
 	Entity(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 	{
-		m_transform = fmemory::fnew<Transform>(pos, rot, scale);
+		//m_transform = fmemory::fnew<Transform>(pos, rot, scale);
+		m_transform = new Transform(pos, rot, scale);
 	}
 	~Entity()
 	{
-		if(m_transform)
-			fmemory::fdelete<>(m_transform);
-		if(m_renderC)
-			fmemory::fdelete<>(m_renderC);
-		if(m_audioC)
-			fmemory::fdelete<>(m_audioC);
-		if(m_physicsC)
-			fmemory::fdelete<>(m_physicsC);
-		if(m_animationC)
-			fmemory::fdelete<>(m_animationC);
-		if(m_AIComponent)
-			fmemory::fdelete<>(m_AIComponent);
-		if(m_inputC)
-			fmemory::fdelete<>(m_inputC);
-		if(m_particleEmitterC)
-			fmemory::fdelete<>(m_particleEmitterC);
+		if (m_transform)
+			//fmemory::fdelete<>(m_transform);
+			delete m_transform;
+		if (m_renderC)
+			//fmemory::fdelete<>(m_renderC);
+			delete m_renderC;
+		if (m_audioC)
+			//fmemory::fdelete<>(m_audioC);
+			delete m_audioC;
+		if (m_physicsC)
+			//fmemory::fdelete<>(m_physicsC);
+			delete m_physicsC;
+		if (m_animationC)
+			//fmemory::fdelete<>(m_animationC);
+			delete m_animationC;
+		if (m_AIComponent)
+			//fmemory::fdelete<>(m_AIComponent);
+			delete m_AIComponent;
+		if (m_inputC)
+			//fmemory::fdelete<>(m_inputC);
+			delete m_inputC;
+		if (m_particleEmitterC)
+			//fmemory::fdelete<>(m_particleEmitterC);
+			delete m_particleEmitterC;
 		if (m_cameraC)
-			fmemory::fdelete(m_cameraC);
+			//fmemory::fdelete(m_cameraC);
+			delete m_cameraC;
 	}
 
 	inline Transform* GetTransform() { return m_transform; }
@@ -95,7 +106,8 @@ inline void Entity::AddComponent<RenderComponent>()
 	}
 	else
 	{
-		m_renderC = fmemory::fnew<RenderComponent>();
+		//m_renderC = fmemory::fnew<RenderComponent>();
+		m_renderC = new RenderComponent();
 	}
 }
 
@@ -108,7 +120,7 @@ inline void Entity::AddComponent<PhysicsComponent>()
 	}
 	else
 	{
-		m_physicsC = fmemory::fnew<PhysicsComponent>();
+		m_physicsC = new PhysicsComponent();
 	}
 }
 
@@ -121,7 +133,7 @@ inline void Entity::AddComponent<AudioComponent>()
 	}
 	else
 	{
-		m_audioC = fmemory::fnew<AudioComponent>();
+		m_audioC = new AudioComponent();
 	}
 }
 
@@ -134,7 +146,7 @@ inline void Entity::AddComponent<AnimationComponent>()
 	}
 	else
 	{
-		m_animationC = fmemory::fnew<AnimationComponent>();
+		m_animationC = new AnimationComponent();
 	}
 }
 
@@ -147,7 +159,7 @@ inline void Entity::AddComponent<AIComponent>()
 	}
 	else
 	{
-		m_AIComponent = fmemory::fnew<AIComponent>();
+		m_AIComponent = new AIComponent();
 	}
 }
 
@@ -160,7 +172,7 @@ inline void Entity::AddComponent<InputComponent>()
 	}
 	else
 	{
-		m_inputC = fmemory::fnew <InputComponent>();
+		m_inputC = new InputComponent();
 	}
 }
 
@@ -173,7 +185,7 @@ inline void Entity::AddComponent<ParticleEmitterComponent>()
 	}
 	else
 	{
-		m_particleEmitterC = fmemory::fnew<ParticleEmitterComponent>();
+		m_particleEmitterC = new ParticleEmitterComponent();
 	}
 }
 
@@ -186,7 +198,7 @@ inline void Entity::AddComponent<CameraComponent>()
 	}
 	else 
 	{
-		m_cameraC = fmemory::fnew<CameraComponent>(m_transform);
+		m_cameraC = new CameraComponent(m_transform);
 	}
 }
 

@@ -20,7 +20,7 @@ class WindowClass
 
 	GLFWwindow* m_gameWindow;
 
-	ThreadPool* m_threadPool;
+	//ThreadPool* m_threadPool;
 
 public:
 	WindowClass(const char*, int, int);

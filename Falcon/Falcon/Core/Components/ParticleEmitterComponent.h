@@ -29,7 +29,10 @@ struct ParticleEmitterComponent: public BasicComponent
 	Particle* m_particle = nullptr;
 
 	ParticleEmitterComponent() : m_particleBuffer(20.0f) {}
-	~ParticleEmitterComponent() { if (m_particle != nullptr)fmemory::fdelete<Particle>(m_particle); }
+	~ParticleEmitterComponent() {
+		if (m_particle != nullptr)//fmemory::fdelete<Particle>(m_particle); }
+			delete m_particle;
+	}
 	void SetMaxParticles(u32 maxParticles) { m_particleBuffer.set_capacity(maxParticles); }
 };
 

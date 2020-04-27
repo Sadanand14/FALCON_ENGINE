@@ -17,14 +17,14 @@ private:
 	VertexBuffer* m_VBO2;
 	VertexBuffer* m_VBO3;
 	IndexBuffer* m_IBO;
-	boost::container::vector<glm::mat4, fmemory::STLAllocator<glm::mat4>> m_worldMats;
-	boost::container::vector<glm::mat3, fmemory::STLAllocator<glm::mat3>> m_normalMats;
+	boost::container::vector<glm::mat4> m_worldMats;
+	boost::container::vector<glm::mat3> m_normalMats;
 	bool m_transparent = false;
 
 public:
 	//Mesh Data
-	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexArray;
-	boost::container::vector<u32, fmemory::STLAllocator<u32>> m_indexOffsets;
+	boost::container::vector<u32> m_indexArray;
+	boost::container::vector<u32> m_indexOffsets;
 
 	Mesh();
 	virtual ~Mesh();
@@ -36,7 +36,7 @@ public:
 	void ClearWorldMatrices();
 	u32 GetWorldMatrixAmount();
 	void Bind() override;
-	void GetVertexPositionsArray (std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&) const;
+	void GetVertexPositionsArray (std::vector < glm::vec3>&) const;
 
 	inline VertexBuffer* GetVB() { return m_VBO1; }
 	inline VertexBuffer* GetVertexBuffer() { return m_VBO1; }

@@ -21,10 +21,14 @@ Mesh::Mesh() : m_VBO1(nullptr), m_VBO2(nullptr), m_VBO3(nullptr), m_IBO(nullptr)
 void Mesh::Setup()
 {
 	Renderable::Setup();
-	m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
-	m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
-	m_VBO3 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat3), GL_DYNAMIC_DRAW);
-	m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
+	//m_VBO1 = fmemory::fnew<VertexBuffer>(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
+	//m_VBO2 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	//m_VBO3 = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::mat3), GL_DYNAMIC_DRAW);
+	//m_IBO = fmemory::fnew<IndexBuffer>(m_indexArray.data(), m_indexArray.size());
+	m_VBO1 = new VertexBuffer(m_vertexArray.data(), m_vertexArray.size() * sizeof(Vertex), GL_STATIC_DRAW);
+	m_VBO2 = new VertexBuffer(nullptr, sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	m_VBO3 = new VertexBuffer(nullptr, sizeof(glm::mat3), GL_DYNAMIC_DRAW);
+	m_IBO  = new IndexBuffer(m_indexArray.data(), m_indexArray.size());
 
 	m_VBO1->Bind();
 	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0, 0);
@@ -108,16 +112,16 @@ void Mesh::Bind()
 * Returns the vertexArray into the vector passed.
 * @param glm::vec3 vector bufffer to copy data into.
 */
-void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>& vertPosArray) const
+void Mesh::GetVertexPositionsArray(std::vector < glm::vec3>& vertPosArray) const
 {
 
 	vertPosArray.resize(m_vertexArray.size());
 	for (u32 itr = 0; itr < m_vertexArray.size(); ++itr)
 	{
 #ifdef FL_PLATFORM_WINDOWS
-		memcpy_s(&vertPosArray[itr], sizeof(glm::vec3), &m_vertexArray[itr], sizeof(glm::vec3));
+		memcpy_s(vertPosArray.data() + itr, sizeof(glm::vec3), m_vertexArray.data() + itr, sizeof(glm::vec3));
 #else
-		memcpy(&vertPosArray[itr], &m_vertexArray[itr], sizeof(glm::vec3));
+		memcpy(vertPosArray.data() + itr, m_vertexArray.data() + itr, sizeof(glm::vec3));
 #endif
 	}
 
@@ -129,7 +133,10 @@ void Mesh::GetVertexPositionsArray(std::vector < glm::vec3, fmemory::STLAllocato
 */
 Mesh::~Mesh()
 {
-	fmemory::fdelete<VertexBuffer>(m_VBO2);
-	fmemory::fdelete<VertexBuffer>(m_VBO1);
-	fmemory::fdelete<IndexBuffer>(m_IBO);
+	//fmemory::fdelete<VertexBuffer>(m_VBO2);
+	delete m_VBO2;
+	//fmemory::fdelete<VertexBuffer>(m_VBO1);
+	delete m_VBO1;
+		//fmemory::fdelete<IndexBuffer>(m_IBO);
+	delete m_IBO;
 }

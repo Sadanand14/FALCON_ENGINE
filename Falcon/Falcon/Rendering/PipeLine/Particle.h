@@ -19,7 +19,7 @@ class Particle : public Renderable
 private:
 	//Render Data
 	VertexBuffer* m_VBO = nullptr;
-	boost::container::vector<ParticleData, fmemory::STLAllocator<ParticleData>> m_particles;
+	boost::container::vector<ParticleData> m_particles;
 	glm::mat4 m_worldMat;
 
 public:

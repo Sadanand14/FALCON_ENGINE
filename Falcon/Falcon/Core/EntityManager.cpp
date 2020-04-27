@@ -14,7 +14,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 	if (objTemplate != NULL)
 	{
-		newEntity = fmemory::fnew<Entity>(pos, rot, scale);
+		//newEntity = fmemory::fnew<Entity>(pos, rot, scale);
+		newEntity = new Entity(pos, rot, scale);
 
 		//Get file data
 
@@ -27,7 +28,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		if (jsonFile.is_open()) {
 			size = jsonFile.tellg();
 			jsonFile.seekg(std::ios::beg);
-			json = fmemory::fnew_arr<char>(size + 1);
+			//json = fmemory::fnew_arr<char>(size + 1);
+			json = new char[size + 1];
 			jsonFile.read(json, size);
 			json[size] = 0;
 			jsonFile.close();
@@ -36,7 +38,8 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 		//Start json doc
 		rapidjson::Document doc;
 		doc.Parse(json);
-		if (json != nullptr)fmemory::fdelete<char>(json);
+		if (json != nullptr)//fmemory::fdelete<char>(json);
+			delete[] json;
 
 		//Check if JSON file is not valid
 		if (!doc.IsObject())
@@ -120,7 +123,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			const rapidjson::Value& mat = doc["particleEmitterComponent"]["material"];
 
 			//LoadMaterial(mat.GetString());
-			particleComp->m_particle = fmemory::fnew<Particle>();
+			particleComp->m_particle = new Particle();//fmemory::fnew<Particle>();
 			particleComp->m_particle->Setup();
 			particleComp->m_particle->PreallocParticleDataAmount(particleComp->m_particleBuffer.capacity());
 			//particleComp->m_particle->SetMaterial(m_materials[mat.GetString()]);
@@ -170,7 +173,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			}
 			case 3:
 			{
-				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+				std::vector < glm::vec3> temp;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
 				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
 				break;
@@ -178,7 +181,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			case 4:
 			{
 				assert(actor != nullptr);
-				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+				std::vector < glm::vec3> temp;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
 				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
 			}

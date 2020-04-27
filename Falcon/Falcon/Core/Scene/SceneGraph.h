@@ -15,8 +15,8 @@ namespace Scene
 
 	class SceneNode;
 
-	typedef boost::container::vector<SceneNode*, fmemory::STLAllocator<SceneNode*>> nodeVector;
-	typedef boost::container::vector<Entity*, fmemory::STLAllocator<Entity*>> entityVector;
+	typedef boost::container::vector<SceneNode*> nodeVector;
+	typedef boost::container::vector<Entity*> entityVector;
 
 	/**
 	* Data structure to hold the data and implementations for a Node inside the SceneGraph.

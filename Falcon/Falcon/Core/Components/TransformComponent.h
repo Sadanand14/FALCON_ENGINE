@@ -12,7 +12,7 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_inverse.hpp"
 
-typedef boost::container::vector<unsigned short int, fmemory::STLAllocator<unsigned short int>> IDVector;
+typedef boost::container::vector<unsigned short int> IDVector;
 
 /**
 * Stucture to hold Transform data for each entity.

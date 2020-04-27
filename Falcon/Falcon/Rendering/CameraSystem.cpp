@@ -93,14 +93,15 @@ CameraSystem::~CameraSystem()
 
 void CameraSystem::Initialize()
 {
-	m_camEvents = fmemory::fnew<CameraEventSystem>();
+	//m_camEvents = fmemory::fnew<CameraEventSystem>();
+	m_camEvents = new CameraEventSystem();
 }
 
 void CameraSystem::ShutDown()
 {
 	m_entityCams.clear();
-	if (m_camEvents != nullptr)
-		fmemory::fdelete(m_camEvents);
+	if (m_camEvents != nullptr) delete m_camEvents;
+		//fmemory::fdelete(m_camEvents);
 }
 void CameraSystem::Update(float dt)
 {

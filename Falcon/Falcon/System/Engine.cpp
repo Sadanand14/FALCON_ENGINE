@@ -3,7 +3,6 @@
 #include "Physics/CarSystem.h"
 namespace gameLoop
 {
-
 	//Camera
 	Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
@@ -12,22 +11,29 @@ namespace gameLoop
 	*/
 	Engine::~Engine()
 	{
-		if (m_scene != nullptr)fmemory::fdelete(m_scene);
-		if (m_octree != nullptr)fmemory::fdelete(m_octree);
-		fmemory::fdelete(m_timer);
-		fmemory::fdelete(m_particleSystem);
-		fmemory::fdelete(m_renderer);
-		fmemory::fdelete(m_input);
-		fmemory::fdelete(m_window);
+		if(m_scene != nullptr)//fmemory::fdelete(m_scene);
+			delete m_scene;
+		//if (m_octree != nullptr)//fmemory::fdelete(m_octree);
+		//	delete;
+		//fmemory::fdelete(m_timer);
+		delete m_timer;
+		//fmemory::fdelete(m_particleSystem);
+		delete m_particleSystem;
+		//fmemory::fdelete(m_renderer);
+		delete m_renderer;
+		//fmemory::fdelete(m_input);
+		delete m_input;
+		//fmemory::fdelete(m_window);
+		delete m_window;
 		AssetManager::Clean();
 
-		CarSystem::ShutDown();
-		physics::ShutdownPhysX();
-		ThreadPool::ShutDown();
-		fmemory::MeoryManagerShutDown();
+		//CarSystem::ShutDown();
+		//physics::ShutdownPhysX();
+		//ThreadPool::ShutDown();
+		//fmemory::MeoryManagerShutDown();
 
-		m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
-		m_audio.Shutdown();
+		//m_audio.UnLoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav");
+		//m_audio.Shutdown();
 	}
 
 	/**
@@ -45,40 +51,44 @@ namespace gameLoop
 	{
 		Log::Init();
 
-		m_currentState = STATE::MENU;
+		m_currentState = STATE::INGAME;
 
-		fmemory::MemoryManagerInit();
+		//fmemory::MemoryManagerInit();
 
-		m_window = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
-		m_threads = ThreadPool::GetThreadPool(m_window->GetWindow());
+		//m_window = fmemory::fnew<WindowClass>("FalconEngine", 1280, 720);
+		m_window = new WindowClass("FalconEngine", 1280, 720);
+		//m_threads = ThreadPool::GetThreadPool(m_window->GetWindow());
 
-		m_input = fmemory::fnew<InputReceiver>(m_window);
+		m_input = new InputReceiver(m_window);
 		m_input->Init(m_window->GetWindow());
 
 		//Booting up physics
-		physics::InitPhysX();
+		//physics::InitPhysX();
 
 		//Initializing CarSystem
-		CarSystem::Initialize();
+		//CarSystem::Initialize();
 
 		// creates a new renderer class on the heap
-		m_renderer = fmemory::fnew<Renderer>(); 
+		//m_renderer = fmemory::fnew<Renderer>(); 
+		m_renderer = new Renderer();
 		m_renderer->Init(m_window->GetWindow());
 
 		// creates a new timer
-		m_timer = fmemory::fnew<Timer>(); 
+		//m_timer = fmemory::fnew<Timer>(); 
+		m_timer = new Timer();
 
 		// Scene load
-		m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
-		m_particleSystem = fmemory::fnew<ParticleSystem>();
+		//m_scene = fmemory::fnew<Scene::SceneGraph>("../Assets/Scenes/scene.json");
+		m_scene = new Scene::SceneGraph("../Assets/Scenes/scene.json");
+		//m_particleSystem = fmemory::fnew<ParticleSystem>();
 		m_scene->UpdateScene();
 
 		// Octree load
-		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
+		//m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
 		//calculate Projection temporarily here
 		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
-		m_octree->SetProjection(projection);
-		m_octree->Update();
+		//m_octree->SetProjection(projection);
+		//m_octree->Update();
 
 		//Create Draw States in Renderer
 		m_renderer->CreateDrawStates(m_window->GetWindow());
@@ -87,8 +97,8 @@ namespace gameLoop
 		m_renderer->SetDrawStates(m_octree->GetViewables(), projection);
 
 		//Initialize the Audio Engine
-		m_audio.Init();
-		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
+		//m_audio.Init();
+		//m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
 		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
 
 
@@ -122,29 +132,26 @@ namespace gameLoop
 		//Update SceneGraph
 		m_scene->UpdateScene();
 
-		m_octree->Update();
+		//m_octree->Update();
 
-		m_particleSystem->Update(dt, m_scene->GetEntities());
+		//m_particleSystem->Update(dt, m_scene->GetEntities());
 		////renderer Update
 		m_renderer->Ingame_Update(dt, m_scene->GetEntities());
 		m_renderer->Ingame_Draw();
 		
+		//physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
 
-		
-		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
-
-
-		camera.SetMousePos(m_input->GetCursor());
-		camera.SetMouseScroll(m_input->GetScroll());
+		//camera.SetMousePos(m_input->GetCursor());
+		//camera.SetMouseScroll(m_input->GetScroll());
 
 		//camera movement setup
-		ProcessInputs(dt);
+		//ProcessInputs(dt);
 
 		//static unsigned int temp = Rendering::OctreeNode::GetCount();
 		//FL_ENGINE_WARN("NodeCount: {0}", temp);
 
-		m_input->Update();
-		CarSystem::Update();
+		//m_input->Update();
+		//CarSystem::Update();
 	}
 
 	void Engine::PauseUpdate()

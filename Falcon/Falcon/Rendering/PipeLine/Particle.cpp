@@ -15,8 +15,8 @@ Particle::Particle() : Renderable(), m_VBO(nullptr)
 void Particle::Setup()
 {
 	Renderable::Setup();
-	m_VBO = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::vec3), GL_DYNAMIC_DRAW);
-
+	//m_VBO = fmemory::fnew<VertexBuffer>(nullptr, sizeof(glm::vec3), GL_DYNAMIC_DRAW);
+    m_VBO = new VertexBuffer(nullptr, sizeof(glm::vec3), GL_DYNAMIC_DRAW);
 	m_VBO->Bind();
 	m_VAO->AddVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleData), offsetof(ParticleData, m_pos), 1);
 	m_VAO->AddVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleData), offsetof(ParticleData, m_size), 1);
@@ -84,5 +84,6 @@ void Particle::Bind()
  */
 Particle::~Particle()
 {
-	fmemory::fdelete<VertexBuffer>(m_VBO);
+	//fmemory::fdelete<VertexBuffer>(m_VBO);
+    delete m_VBO;
 }

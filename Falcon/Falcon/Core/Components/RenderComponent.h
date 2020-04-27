@@ -5,7 +5,7 @@
 
 #include <PipeLine/Mesh.h>
 
-typedef boost::container::vector<glm::vec3, fmemory::STLAllocator<glm::vec3>> boundingVector;
+typedef boost::container::vector<glm::vec3> boundingVector;
 
 
 /**
