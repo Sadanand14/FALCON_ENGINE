@@ -181,7 +181,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetindicesArray(tempIndices);
-				glm::vec3 meshScale = newEntity->GetTransform()->GetScale();
+				glm::vec3 meshScale = newEntity->GetTransform()->GetRelativeScale();
 				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3), meshScale);
 
 
@@ -194,7 +194,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				assert(actor != nullptr);
 				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> tempVerts;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(tempVerts);
-				glm::vec3 meshScale = newEntity->GetTransform()->GetScale();
+				glm::vec3 meshScale = newEntity->GetTransform()->GetRelativeScale();
 				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &tempVerts[0], tempVerts.size(), sizeof(glm::vec3),meshScale);
 			}
 			}
