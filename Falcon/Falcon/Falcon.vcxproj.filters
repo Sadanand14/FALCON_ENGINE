@@ -312,6 +312,9 @@
     <ClInclude Include="Rendering\PipeLine\Line.h" />
     <ClInclude Include="Rendering\PipeLine\RenderPasses\LineRenderPass.h" />
     <ClInclude Include="Core\Components\CameraComponent.h" />
+    <ClInclude Include="Core\Terrain.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp">
@@ -485,6 +488,7 @@
     <ClCompile Include="Rendering\Waypoints.cpp" />
     <ClCompile Include="Rendering\PipeLine\Line.cpp" />
     <ClCompile Include="Rendering\PipeLine\RenderPasses\LineRenderPass.cpp" />
+    <ClCompile Include="Core\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

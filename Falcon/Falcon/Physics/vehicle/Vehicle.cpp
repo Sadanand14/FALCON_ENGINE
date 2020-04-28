@@ -31,7 +31,7 @@ namespace physics
 			physx::PxRigidStatic* gGroundPlane = NULL;
 			std::unordered_map<Car*, CarController*> gCarControllerMap;
 			std::unordered_map<Car*, int> gCarIndexMap;
-	
+
 			/**
 			* Helper method to create a drivable plane.
 			* @param simulation filter data
@@ -247,6 +247,30 @@ namespace physics
 			}
 			return surfaceTirePairs;
 		}
+
+
+
+
+		bool MakeActorDrivableSurface(physx::PxShape* shape)
+		{
+			try {
+				//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+				physx::PxFilterData qryFilterData;
+				setupDrivableSurface(qryFilterData);
+				shape->setQueryFilterData(qryFilterData);
+
+				//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+				physx::PxFilterData simFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+				shape->setSimulationFilterData(simFilterData);
+				return true;
+			}
+			catch (std::exception& e)
+			{
+				FL_ENGINE_ERROR("ERROR: Failed to make surface drivable. {0}", e.what());
+				return false;
+			}
+		}
+
 
 
 

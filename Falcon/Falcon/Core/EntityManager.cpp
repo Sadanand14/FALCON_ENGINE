@@ -137,6 +137,7 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 
 			int type;
 			int rigidbodyType = -1;
+			bool isDrivable = false;
 
 			const rapidjson::Value& colliderType = doc["physicsComponent"]["type"];
 			type = colliderType.GetInt();
@@ -145,6 +146,12 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			{
 				const rapidjson::Value& rgType = doc["physicsComponent"]["rigidbody"];
 				rigidbodyType = rgType.GetInt();
+			}
+
+			if (doc["physicsComponent"].HasMember("isDrivable"))
+			{
+				const rapidjson::Value& drive = doc["physicsComponent"]["isDrivable"];
+				isDrivable = drive.GetBool();
 			}
 
 			switch (type)
@@ -171,19 +178,31 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 			case 3:
 			{
 				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+				std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
 				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
-				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3));
+				newEntity->GetComponent<RenderComponent>()->m_mesh->GetindicesArray(tempIndices);
+				glm::vec3 meshScale = newEntity->GetTransform()->GetRelativeScale();
+				physxComp->SetMeshCollider(&temp[0], temp.size(), sizeof(glm::vec3), meshScale);
+
+
+				//physxComp->SetMeshColliderWithTriangleMeshes(&temp[0], temp.size(), sizeof(glm::vec3),
+				//											 &tempIndices[0], tempIndices.size(), sizeof(u32), meshScale);
 				break;
 			}
 			case 4:
 			{
 				assert(actor != nullptr);
-				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
-				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(temp);
-				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &temp[0], temp.size(), sizeof(glm::vec3));
+				std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> tempVerts;
+				newEntity->GetComponent<RenderComponent>()->m_mesh->GetVertexPositionsArray(tempVerts);
+				glm::vec3 meshScale = newEntity->GetTransform()->GetRelativeScale();
+				physxComp->AddToExclusiveShape(actor, newEntity->GetTransform(), &tempVerts[0], tempVerts.size(), sizeof(glm::vec3),meshScale);
 			}
 			}
 
+			if (isDrivable)
+			{
+				physxComp->MakeDrivableSurface();
+			}
 
 			switch (rigidbodyType)
 			{
@@ -194,6 +213,9 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 				physxComp->SetPhysicsBodyType(newEntity->GetTransform(), physics::PhysicsBodyType::EDYNAMIC_BODY);
 				break;
 			}
+
+			
+
 		}
 
 		if (doc.HasMember("cameraComponent")) 
@@ -206,6 +228,34 @@ Entity* EntityManager::CreateEntity(const char* objTemplate, glm::vec3 pos, glm:
 	}
 
 	return newEntity;
+}
+
+
+/**
+* Creats a terrain Entity.
+* @param pointer to the terrain mesh
+*/
+Terrain* EntityManager::CreateTerrainEntity(Mesh* terrainMesh)
+{
+
+	Terrain* terrain = fmemory::fnew<Terrain>();
+	
+	try {
+
+		std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>> temp;
+		std::vector < u32, fmemory::STLAllocator<u32>> tempIndices;
+		terrainMesh->GetVertexPositionsArray(temp);
+		terrainMesh->GetindicesArray(tempIndices);
+		terrain->AddPhysicsToTerrain(&temp[0], temp.size(), sizeof(glm::vec3),
+									 &tempIndices[0], tempIndices.size(), sizeof(u32));
+
+		return terrain;
+	}
+	catch (std::exception& e)
+	{
+		FL_ENGINE_ERROR("ERROR: Failed to create physics for the terrain in {0} {1}. \n {2}", __FUNCTION__,__LINE__, e.what());
+		return nullptr;
+	}
 }
 
 /**

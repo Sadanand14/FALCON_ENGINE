@@ -470,7 +470,7 @@ namespace physics
 		{
 			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalAccel(true);
+				//vehicleInputData.setDigitalAccel(true);
 				vehicleInputData.setDigitalSteerRight(true);
 			}
 			else
@@ -489,7 +489,7 @@ namespace physics
 		{
 			if (gIsInputDigital)
 			{
-				vehicleInputData.setDigitalAccel(true);
+				//vehicleInputData.setDigitalAccel(true);
 				vehicleInputData.setDigitalSteerLeft(true);
 			}
 			else

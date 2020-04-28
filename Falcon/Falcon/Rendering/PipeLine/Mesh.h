@@ -37,6 +37,7 @@ public:
 	u32 GetWorldMatrixAmount();
 	void Bind() override;
 	void GetVertexPositionsArray (std::vector < glm::vec3, fmemory::STLAllocator<glm::vec3>>&) const;
+	void GetindicesArray (std::vector < u32, fmemory::STLAllocator<u32>>&) const;
 
 	inline VertexBuffer* GetVB() { return m_VBO1; }
 	inline VertexBuffer* GetVertexBuffer() { return m_VBO1; }
