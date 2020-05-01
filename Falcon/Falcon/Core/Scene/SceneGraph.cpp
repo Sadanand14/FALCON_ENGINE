@@ -492,9 +492,20 @@ namespace Scene
 
 				rapidjson::Value& car = doc["vehicles"][itr];
 				NodeWithOffset temp;
-				RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor();
+				RigidbodyDynamic* vehActor = physics::CreateDynamicRigidActor(true);
 				unsigned looper = 0;
 				const rapidjson::Value& user_car_flag = doc["vehicles"][itr][looper]["user_car"];
+
+				const rapidjson::Value& car_pos = doc["vehicles"][itr][looper]["car_pos"];
+				const rapidjson::Value& car_scale = doc["vehicles"][itr][looper]["car_scale"];
+				const rapidjson::Value& car_rot = doc["vehicles"][itr][looper]["car_rot"];
+
+				glm::vec3 car_pos_vec(car_pos[0].GetDouble(), car_pos[1].GetDouble(), car_pos[2].GetDouble());
+				glm::vec3 car_scale_vec(car_scale[0].GetDouble(), car_scale[1].GetDouble(), car_scale[2].GetDouble());
+				glm::quat car_rot_quat(car_rot[3].GetDouble(), car_rot[0].GetDouble(), car_rot[1].GetDouble(), car_rot[2].GetDouble());
+				//glm::quat(1, 0, 0, 0)
+				Transform car_transform(car_pos_vec, car_rot_quat,car_scale_vec);
+
 				bool is_user_car = user_car_flag.GetBool();
 
 				for (looper = 1; looper < car.Size();++looper)
@@ -503,7 +514,7 @@ namespace Scene
 					m_rootNode->AddChild(temp.m_sceneNode);
 					nextEntityOffset = temp.m_nextOffset;
 				}
-				physics::vehicle::Car* vehicle = physics::vehicle::CreateCar(vehActor, *m_entityList[m_entityList.size()-1]->GetTransform());
+				physics::vehicle::Car* vehicle = physics::vehicle::CreateCar(vehActor, car_transform);
 				EventManager::PushEvent(boost::make_shared<CarEvent>(vehicle, is_user_car), EVENT_CAR_CREATED);
 			}
 

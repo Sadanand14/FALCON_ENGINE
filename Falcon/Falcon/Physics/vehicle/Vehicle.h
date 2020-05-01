@@ -220,6 +220,8 @@ namespace physics
 			VehicleDesc m_carDesc;
 			physx::PxVehicleDrive4W* m_car;
 			bool m_isInAir;
+
+			void CustomizeCarToEngineScale(float scale);
 			//FLVehicleDrive4WRawInputData m_vehicleInputData;
 
 			Car(physx::PxRigidDynamic* vehActor, Transform& startTransform);
@@ -238,6 +240,9 @@ namespace physics
 			CarController(bool mimicInput = false);
 			~CarController() = default;
 			void SetDriveMode(DriveMode drivemode, Car* car, physx::PxVehicleDrive4WRawInputData& vehicleInputData);
+			
+			
+
 			inline bool ShouldMimicInput() const { return mMimicInput; }
 		private:
 			bool mMimicInput;

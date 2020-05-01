@@ -433,10 +433,13 @@ namespace physics
 	* Creates an empty rigid dynamic body which can be used to define multiple colliders.
 	*/
 
-	physx::PxRigidDynamic* CreateDynamicRigidActor() 
+	physx::PxRigidDynamic* CreateDynamicRigidActor(bool isCCDEnabled /*false*/)
 	{ 
 		physx::PxRigidDynamic* actor = gPhysics->createRigidDynamic(physx::PxTransform(physx::PxIdentity));
 		gScene->addActor(*actor);
+
+		if (isCCDEnabled)
+			actor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
 		return actor;
 	}
 

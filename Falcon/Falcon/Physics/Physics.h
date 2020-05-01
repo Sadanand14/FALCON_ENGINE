@@ -60,7 +60,7 @@ namespace physics
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);
 	physx::PxRigidDynamic* CreateDynamicRigidActor(const Transform* transform, physx::PxShape* collider);
-	physx::PxRigidDynamic* CreateDynamicRigidActor() ;
+	physx::PxRigidDynamic* CreateDynamicRigidActor(bool isCCDEnabled = false);
 	void ReleaseCollider(physx::PxRigidActor* ref);
 
 	template<typename T>
