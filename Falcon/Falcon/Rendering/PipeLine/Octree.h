@@ -61,8 +61,7 @@ namespace Rendering
 		glm::vec3 m_nearTopLeft;
 		glm::vec3 m_farBottomRight;
 		OctreeNode* m_rootNode;
-		Camera* m_camera;
-		glm::mat4 m_projection;
+		glm::mat4 m_projection, m_view;
 		boost::circular_buffer<OctreeNode> m_freeNodes;
 		boundingVector defaultVolume;
 
@@ -79,9 +78,10 @@ namespace Rendering
 
 	public:
 
+		inline void SetView(glm::mat4  view) { m_view = view; }
 		inline Scene::entityVector* GetViewables() { return &m_viewables; }
 		inline void SetProjection(glm::mat4 proj) { m_projection = proj; }
-		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene, Camera* camera);
+		Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene);
 		void Update();
 		~Octree();
 	};
