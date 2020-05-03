@@ -470,7 +470,7 @@ namespace physics
 		{
 			if (gIsInputDigital)
 			{
-				//vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalAccel(true);
 				vehicleInputData.setDigitalSteerRight(true);
 			}
 			else
@@ -489,7 +489,7 @@ namespace physics
 		{
 			if (gIsInputDigital)
 			{
-				//vehicleInputData.setDigitalAccel(true);
+				vehicleInputData.setDigitalAccel(true);
 				vehicleInputData.setDigitalSteerLeft(true);
 			}
 			else
@@ -561,5 +561,165 @@ namespace physics
 				vehicleInputData.setAnalogHandbrake(0.0f);
 			}
 		}
+
+
+
+
+		void CustomizeVehicleToLengthScale(const physx::PxReal lengthScale, physx::PxRigidDynamic* rigidDynamic, physx::PxVehicleWheelsSimData* wheelsSimData, physx::PxVehicleDriveSimData* driveSimData)
+		{
+			//Rigid body center of mass and moment of inertia.
+			{
+				physx::PxTransform t = rigidDynamic->getCMassLocalPose();
+				t.p *= lengthScale;
+				rigidDynamic->setCMassLocalPose(t);
+
+				physx::PxVec3 moi = rigidDynamic->getMassSpaceInertiaTensor();
+				moi *= (lengthScale * lengthScale);
+				rigidDynamic->setMassSpaceInertiaTensor(moi);
+			}
+
+			//Wheels, suspensions, wheel centers, tire/susp force application points.
+			{
+				for (physx::PxU32 i = 0; i < wheelsSimData->getNbWheels(); i++)
+				{
+					physx::PxVehicleWheelData wheelData = wheelsSimData->getWheelData(i);
+					wheelData.mRadius *= lengthScale;
+					wheelData.mWidth *= lengthScale;
+					wheelData.mDampingRate *= lengthScale * lengthScale;
+					wheelData.mMaxBrakeTorque *= lengthScale * lengthScale;
+					wheelData.mMaxHandBrakeTorque *= lengthScale * lengthScale;
+					wheelData.mMOI *= lengthScale * lengthScale;
+					wheelsSimData->setWheelData(i, wheelData);
+
+					physx::PxVehicleSuspensionData suspData = wheelsSimData->getSuspensionData(i);
+					suspData.mMaxCompression *= lengthScale;
+					suspData.mMaxDroop *= lengthScale;
+					wheelsSimData->setSuspensionData(i, suspData);
+
+					physx::PxVec3 v = wheelsSimData->getWheelCentreOffset(i);
+					v *= lengthScale;
+					wheelsSimData->setWheelCentreOffset(i, v);
+
+					v = wheelsSimData->getSuspForceAppPointOffset(i);
+					v *= lengthScale;
+					wheelsSimData->setSuspForceAppPointOffset(i, v);
+
+					v = wheelsSimData->getTireForceAppPointOffset(i);
+					v *= lengthScale;
+					wheelsSimData->setTireForceAppPointOffset(i, v);
+				}
+			}
+
+			//Slow forward speed correction.
+			{
+				wheelsSimData->setSubStepCount(5.0f * lengthScale, 3, 1);
+				wheelsSimData->setMinLongSlipDenominator(4.0f * lengthScale);
+			}
+
+			//Engine
+			if (driveSimData)
+			{
+				physx::PxVehicleEngineData engineData = driveSimData->getEngineData();
+				engineData.mMOI *= lengthScale * lengthScale;
+				engineData.mPeakTorque *= lengthScale * lengthScale;
+				engineData.mDampingRateFullThrottle *= lengthScale * lengthScale;
+				engineData.mDampingRateZeroThrottleClutchEngaged *= lengthScale * lengthScale;
+				engineData.mDampingRateZeroThrottleClutchDisengaged *= lengthScale * lengthScale;
+				driveSimData->setEngineData(engineData);
+			}
+
+			//Clutch.
+			if (driveSimData)
+			{
+				physx::PxVehicleClutchData clutchData = driveSimData->getClutchData();
+				clutchData.mStrength *= lengthScale * lengthScale;
+				driveSimData->setClutchData(clutchData);
+			}
+
+
+
+			//Scale the collision meshes too.
+			{
+				physx::PxShape* shapes[16];
+				const physx::PxU32 nbShapes = rigidDynamic->getShapes(shapes, 16);
+				for (physx::PxU32 i = 0; i < nbShapes; i++)
+				{
+					switch (shapes[i]->getGeometryType())
+					{
+					case physx::PxGeometryType::eSPHERE:
+					{
+						physx::PxSphereGeometry sphere;
+						shapes[i]->getSphereGeometry(sphere);
+						sphere.radius *= lengthScale;
+						shapes[i]->setGeometry(sphere);
+					}
+					break;
+					case physx::PxGeometryType::ePLANE:
+						PX_ASSERT(false);
+						break;
+					case physx::PxGeometryType::eCAPSULE:
+					{
+						physx::PxCapsuleGeometry capsule;
+						shapes[i]->getCapsuleGeometry(capsule);
+						capsule.radius *= lengthScale;
+						capsule.halfHeight *= lengthScale;
+						shapes[i]->setGeometry(capsule);
+					}
+					break;
+					case physx::PxGeometryType::eBOX:
+					{
+						physx::PxBoxGeometry box;
+						shapes[i]->getBoxGeometry(box);
+						box.halfExtents *= lengthScale;
+						shapes[i]->setGeometry(box);
+					}
+					break;
+					case physx::PxGeometryType::eCONVEXMESH:
+					{
+						physx::PxConvexMeshGeometry convexMesh;
+						shapes[i]->getConvexMeshGeometry(convexMesh);
+						convexMesh.scale.scale *= lengthScale;
+						shapes[i]->setGeometry(convexMesh);
+					}
+					break;
+					case physx::PxGeometryType::eTRIANGLEMESH:
+					{
+						physx::PxTriangleMeshGeometry triMesh;
+						shapes[i]->getTriangleMeshGeometry(triMesh);
+						triMesh.scale.scale *= lengthScale;
+						shapes[i]->setGeometry(triMesh);
+					}
+					break;
+					case physx::PxGeometryType::eHEIGHTFIELD:
+					{
+						physx::PxHeightFieldGeometry hf;
+						shapes[i]->getHeightFieldGeometry(hf);
+						hf.columnScale *= lengthScale;
+						hf.heightScale *= lengthScale;
+						hf.rowScale *= lengthScale;
+						shapes[i]->setGeometry(hf);
+					}
+					break;
+					case physx::PxGeometryType::eINVALID:
+					case physx::PxGeometryType::eGEOMETRY_COUNT:
+						break;
+					}
+				}
+			}
+		}
+
+		void ScaleAckermanData(float lengthScale, physx::PxVehicleDriveSimData4W* driveSimData)
+		{
+			//Ackermann geometry.
+			if (driveSimData)
+			{
+				physx::PxVehicleAckermannGeometryData ackermannData = driveSimData->getAckermannGeometryData();
+				ackermannData.mAxleSeparation *= lengthScale;
+				ackermannData.mFrontWidth *= lengthScale;
+				ackermannData.mRearWidth *= lengthScale;
+				driveSimData->setAckermannGeometryData(ackermannData);
+			}
+		}
+
 	}
 }

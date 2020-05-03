@@ -287,9 +287,22 @@ namespace physics
 			CreateVehicle4W(this, vehActor);
 			m_car->getRigidDynamicActor()->setGlobalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(startTransform.GetPosition()),
 				*PXMathUtils::QuatToPxQuat(startTransform.GetRotation())));
+
+			//CustomizeCarToEngineScale(0.1);
 		}
 
 
+
+		/**
+		* Scaling car internals up or down
+		* @param scale Scale down/up
+		*/
+		void Car::CustomizeCarToEngineScale(float scale)
+		{
+			physx::PxVehicleDriveSimData* tempSimData = static_cast<physx::PxVehicleDriveSimData*>(&m_car->mDriveSimData);
+			CustomizeVehicleToLengthScale(scale, m_car->getRigidDynamicActor(), &m_car->mWheelsSimData, &m_car->mDriveSimData);
+			ScaleAckermanData(scale,&m_car->mDriveSimData);
+		}
 
 
 
@@ -369,10 +382,10 @@ namespace physics
 				gCarIndexMap[car] = gCars.size() - 1;
 
 
-				gIsVehicleInScene =  true;
+				gIsVehicleInScene = true;
 				return car;
 			}
-			catch (std::exception &e )
+			catch (std::exception& e)
 			{
 				FL_ENGINE_ERROR("ERROR: Failed to create car. {0}", e.what());
 				return nullptr;
@@ -396,6 +409,13 @@ namespace physics
 					fmemory::fdelete<CarController>(controller);
 			}
 		}
+
+
+
+
+		
+
+
 
 
 		/**

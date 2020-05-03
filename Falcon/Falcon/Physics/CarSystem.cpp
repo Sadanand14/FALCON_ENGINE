@@ -48,7 +48,7 @@ void CarEventSystem::ProcessEvents()
 		if (temp->CheckCategory(EVENT_KEY_INPUT))
 		{
 			//Do the controller logic
-			FL_ENGINE_INFO("Received a car input event");
+			//FL_ENGINE_INFO("Received a car input event");
 			boost::shared_ptr<KeyEvent> keyEvent = boost::static_pointer_cast<KeyEvent>(temp);
 
 			//KeyInputResponse
