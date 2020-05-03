@@ -27,7 +27,8 @@ namespace physics
 		void SetupVehicleActorData(Car* car,physx::PxRigidDynamic* vehActor);
 		void ConfigureCarData(physx::PxVehicleWheels* vehicle, ActorUserData* actorUserData, ShapeUserData* shapeUserDatas);
 		void IncrementDrivingMode(Car* car, physx::PxVehicleDrive4WRawInputData& gVehicleInputData,const float timestep);
-
+		void CustomizeVehicleToLengthScale(const physx::PxReal lengthScale, physx::PxRigidDynamic* rigidDynamic, physx::PxVehicleWheelsSimData* wheelsSimData, physx::PxVehicleDriveSimData* driveSimData);
+		void ScaleAckermanData(float lengthScale, physx::PxVehicleDriveSimData4W* driveSimData);
 		/**
 		* Methods to pass on inuts to phyX.
 		*/

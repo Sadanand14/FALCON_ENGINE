@@ -52,7 +52,7 @@ private:
 public:
 	Transform()
 		:m_position({ 0.0f, 0.0f, 0.0f }), m_rotation(glm::quat()), m_scale({ 1.0f,1.0f,1.0f }), m_model(1.0f),
-		m_normal(1.0f), m_updateFlag(true), m_parentMatrix(glm::mat4()), m_front({1.0f, 0.0f, 0.0f})
+		m_normal(1.0f), m_updateFlag(true), m_parentMatrix(glm::mat4(1.0)), m_front({1.0f, 0.0f, 0.0f})
 	{
 		octreeID.reserve(10);
 		RecalculateMatrix();
@@ -60,7 +60,7 @@ public:
 
 	Transform(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
 		: m_position(pos), m_rotation(rot), m_scale(scale), m_updateFlag(true),
-		m_parentMatrix(glm::mat4()), m_front({ 1.0f, 0.0f, 0.0f })
+		m_parentMatrix(glm::mat4(1.0)), m_front({ 1.0f, 0.0f, 0.0f })
 	{
 		octreeID.reserve(10);
 		RecalculateMatrix();
@@ -100,7 +100,11 @@ public:
 	inline const glm::mat3& GetNormal() const { return m_normal; }
 
 	inline const glm::vec3 GetRelativePosition() const { return glm::vec3(m_parentMatrix * glm::vec4(m_position, 1.0)); }
-
+	const glm::vec3 GetRelativeScale() const 
+	{ 
+		 glm::vec3 scale = glm::vec3(m_parentMatrix * glm::vec4(m_scale, 1.0)); 
+		 return scale;
+	}
 	void CheckFlag()
 	{
 		if (m_updateFlag)

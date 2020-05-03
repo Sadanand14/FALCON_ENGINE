@@ -60,7 +60,7 @@ namespace physics
 	physx::PxRigidStatic* CreatePlane();
 	physx::PxRigidStatic* CreateStaticRigidActor(const Transform* transform, physx::PxShape* collider);
 	physx::PxRigidDynamic* CreateDynamicRigidActor(const Transform* transform, physx::PxShape* collider);
-	physx::PxRigidDynamic* CreateDynamicRigidActor() ;
+	physx::PxRigidDynamic* CreateDynamicRigidActor(bool isCCDEnabled = false);
 	void ReleaseCollider(physx::PxRigidActor* ref);
 
 	template<typename T>
@@ -75,12 +75,15 @@ namespace physics
 	physx::PxShape* GetBoxCollider(const float& halfX, const float& halfY, const float& halfZ);
 	physx::PxShape* GetSphereCollider(const float& radius);
 	physx::PxShape* GetCapsuleCollider(const float& radius,const float& halfHeight);
-	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert = false);
+	physx::PxShape* GetMeshCollider(const glm::vec3* vertexData, const int& stride, const int& vertCount, glm::vec3 & scaling, bool directInsert = false);
+	physx::PxShape* GetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertCount, const int& vertStride,const u32* indexData,
+													  const int& indexCount, const int& indexStride, glm::vec3& scaling, bool directInsert = false);
 	physx::PxConvexMesh* GetConvexMesh(const glm::vec3* vertexData, const int& stride, const int& vertCount, bool directInsert = false);
-	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride);
+	physx::PxShape* GetExclusiveShape(physx::PxRigidActor* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scaleFactor);
+	
 
 
-
+			
 
 	
 }

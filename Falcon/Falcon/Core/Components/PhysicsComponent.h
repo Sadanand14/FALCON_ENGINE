@@ -3,6 +3,7 @@
 
 #include "BasicComponent.h"
 #include "Physics/Physics.h"
+#include "Physics/vehicle/Vehicle.h"
 #include "TransformComponent.h"
 #include "glm/vec3.hpp"
 
@@ -98,7 +99,7 @@ public:
 		}
 	}
 
-	void SetMeshCollider(const glm::vec3* vertexData, const int& count, const int& stride)
+	void SetMeshCollider(const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scale)
 	{
 
 		if (m_collider != nullptr)
@@ -107,7 +108,26 @@ public:
 			return;
 		}
 
-		m_collider = physics::GetMeshCollider(vertexData, stride, count);
+		m_collider = physics::GetMeshCollider(vertexData, stride, count,scale);
+		if (!m_collider)
+		{
+			FL_ENGINE_ERROR("Failed to create mesh m_collider");
+		}
+	}
+
+
+	void SetMeshColliderWithTriangleMeshes(const glm::vec3* vertexData, const int& vertcount, const int& vertexStride,
+										  const u32* indexData, const int& indexCount, const int& indexStride, glm::vec3& scale)
+	{
+		if (m_collider != nullptr)
+		{
+			FL_ENGINE_ERROR("{0} Collider already assigned!. ", m_collider->getGeometryType());
+			return;
+		}
+
+		m_collider = physics::GetMeshColliderWithTriangleMeshes(vertexData, vertcount,  vertexStride, 
+																indexData, indexCount, indexStride,scale);
+
 		if (!m_collider)
 		{
 			FL_ENGINE_ERROR("Failed to create mesh m_collider");
@@ -142,15 +162,30 @@ public:
 		return m_actor != nullptr;
 	}
 
-	void AddToExclusiveShape(Rigidbody* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride)
+	void AddToExclusiveShape(Rigidbody* actor, const Transform* transform,const glm::vec3* vertexData, const int& count, const int& stride, glm::vec3& scale)
 	{
 		m_actor = actor;
-		m_collider = physics::GetExclusiveShape(actor,transform,vertexData,count,stride);
+		m_collider = physics::GetExclusiveShape(actor,transform,vertexData,count,stride,scale);
 	}
 
 
 	inline const Collider* GetCollider() const { return m_collider; }
 	inline const Rigidbody* GetActor() const  { return m_actor; }
+
+
+	void MakeDrivableSurface()
+	{
+		if (m_collider == nullptr)
+		{
+			FL_ENGINE_INFO("INFO: Can't make null collider shape a drivable surface");
+			return;
+		}
+		else
+		{
+			physics::vehicle::MakeActorDrivableSurface(m_collider);
+		}
+	}
+
 
 	~PhysicsComponent()
 	{

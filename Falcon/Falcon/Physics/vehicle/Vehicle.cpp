@@ -31,7 +31,7 @@ namespace physics
 			physx::PxRigidStatic* gGroundPlane = NULL;
 			std::unordered_map<Car*, CarController*> gCarControllerMap;
 			std::unordered_map<Car*, int> gCarIndexMap;
-	
+
 			/**
 			* Helper method to create a drivable plane.
 			* @param simulation filter data
@@ -250,6 +250,30 @@ namespace physics
 
 
 
+
+		bool MakeActorDrivableSurface(physx::PxShape* shape)
+		{
+			try {
+				//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+				physx::PxFilterData qryFilterData;
+				setupDrivableSurface(qryFilterData);
+				shape->setQueryFilterData(qryFilterData);
+
+				//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+				physx::PxFilterData simFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+				shape->setSimulationFilterData(simFilterData);
+				return true;
+			}
+			catch (std::exception& e)
+			{
+				FL_ENGINE_ERROR("ERROR: Failed to make surface drivable. {0}", e.what());
+				return false;
+			}
+		}
+
+
+
+
 		/**
 		* Car structure constructor
 		* @param Rigiddynamic* to the actor
@@ -263,9 +287,22 @@ namespace physics
 			CreateVehicle4W(this, vehActor);
 			m_car->getRigidDynamicActor()->setGlobalPose(physx::PxTransform(*PXMathUtils::Vec3ToPxVec3(startTransform.GetPosition()),
 				*PXMathUtils::QuatToPxQuat(startTransform.GetRotation())));
+
+			//CustomizeCarToEngineScale(0.1);
 		}
 
 
+
+		/**
+		* Scaling car internals up or down
+		* @param scale Scale down/up
+		*/
+		void Car::CustomizeCarToEngineScale(float scale)
+		{
+			physx::PxVehicleDriveSimData* tempSimData = static_cast<physx::PxVehicleDriveSimData*>(&m_car->mDriveSimData);
+			CustomizeVehicleToLengthScale(scale, m_car->getRigidDynamicActor(), &m_car->mWheelsSimData, &m_car->mDriveSimData);
+			ScaleAckermanData(scale,&m_car->mDriveSimData);
+		}
 
 
 
@@ -345,10 +382,10 @@ namespace physics
 				gCarIndexMap[car] = gCars.size() - 1;
 
 
-				gIsVehicleInScene =  true;
+				gIsVehicleInScene = true;
 				return car;
 			}
-			catch (std::exception &e )
+			catch (std::exception& e)
 			{
 				FL_ENGINE_ERROR("ERROR: Failed to create car. {0}", e.what());
 				return nullptr;
@@ -372,6 +409,13 @@ namespace physics
 					fmemory::fdelete<CarController>(controller);
 			}
 		}
+
+
+
+
+		
+
+
 
 
 		/**
