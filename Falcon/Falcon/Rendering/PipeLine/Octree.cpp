@@ -112,7 +112,7 @@ namespace Rendering
 	*@param[in] Pointer to the main SceneGraph managing the scene.
 	*@param[in] Pointer to the Current viewing Camera
 	*/
-	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene, Camera* camera) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene), m_camera(camera)
+	Octree::Octree(glm::vec3 nearTopLeft, glm::vec3 farBottomRight, float minSide, Scene::SceneGraph* scene) : m_nearTopLeft(nearTopLeft), m_farBottomRight(farBottomRight), m_scene(scene)
 	{
 		assert((farBottomRight.x - nearTopLeft.x) > 0.0f
 			&& (nearTopLeft.y - farBottomRight.y) > 0.0f
@@ -344,7 +344,7 @@ namespace Rendering
 		static mat4 View;
 		static mat4 VP;
 		static mat4 TVP;
-		View = m_camera->GetViewMatrix();
+		View = m_view;
 		VP = m_projection * View;
 		TVP = glm::transpose(VP);
 		//vec4 xColumn = VP[0];

@@ -74,7 +74,7 @@ namespace gameLoop
 		m_scene->UpdateScene();
 
 		// Octree load
-		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene, &camera);
+		m_octree = fmemory::fnew<Rendering::Octree>(glm::vec3(-320.0f, 320.0f, -320.0f), glm::vec3(320.0f, -320.0f, 320.0f), 5.0f, m_scene);
 		//calculate Projection temporarily here
 		glm::mat4 projection = glm::perspective(glm::radians(camera.m_Zoom), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
 		m_octree->SetProjection(projection);
@@ -90,9 +90,6 @@ namespace gameLoop
 		m_audio.Init();
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
 		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
-
-
-		
 
 		return true;
 	}
@@ -122,6 +119,7 @@ namespace gameLoop
 		//Update SceneGraph
 		m_scene->UpdateScene();
 
+		m_octree->SetView(CameraSystem::GetView());
 		m_octree->Update();
 
 		m_particleSystem->Update(dt, m_scene->GetEntities());
@@ -129,16 +127,7 @@ namespace gameLoop
 		m_renderer->Ingame_Update(dt, m_scene->GetEntities());
 		m_renderer->Ingame_Draw();
 		
-
-		
 		physics::StepPhysics(dt, m_scene->GetEntities(), m_scene->GetEntities()->size());
-
-
-		camera.SetMousePos(m_input->GetCursor());
-		camera.SetMouseScroll(m_input->GetScroll());
-
-		//camera movement setup
-		ProcessInputs(dt);
 
 		//static unsigned int temp = Rendering::OctreeNode::GetCount();
 		//FL_ENGINE_WARN("NodeCount: {0}", temp);
