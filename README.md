@@ -88,50 +88,37 @@ Do not perform raw IO outside of specifically designated engine subsystems.
 
 We will be maintaining a Linux build, with full intention of this engine supporting cross-platform development. Don't break this with platform-specific code.
 
-## Setting Up the Project
+## Setting up the project
 
-### GLM
+### Generating project files:
+Falcon uses premake for the as a build configuration utility. 
 
-When including glm in a file, ensure that you `#define GLM_ENABLE_EXPERIMENTAL` before the GLM includes. The basic 3D maths GLM include section would look like :
+To generate files on Windows, you have to run `GenProject.bat` whereas on linux, you run `GenProject.sh` via terminal. 
 
-```cpp
-#define GLM_ENABLE_EXPERIMENTAL
-#include "../glm/glm.hpp"
-#include "../glm/gtx/quaternion.hpp"
-```
+### Downloading Vendors:
 
+#### Manual Process:
+**1. Assets:**
+**Windows:**
+You can download assets for windows, from [Windows Assets](https://drive.google.com/a/g.rit.edu/file/d/1lXzUblckjqBw5ZdnKEeIOGwsa4X3WoRd/view?usp=sharing). Once downloaded, unzip it under following path,
+	`FALCON_ENGINE\Falcon`
 
-### GLFW
+**Linux:** 
+You can download Linux assets from [Linux tarball](https://drive.google.com/open?id=1V2WRjAMlHCOTJoYXXKZzNuE7PgAqw7UY). Once downloaded you need to unzip these into the build directory of the project which is like,
 
-The Graphics Library Framework is useful for assisting in simple window creation and input handling. The following guide will help enable it in your environment:
+`FALCON_ENGINE\Falcon\build\Debug\`
 
-1. Download GLFW at : https://www.glfw.org/download.html
+**2. Third party libraries/ vendor:**
+	The process for vendors is same for both platforms,.You can download the specific builds for vendors from following links,
+		
+Windows : [vendors.zip](https://drive.google.com/open?id=1CchZegqYkadK3kZguiG7o85_ZGr8fIU9)
+Linux   : [Vendor.tar.zip](https://drive.google.com/open?id=18iscICo1bDoGShJAOcVhI2Q6F5Ayr7OM)
 
-2. After extracting all files, move the `GLFW` folder to your project's `include` directory
+ Once downloaded, unzip it under `FALCON_ENGINE\Falcon\Falcon\`.
 
-3. Copy the library files in `lib-vc2015` to your project's `libraries` directory
+#### Automated Process:
+Follow the steps mentiond in [Setup Vendors and assets for the project](tools/Readme.md). 
 
-4. (Visual Studio) Go to your project properties, and set Configuration and Platform options to All
-
-5. (Visual Studio) Go to C/C++ -> General. Add `$(ProjectDir)include` to `Additional Include Directories` if it is not already there
-
-6. (Visual Studio) Go to Linker -> General. Add `$(ProjectDir)libraries` to `Additional Library Directories` if it is not already there
-
-7. (Visual Studio) Go to Linker -> Input. Add `glfw3.lib` to `Additional Dependencies`
-
-### Boost
-
-_Note : this guide is primarily targeted at setting up a Windows development environment. You can probably just use your package manager on Linux._
-
-1. Download the zip file for boost from the team drive.
-
-2. Extract into the "FalconEngine" project directory.
-
-3. (Visual Studio) Go to your project properties, and set Configuration and Platform options to All.
-
-4. (Visual Studio) Add `$(ProjectDir)boost_1_69_0` to `Include Directories`.
-
-5. (Visual Studio) Add `$(ProjectDir)boost_1_69_0\stage\lib` to `Library Directories`.
 
 ### Building Falcon on Linux
 
@@ -142,30 +129,18 @@ sudo apt install python
 sudo apt install python-dev
 sudo apt install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libglew-dev
 ```
-2. Setting up git on linux
-```shell
-sudo apt install git
-git config --global user.email "user@email.com"
-git config --gloval user.name  "FirstName LastName"
+2. Clone and generate project following the steps mentioned in [Setting up the project](#Setting-up-the-project).
+3. To build and run the code,
 ```
-Now clone the repo in your working directory.
-
-3. Download vendor_linux.tar from drive. And extract it in the `GraphicsEngine/GraphicsEngine/` path. Use setup_vendor script for this.
-
-4. To build and run the code,
-	1. Generate project
-```shell
-./GenProject.sh
-```
-	2. Run make to build project
+	#2. Run make to build project
 	```shell
 	make 
 	```
-	if you want to clean the build directory use,
+	#if you want to clean the build directory use,
 	```shell
 	make clean
 	```
-
+```
 
 ### Precautions to work with premake now,
 Whenever you add new directory in source, add any lib or any include please make sure you add it to the relevant places in the premake.lua file. otherwise there will be lot of inconsistencies. 
