@@ -89,7 +89,7 @@ namespace gameLoop
 		//Initialize the Audio Engine
 		m_audio.Init();
 		m_audio.LoadSound("../Assets/Sounds/f1_theme_brian_tyler.wav", true, true, false);
-		//m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
+		m_audio.PlaySounds("../Assets/Sounds/f1_theme_brian_tyler.wav", { 0,0,0 }, -0.6f);
 
 		return true;
 	}
@@ -99,6 +99,7 @@ namespace gameLoop
 		m_renderer->Menu_Update();
 		m_renderer->Menu_Draw();
 		m_input->Update();
+		m_audio.Update();
 	}
 
 	void Engine::IngameUpdate()
@@ -134,11 +135,13 @@ namespace gameLoop
 
 		m_input->Update();
 		CarSystem::Update();
+		m_audio.Update();
 	}
 
 	void Engine::PauseUpdate()
 	{
 		m_input->Update();
+		m_audio.Update();
 	}
 
 	void Engine::ProcessInputs(float dt)
