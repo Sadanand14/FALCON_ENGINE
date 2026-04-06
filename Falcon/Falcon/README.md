@@ -131,15 +131,15 @@ sudo apt install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libglew-
 ```
 2. Clone and generate project following the steps mentioned in [Setting up the project](#Setting-up-the-project).
 3. To build and run the code,
+
+```shell
+# Run make to build project
+make
 ```
-	#2. Run make to build project
-	```shell
-	make 
-	```
-	#if you want to clean the build directory use,
-	```shell
-	make clean
-	```
+
+```shell
+# If you want to clean the build directory use:
+make clean
 ```
 
 ### Precautions to work with premake now,
